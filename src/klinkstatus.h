@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2004 by Paulo Moura Guedes                              *
- *   pmg@netcabo.pt                                                        *
+ *   moura@kdewebdev.org                                                        *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -35,7 +35,7 @@ class KToggleAction;
  * statusbar but relies on the "Part" to do all the real work.
  *
  * @short Application Shell
- * @author Paulo Moura Guedes <pmg@netcabo.pt>
+ * @author Paulo Moura Guedes <moura@kdewebdev.org>
  * @version 0.1.0
  */
 class KLinkStatus : public KParts::MainWindow

@@ -4,7 +4,7 @@
 // Description:
 //
 //
-// Author: Paulo Moura Guedes <pmg@netcabo.pt>, (C) 2004
+// Author: Paulo Moura Guedes <moura@kdewebdev.org>, (C) 2004
 //
 // Copyright: See COPYING file that comes with this distribution
 //

@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2004 by Paulo Moura Guedes                              *
- *   pmg@netcabo.pt                                                        *
+ *   moura@kdewebdev.org                                                        *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -85,10 +85,10 @@ private slots:
     virtual void slotEditReferrerWithQuanta(KURL const& url);
     virtual void slotViewUrlInBrowser();
     virtual void slotViewParentUrlInBrowser();
+    virtual void loadContextTableMenu(QValueVector<KURL> const& referrers);
 
 private:
 
-    void loadContextTableMenu(QValueVector<KURL> const& referrers);
     vector<TableItem*> generateRowOfTableItems(LinkStatus const* linkstatus);
     void insereLinha(vector<TableItem*> items);
 

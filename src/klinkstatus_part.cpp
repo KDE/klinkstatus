@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2004 by Paulo Moura Guedes                              *
- *   pmg@netcabo.pt                                                        *
+ *   moura@kdewebdev.org                                                        *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -283,9 +283,9 @@ KAboutData* KLinkStatusPart::createAboutData()
 {
     KAboutData * about = new KAboutData("klinkstatuspart", I18N_NOOP("KLinkStatus Part"), version_,
                                         description_, KAboutData::License_GPL_V2,
-                                        "(C) 2004 Paulo Moura Guedes", 0, 0, "pmg@netcabo.pt");
+                                        "(C) 2004 Paulo Moura Guedes", 0, 0, "moura@kdewebdev.org");
 
-    about->addAuthor("Paulo Moura Guedes", 0, "pmg@netcabo.pt");
+    about->addAuthor("Paulo Moura Guedes", 0, "moura@kdewebdev.org");
 
     about->addCredit("Manuel Menezes de Sequeira", 0, 0, "http://home.iscte.pt/~mms/");
     about->addCredit("Gonçalo Silva", 0, "gngs@paradigma.co.pt");
