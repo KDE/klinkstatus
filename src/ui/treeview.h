@@ -65,6 +65,7 @@ protected:
 private slots:
 
     void slotPopupContextMenu(QListViewItem *, const QPoint &, int);    
+    virtual void slotPopupContextMenu(int row, int col, const QPoint& pos) {};
     virtual void slotCopyUrlToClipboard() const;
     virtual void slotCopyParentUrlToClipboard() const;
     virtual void slotCopyCellTextToClipboard() const;

@@ -51,8 +51,6 @@
 #include <kiconloader.h>
 
 
-#include "plot2dcanvas.h"
-#include <qvaluevector.h>
 SessionWidget::SessionWidget(int max_simultaneous_connections, int time_out,
                              QWidget* parent, const char* name, WFlags f)
         : SessionWidgetBase(parent, name, f), search_manager_(0),
