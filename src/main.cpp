@@ -42,8 +42,8 @@ static KCmdLineOptions options[] =
 
 int main(int argc, char *argv[])
 {
-    KAboutData about("klinkstatus", I18N_NOOP("KLinkStatus"), version, description,
-                     KAboutData::License_GPL, "(C) 2004 Paulo Moura Guedes", 0, 0, "pmg@netcabo.pt");
+    KAboutData about(PACKAGE, I18N_NOOP("KLinkStatus"), version, description,
+                     KAboutData::License_GPL_V2, "(C) 2004 Paulo Moura Guedes", 0, 0, "pmg@netcabo.pt");
 
     about.addAuthor("Paulo Moura Guedes", 0, "pmg@netcabo.pt");
 

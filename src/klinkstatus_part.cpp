@@ -137,7 +137,7 @@ void KLinkStatusPart::slotNewLinkCheck()
 
 void KLinkStatusPart::slotOpenLink()
 {
-    QString file_name = KFileDialog::getOpenFileName();
+    QString file_name = KFileDialog::getOpenURL().url();
 
     if (file_name.isEmpty() == false)
     {
@@ -183,7 +183,7 @@ void KLinkStatusPart::slotReportBug()
 KAboutData* KLinkStatusPart::createAboutData()
 {
     KAboutData * about = new KAboutData("klinkstatuspart", I18N_NOOP("KLinkStatus"), version_,
-                                        description_, KAboutData::License_GPL,
+                                        description_, KAboutData::License_GPL_V2,
                                         "(C) 2004 Paulo Moura Guedes", 0, 0, "pmg@netcabo.pt");
 
     about->addAuthor("Paulo Moura Guedes", 0, "pmg@netcabo.pt");
