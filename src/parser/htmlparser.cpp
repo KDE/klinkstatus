@@ -109,7 +109,7 @@ vector<QString> const& HtmlParser::parseNodesOfType(QString const& tipo)
     return aux_;
 }
 
-int HtmlParser::endOfTag(QString const& s, int index, char end_of_tag)
+int HtmlParser::endOfTag(QString const& s, int index, QChar end_of_tag)
 {
     if( (uint)index >= s.length() )
         return -1;

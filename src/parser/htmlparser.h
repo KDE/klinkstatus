@@ -73,7 +73,7 @@ private:
      e.g.
      endOfTag("<img src=\"bad > luck\">") => 22 (not 15)
   */
-  static int endOfTag(QString const& s, int index = 0, char end_of_tag = '>');
+  static int endOfTag(QString const& s, int index = 0, QChar end_of_tag = '>');
 
 private:
 
