@@ -89,7 +89,7 @@ private:
 
 inline HtmlParser::~HtmlParser()
 {
-  //kdDebug(2121) <<  "*";
+  //kdDebug(23100) <<  "*";
 }
 
 inline uint HtmlParser::estimativaLinks(uint doc_size)

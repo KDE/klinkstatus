@@ -25,7 +25,7 @@
 
 LinkStatus::~LinkStatus()
 {
-    //kdDebug(2121) <<  "|";
+    //kdDebug(23100) <<  "|";
 
     for(uint i = 0; i != children_nodes_.size(); ++i)
     {
@@ -131,9 +131,9 @@ void LinkStatus::loadNode()
     {
         setErrorOccurred(true);
         setError("Malformed");
-        kdDebug(2121) <<  "Malformed:" << endl;
-        kdDebug(2121) <<  "Node: " << node()->content() << endl;
-        //kdDebug(2121) <<  toString() << endl; // probable segfault
+        kdDebug(23100) <<  "Malformed:" << endl;
+        kdDebug(23100) <<  "Node: " << node()->content() << endl;
+        //kdDebug(23100) <<  toString() << endl; // probable segfault
     }
 }
 
@@ -155,9 +155,9 @@ void LinkStatus::setMalformed(bool flag)
     {
         setErrorOccurred(true);
         setError("Malformed");
-        kdDebug(2121) <<  "Malformed!" << endl;
-        kdDebug(2121) <<  node()->content() << endl;
-        //kdDebug(2121) <<  toString() << endl; // probable segfault
+        kdDebug(23100) <<  "Malformed!" << endl;
+        kdDebug(23100) <<  node()->content() << endl;
+        //kdDebug(23100) <<  toString() << endl; // probable segfault
     }
     else if(error() == "Malformed")
     {

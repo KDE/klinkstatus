@@ -110,7 +110,7 @@ void NodeLink::parseAttributeHREF()
             findWord(content(), "NAME") == -1 &&
             findWord(content(), "TARGET") == -1)
     {
-        kdDebug(2121) <<  "MALFORMED: " << endl
+        kdDebug(23100) <<  "MALFORMED: " << endl
         << "NodeLink::parseAttributeHREF: " << content() << endl;
         setMalformed(true);
         return;
@@ -190,7 +190,7 @@ void NodeMETA::parseAttributeURL()
         while(aspas != -1);
 
         if(attribute_url_.isEmpty())
-            kdDebug(2121) <<  "void NodeMeta::parseAttributeURL(): Assertion `!attribute_url_.isEmpty()' failed.\n"
+            kdDebug(23100) <<  "void NodeMeta::parseAttributeURL(): Assertion `!attribute_url_.isEmpty()' failed.\n"
             << content_ << endl << attribute_http_equiv_ << endl << attribute_url_ << endl;
         assert(!attribute_url_.isEmpty());
 
@@ -206,8 +206,8 @@ void NodeIMG::parseAttributeSRC()
 {
     if(findWord(content(), "SRC") == -1)
     {
-        kdDebug(2121) <<  "MALFORMED_____________________________________________________________" << endl;
-        kdDebug(2121) <<  "Conteudo: " << content() << endl;
+        kdDebug(23100) <<  "MALFORMED_____________________________________________________________" << endl;
+        kdDebug(23100) <<  "Conteudo: " << content() << endl;
         setMalformed(true);
         return;
     }

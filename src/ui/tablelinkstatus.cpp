@@ -337,7 +337,7 @@ QColor const& TableItem::textStatusColor() const
 {
     if(linkStatus()->errorOccurred())
     {
-        //kdDebug(2121) <<  "ERROR: " << linkStatus()->error() << ": " << linkStatus()->absoluteUrl().prettyURL() << endl;
+        //kdDebug(23100) <<  "ERROR: " << linkStatus()->error() << ": " << linkStatus()->absoluteUrl().prettyURL() << endl;
         if(linkStatus()->error() == "Javascript not suported")
             return lightGray;
         else
@@ -354,9 +354,9 @@ QColor const& TableItem::textStatusColor() const
 
         if(status_code[0] == '0')
         {
-            kdDebug(2121) <<  "statuc code == 0: " << endl;
-            kdDebug(2121) <<  linkStatus()->toString() << endl;
-            kdDebug(2121) <<  linkStatus()->httpHeader().toString() << endl;
+            kdDebug(23100) <<  "statuc code == 0: " << endl;
+            kdDebug(23100) <<  linkStatus()->toString() << endl;
+            kdDebug(23100) <<  linkStatus()->httpHeader().toString() << endl;
         }
         //assert(status_code[0] != '0');
 
@@ -495,9 +495,9 @@ void TableItemStatus::setText()
         /*
                 if(linkStatus()->httpHeader().statusCode() == 0)
                 {
-                    kdDebug(2121) <<  "TableItemStatus::setText : statusCode() == 0" << endl;
-                    kdDebug(2121) <<  linkStatus()->toString() << endl;
-                    kdDebug(2121) <<  linkStatus()->docHtml() << endl;
+                    kdDebug(23100) <<  "TableItemStatus::setText : statusCode() == 0" << endl;
+                    kdDebug(23100) <<  linkStatus()->toString() << endl;
+                    kdDebug(23100) <<  linkStatus()->docHtml() << endl;
                 }
         */
         //assert(linkStatus()->httpHeader().statusCode() != 0); //<------------------------------------------------------------

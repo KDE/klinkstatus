@@ -159,7 +159,7 @@ inline void LinkStatus::setBaseURI(KURL const& base_url)
 {
     if(!base_url.isValid())
     {
-        kdDebug(2121) <<  "base url not valid: " << endl
+        kdDebug(23100) <<  "base url not valid: " << endl
         << "parent: " << parent()->absoluteUrl().prettyURL() << endl
         << "url: " << absoluteUrl().prettyURL() << endl
         << "base url resolved: " << base_url.prettyURL() << endl;
