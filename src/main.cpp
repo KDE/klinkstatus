@@ -31,7 +31,7 @@ using namespace std;
 
 
 static const char description[] =
-    I18N_NOOP("A link checker");
+    I18N_NOOP("A Link Checker.\n\nKLinkStatus belongs to the kdewebdev module from KDE.");
 
 static const char version[] = "0.2.1";
 
