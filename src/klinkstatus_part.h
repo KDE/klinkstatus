@@ -58,11 +58,15 @@ protected slots:
 	void slotOpenLink();
 	void slotClose();
 	void slotAbout();
+	void slotReportBug();
 	
 private:
     void initGUI();
 
 private:
+	static const char description_[];
+	static const char version_[];
+	
     TabWidgetSession* tabwidget_;
 	KAboutApplication* m_dlgAbout;
 	KAction* action_new_link_check_;

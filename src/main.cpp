@@ -47,13 +47,14 @@ int main(int argc, char *argv[])
 
     about.addAuthor("Paulo Moura Guedes", 0, "pmg@netcabo.pt");
 
-    about.addCredit("Andras Mantia", 0, "amantia@kde.org");
-    about.addCredit("Eric Laffoon", 0, "sequitur@kde.org");
-    about.addCredit("Gonçalo Silva", 0, "gngs@paradigma.co.pt");
     about.addCredit("Manuel Menezes de Sequeira", 0, 0, "http://home.iscte.pt/~mms/");
-    about.addCredit("Mathieu Kooiman", 0, " quanta@map-is.nl");
-    about.addCredit("Michal Rudolf", 0, "mrudolf@kdewebdev.org");
+    about.addCredit("Gonçalo Silva", 0, "gngs@paradigma.co.pt");
     about.addCredit("Nuno Monteiro", 0, 0, "http://www.itsari.org");
+    about.addCredit("Eric Laffoon", 0, "sequitur@kde.org");
+    about.addCredit("Andras Mantia", 0, "amantia@kde.org");
+    about.addCredit("Michal Rudolf", 0, "mrudolf@kdewebdev.org");
+    about.addCredit("Mathieu Kooiman", 0, " quanta@map-is.nl");
+	about.addCredit("Jens Herden", 0, "jens@kdewebdev.org");
 
     KCmdLineArgs::init(argc, argv, &about);
     KCmdLineArgs::addCmdLineOptions( options );

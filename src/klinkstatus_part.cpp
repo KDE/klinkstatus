@@ -28,11 +28,15 @@
 #include <kparts/factory.h>
 #include <kstandarddirs.h>
 #include <kaboutapplication.h>
+#include <kbugreport.h>
 
 #include "klinkstatus_part.h"
 #include "ui/tabwidgetsession.h"
 #include "ui/sessionwidget.h"
 
+
+const char KLinkStatusPart::description_[] = "A Link Checker";
+const char KLinkStatusPart::version_[] = "0.1.0-CVS";
 
 // Factory code for KDE 3
 typedef KParts::GenericFactory<KLinkStatusPart> KLinkStatusFactory;
@@ -55,7 +59,7 @@ KLinkStatusPart::KLinkStatusPart(QWidget *parentWidget, const char *widgetName,
     // we are not modified since we haven't done anything yet
     setModified(false);
 
-	openURL("");
+    openURL("");
 }
 
 KLinkStatusPart::~KLinkStatusPart()
@@ -65,26 +69,27 @@ void KLinkStatusPart::initGUI()
 {
     setXMLFile("klinkstatus_part.rc", true);
 
-    action_new_link_check_ = new KAction(i18n("New Link Check"),
-                                         "filenew",
+    action_new_link_check_ = new KAction(i18n("New Link Check"), "filenew",
                                          0, this, SLOT(slotNewLinkCheck()),
                                          actionCollection(), "new_link_check");
 
-    action_open_link_ = new KAction(i18n("Open URL"),
-                                    "fileopen",
+    action_open_link_ = new KAction(i18n("Open URL"), "fileopen",
                                     0, this, SLOT(slotOpenLink()),
                                     actionCollection(), "open_link");
 
-    action_close_tab_ = new KAction(i18n("Close Tab"),
-                                    "fileclose",
+    action_close_tab_ = new KAction(i18n("Close Tab"), "fileclose",
                                     0, this, SLOT(slotClose()),
                                     actionCollection(), "close_tab");
     action_close_tab_->setEnabled(false);
 
-    (void) new KAction(i18n("About KLinkStatus"),
-                       "klinkstatus",
+    //_____________________________________________________________________________________
+
+    (void) new KAction(i18n("About KLinkStatus")," klinkstatus",
                        0, this, SLOT(slotAbout()),
                        actionCollection(), "about_klinkstatus");
+
+    (void) new KAction(i18n("&Report Bug..."), 0, 0, this,
+                        SLOT(slotReportBug()), actionCollection(), "report_bug");
 }
 
 void KLinkStatusPart::setModified(bool modified)
@@ -145,9 +150,9 @@ void KLinkStatusPart::slotClose()
     tabwidget_->closeSession();
 
     if(tabwidget_->count() > 1)
-		assert(action_close_tab_->isEnabled());
+        assert(action_close_tab_->isEnabled());
     else
-		action_close_tab_->setEnabled(false);
+        action_close_tab_->setEnabled(false);
 }
 
 void KLinkStatusPart::slotAbout()
@@ -169,62 +174,28 @@ void KLinkStatusPart::slotAbout()
     }
 }
 
-/*
-void KLinkStatusPart::fileNew()
+void KLinkStatusPart::slotReportBug()
 {
-    // this slot is called whenever the File->New menu is selected,
-    // the New shortcut is pressed (usually CTRL+N) or the New toolbar
-    // button is clicked
-
-    // About this function, the style guide (
-    // http://developer.kde.org/documentation/standards/kde/style/basics/index.html )
-    // says that it should open a new window if the document is _not_
-    // in its initial state.  This is what we do here.. -> i don't think so
-    openURL(KURL());
-
-    if(tabwidget_->count() > 1)
-        actionCollection()->action(KStdAction::stdName(KStdAction::Close))->setEnabled(true);
-    else
-        actionCollection()->action(KStdAction::stdName(KStdAction::Close))->setEnabled(false);
+    KBugReport dlg(widget(), true, createAboutData());
+    dlg.exec();
 }
 
-void KLinkStatusPart::fileOpen()
-{
-    // this slot is called whenever the File->Open menu is selected,
-    // the Open shortcut is pressed (usually CTRL+O) or the Open toolbar
-    // button is clicked
-    QString file_name = KFileDialog::getOpenFileName();
-
-    if (file_name.isEmpty() == false)
-    {
-        openURL(file_name);
-    }
-}
-
-void KLinkStatusPart::fileClose()
-{
-    tabwidget_->closeSession();
-
-    if(tabwidget_->count() > 1)
-        actionCollection()->action(KStdAction::stdName(KStdAction::Close))->setEnabled(true);
-    else
-        actionCollection()->action(KStdAction::stdName(KStdAction::Close))->setEnabled(false);
-}
-*/
 KAboutData* KLinkStatusPart::createAboutData()
 {
-    KAboutData * about = new KAboutData("klinkstatuspart", I18N_NOOP("KLinkStatus"), "0.1.0");
+    KAboutData * about = new KAboutData("klinkstatuspart", I18N_NOOP("KLinkStatus"), version_,
+                                        description_, KAboutData::License_GPL,
+                                        "(C) 2004 Paulo Moura Guedes", 0, 0, "pmg@netcabo.pt");
 
     about->addAuthor("Paulo Moura Guedes", 0, "pmg@netcabo.pt");
 
-    about->addCredit("Andras Mantia", 0, "amantia@kde.org");
-    about->addCredit("Eric Laffoon", 0, "sequitur@kde.org");
-    about->addCredit("Gonçalo Silva", 0, "gngs@paradigma.co.pt");
-    about->addCredit("Mathieu Kooiman", 0, " quanta@map-is.nl");
     about->addCredit("Manuel Menezes de Sequeira", 0, 0, "http://home.iscte.pt/~mms/");
-    about->addCredit("Michal Rudolf", 0, "mrudolf@kdewebdev.org");
     about->addCredit("Gonçalo Silva", 0, "gngs@paradigma.co.pt");
     about->addCredit("Nuno Monteiro", 0, 0, "http://www.itsari.org");
+    about->addCredit("Eric Laffoon", 0, "sequitur@kde.org");
+    about->addCredit("Andras Mantia", 0, "amantia@kde.org");
+    about->addCredit("Michal Rudolf", 0, "mrudolf@kdewebdev.org");
+    about->addCredit("Mathieu Kooiman", 0, " quanta@map-is.nl");
+    about->addCredit("Jens Herden", 0, "jens@kdewebdev.org");
 
     return about;
 }

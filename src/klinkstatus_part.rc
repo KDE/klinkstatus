@@ -9,7 +9,8 @@
     <Separator/>
   </Menu>
   <Menu name="help"><text>&amp;Help</text>
-#    <Action name="about_klinkstatus"/>
+    <Action name="about_klinkstatus"/>
+	<Action name="report_bug"/>
   </Menu>
 </MenuBar>
 <ToolBar name="linksToolBar">
