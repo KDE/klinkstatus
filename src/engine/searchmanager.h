@@ -63,6 +63,7 @@ public:
     void setDomain(QString const& domain);
     void setCheckParentDirs(bool flag);
 	void setCheckExternalLinks(bool flag);
+    void setTimeOut(int time_out);
 	
     void cleanItems();
     void reset();

@@ -83,6 +83,12 @@ inline void SearchManager::setCheckExternalLinks(bool flag)
 	check_external_links_ = flag;
 }
 
+inline void SearchManager::setTimeOut(int time_out)
+{
+    Q_ASSERT(time_out > 0);
+    time_out_ = time_out;   
+}
+
 
 
 inline bool SearchManager::checkParentDirs() const
