@@ -61,6 +61,7 @@ KLinkStatus::KLinkStatus()
         {
             // tell the KParts::MainWindow that this is indeed the main widget
             setCentralWidget(m_part->widget());
+	    setStandardToolBarMenuEnabled(true);
 
             // and integrate the part's GUI with the shell's
             createGUI(m_part);
