@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2004 by Paulo Moura Guedes                              *
- *   moura@kdewebdev.org                                                        *
+ *   moura@kdewebdev.org                                                   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -36,7 +36,7 @@
 
 
 KLinkStatus::KLinkStatus()
-        : KParts::MainWindow( 0L, "KLinkStatus" )
+    : KParts::MainWindow( 0L, "KLinkStatus" )
 {
     // set the shell's ui resource file
     setXMLFile("klinkstatus_shell.rc");

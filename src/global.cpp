@@ -18,6 +18,7 @@
 #include <kdebug.h>
 #include <kapplication.h>
 #include <kstaticdeleter.h>
+#include <kurl.h>
 
 #include <sys/types.h>
 #include <unistd.h>
@@ -50,7 +51,7 @@ Global::~Global()
         staticDeleter.setObject(m_self_, 0, false);
 }
 
-bool Global::isKLinkStatusEmbeddedinQuanta()
+bool Global::isKLinkStatusEmbeddedInQuanta()
 {
     QCString app_id = "quanta-" + QCString().setNum(getpid());
     return self()->dcop_client_->isApplicationRegistered(app_id);
@@ -63,7 +64,7 @@ bool Global::isQuantaRunningAsUnique()
 
 bool Global::isQuantaAvailableViaDCOP()
 {
-    if(isQuantaRunningAsUnique() or isKLinkStatusEmbeddedinQuanta())
+    if(isQuantaRunningAsUnique() or isKLinkStatusEmbeddedInQuanta())
         return true;
 
     else
@@ -107,5 +108,17 @@ QCString Global::quantaDCOPAppId()
         }
     */
 }
+
+KURL Global::urlWithQuantaPreviewPrefix(KURL const& url)
+{
+    Q_ASSERT(isKLinkStatusEmbeddedInQuanta());
+    
+    DCOPRef quanta(Global::quantaDCOPAppId(),"WindowManagerIf");
+    QString string_url_with_prefix = quanta.call("urlWithPreviewPrefix", url.url());
+    //kdDebug(23100) << "string_url_with_prefix: " << string_url_with_prefix << endl;
+
+    return KURL(string_url_with_prefix);
+}
+
 
 #include "global.moc"

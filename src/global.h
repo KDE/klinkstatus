@@ -16,6 +16,7 @@
 class QCString;
 
 class DCOPClient;
+class KURL;
 
 /**
 @author Paulo Moura Guedes
@@ -27,10 +28,12 @@ public:
     static Global* self();
     ~Global();
 
-    static bool isKLinkStatusEmbeddedinQuanta();
+    static bool isKLinkStatusEmbeddedInQuanta();
     static bool isQuantaRunningAsUnique();
     static bool isQuantaAvailableViaDCOP();
     static QCString quantaDCOPAppId();
+    
+    static KURL urlWithQuantaPreviewPrefix(KURL const& url);
 
 private:
     Global(QObject *parent = 0, const char *name = 0);

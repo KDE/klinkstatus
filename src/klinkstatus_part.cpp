@@ -34,6 +34,7 @@
 #include <kshortcut.h>
 #include <kaccel.h>
 
+#include "global.h"
 #include "cfg/klsconfig.h"
 #include "klinkstatus_part.h"
 #include "ui/tabwidgetsession.h"
@@ -69,7 +70,8 @@ KLinkStatusPart::KLinkStatusPart(QWidget *parentWidget, const char *widgetName,
 }
 
 KLinkStatusPart::~KLinkStatusPart()
-{}
+{
+}
 
 void KLinkStatusPart::initGUI()
 {
@@ -154,16 +156,25 @@ void KLinkStatusPart::setModified(bool modified)
 
 bool KLinkStatusPart::openURL(KURL const& url)
 {
-    //emit setWindowCaption( url.prettyURL() );
-
+    KURL url_aux = url;
+    
+    if(KLSConfig::useQuantaUrlPreviewPrefix() && Global::isKLinkStatusEmbeddedInQuanta())
+    {
+        url_aux = Global::urlWithQuantaPreviewPrefix(url);
+        if(!url_aux.isValid() || url_aux.isEmpty())
+            url_aux = url;
+    }
+    else
+        url_aux = url;
+    
     if(tabwidget_->count() == 0 || !tabwidget_->emptySessionsExist() )
     {
-        connect(tabwidget_->newSession(url), SIGNAL(signalSearchFinnished()),
+        connect(tabwidget_->newSession(url_aux), SIGNAL(signalSearchFinnished()),
                 this, SLOT(slotEnableDisplayLinksActions()));
     }
     else
     {
-        tabwidget_->getEmptySession()->setUrl(url);
+        tabwidget_->getEmptySession()->setUrl(url_aux);
     }
 
     action_close_tab_->setEnabled(tabwidget_->count() > 1);

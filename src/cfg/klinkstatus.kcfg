@@ -47,6 +47,11 @@
       <label>Whether to remeber the check settings like depth, etc, on exit.</label>
       <default>false</default>
     </entry>
+   
+    <entry name="UseQuantaUrlPreviewPrefix" type="Bool">
+      <label>Whether preview prefix in Quanta project is used to set the URL to check.</label>
+      <default>true</default>
+    </entry>
   
   </group>
 </kcfg>

@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2004 by Paulo Moura Guedes                              *
- *   moura@kdewebdev.org                                                        *
+ *   moura@kdewebdev.org                                                   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -22,6 +22,7 @@
 #include "tablelinkstatus.h"
 #include "klshistorycombo.h"
 #include "resultview.h"
+#include "../global.h"
 #include "../engine/linkstatus.h"
 #include "../engine/linkchecker.h"
 #include "../engine/searchmanager.h"
@@ -134,6 +135,7 @@ void SessionWidget::setColumns(QStringList const& colunas)
 void SessionWidget::setUrl(KURL const& url)
 {
     combobox_url->setCurrentText(url.prettyURL());
+    combobox_url->setFocus();
 }
 
 void SessionWidget::displayAllLinks()
@@ -232,7 +234,13 @@ void SessionWidget::slotCheck()
     table_linkstatus->clear();
 
     KURL url = ::normalizeUrl(combobox_url->currentText());
-
+    if(KLSConfig::useQuantaUrlPreviewPrefix() && Global::isKLinkStatusEmbeddedInQuanta())
+    {
+        KURL url_aux = Global::urlWithQuantaPreviewPrefix(url);
+        if(url_aux.isValid() && !url_aux.isEmpty())
+            url = url_aux;   
+    }
+    
     if(not checkbox_recursively->isChecked())
     {
         search_manager_->setSearchMode(SearchManager::depth);
