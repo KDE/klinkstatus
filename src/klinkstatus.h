@@ -73,6 +73,7 @@ private slots:
 private:
     void setupAccel();
     void setupActions();
+    void removeDuplicatedActions();
 
 private:
     KParts::ReadOnlyPart *m_part;
