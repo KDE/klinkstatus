@@ -390,8 +390,8 @@ void SearchManager::continueSearch()
         else
         {
             kdDebug(23100) <<  "Next Level_____________________________________________________________________________________\n\n\n";
-            if( (search_mode_ != SearchManager::depth) ||
-                    (current_depth_ < depth_) )
+            if(search_mode_ == SearchManager::domain or
+                    current_depth_ < depth_)
             {
                 current_node_ = 0;
                 ++current_depth_;
