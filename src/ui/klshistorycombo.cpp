@@ -17,6 +17,8 @@
 #include <kdebug.h>
 #include <kstdaccel.h>
 #include <kurldrag.h>
+#include <kglobalsettings.h> 
+
 
 KConfig* KLSHistoryCombo::config_ = 0L;
 bool KLSHistoryCombo::items_saved_ = false;
@@ -27,12 +29,8 @@ KLSHistoryCombo::KLSHistoryCombo(QWidget *parent, const char *name)
 {
     // @todo settings
     setMaxCount(50);
-    setHandleSignals(false);
     setDuplicatesEnabled(false);
-    setAutoCompletion(true);
-
-    // Make the lineedit consume the Key_Enter event...
-    //setTrapReturnKey( true );
+    setAutoCompletion(false);
 
     connect(this, SIGNAL(activated(const QString& )),
             this, SLOT(addToHistory(const QString& )));
@@ -44,7 +42,7 @@ KLSHistoryCombo::~KLSHistoryCombo()
 void KLSHistoryCombo::init()
 {
     Q_ASSERT(config_);
-    
+
     loadItems();
 }
 
@@ -52,41 +50,36 @@ void KLSHistoryCombo::saveItems()
 {
     if(items_saved_)
         return;
+
+    QStringList items = historyItems();
     
-    QStringList items;
-
-    for(int i = 0; i != count(); ++i)
-        items.append(text(i));
-
     config_->setGroup("Location Bar");
     config_->writeEntry("ComboContents", items);
 
     config_->sync();
-    
+
     items_saved_ = true;
 }
 
 void KLSHistoryCombo::loadItems()
 {
     clear();
-    int i = 0;
 
-    config_->setGroup( "History" ); // delete the old 2.0.x completion
+    config_->setGroup( "History" );
     config_->writeEntry( "CompletionItems", "unused" );
 
     config_->setGroup( "Location Bar" );
     QStringList items = config_->readListEntry( "ComboContents" );
-    QStringList::ConstIterator it = items.begin();
-    QString item;
-    while ( it != items.end() )
-    {
-        item = *it;
-        if ( !item.isEmpty() )
-        { // only insert non-empty items
-            insertItem( item, i++ );
-        }
-        ++it;
-    }
+
+    bool block = signalsBlocked();
+    blockSignals( true );
+
+    setHistoryItems(items);
+    blockSignals(block);
+
+    completionObject()->setItems(items);
+
+    setCompletionMode(KGlobalSettings::completionMode());
 }
 
 bool KLSHistoryCombo::eventFilter( QObject *o, QEvent *ev )
