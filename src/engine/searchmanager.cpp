@@ -27,7 +27,7 @@
 #include <kapplication.h>
 #include <kdebug.h>
 
-#include <cassert>
+
 #include <iostream>
 #include <unistd.h>
 
@@ -51,7 +51,7 @@ void SearchManager::reset()
 {
     kdDebug(23100) <<  "SearchManager::reset()" << endl;
 
-    //assert(not links_being_checked_);
+    //Q_ASSERT(not links_being_checked_);
 
     root_.reset();
     cleanItems();
@@ -106,8 +106,8 @@ void SearchManager::startSearch(KURL const& root, SearchMode const& modo)
     //time_.restart();
     time_.start();
 
-    assert(root.isValid());
-    //assert(root.protocol() == "http" || root.protocol() == "https");
+    Q_ASSERT(root.isValid());
+    //Q_ASSERT(root.protocol() == "http" || root.protocol() == "https");
 
     if(root.hasHost() && (domain_.isNull() || domain_.isEmpty()))
     {
@@ -123,15 +123,15 @@ void SearchManager::startSearch(KURL const& root, SearchMode const& modo)
 
     search_mode_ = modo;
     if(modo == depth)
-        assert(depth_ != -1);
+        Q_ASSERT(depth_ != -1);
     else if(modo == domain)
-        assert(depth_ == -1);
+        Q_ASSERT(depth_ == -1);
     else
-        assert(depth_ != -1);
+        Q_ASSERT(depth_ != -1);
 
     searching_ = true;
 
-    //assert(domain_ != QString::null);
+    //Q_ASSERT(domain_ != QString::null);
     checkRoot();
 }
 
@@ -167,8 +167,8 @@ void SearchManager::slotRootChecked(const LinkStatus * link, LinkChecker * check
 {
     kdDebug(23100) <<  "SearchManager::slotRootChecked" << endl;
 
-    assert(checked_links_ == 0);
-    assert(search_results_.size() == 0);
+    Q_ASSERT(checked_links_ == 0);
+    Q_ASSERT(search_results_.size() == 0);
 
     ++checked_links_;
     //kdDebug(23100) <<  "++checked_links_: SearchManager::slotRootChecked" << endl;
@@ -192,7 +192,7 @@ void SearchManager::slotRootChecked(const LinkStatus * link, LinkChecker * check
             kdDebug(23100) <<  "search_results_.size() != 1:" << endl;
             kdDebug(23100) <<  "size: " << search_results_.size() << endl;
         }
-        assert(search_results_.size() == 1);
+        Q_ASSERT(search_results_.size() == 1);
 
         if(no.size() > 0)
         {
@@ -207,7 +207,7 @@ void SearchManager::slotRootChecked(const LinkStatus * link, LinkChecker * check
 
     else
     {
-        assert(search_results_.size() == 0);
+        Q_ASSERT(search_results_.size() == 0);
         kdDebug(23100) <<  "Search Finished! (SearchManager::slotRootChecked)#2" << endl;
         finnish();
     }
@@ -266,7 +266,7 @@ vector<LinkStatus*> SearchManager::children(LinkStatus* link)
                 kdDebug(23100) <<  "link: " << endl << link->toString() << endl;
                 kdDebug(23100) <<  "child: " << endl << ls->toString() << endl;
             }
-            assert(link->externalDomainDepth() <= external_domain_depth_);
+            Q_ASSERT(link->externalDomainDepth() <= external_domain_depth_);
 
             children.push_back(ls);
         }
@@ -309,9 +309,9 @@ bool SearchManager::existUrl(KURL const& url, KURL const& url_parent) const
 
 void SearchManager::startSearch()
 {
-    assert(current_depth_ == 1);
-    assert(search_results_[current_depth_ - 1].size() == 1);
-    assert(current_node_ == 0);
+    Q_ASSERT(current_depth_ == 1);
+    Q_ASSERT(search_results_[current_depth_ - 1].size() == 1);
+    Q_ASSERT(current_node_ == 0);
 
     if( (int)current_depth_ <= depth_ || search_mode_ != depth )
         checkVectorLinks(nodeToAnalize());
@@ -324,7 +324,7 @@ void SearchManager::startSearch()
 
 void SearchManager::continueSearch()
 {
-    assert(not links_being_checked_);
+    Q_ASSERT(not links_being_checked_);
 
     vector<LinkStatus*> const& no = nodeToAnalize();
 
@@ -368,8 +368,8 @@ void SearchManager::continueSearch()
 
 vector<LinkStatus*> const& SearchManager::nodeToAnalize() const
 {
-    assert( (uint)current_depth_ == search_results_.size() );
-    assert( (uint)current_node_ < (search_results_[current_depth_ - 1]).size() );
+    Q_ASSERT( (uint)current_depth_ == search_results_.size() );
+    Q_ASSERT( (uint)current_node_ < (search_results_[current_depth_ - 1]).size() );
 
     return (search_results_[current_depth_ - 1])[current_node_];
 }
@@ -392,7 +392,7 @@ vector<LinkStatus*> SearchManager::chooseLinks(vector<LinkStatus*> const& links)
 
 void SearchManager::checkLinksSimultaneously(vector<LinkStatus*> const& links)
 {
-    assert(finished_connections_ <= max_simultaneous_connections_);
+    Q_ASSERT(finished_connections_ <= max_simultaneous_connections_);
     finished_connections_ = 0;
     links_being_checked_ = 0;
     maximum_current_connections_ = -1;
@@ -405,17 +405,17 @@ void SearchManager::checkLinksSimultaneously(vector<LinkStatus*> const& links)
     for(uint i = 0; i != links.size(); ++i)
     {
         LinkStatus* ls(links[i]);
-        assert(ls);
+        Q_ASSERT(ls);
 
         QString protocol = ls->absoluteUrl().protocol();
 
         ++links_being_checked_;
-        assert(links_being_checked_ <= max_simultaneous_connections_);
+        Q_ASSERT(links_being_checked_ <= max_simultaneous_connections_);
 
         if(ls->malformed())
         {
-            assert(ls->errorOccurred());
-            assert(ls->error() == "Malformed");
+            Q_ASSERT(ls->errorOccurred());
+            Q_ASSERT(ls->error() == "Malformed");
 
             ls->setChecked(true);
             slotLinkChecked(ls, 0);
@@ -460,7 +460,7 @@ void SearchManager::slotLinkChecked(const LinkStatus * link, LinkChecker * check
 {
     //kdDebug(23100) <<  "SearchManager::slotLinkChecked -> " << link->absoluteUrl().url() << endl;
 
-    assert(link);
+    Q_ASSERT(link);
     emit signalLinkChecked(link, checker);
     ++checked_links_;
     ++finished_connections_;
@@ -468,7 +468,7 @@ void SearchManager::slotLinkChecked(const LinkStatus * link, LinkChecker * check
 
     if(links_being_checked_ < 0)
         kdDebug(23100) <<  link->toString() << endl;
-    assert(links_being_checked_ >= 0);
+    Q_ASSERT(links_being_checked_ >= 0);
 
     if(canceled_ and searching_ and !links_being_checked_)
     {
@@ -616,7 +616,7 @@ bool SearchManager::localDomain(KURL const& url) const
 /*
 bool SearchManager::isLocalRestrict(KURL const& url) const
 {
-    assert(url.protocol() == "http" || url.protocol() == "https");
+    Q_ASSERT(url.protocol() == "http" || url.protocol() == "https");
  
     KURL url_root = root_.absoluteUrl();
  
@@ -656,7 +656,7 @@ bool SearchManager::generalDomain() const
 
     else
     {
-        assert(!domain_.isEmpty());
+        Q_ASSERT(!domain_.isEmpty());
 
         if(!check_parent_dirs_)
             return false;
@@ -670,12 +670,12 @@ bool SearchManager::generalDomain() const
         else
         {
             vector<QString> palavras = tokenizeWordsSeparatedByDots(domain_);
-            assert(palavras.size() >= 1); // host might be localhost
+            Q_ASSERT(palavras.size() >= 1); // host might be localhost
 
             QString primeira_palavra = palavras[0];
             if(primeira_palavra == "www")
             {
-                assert(palavras.size() >= 3);
+                Q_ASSERT(palavras.size() >= 3);
                 kdDebug(23100) <<  "Domain vago" << endl;
                 return true;
             }
@@ -716,8 +716,8 @@ void SearchManager::slotLinkCheckerFinnished(LinkChecker * checker)
 {
     kdDebug(23100) <<  "deleting linkchecker" << endl;
 
-    assert(checker);
-    //assert(checker->linkStatus()->checked());
+    Q_ASSERT(checker);
+    //Q_ASSERT(checker->linkStatus()->checked());
 
     delete checker;
     checker = 0;

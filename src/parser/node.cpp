@@ -192,7 +192,7 @@ void NodeMETA::parseAttributeURL()
         if(attribute_url_.isEmpty())
             kdDebug(23100) <<  "void NodeMeta::parseAttributeURL(): Assertion `!attribute_url_.isEmpty()' failed.\n"
             << content_ << endl << attribute_http_equiv_ << endl << attribute_url_ << endl;
-        assert(!attribute_url_.isEmpty());
+        Q_ASSERT(!attribute_url_.isEmpty());
 
         linktype_ = resolveLinkType(attribute_url_);
     }

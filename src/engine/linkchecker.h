@@ -29,7 +29,7 @@
 #include "../parser/http.h"
 class LinkStatus;
 
-#include <cassert>
+
 #include <iostream>
 using namespace std;
 

@@ -38,9 +38,9 @@ LinkChecker::LinkChecker(LinkStatus* linkstatus, int time_out,
         linkstatus_(linkstatus), t_job_(0), time_out_(time_out), checker_(0),
         redirection_(false), header_checked_(false), finnished_(false), parsing_(false)
 {
-    assert(linkstatus_);
-    assert(!linkstatus_->checked());
-    assert(QString(parent->className()) == QString("SearchManager"));
+    Q_ASSERT(linkstatus_);
+    Q_ASSERT(!linkstatus_->checked());
+    Q_ASSERT(QString(parent->className()) == QString("SearchManager"));
 
     kdDebug(23100) <<  "Checking " << linkstatus_->absoluteUrl().url() << endl;
 }
@@ -50,10 +50,10 @@ LinkChecker::~LinkChecker()
 
 void LinkChecker::check()
 {
-    assert(!finnished_);
+    Q_ASSERT(!finnished_);
 
     KURL url = linkStatus()->absoluteUrl();
-    assert(url.isValid());
+    Q_ASSERT(url.isValid());
 
     t_job_ = KIO::get
                  (url, false, false);
@@ -76,7 +76,7 @@ void LinkChecker::slotTimeOut()
 {
     if(not finnished_ and not parsing_)
     {
-        assert(t_job_);
+        Q_ASSERT(t_job_);
 
         linkstatus_->setErrorOccurred(true);
         linkstatus_->setError("Timeout");
@@ -94,14 +94,14 @@ void LinkChecker::slotMimetype (KIO::Job* /*job*/, const QString &type)
 
     //kdDebug(23100) <<  "LinkChecker::slotMimetype:" << type << "-> " << linkstatus_->absoluteUrl().url() << endl;
 
-    assert(t_job_);
+    Q_ASSERT(t_job_);
 
     LinkStatus* ls = 0;
     if(redirection_)
         ls = linkStatus()->redirection();
     else
         ls = linkstatus_;
-    assert(ls);
+    Q_ASSERT(ls);
 
     ls->setMimeType(type);
     KURL url = ls->absoluteUrl();
@@ -151,14 +151,14 @@ void LinkChecker::slotData(KIO::Job* /*job*/, const QByteArray& data)
 
     //kdDebug(23100) <<  "LinkChecker::slotData -> " << linkstatus_->absoluteUrl().url()  << endl;
 
-    assert(t_job_);
+    Q_ASSERT(t_job_);
 
     LinkStatus* ls = 0;
     if(redirection_)
         ls = linkStatus()->redirection();
     else
         ls = linkstatus_;
-    assert(ls);
+    Q_ASSERT(ls);
 
     KURL url = ls->absoluteUrl();
 
@@ -166,9 +166,9 @@ void LinkChecker::slotData(KIO::Job* /*job*/, const QByteArray& data)
     {
         if(ls->onlyCheckHeader())
         {
-            assert(header_checked_ == false);
+            Q_ASSERT(header_checked_ == false);
             // the job should had been killed in slotMimetype
-            assert(url.protocol() == "http" || url.protocol() == "https");
+            Q_ASSERT(url.protocol() == "http" || url.protocol() == "https");
 
             // get the header and quit
             if(url.protocol() == "http" || url.protocol() == "https")
@@ -216,7 +216,7 @@ void LinkChecker::slotData(KIO::Job* /*job*/, const QByteArray& data)
 
             else
             {
-                assert(ls->mimeType() == "text/html");
+                Q_ASSERT(ls->mimeType() == "text/html");
                 doc_html_ += QString(data);
             }
         }
@@ -234,7 +234,7 @@ void LinkChecker::slotResult(KIO::Job* /*job*/)
 
     //kdDebug(23100) <<  "LinkChecker::slotResult -> " << linkstatus_->absoluteUrl().url()  << endl;
 
-    assert(t_job_);
+    Q_ASSERT(t_job_);
 
     if(t_job_->error() and t_job_->error() == KIO::ERR_USER_CANCELED)
     {
@@ -247,19 +247,19 @@ void LinkChecker::slotResult(KIO::Job* /*job*/)
         ls = linkStatus()->redirection();
     else
         ls = linkstatus_;
-    assert(ls);
+    Q_ASSERT(ls);
 
     if(!(!ls->onlyCheckHeader() or
             t_job_->error() or
             not header_checked_))
         kdWarning(23100) << ls->toString() << endl;
 
-    assert(not ls->onlyCheckHeader() or t_job_->error() or !header_checked_);
+    Q_ASSERT(not ls->onlyCheckHeader() or t_job_->error() or !header_checked_);
 
     if(ls->isErrorPage())
         kdWarning(23100) << "\n\n" << ls->toString() << endl << endl;
 
-    assert(not t_job_->isErrorPage());
+    Q_ASSERT(not t_job_->isErrorPage());
 
     if(t_job_->error())
     {
@@ -296,7 +296,7 @@ void LinkChecker::slotResult(KIO::Job* /*job*/)
                 check();
                 return;
             }
-            assert(header_checked_);
+            Q_ASSERT(header_checked_);
         }
 
         if(!doc_html_.isNull() && !doc_html_.isEmpty())
@@ -328,8 +328,8 @@ void LinkChecker::slotPermanentRedirection (KIO::Job* /*job*/, const KURL &fromU
 
     //kdDebug(23100) <<  "LinkChecker::slotPermanentRedirection -> " << linkstatus_->absoluteUrl().url() << endl;
 
-    assert(t_job_);
-    assert(linkstatus_->absoluteUrl().protocol() == "http" ||
+    Q_ASSERT(t_job_);
+    Q_ASSERT(linkstatus_->absoluteUrl().protocol() == "http" ||
            linkstatus_->absoluteUrl().protocol() == "https");
 
     redirection_ = true;
@@ -350,7 +350,7 @@ void LinkChecker::slotPermanentRedirection (KIO::Job* /*job*/, const KURL &fromU
     linkstatus_->redirection()->setOriginalUrl(toUrl.url());
 
     SearchManager* gp = dynamic_cast<SearchManager*>(parent());
-    assert(gp);
+    Q_ASSERT(gp);
 
     if(gp->localDomain(ls_red->absoluteUrl()))
         ls_red->setExternalDomainDepth(-1);
@@ -375,7 +375,7 @@ void LinkChecker::slotPermanentRedirection (KIO::Job* /*job*/, const KURL &fromU
 
 void LinkChecker::finnish()
 {
-    assert(!t_job_);
+    Q_ASSERT(!t_job_);
 
     if(!finnished_)
     {
@@ -384,7 +384,7 @@ void LinkChecker::finnish()
         finnished_ = true;
 
         if(redirection_)
-            assert(linkstatus_->checked());
+            Q_ASSERT(linkstatus_->checked());
         else
             linkstatus_->setChecked(true);
 
@@ -396,11 +396,11 @@ HttpResponseHeader LinkChecker::getHttpHeader(KIO::Job* /*job*/, bool remember_c
 {
     //kdDebug(23100) <<  "LinkChecker::getHttpHeader -> " << linkstatus_->absoluteUrl().url() << endl;
 
-    assert(!finnished_);
-    assert(t_job_);
+    Q_ASSERT(!finnished_);
+    Q_ASSERT(t_job_);
 
     QString header_string = t_job_->queryMetaData("HTTP-Headers");
-    //    assert(!header_string.isNull() && !header_string.isEmpty());
+    //    Q_ASSERT(!header_string.isNull() && !header_string.isEmpty());
     //kdDebug(23100) <<  header_string << endl;
     if(header_string.isNull() || header_string.isEmpty())
     {

@@ -82,7 +82,7 @@ int smallerUnsigned(int a, int b)
 /*
 void viewUrlInBrowser(KURL const& url, QWidget* parent, QString browser)
 {
-    assert(url.isValid());
+    Q_ASSERT(url.isValid());
 
 #ifdef Q_WS_WIN
 

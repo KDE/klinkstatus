@@ -18,12 +18,12 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include <cassert>
+
 
 
 inline int SearchManager::maximumCurrentConnections() const
 {
-  assert(maximum_current_connections_ != -1);
+  Q_ASSERT(maximum_current_connections_ != -1);
   return maximum_current_connections_;
 }
 
@@ -34,7 +34,7 @@ inline SearchManager::SearchMode const& SearchManager::searchMode() const
 
 inline int SearchManager::checkedLinks() const
 {
-  assert(checked_links_ > 0);
+  Q_ASSERT(checked_links_ > 0);
   return checked_links_;
 }
 
@@ -67,7 +67,7 @@ inline void SearchManager::setExternalDomainDepth(int depth)
 
 inline void SearchManager::setDomain(QString const& domain)
 {
-  assert(domain.find("http://") == -1);
+  Q_ASSERT(domain.find("http://") == -1);
   domain_ = domain;
   general_domain_ = generalDomain();
   checked_general_domain_ = true;

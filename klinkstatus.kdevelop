@@ -46,15 +46,15 @@
         <ccompiler>kdevgccoptions</ccompiler>
         <cxxcompiler>kdevgppoptions</cxxcompiler>
         <f77compiler>kdevg77options</f77compiler>
-        <cxxflags>-DKDE_NO_COMPAT -DQT_NO_COMPAT</cxxflags>
+        <cxxflags>-DKDE_NO_COMPAT -DQT_NO_COMPAT -DQT_FATAL_ASSERT</cxxflags>
         <topsourcedir>..</topsourcedir>
-        <cppflags/>
-        <ldflags/>
-        <ccompilerbinary/>
-        <cxxcompilerbinary/>
-        <f77compilerbinary/>
-        <cflags/>
-        <f77flags/>
+        <cppflags></cppflags>
+        <ldflags></ldflags>
+        <ccompilerbinary></ccompilerbinary>
+        <cxxcompilerbinary></cxxcompilerbinary>
+        <f77compilerbinary></f77compilerbinary>
+        <cflags></cflags>
+        <f77flags></f77flags>
         <envvars>
           <envvar value="kfilereplace kommander kimagemapeditor kxsldbg quanta lib" name="DO_NOT_COMPILE" />
         </envvars>
@@ -150,7 +150,7 @@
   </kdevdebugger>
   <kdevfilecreate>
     <filetypes>
-      <type icon="" ext="H" name="C++ Header" create="template" >
+      <type icon="" ext="H" create="template" name="C++ Header" >
         <descr/>
       </type>
     </filetypes>

@@ -83,7 +83,7 @@ void SessionWidget::newSearchManager()
     gestor_pesquisa_ = new SearchManager(KLSConfig::maxConnectionsNumber(),
                                          KLSConfig::timeOut(),
                                          this, "search_manager");
-    assert(gestor_pesquisa_);
+    Q_ASSERT(gestor_pesquisa_);
 
     connect(gestor_pesquisa_, SIGNAL(signalRootChecked(const LinkStatus *, LinkChecker *)),
             this, SLOT(slotRootChecked(const LinkStatus *, LinkChecker *)));
@@ -111,7 +111,7 @@ void SessionWidget::setUrl(KURL const& url)
 
 bool SessionWidget::isEmpty() const
 {
-    assert(table_linkstatus);
+    Q_ASSERT(table_linkstatus);
     return table_linkstatus->isEmpty();
 }
 
@@ -173,7 +173,7 @@ void SessionWidget::slotCheck()
     //textlabel_elapsed_time_value->setText("");
     textlabel_elapsed_time_value->setEnabled(true);
 
-    assert(!pushbutton_check->isEnabled()); // FIXME pushbutton_check sometimes doesn't show disable. Qt bug?
+    Q_ASSERT(!pushbutton_check->isEnabled()); // FIXME pushbutton_check sometimes doesn't show disable. Qt bug?
 
     table_linkstatus->removeLinhas();
 
@@ -232,7 +232,7 @@ void SessionWidget::slotCheck()
 
 void SessionWidget::slotCancel()
 {
-    assert(!ready_);
+    Q_ASSERT(!ready_);
     pushbutton_cancel->setEnabled(false);
     gestor_pesquisa_->cancelSearch();
 }
@@ -282,7 +282,7 @@ void SessionWidget::slotRootChecked(LinkStatus const* linkstatus, LinkChecker * 
 {
     slotSetTimeElapsed();
 
-    assert(textlabel_progressbar->text() == "Checking...");
+    Q_ASSERT(textlabel_progressbar->text() == "Checking...");
     progressbar_checker->setProgress(1);
 
     table_linkstatus->insereLinha(generateRowOfTableItems(linkstatus));
@@ -295,7 +295,7 @@ void SessionWidget::slotLinkChecked(LinkStatus const* linkstatus, LinkChecker * 
 {
     slotSetTimeElapsed();
 
-    assert(textlabel_progressbar->text() == "Checking...");
+    Q_ASSERT(textlabel_progressbar->text() == "Checking...");
     progressbar_checker->setProgress(progressbar_checker->progress() + 1);
 
     if(linkstatus->checked())
@@ -403,7 +403,7 @@ void SessionWidget::slotAddingLevelTotalSteps(uint steps)
 
 void SessionWidget::slotAddingLevelProgress()
 {
-    assert(textlabel_progressbar->text() == "Adding level...");
+    Q_ASSERT(textlabel_progressbar->text() == "Adding level...");
     progressbar_checker->setProgress(progressbar_checker->progress() + 1);
 }
 

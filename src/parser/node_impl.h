@@ -103,10 +103,10 @@ inline QString const& NodeLink::linkLabel() const
 
 inline QString NodeLink::mailto() const
 {
-    assert(linktype_ == Node::mailto);
+    Q_ASSERT(linktype_ == Node::mailto);
 
     int inicio = findWord(attribute_href_, "MAILTO:");
-    assert(inicio != -1);
+    Q_ASSERT(inicio != -1);
 
     return attribute_href_.mid(inicio);
 }
@@ -159,7 +159,7 @@ inline bool NodeMETA::isLink() const
     if(upperCase(attribute_http_equiv_) == "REFRESH" &&
             findWord(content(), "URL") != -1)
     {
-        // assert(findWord(content(), "URL") != -1); // not necessarily
+        // Q_ASSERT(findWord(content(), "URL") != -1); // not necessarily
         return true;
     }
     else

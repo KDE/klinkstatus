@@ -27,7 +27,7 @@
 HtmlParser::HtmlParser(QString const& documento)
         : document_(documento)
 {
-    assert(!documento.isEmpty());
+    Q_ASSERT(!documento.isEmpty());
 
     stripScriptContent();
     stripComments(); // after removing the script because comments in scripts have diferent sintaxe
@@ -51,7 +51,7 @@ bool HtmlParser::hasBaseUrl() const
 
 NodeBASE const& HtmlParser::baseUrl() const
 {
-    assert(hasBaseUrl());
+    Q_ASSERT(hasBaseUrl());
     return node_BASE;
 }
 

@@ -21,7 +21,7 @@
 #include "mstring.h"
 
 #include <iostream>
-#include <cassert>
+
 
 using namespace std;
 
@@ -134,7 +134,7 @@ int nextCharDifferentThan(QChar c, QString const& s, uint i)
 
 vector<QString> tokenize(QString s)
 {
-    assert(!s.isEmpty());
+    Q_ASSERT(!s.isEmpty());
     vector<QString> v;
 
     while(true)

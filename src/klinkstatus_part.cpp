@@ -150,7 +150,7 @@ void KLinkStatusPart::slotClose()
     tabwidget_->closeSession();
 
     if(tabwidget_->count() > 1)
-        assert(action_close_tab_->isEnabled());
+        Q_ASSERT(action_close_tab_->isEnabled());
     else
         action_close_tab_->setEnabled(false);
 }

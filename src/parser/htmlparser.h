@@ -24,7 +24,7 @@
 #include <qstring.h>
 
 #include <vector>
-#include <cassert>
+
 
 #include "mstring.h"
 #include "node.h"

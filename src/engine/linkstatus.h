@@ -32,7 +32,7 @@
 #include <qobject.h>
 #include <qvaluevector.h>
 
-#include <cassert>
+
 #include <vector>
 #include <iostream>
 

@@ -58,7 +58,7 @@ void LinkStatus::reset()
     checked_ = false;
     only_check_header_ = true;
     malformed_ = false;
-    assert(!node_);
+    Q_ASSERT(!node_);
     has_base_URI_ = false;
     label_ = "";
     absolute_url_ = "";
@@ -85,7 +85,7 @@ void LinkStatus::reset()
             redirection_ = 0;
         }
     }
-    assert(!parent_);
+    Q_ASSERT(!parent_);
     base_URI_ = "";
 }
 
@@ -95,10 +95,10 @@ QString const LinkStatus::toString() const
 
     if(!is_root_)
     {
-        assert(parent_);
+        Q_ASSERT(parent_);
         aux += ("Parent: " + parent()->absoluteUrl().prettyURL() + "\n");
     }
-    assert(!original_url_.isNull());
+    Q_ASSERT(!original_url_.isNull());
 
     aux += ("URL: " + absoluteUrl().prettyURL() + "\n");
     aux += ("Original URL: " + originalUrl() + "\n");
@@ -122,7 +122,7 @@ LinkStatus* LinkStatus::lastRedirection(LinkStatus* ls)
 
 void LinkStatus::loadNode()
 {
-    assert(node_);
+    Q_ASSERT(node_);
 
     setOriginalUrl(node_->url());
     setLabel(node_->linkLabel());

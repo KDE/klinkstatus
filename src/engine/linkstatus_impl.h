@@ -62,7 +62,7 @@ inline void LinkStatus::setDepth(uint depth)
 
 inline void LinkStatus::setParent(LinkStatus* parent)
 {
-    assert(parent);
+    Q_ASSERT(parent);
 
     parent_ = parent;
     addReferrer(parent->absoluteUrl());
@@ -85,7 +85,7 @@ inline void LinkStatus::setLabel(QString const& label)
 
 inline void LinkStatus::setDocHtml(QString const& doc_html)
 {
-    assert(!doc_html.isEmpty());
+    Q_ASSERT(!doc_html.isEmpty());
     doc_html_ = doc_html;
 }
 
@@ -96,13 +96,13 @@ inline void LinkStatus::setHttpHeader(HttpResponseHeader const& cabecalho_http)
 
 inline void LinkStatus::setStatus(QString const& status)
 {
-    assert(!status.isEmpty());
+    Q_ASSERT(!status.isEmpty());
     status_ = status;
 }
 
 inline void LinkStatus::setError(QString const& error)
 {
-    assert(!error.isEmpty());
+    Q_ASSERT(!error.isEmpty());
     error_ = error;
 }
 
@@ -119,8 +119,8 @@ inline void LinkStatus::setIsRoot(bool flag)
 
 inline void LinkStatus::setRedirection(LinkStatus* redirection)
 {
-    assert(redirection != NULL);
-    assert(isRedirection());
+    Q_ASSERT(redirection != NULL);
+    Q_ASSERT(isRedirection());
     redirection_ = redirection;
 }
 
@@ -136,7 +136,7 @@ inline void LinkStatus::addChildNode(Node* node)
 
 inline void LinkStatus::reserveMemoryForChildrenNodes(int n)
 {
-    assert(n > 0);
+    Q_ASSERT(n > 0);
     children_nodes_.reserve(n);
 }
 
@@ -147,7 +147,7 @@ inline void LinkStatus::setChecked(bool flag)
 
 inline void LinkStatus::setExternalDomainDepth(int p)
 {
-    assert(p >= -1);
+    Q_ASSERT(p >= -1);
     external_domain_depth_ = p;
 }
 
@@ -170,7 +170,7 @@ inline void LinkStatus::setBaseURI(KURL const& base_url)
         << "base url resolved: " << base_url.prettyURL() << endl;
     }
 
-    assert(base_url.isValid());
+    Q_ASSERT(base_url.isValid());
     has_base_URI_ = true;
     base_URI_ = base_url;
 }
@@ -182,7 +182,7 @@ inline void LinkStatus::setIgnored(bool flag)
 
 inline void LinkStatus::setMimeType(QString const& mimetype)
 {
-    assert(!mimetype.isNull() and !mimetype.isEmpty());
+    Q_ASSERT(!mimetype.isNull() and !mimetype.isEmpty());
     mimetype_ = mimetype;
 }
 
@@ -198,7 +198,7 @@ inline void LinkStatus::setIsLocalRestrict(bool flag)
 
 inline void LinkStatus::addReferrer(KURL const& url)
 {
-    assert(url.isValid());
+    Q_ASSERT(url.isValid());
     
     referrers_.push_back(url);
 }
@@ -304,7 +304,7 @@ inline LinkStatus* LinkStatus::redirection() const
 
 inline Node* LinkStatus::node() const
 {
-    //assert(node_);
+    //Q_ASSERT(node_);
     return node_;
 }
 
@@ -335,7 +335,7 @@ inline bool LinkStatus::hasBaseURI() const
 
 inline KURL const& LinkStatus::baseURI() const
 {
-    assert(hasBaseURI());
+    Q_ASSERT(hasBaseURI());
     return base_URI_;
 }
 
@@ -346,7 +346,7 @@ inline bool LinkStatus::ignored() const
 
 inline QString LinkStatus::mimeType() const
 {
-    assert(!mimetype_.isNull());
+    Q_ASSERT(!mimetype_.isNull());
     return mimetype_;
 }
 

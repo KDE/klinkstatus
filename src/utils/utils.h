@@ -25,7 +25,7 @@
 #include <qstring.h>
 
 //#include <string>
-#include <cassert>
+
 
 using namespace std;
 

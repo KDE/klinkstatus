@@ -21,7 +21,7 @@
 #include "http.h"
 #include "mstring.h"
 
-#include <cassert>
+
 #include <iostream>
 
 
@@ -31,12 +31,12 @@ void HttpResponseHeader::parseLocation()
   QString cabecalho(toString());
 
   int location = findWord(cabecalho, "Location: ");  
-  assert(location != -1);
+  Q_ASSERT(location != -1);
 
   int fim_de_linha_1 = cabecalho.find('\n', location);
   int fim_de_linha_2 = cabecalho.find('\r', location);
 
-  assert(fim_de_linha_1 != -1 || fim_de_linha_2 != -1);
+  Q_ASSERT(fim_de_linha_1 != -1 || fim_de_linha_2 != -1);
 
   int fim_de_linha;
 

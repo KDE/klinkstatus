@@ -135,8 +135,8 @@ bool existUrl(KURL const& url, vector<LinkStatus*> const& v)
 // FIXME - Rename this function to sameDomain
 bool equalHost(QString const& host1, QString const& host2, bool restrict)
 {
-    //assert(!host1.isEmpty());
-    //assert(!host2.isEmpty()); // this fails if href="javascript:......."
+    //Q_ASSERT(!host1.isEmpty());
+    //Q_ASSERT(!host2.isEmpty()); // this fails if href="javascript:......."
     //if(host2.isEmpty())
     //return false;
 

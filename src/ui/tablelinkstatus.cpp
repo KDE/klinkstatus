@@ -38,7 +38,6 @@
 #include <dcopclient.h>
 #include <dcopref.h>
 
-#include <cassert>
 #include <iostream>
 
 
@@ -78,7 +77,7 @@ TableLinkstatus::~TableLinkstatus()
 
 void TableLinkstatus::setColunas(vector<QString> const& columns)
 {
-    assert(columns.size() != 0);
+    Q_ASSERT(columns.size() != 0);
 
     removeColunas();
     setNumCols(columns.size());
@@ -88,16 +87,16 @@ void TableLinkstatus::setColunas(vector<QString> const& columns)
     {
         if(i == 0)
         {
-            assert(columns[i] == i18n("Status") && col_status_ == 1);
+            Q_ASSERT(columns[i] == i18n("Status") && col_status_ == 1);
             setColumnWidth(i, STATUS_COLUMN_WIDTH);
         }
         else if(i == 1)
         {
-            assert(columns[i] == i18n("Label") && col_label_ == 2);
+            Q_ASSERT(columns[i] == i18n("Label") && col_label_ == 2);
             setColumnWidth(i, width() / 3);
         }
         else if(i == 2)
-            assert(columns[i] == i18n("URL") && col_url_ == 3);
+            Q_ASSERT(columns[i] == i18n("URL") && col_url_ == 3);
 
         horizontal_header->setLabel(i, i18n(columns[i]));
     }
@@ -108,14 +107,14 @@ void TableLinkstatus::setColunas(vector<QString> const& columns)
 
 void TableLinkstatus::insereLinha(vector<TableItem*> items)
 {
-    assert(items.size() == (uint)numCols());
+    Q_ASSERT(items.size() == (uint)numCols());
 
     setNumRows(numRows() + 1);
     int row = numRows() - 1;
 
     for(vector<TableItem*>::size_type i = 0; i != items.size(); ++i)
     {
-        assert(items[i]);
+        Q_ASSERT(items[i]);
 
         int col = items[i]->columnIndex() - 1;
         setItem(row, col, items[i]);
@@ -138,7 +137,7 @@ void TableLinkstatus::removeLinhas()
 
     removeRows(linhas);
 
-    assert(numRows() == 0);
+    Q_ASSERT(numRows() == 0);
 }
 
 void TableLinkstatus::removeColunas()
@@ -149,7 +148,7 @@ void TableLinkstatus::removeColunas()
 
     removeColumns(columns);
 
-    assert(numCols() == 0);
+    Q_ASSERT(numCols() == 0);
 }
 
 void TableLinkstatus::mostraPorStatusCode(int status_code)
@@ -181,7 +180,7 @@ void TableLinkstatus::ensureCellVisible(int row, int col)
 bool TableLinkstatus::textoCabeNaCelula(int row, int col) const
 {
     QTableItem* itm(myItem(row, col));
-    assert(itm);
+    Q_ASSERT(itm);
 
     QSize size_hint(itm->sizeHint());
     int visible_width = 0;
@@ -205,7 +204,7 @@ bool TableLinkstatus::isEmpty() const
 TableItem* TableLinkstatus::myItem(int row, int col) const
 {
     TableItem* _item = dynamic_cast<TableItem*> (QTable::item(row, col));
-    //assert(_item);
+    //Q_ASSERT(_item);
     return _item;
 }
 
@@ -313,7 +312,7 @@ void TableLinkstatus::slotViewParentUrlInBrowser()
     else
     {
         LinkStatus const* ls_parent = _item->linkStatus()->parent();
-        assert(ls_parent);
+        Q_ASSERT(ls_parent);
 
         KURL url = ls_parent->absoluteUrl();
 
@@ -336,8 +335,8 @@ TableItem::TableItem(QTable* table, EditType et,
         : QTableItem(table, et, ""), ls_((LinkStatus*)linkstatus),
         column_index_(column_index), alignment_(alignment)
 {
-    assert(ls_);
-    assert(column_index_ > 0);
+    Q_ASSERT(ls_);
+    Q_ASSERT(column_index_ > 0);
 }
 
 TableItem::~TableItem()
@@ -345,14 +344,14 @@ TableItem::~TableItem()
 
 void TableItem::setColumnIndex(int i)
 {
-    assert(i > 0 && i <= table()->numCols());
+    Q_ASSERT(i > 0 && i <= table()->numCols());
 
     column_index_ = i;
 }
 
 int TableItem::columnIndex() const
 {
-    assert(column_index_ <= table()->numCols());
+    Q_ASSERT(column_index_ <= table()->numCols());
 
     return column_index_;
 }
@@ -396,7 +395,7 @@ QColor const& TableItem::textStatusColor() const
             kdDebug(23100) <<  linkStatus()->toString() << endl;
             kdDebug(23100) <<  linkStatus()->httpHeader().toString() << endl;
         }
-        //assert(status_code[0] != '0');
+        //Q_ASSERT(status_code[0] != '0');
 
         if(status_code[0] == '5')
             return darkMagenta;
@@ -524,7 +523,7 @@ void TableItemStatus::setText()
                     kdDebug(23100) <<  linkStatus()->docHtml() << endl;
                 }
         */
-        //assert(linkStatus()->httpHeader().statusCode() != 0); //<------------------------------------------------------------
+        //Q_ASSERT(linkStatus()->httpHeader().statusCode() != 0); //<------------------------------------------------------------
         //QTableItem::setText( QString::number(linkStatus()->httpHeader().statusCode()) );
         QTableItem::setText( linkStatus()->status() );
     }

@@ -58,7 +58,7 @@ bool TabWidgetSession::emptySessionsExist() const
 
     for(int i = 0; i != count(); ++i)
     {
-		assert(tabs_[i]);
+		Q_ASSERT(tabs_[i]);
         if(tabs_[i]->isEmpty() and not tabs_[i]->getSearchManager()->searching())
             return true;
     }
@@ -67,8 +67,8 @@ bool TabWidgetSession::emptySessionsExist() const
 
 SessionWidget* TabWidgetSession::getEmptySession() const
 {
-    assert(emptySessionsExist());
-    assert(count() != 0);
+    Q_ASSERT(emptySessionsExist());
+    Q_ASSERT(count() != 0);
 
     for(uint i = 0; i != tabs_.size(); ++i)
     {
@@ -87,7 +87,7 @@ void TabWidgetSession::newSession()
 
     insertTab(session_widget, QString("Session") + QString::number(count() + 1));
     tabs_.insert(count() - 1, session_widget);
-	assert(tabs_[count() - 1]);
+	Q_ASSERT(tabs_[count() - 1]);
     setCurrentPage(count() - 1);
 }
 
