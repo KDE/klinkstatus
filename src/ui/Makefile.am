@@ -6,6 +6,5 @@ libui_la_LDFLAGS = $(all_libraries)
 libui_la_LIBADD = $(top_builddir)/klinkstatus/src/cfg/libcfg.la
 noinst_LTLIBRARIES =  libui.la
 libui_la_SOURCES = celltooltip.cpp sessionwidgetbase.ui sessionwidget.cpp \
-		tablelinkstatus.cpp tabwidgetsession.cpp klshistorycombo.cpp resultview.cpp treeview.cpp \
-	plot2dskeleton.cpp plot2dcanvas.cpp
+		tablelinkstatus.cpp tabwidgetsession.cpp klshistorycombo.cpp resultview.cpp treeview.cpp
 SUBDIRS =  settings
