@@ -44,7 +44,7 @@ int main(int argc, char *argv[])
 {
     KAboutData about("klinkstatus", I18N_NOOP("KLinkStatus"), version, description,
                      KAboutData::License_GPL_V2, "(C) 2004 Paulo Moura Guedes", 0, 0, "moura@kdewebdev.org");
-/*
+
     about.addAuthor("Paulo Moura Guedes", 0, "moura@kdewebdev.org");
 
     about.addCredit("Manuel Menezes de Sequeira", 0, 0, "http://home.iscte.pt/~mms/");
@@ -55,7 +55,8 @@ int main(int argc, char *argv[])
     about.addCredit("Michal Rudolf", 0, "mrudolf@kdewebdev.org");
     about.addCredit("Mathieu Kooiman", 0, " quanta@map-is.nl");
 	about.addCredit("Jens Herden", 0, "jens@kdewebdev.org");
-*/
+	about.addCredit("Helge Hielscher", 0, "hhielscher@unternehmen.com");
+
     KCmdLineArgs::init(argc, argv, &about);
     KCmdLineArgs::addCmdLineOptions( options );
 
