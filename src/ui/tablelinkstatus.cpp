@@ -651,8 +651,9 @@ void TableItemStatus::setPixmap()
         }
         else if(linkStatus()->error() == "Malformed")
         {
+            //QTableItem::setPixmap(SmallIcon("bug"));
             locate("data",
-                   "/usr/share/apps/klinkstatuspart/icons/crystalsvg/16x16/actions/bug.png"));
+                   "/usr/share/apps/klinkstatuspart/icons/crystalsvg/16x16/actions/bug.png");
         }
         else
         {

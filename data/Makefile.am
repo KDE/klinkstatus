@@ -1,3 +1,3 @@
 SUBDIRS = icons
 
-klinkstatusicondir = $(kde_datadir)/klinkstatuspart/icons
+klinkstatusicondir = $(kde_datadir)/klinkstatus/icons
