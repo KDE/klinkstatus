@@ -221,7 +221,7 @@ void TableLinkstatus::loadContextTableMenu()
     context_table_menu_.insertItem(SmallIconSet("fileopen"), i18n("Open URL"),
                                    this, SLOT(slotViewUrlInBrowser()));
 
-    context_table_menu_.insertItem(SmallIconSet("fileopen"), i18n("Open Parent URL"),
+    context_table_menu_.insertItem(SmallIconSet("fileopen"), i18n("Open Referrer URL"),
                                    this, SLOT(slotViewParentUrlInBrowser()));
 
     context_table_menu_.insertSeparator();
@@ -229,7 +229,7 @@ void TableLinkstatus::loadContextTableMenu()
     context_table_menu_.insertItem(SmallIconSet("editcopy"), i18n("Copy URL"),
                                    this, SLOT(slotCopyUrlToClipboard()));
 
-    context_table_menu_.insertItem(SmallIconSet("editcopy"), i18n("Copy Parent URL"),
+    context_table_menu_.insertItem(SmallIconSet("editcopy"), i18n("Copy Referrer URL"),
                                    this, SLOT(slotCopyParentUrlToClipboard()));
 
     context_table_menu_.insertItem(SmallIconSet("editcopy"), i18n("Copy cell text"),
