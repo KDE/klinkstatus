@@ -48,12 +48,12 @@ int findChar(QString const& s, QChar letra, uint a_partir_do_indice)
 /**
   The string palavra, must not have any spaces.
 */
-int findSeparableWord(QString const& s_, QString const& palavra)
+int findSeparableWord(QString const& s_, QString const& palavra, uint a_partir_do_indice)
 {
     bool encontrou = true;
     QString s(s_);
     uint indice_palavra = 0;
-    int indice = 0;
+    int indice = a_partir_do_indice;
 
     do
     {

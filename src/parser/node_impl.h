@@ -130,7 +130,7 @@ inline NodeA::NodeA(QString const& content)
 
 inline QString const& NodeA::attributeNAME() const
 {
-    return attribute_name_;   
+    return attribute_name_;
 }
 
 inline void NodeA::parse()
@@ -326,4 +326,57 @@ inline NodeBASE::NodeBASE(QString const& content)
 inline bool NodeBASE::isLink() const
 {
     return false;
+}
+
+// class NodeTITLE________________________________________
+
+inline NodeTITLE::NodeTITLE()
+        : Node()
+{
+    element_ = TITLE;
+    parse();
+}
+
+inline NodeTITLE::NodeTITLE(QString const& content)
+        : Node(content)
+{
+    element_ = TITLE;
+    parse();
+}
+
+inline QString const& NodeTITLE::url() const
+{
+    return QString::null;
+}
+
+inline QString const& NodeTITLE::linkLabel() const
+{
+    return QString::null;
+}
+
+inline void NodeTITLE::parse()
+{
+    parseAttributeTITLE();
+}
+
+inline bool NodeTITLE::isLink() const
+{
+    return false;   
+}
+
+inline QString const& NodeTITLE::attributeTITLE() const
+{
+    return attribute_title_;   
+}
+
+inline void NodeTITLE::parseAttributeTITLE()
+{
+    kdDebug(23100) << "Content: " << content_ << endl;
+     
+    attribute_title_ = content_;
+    attribute_title_.replace("<TITLE>", "", false);
+    attribute_title_.replace("</TITLE>", "", false);
+    attribute_title_.stripWhiteSpace();
+    
+    kdDebug(23100) << "TITLE: " << attribute_title_ << endl;
 }

@@ -316,6 +316,8 @@ void LinkChecker::slotResult(KIO::Job* /*job*/)
 
             if(parser.hasBaseUrl())
                 ls->setBaseURI(KURL(parser.baseUrl().url()));
+            if(parser.hasTitle())
+                ls->setHtmlDocTitle(parser.title().attributeTITLE());
             ls->setChildrenNodes(parser.nodes());
             parsing_ = false;
         }

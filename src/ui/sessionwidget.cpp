@@ -227,7 +227,6 @@ void SessionWidget::slotCheck()
     combobox_url->setCurrentText(url.prettyURL());
     gestor_pesquisa_->startSearch(url);
     slotSetTimeElapsed();
-    emit signalCheckUrl(gestor_pesquisa_->linkStatusRoot());
 }
 
 void SessionWidget::slotCancel()
@@ -281,6 +280,7 @@ bool SessionWidget::validFields()
 void SessionWidget::slotRootChecked(LinkStatus const* linkstatus, LinkChecker * anal)
 {
     slotSetTimeElapsed();
+    emit signalUpdateTabLabel(gestor_pesquisa_->linkStatusRoot());
 
     Q_ASSERT(textlabel_progressbar->text() == "Checking...");
     progressbar_checker->setProgress(1);

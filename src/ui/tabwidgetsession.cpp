@@ -58,7 +58,7 @@ bool TabWidgetSession::emptySessionsExist() const
 
     for(int i = 0; i != count(); ++i)
     {
-		Q_ASSERT(tabs_[i]);
+        Q_ASSERT(tabs_[i]);
         if(tabs_[i]->isEmpty() and not tabs_[i]->getSearchManager()->searching())
             return true;
     }
@@ -75,19 +75,19 @@ SessionWidget* TabWidgetSession::getEmptySession() const
         if(tabs_[i]->isEmpty())
             return tabs_[i];
     }
-	return 0;
+    return 0;
 }
 
 void TabWidgetSession::newSession()
 {
     // TODO: settings: number of connections, timeout
     SessionWidget* session_widget = newSessionWidget();
-    connect(session_widget, SIGNAL(signalCheckUrl(const LinkStatus * )),
+    connect(session_widget, SIGNAL(signalUpdateTabLabel(const LinkStatus * )),
             this, SLOT(updateTabLabel(const LinkStatus * )));
 
     insertTab(session_widget, QString("Session") + QString::number(count() + 1));
     tabs_.insert(count() - 1, session_widget);
-	Q_ASSERT(tabs_[count() - 1]);
+    Q_ASSERT(tabs_[count() - 1]);
     setCurrentPage(count() - 1);
 }
 
@@ -119,8 +119,13 @@ SessionWidget* TabWidgetSession::newSessionWidget()
 
 void TabWidgetSession::updateTabLabel(LinkStatus const* linkstatus)
 {
-    KURL url = linkstatus->absoluteUrl();
-    changeTab(currentPage(), url.prettyURL());
+    if(linkstatus->hasHtmlDocTitle())
+        changeTab(currentPage(), linkstatus->htmlDocTitle());
+    else
+    {
+        KURL url = linkstatus->absoluteUrl();
+        changeTab(currentPage(), url.prettyURL());
+    }
 }
 
 void TabWidgetSession::setUrl(KURL const& url)

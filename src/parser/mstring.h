@@ -55,7 +55,7 @@ int findChar(QString const& s, QChar letra, uint a_partir_do_indice = 0);
    findWord("<\na href=""></a>", "<a") => -1
    findSeparableWord("<\na href=""></a>", "<a") => 3
 */
-int findSeparableWord(QString const& s, QString const& palavra);
+int findSeparableWord(QString const& s, QString const& palavra, uint a_partir_do_indice = 0);
 
 /**
    Space means Unicode characters with decimal values 

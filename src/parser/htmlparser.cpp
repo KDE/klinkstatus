@@ -41,18 +41,31 @@ HtmlParser::HtmlParser(QString const& documento)
     parseNodesOfTypeFRAME();
     parseNodesOfTypeIFRAME();
     parseNodesOfTypeBASE();
+    parseNodesOfTypeTITLE();
 }
 
 bool HtmlParser::hasBaseUrl() const
 {
-    return (node_BASE.element() == Node::BASE &&
-            !node_BASE.url().isEmpty());
+    return (node_BASE_.element() == Node::BASE &&
+            !node_BASE_.url().isEmpty());
 }
 
 NodeBASE const& HtmlParser::baseUrl() const
 {
     Q_ASSERT(hasBaseUrl());
-    return node_BASE;
+    return node_BASE_;
+}
+
+bool HtmlParser::hasTitle() const
+{
+    return (node_TITLE_.element() == Node::TITLE &&
+            !node_TITLE_.attributeTITLE().isEmpty());
+}
+
+NodeTITLE const& HtmlParser::title() const
+{
+    Q_ASSERT(hasTitle());
+    return node_TITLE_;
 }
 
 vector<QString> const& HtmlParser::parseNodesOfType(QString const& tipo)
@@ -206,7 +219,7 @@ void HtmlParser::parseNodesOfTypeBASE()
     int inicio = 0, fim = 0;
 
     inicio = findSeparableWord(doc, "<BASE");
-    if(inicio == -1 || (doc[inicio] != ' ' && doc[inicio] != '\n') )
+    if(inicio == -1 or not doc[inicio].isSpace())
         return;
 
     fim = doc.find(">", inicio);
@@ -214,7 +227,27 @@ void HtmlParser::parseNodesOfTypeBASE()
         return;
 
     node = doc.mid(inicio, fim-inicio);
-    node_BASE.setNode(node);
+    node_BASE_.setNode(node);
+}
+
+void HtmlParser::parseNodesOfTypeTITLE()
+{
+    QString node;
+    QString doc = document_;
+    int inicio = 0, fim = 0;
+
+    inicio = findSeparableWord(doc, "<TITLE>");
+    if(inicio == -1)
+        return;
+
+    fim = findSeparableWord(doc, "</TITLE>", inicio);
+    if(fim == -1)
+        return;
+    
+    node = doc.mid(inicio, fim-inicio);
+    kdDebug(23100) << "HtmlParser::parseNodesOfTypeTITLE: " << node << endl;
+
+    node_TITLE_.setNode(node);
 }
 
 
@@ -339,7 +372,7 @@ void HtmlParser::mostra() const
     kdDebug(23100) << "____________________________________________________________________" << endl;
 
     kdDebug(23100) << "\nBASE:\n\n";
-    kdDebug(23100) << node_BASE.url() << endl;
+    kdDebug(23100) << node_BASE_.url() << endl;
 
     kdDebug(23100) << "____________________________________________________________________" << endl;
 

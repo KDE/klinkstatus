@@ -74,7 +74,9 @@ public:
     void setOnlyCheckHeader(bool flag);
     void setMalformed(bool flag = true);
     void setHasBaseURI(bool flag = true);
+    void setHasHtmlDocTitle(bool flag = true);
     void setBaseURI(KURL const& base_url);
+    void setHtmlDocTitle(QString const& title);
     void setIgnored(bool flag = true);
     void setMimeType(QString const& mimetype);
     void setIsErrorPage(bool flag);
@@ -106,7 +108,9 @@ public:
     bool onlyCheckHeader() const;
     bool malformed() const;
     bool hasBaseURI() const;
+    bool hasHtmlDocTitle() const;
     KURL const& baseURI() const;
+    QString const& htmlDocTitle() const;
     bool ignored() const;
     bool redirectionExists(KURL const& url) const; // to avoid cyclic links
     QString mimeType() const;
@@ -145,7 +149,9 @@ private:
     bool malformed_;
     Node* node_;
     bool has_base_URI_;
+    bool has_html_doc_title_;
     KURL base_URI_;
+    QString html_doc_title_;
     bool ignored_;
     QString mimetype_;
     bool is_error_page_;

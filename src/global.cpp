@@ -62,6 +62,21 @@ QCString Global::quantaDCOPAppId()
         kdError(23100) << "You didn't check if Global::isQuantaAvailableViaDCOP!" << endl;
         return "";
     }
+
+    /*
+        else
+        {
+            QCStringList apps = client->registeredApplications();
+     
+            for(QCStringList::ConstIterator it = apps.begin(); it != apps.end(); ++it)
+            {
+                if( (*it).contains("quanta-") )
+                    return (*it);
+            }
+            kdError(23100) << "You didn't check if Global::isQuantaAvailableViaDCOP!" << endl;
+            return "";
+        }
+    */
 }
 
 #include "global.moc"

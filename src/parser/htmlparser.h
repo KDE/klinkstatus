@@ -47,7 +47,9 @@ public:
 
   vector<Node*> const& nodes() const;
   bool hasBaseUrl() const;
+  bool hasTitle() const;
   NodeBASE const& baseUrl() const;
+  NodeTITLE const& title() const;
   static uint estimativaLinks(uint doc_size);
 
   // test:
@@ -64,6 +66,7 @@ private:
   void parseNodesOfTypeFRAME();
   void parseNodesOfTypeIFRAME();
   void parseNodesOfTypeBASE();
+  void parseNodesOfTypeTITLE();
 
   void stripComments();
   void stripScriptContent();
@@ -79,7 +82,8 @@ private:
 
   vector<QString> aux_;
   vector<Node*> nodes_;
-  NodeBASE node_BASE;
+  NodeBASE node_BASE_;
+  NodeTITLE node_TITLE_;
 
   QString document_;
   QString script_; // Fica aqui guardado (JavaScript, etc)

@@ -22,7 +22,7 @@ inline LinkStatus::LinkStatus()
         : depth_(-1), external_domain_depth_(-1), is_root_(false),
         error_occurred_(false), is_redirection_(false), parent_(0), checked_(false),
         only_check_header_(true), malformed_(false),
-        node_(0), has_base_URI_(false), ignored_(false),
+        node_(0), has_base_URI_(false), has_html_doc_title_(false), ignored_(false),
         mimetype_(""), is_error_page_(false)
 {}
 
@@ -30,7 +30,7 @@ inline LinkStatus::LinkStatus(KURL const& absolute_url)
         : depth_(-1), external_domain_depth_(-1), is_root_(false),
         error_occurred_(false), is_redirection_(false), parent_(0), checked_(false),
         only_check_header_(true), malformed_(false),
-        node_(0), has_base_URI_(false), ignored_(false),
+        node_(0), has_base_URI_(false), has_html_doc_title_(false), ignored_(false),
         mimetype_(""), is_error_page_(false)
 {
     setAbsoluteUrl(absolute_url);
@@ -40,7 +40,7 @@ inline LinkStatus::LinkStatus(Node* node, LinkStatus* parent)
         : depth_(-1), external_domain_depth_(-1), is_root_(false),
         error_occurred_(false), is_redirection_(false), parent_(0), checked_(false),
         only_check_header_(true), malformed_(false),
-        node_(node), has_base_URI_(false), ignored_(false),
+        node_(node), has_base_URI_(false), has_html_doc_title_(false), ignored_(false),
         mimetype_(""), is_error_page_(false)
 {
     loadNode();
@@ -52,7 +52,7 @@ inline LinkStatus::LinkStatus(Node* node, LinkStatus* parent)
 
 inline void LinkStatus::setRootUrl(KURL const& url)
 {
-    root_url_ = url;   
+    root_url_ = url;
 }
 
 inline void LinkStatus::setDepth(uint depth)
@@ -161,10 +161,16 @@ inline void LinkStatus::setHasBaseURI(bool flag)
     has_base_URI_ = flag;
 }
 
+inline void LinkStatus::setHasHtmlDocTitle(bool flag)
+{
+    has_html_doc_title_ = flag;
+}
+
 inline void LinkStatus::setBaseURI(KURL const& base_url)
 {
-    if(!base_url.isValid()) {
-        kdDebug(23100) <<  "base url not valid: " << endl
+    if(!base_url.isValid())
+    {
+        kdWarning(23100) <<  "base url not valid: " << endl
         << "parent: " << parent()->absoluteUrl().prettyURL() << endl
         << "url: " << absoluteUrl().prettyURL() << endl
         << "base url resolved: " << base_url.prettyURL() << endl;
@@ -173,6 +179,19 @@ inline void LinkStatus::setBaseURI(KURL const& base_url)
     Q_ASSERT(base_url.isValid());
     has_base_URI_ = true;
     base_URI_ = base_url;
+}
+
+inline void LinkStatus::setHtmlDocTitle(QString const& title)
+{
+    if(title.isNull() or title.isEmpty())
+    {
+        kdError(23100) << "HTML doc title is null or empty!" << endl
+        << toString() << endl;
+    }
+    Q_ASSERT(not title.isNull() and not title.isEmpty());
+
+    has_html_doc_title_ = true;
+    html_doc_title_ = title;
 }
 
 inline void LinkStatus::setIgnored(bool flag)
@@ -199,7 +218,7 @@ inline void LinkStatus::setIsLocalRestrict(bool flag)
 inline void LinkStatus::addReferrer(KURL const& url)
 {
     Q_ASSERT(url.isValid());
-    
+
     referrers_.push_back(url);
 }
 
@@ -208,7 +227,7 @@ inline void LinkStatus::addReferrer(KURL const& url)
 
 inline KURL const& LinkStatus::rootUrl() const
 {
-    return root_url_;   
+    return root_url_;
 }
 
 inline uint LinkStatus::depth() const
@@ -268,7 +287,8 @@ inline QString LinkStatus::status() const
     else if(absoluteUrl().protocol() != "http" &&
             absoluteUrl().protocol() != "https")
         return status_;
-    else {
+    else
+    {
         QString string_code = QString::number(httpHeader().statusCode());
         if(absoluteUrl().hasRef()) // ref URL
             return status_;
@@ -335,10 +355,21 @@ inline bool LinkStatus::hasBaseURI() const
     return has_base_URI_;
 }
 
+inline bool LinkStatus::hasHtmlDocTitle() const
+{
+    return has_html_doc_title_;
+}
+
 inline KURL const& LinkStatus::baseURI() const
 {
     Q_ASSERT(hasBaseURI());
     return base_URI_;
+}
+
+inline QString const& LinkStatus::htmlDocTitle() const
+{
+    Q_ASSERT(has_html_doc_title_);
+    return html_doc_title_;
 }
 
 inline bool LinkStatus::ignored() const
@@ -359,6 +390,6 @@ inline bool LinkStatus::isErrorPage() const
 
 inline QValueVector<KURL> const& LinkStatus::referrers() const
 {
-    return referrers_;   
+    return referrers_;
 }
 

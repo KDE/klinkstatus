@@ -14,7 +14,7 @@
     </keywords>
     <projectdirectory>.</projectdirectory>
     <absoluteprojectpath>false</absoluteprojectpath>
-    <description></description>
+    <description/>
     <ignoreparts/>
     <secondaryLanguages/>
   </general>
@@ -48,13 +48,13 @@
         <f77compiler>kdevg77options</f77compiler>
         <cxxflags>-DKDE_NO_COMPAT -DQT_NO_COMPAT -DQT_FATAL_ASSERT</cxxflags>
         <topsourcedir>..</topsourcedir>
-        <cppflags></cppflags>
-        <ldflags></ldflags>
-        <ccompilerbinary></ccompilerbinary>
-        <cxxcompilerbinary></cxxcompilerbinary>
-        <f77compilerbinary></f77compilerbinary>
-        <cflags></cflags>
-        <f77flags></f77flags>
+        <cppflags/>
+        <ldflags/>
+        <ccompilerbinary/>
+        <cxxcompilerbinary/>
+        <f77compilerbinary/>
+        <cflags/>
+        <f77flags/>
         <envvars>
           <envvar value="kfilereplace kommander kimagemapeditor kxsldbg quanta lib" name="DO_NOT_COMPILE" />
         </envvars>
@@ -133,11 +133,11 @@
   <kdevdebugger>
     <general>
       <dbgshell>libtool</dbgshell>
-      <programargs></programargs>
-      <gdbpath></gdbpath>
-      <configGdbScript></configGdbScript>
-      <runShellScript></runShellScript>
-      <runGdbScript></runGdbScript>
+      <programargs/>
+      <gdbpath/>
+      <configGdbScript/>
+      <runShellScript/>
+      <runGdbScript/>
       <breakonloadinglibs>true</breakonloadinglibs>
       <separatetty>false</separatetty>
       <floatingtoolbar>false</floatingtoolbar>
@@ -150,7 +150,7 @@
   </kdevdebugger>
   <kdevfilecreate>
     <filetypes>
-      <type icon="" ext="H" create="template" name="C++ Header" >
+      <type icon="" ext="H" name="C++ Header" create="template" >
         <descr/>
       </type>
     </filetypes>

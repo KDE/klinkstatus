@@ -55,7 +55,7 @@ public:
     SearchManager const* getSearchManager() const;
 
 signals:
-    void signalCheckUrl(const LinkStatus *);
+    void signalUpdateTabLabel(const LinkStatus *);
 
 private slots:
 

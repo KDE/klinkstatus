@@ -42,7 +42,8 @@ public:
         META,
         IMG,
         FRAME,
-        BASE
+        BASE,
+        TITLE
     };
     enum LinkType {
         href,
@@ -114,12 +115,12 @@ public:
     {}
     ;
     QString const& attributeNAME() const;
-    
+
     virtual void parse();
-    
+
 private:
     void parseAttributeNAME();
-    
+
 private:
     QString attribute_name_;
 };
@@ -225,6 +226,29 @@ public:
     ;
 
     virtual bool isLink() const;
+};
+
+class NodeTITLE: public Node
+{
+public:
+    NodeTITLE();
+    NodeTITLE(QString const& content);
+    ~NodeTITLE()
+    {}
+    ;
+
+    virtual QString const& url() const;
+    virtual QString const& linkLabel() const;
+    virtual void parse();
+    virtual bool isLink() const;
+    
+    QString const& attributeTITLE() const;
+
+private:
+    void parseAttributeTITLE();
+
+private:
+    QString attribute_title_;
 };
 
 
