@@ -458,9 +458,8 @@ void LinkChecker::checkRef(LinkStatus const* linkstatus_parent)
     //kdDebug(23100) << "linkstatus_parent: " << linkstatus_parent->absoluteUrl().url() << endl;
 
     vector<Node*> nodes = linkstatus_parent->childrenNodes();
-    QString ref = linkStatus()->originalUrl();
-    Q_ASSERT(ref.find("#") != -1);
-    QString name_ref = ref.mid(ref.find("#") + 1);
+    QString name_ref = linkStatus()->absoluteUrl().ref();
+    Q_ASSERT(not name_ref.isNull());
     //kdDebug(23100) << "name_ref: " << name_ref << endl;
 
     int count = 0;
