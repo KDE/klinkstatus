@@ -287,9 +287,6 @@
                                             <property name="text">
                                                 <string>&amp;Check</string>
                                             </property>
-                                            <property name="accel">
-                                                <string>Alt+C</string>
-                                            </property>
                                             <property name="toolTip" stdset="0">
                                                 <string>Click here to begin searching</string>
                                             </property>
@@ -303,9 +300,6 @@
                                             </property>
                                             <property name="text">
                                                 <string>&amp;Pause</string>
-                                            </property>
-                                            <property name="accel">
-                                                <string>Alt+P</string>
                                             </property>
                                             <property name="toolTip" stdset="0">
                                                 <string></string>
