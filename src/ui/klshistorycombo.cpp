@@ -10,7 +10,7 @@
 //
 //
 #include "klshistorycombo.h"
-#include "../klsconfig.h"
+#include "klsconfig.h"
 
 #include <kapplication.h>
 #include <kconfig.h>

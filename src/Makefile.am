@@ -1,5 +1,5 @@
 # set the include path for X, qt and KDE
-INCLUDES = -I$(top_builddir)/klinkstatus/src/ui $(all_includes)
+INCLUDES = -I$(top_builddir)/klinkstatus/src/ui -I$(top_srcdir)/klinkstatus/cfg $(all_includes)
 
 # these are the headers for your project
 
@@ -44,12 +44,11 @@ libklinkstatuspart_la_LIBADD = $(top_builddir)/klinkstatus/src/ui/libui.la $(top
 # this is where the desktop file will go 
 partdesktopdir   = $(kde_servicesdir)
 partdesktop_DATA = klinkstatus_part.desktop
-kde_kcfg_DATA = klinkstatus.kcfg
 
 # this is where the part's XML-GUI resource file goes
 partrcdir   = $(kde_datadir)/klinkstatuspart
 partrc_DATA = klinkstatus_part.rc
 noinst_HEADERS =  klinkstatus.h klinkstatus_part.h
 klinkstatus_SOURCES = klinkstatus.cpp main.cpp
-libklinkstatuspart_la_SOURCES = klinkstatus_part.cpp klsconfig.kcfgc
-SUBDIRS =  utils parser engine ui
+libklinkstatuspart_la_SOURCES = klinkstatus_part.cpp 
+SUBDIRS = cfg utils parser engine ui

@@ -24,7 +24,7 @@
 #include "../engine/linkstatus.h"
 #include "../engine/linkchecker.h"
 #include "../engine/searchmanager.h"
-#include "../klsconfig.h"
+#include "klsconfig.h"
 
 #include <qevent.h>
 #include <qlineedit.h>
