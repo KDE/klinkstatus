@@ -197,8 +197,8 @@ void TableLinkstatus::showAll()
     for(int i = 0; i != numRows(); ++i)
     {
         int row = i;
-        showRow(row);   
-    }       
+        showRow(row);
+    }
 }
 
 /*
@@ -208,7 +208,7 @@ void TableLinkstatus::mostraPorStatusCode(int status_code)
     {
         int row = i + 1;
         QTableItem* _item = myItem(row, col_status_);
-
+ 
         if(status_code != _item->text().toInt())
             hideRow(row);
     }
@@ -475,7 +475,7 @@ LinkStatus const* const TableItem::linkStatus() const
     Q_ASSERT(ls_);
     return ls_;
 }
-
+ 
 QColor const& TableItem::textStatusColor() const
 {
     if(linkStatus()->errorOccurred())
@@ -486,18 +486,18 @@ QColor const& TableItem::textStatusColor() const
         else
             return Qt::red;
     }
-
+ 
     else if(linkStatus()->absoluteUrl().hasRef())
         return Qt::blue;
-
+ 
     else if(linkStatus()->absoluteUrl().protocol() != "http" &&
             linkStatus()->absoluteUrl().protocol() != "https")
         return Qt::darkGreen;
-
+ 
     else
     {
         QString status_code(QString::number(linkStatus()->httpHeader().statusCode()));
-
+ 
         if(status_code[0] == '0')
         {
             kdWarning(23100) <<  "status code == 0: " << endl;
@@ -505,19 +505,19 @@ QColor const& TableItem::textStatusColor() const
             kdWarning(23100) <<  linkStatus()->httpHeader().toString() << endl;
         }
         //Q_ASSERT(status_code[0] != '0');
-
+ 
         if(status_code[0] == '5')
             return Qt::darkMagenta;
-
+ 
         else if(status_code[0] == '4')
             return Qt::red;
-
+ 
         else if(status_code[0] == '3')
             return Qt::blue;
-
+ 
         else if(status_code[0] == '2')
             return Qt::darkGreen;
-
+ 
         else
             return Qt::red;
     }
@@ -618,7 +618,9 @@ TableItemStatus::TableItemStatus(QTable* table, EditType et,
 
 void TableItemStatus::setText()
 {
-    if(linkStatus()->errorOccurred() || linkStatus()->status() == "OK")
+    if(linkStatus()->errorOccurred() or
+            linkStatus()->status() == "OK" or
+            linkStatus()->status() == "304")
     {
         QTableItem::setText("");
     }
@@ -640,6 +642,9 @@ void TableItemStatus::setText()
 
 void TableItemStatus::setPixmap()
 {
+    //kdDebug(23100) << locate("data", "klinkstatuspart/icons/304.png") << endl;
+    //kdDebug(23100) << locate("data", "klinkstatuspart/iconsbug.png") << endl;
+
     if(linkStatus()->errorOccurred())
     {
 
@@ -649,18 +654,24 @@ void TableItemStatus::setPixmap()
         }
         else if(linkStatus()->error() == "Malformed")
         {
-            QTableItem::setPixmap(locate("data", "khtml/icons/crystalsvg/16x16/actions/bug.png"));
+            QTableItem::setPixmap(
+                locate("data",
+                       "/usr/share/apps/klinkstatuspart/icons/crystalsvg/16x16/actions/bug.png"));
         }
         else
         {
             QTableItem::setPixmap(SmallIcon("no"));
         }
     }
+    else if(linkStatus()->status() == "304")
+        QTableItem::setPixmap(QPixmap(locate("data", "klinkstatuspart/icons/304.png")));
+
     else if(linkStatus()->status() == "OK")
         QTableItem::setPixmap(SmallIcon("ok"));
 }
 
-QString TableItemStatus::toolTip() const
+QString TableItemStatus::toolTip()
+const
 {
     if(linkStatus()->errorOccurred() ||
             linkStatus()->absoluteUrl().hasRef() ||

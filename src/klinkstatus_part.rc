@@ -9,6 +9,7 @@
     <Separator/>
   </Menu>
   <Menu name="view"><text>&amp;View</text>
+    <Separator/>
     <Action name="display_all_links"/>
     <Separator/>
     <Action name="display_good_links"/>
@@ -18,6 +19,7 @@
     <Separator/>
   </Menu>
   <Menu name="help"><text>&amp;Help</text>
+    <Separator/>
     <Action name="about_klinkstatus"/>
 	<Action name="report_bug"/>
   </Menu>

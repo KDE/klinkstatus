@@ -292,7 +292,7 @@ inline QString LinkStatus::status() const
         QString string_code = QString::number(httpHeader().statusCode());
         if(absoluteUrl().hasRef()) // ref URL
             return status_;
-        else if(string_code == "200" or string_code == "304")
+        else if(string_code == "200"/* or string_code == "304"*/)
             return "OK";
         else
             return string_code;

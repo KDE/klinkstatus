@@ -102,7 +102,7 @@ void KLinkStatusPart::initGUI()
     action_display_bad_links_->setEnabled(false);
 
     action_display_malformed_links_ = new KAction(i18n("Malformed links"),
-                                      "khtml/icons/crystalsvg/16x16/actions/bug.png",
+                                      "bug",
                                       0, this, SLOT(slotDisplayMalformedLinks()),
                                       actionCollection(), "display_malformed_links");
     action_display_malformed_links_->setEnabled(false);
