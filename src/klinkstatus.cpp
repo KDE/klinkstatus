@@ -123,10 +123,8 @@ void KLinkStatus::removeDuplicatedActions()
     QWidget* container = part_about_action->container(0); // call this only once or segfault
     part_about_action->unplug(container);
     part_report_action->unplug(container);
-    part_action_collection->remove
-    (part_about_action);
-    part_action_collection->remove
-    (part_report_action);
+    part_action_collection->remove(part_about_action);
+    part_action_collection->remove(part_report_action);
 }
 
 void KLinkStatus::saveProperties(KConfig* /*config*/)
@@ -167,7 +165,7 @@ void KLinkStatus::optionsShowStatusbar()
 void KLinkStatus::optionsConfigureKeys()
 {
     //KKeyDialog::configure(actionCollection());
-    
+
     KKeyDialog dlg( false, this );
     QPtrList<KXMLGUIClient> clients = guiFactory()->clients();
     for( QPtrListIterator<KXMLGUIClient> it( clients );

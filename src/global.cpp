@@ -71,7 +71,7 @@ bool Global::isQuantaAvailableViaDCOP()
 
     else
     {
-        self()->execCommandPS("ps h -o pid -C quanta -C quanta_be");
+        self()->execCommand("ps h -o pid -C quanta -C quanta_be");
         QStringList ps_list = QStringList::split("\n", self()->script_output_);
 
         for(uint i = 0; i != ps_list.size(); ++i)
@@ -104,7 +104,7 @@ QCString Global::quantaDCOPAppId()
 
     else
     {
-        self()->execCommandPS("ps h -o pid -C quanta -C quanta_be");
+        self()->execCommand("ps h -o pid -C quanta -C quanta_be");
         QStringList ps_list = QStringList::split("\n", self()->script_output_);
 
         for(uint i = 0; i != ps_list.size(); ++i)
@@ -135,7 +135,13 @@ KURL Global::urlWithQuantaPreviewPrefix(KURL const& url)
     return KURL(string_url_with_prefix);
 }
 
-void Global::execCommandPS(QString const& command)
+void Global::openQuanta(QStringList const& args)
+{
+    QString command(args.join(" "));
+    Global::execCommand("quanta " + command);    
+}
+
+void Global::execCommand(QString const& command)
 {
 
     //We create a KProcess that executes the "ps" *nix command to get the PIDs of the

@@ -265,17 +265,17 @@ void TableLinkstatus::slotPopupContextMenu(int r, int w, const QPoint& pos)
     if(table_item)
     {
         QValueVector<KURL> referrers = table_item->linkStatus()->referrers();
-        loadContextTableMenu(referrers);
+        loadContextTableMenu(referrers, table_item->linkStatus()->isRoot());
         context_table_menu_.popup(pos);
     }
 }
 
-void TableLinkstatus::loadContextTableMenu(QValueVector<KURL> const& referrers)
+void TableLinkstatus::loadContextTableMenu(QValueVector<KURL> const& referrers, bool is_root)
 {
     context_table_menu_.clear();
     sub_menu_->clear();
 
-    if(Global::isQuantaAvailableViaDCOP())
+    if(!is_root)
     {
         sub_menu_->insertItem(i18n("All"), this, SLOT(slotEditReferrersWithQuanta()));
         sub_menu_->insertSeparator();
@@ -341,14 +341,24 @@ void TableLinkstatus::slotEditReferrersWithQuanta()
     TableItem* _item = myItem(currentRow(), currentColumn());
     QValueVector<KURL> referrers = _item->linkStatus()->referrers();
 
-    for(uint i = 0; i != referrers.size(); ++i)
-        slotEditReferrerWithQuanta(referrers[i]);
+    if(Global::isQuantaAvailableViaDCOP())
+    {
+        for(uint i = 0; i != referrers.size(); ++i)
+            slotEditReferrerWithQuanta(referrers[i]);
+    }
+    else
+    {
+        QStringList list_urls;
+        
+        for(uint i = 0; i != referrers.size(); ++i)
+            list_urls.append(referrers[i].url());
+        
+        Global::openQuanta(list_urls);
+    }
 }
 
 void TableLinkstatus::slotEditReferrerWithQuanta(int id)
 {
-    Q_ASSERT(Global::isQuantaAvailableViaDCOP());
-
     int index = sub_menu_->indexOf(id);
 
     if(index == 0)
@@ -370,23 +380,23 @@ void TableLinkstatus::slotEditReferrerWithQuanta(int id)
 
 void TableLinkstatus::slotEditReferrerWithQuanta(KURL const& url)
 {
-    Q_ASSERT(Global::isQuantaAvailableViaDCOP());
-
-    TableItem* _item = myItem(currentRow(), currentColumn());
-    if(_item->linkStatus()->isRoot())
-    {
-        KMessageBox::sorry(this, i18n("Root URL."));
-        return;
-    }
     QString filePath = url.url();
-
-    DCOPRef quanta(Global::quantaDCOPAppId(),"WindowManagerIf");
-    bool success = quanta.send("openFile", filePath, 0, 0);
-
-    if(!success)
+    
+    if(Global::isQuantaAvailableViaDCOP())
     {
-        QString message = QString(i18n("<qt>File <b>%1</b> cannot be opened. Might be a DCOP problem.</qt>")).arg(filePath);
-        KMessageBox::error(parentWidget(), message);
+        DCOPRef quanta(Global::quantaDCOPAppId(),"WindowManagerIf");
+        bool success = quanta.send("openFile", filePath, 0, 0);
+
+        if(!success)
+        {
+            QString message = QString(i18n("<qt>File <b>%1</b> cannot be opened. Might be a DCOP problem.</qt>")).arg(filePath);
+            KMessageBox::error(parentWidget(), message);
+        }
+    }
+    else
+    {
+        QStringList args(url.url());
+        Global::openQuanta(args);
     }
 }
 

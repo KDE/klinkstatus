@@ -35,11 +35,12 @@ public:
     static QCString quantaDCOPAppId();
     static KURL urlWithQuantaPreviewPrefix(KURL const& url);
     
-    static void setLoopStarted(bool flag);
-    static void execCommandPS(QString const& command);
+    //static void setLoopStarted(bool flag);
+    static void openQuanta(QStringList const& args);
     
 private:
     Global(QObject *parent = 0, const char *name = 0);
+    static void execCommand(QString const& command);
 
 private slots:
     void slotGetScriptOutput(KProcess* process, char* buffer, int buflen);

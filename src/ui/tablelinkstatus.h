@@ -85,7 +85,7 @@ private slots:
     virtual void slotEditReferrerWithQuanta(KURL const& url);
     virtual void slotViewUrlInBrowser();
     virtual void slotViewParentUrlInBrowser();
-    virtual void loadContextTableMenu(QValueVector<KURL> const& referrers);
+    virtual void loadContextTableMenu(QValueVector<KURL> const& referrers, bool is_root = false);
 
 private:
 
