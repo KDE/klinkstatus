@@ -26,11 +26,12 @@
 #include "../engine/linkstatus.h"
 class SearchManager;
 class TableItem;
-class TableLinkstatus; // TODO remove this when possible
+//class TableLinkstatus; // TODO remove this when possible
 
 #include <qtimer.h>
 #include <qstring.h>
 class QStringList;
+class QListViewItem;
 
 #include <vector>
 
@@ -85,7 +86,7 @@ private slots:
     void slotSearchFinished();
     void slotSearchPaused();
     /** Shows the status of the clicked URL (row) for 5 seconds */
-    void showBottomStatusLabel(int row, int col, int button, QPoint const&  mousePos);
+    void showBottomStatusLabel(QListViewItem* item);
     void clearBottomStatusLabel();
     void slotSetTimeElapsed();
     void newSearchManager();
@@ -109,7 +110,7 @@ private:
     QTimer bottom_status_timer_;
     int max_simultaneous_connections_;
     int time_out_;
-    TableLinkstatus* table_linkstatus;
+    //TableLinkstatus* table_linkstatus;
     bool tree_display_; // tree/flat result display
 };
 

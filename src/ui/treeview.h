@@ -32,15 +32,10 @@ public:
     TreeView(QWidget *parent = 0, const char *name = 0,
              int column_index_status = 2,
              int column_index_label = 3,
-             int column_index_URL = 1);
+            int column_index_URL = 1);
     ~TreeView();
 
     virtual void setColumns(QStringList const& columns);
-
-    /* Insere uma nova entrada no fim da tabela */
-    virtual void insertResult(LinkStatus const* linkstatus)
-    {}
-    ;
     virtual void clear();
     void removeColunas();
     virtual void show(ResultView::Status const& status);
@@ -52,20 +47,16 @@ public:
     If tree_view, it follows always the last link inserted.
      */
     void ensureRowVisible(const QListViewItem * i, bool tree_display);
-    virtual void ensureCellVisible(int row, int col) {}
-    virtual bool textFitsInCell(int row, int col) const
-        {}
     virtual bool isEmpty() const;
 
-    //TreeViewItem* myItem(int row, int col) const;
-
+    TreeViewItem* myItem(QListViewItem* item) const;
+    
 protected:
     virtual void resizeEvent(QResizeEvent *e);
 
 private slots:
 
     void slotPopupContextMenu(QListViewItem *, const QPoint &, int);    
-    virtual void slotPopupContextMenu(int row, int col, const QPoint& pos) {};
     virtual void slotCopyUrlToClipboard() const;
     virtual void slotCopyParentUrlToClipboard() const;
     virtual void slotCopyCellTextToClipboard() const;
@@ -80,7 +71,6 @@ private:
     void resetColumns();
 
 private:
-    TreeViewItem* myItem(QListViewItem* item) const;
     int current_column_; // apparently it's impossible to know what is the current column
 };
 

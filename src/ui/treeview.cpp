@@ -34,7 +34,7 @@ TreeView::TreeView(QWidget *parent, const char *name,
                    int column_index_label,
                    int column_index_URL)
         : KListView(parent, name),
-        ResultView(/*column_index_status, column_index_label, column_index_URL*/),
+        ResultView(column_index_status, column_index_label, column_index_URL),
         current_column_(0)
 {
     setShowToolTips(true);

@@ -65,10 +65,10 @@ SessionWidget::SessionWidget(int max_simultaneous_connections, int time_out,
 
     connect(combobox_url, SIGNAL( textChanged ( const QString & ) ),
             this, SLOT( slotEnableCheckButton( const QString & ) ) );
-    /*
-    connect(table_linkstatus, SIGNAL( clicked ( int, int, int, const QPoint & ) ),
-            this, SLOT( showBottomStatusLabel( int, int, int, const QPoint & ) ) );
-    */
+    
+    connect(tree_view, SIGNAL( clicked ( QListViewItem * ) ),
+            this, SLOT( showBottomStatusLabel( QListViewItem * ) ) );
+    
     connect(&bottom_status_timer_, SIGNAL(timeout()), this, SLOT(clearBottomStatusLabel()) );
 }
 
@@ -223,7 +223,7 @@ void SessionWidget::slotCheck()
     }
     
     emit signalSearchStarted();
-    slotLoadSettings(isEmpty()); // it seems that KConfigDialogManager is not trigering this slot
+    slotLoadSettings(true); // it seems that KConfigDialogManager is not trigering this slot
 
     newSearchManager();
 
@@ -495,8 +495,29 @@ void SessionWidget::insertUrlAtCombobox(QString const& url)
     combobox_url->addToHistory(url);
 }
 
-void SessionWidget::showBottomStatusLabel(int row, int /*col*/, int /*button*/, QPoint const&  /*mousePos*/)
+void SessionWidget::showBottomStatusLabel(QListViewItem * item)
 {
+    kdDebug(23100) << "SessionWidget::showBottomStatusLabel" << endl;
+    
+    TreeViewItem* _item = tree_view->myItem(item);
+    if(_item)
+    {
+        QString status = _item->linkStatus()->status();
+        textlabel_status->setText(status);
+
+        if(textlabel_status->sizeHint().width() > textlabel_status->maximumWidth())
+            QToolTip::add
+                    (textlabel_status, status);
+        else
+            QToolTip::remove
+                    (textlabel_status);
+
+        bottom_status_timer_.stop();
+        bottom_status_timer_.start(5 * 1000, true);
+    }
+
+    
+    /*
     if(table_linkstatus->myItem(row, 0))
     {
         QString status = table_linkstatus->myItem(row, 0)->toolTip(); // tooltip of the status column
@@ -512,6 +533,7 @@ void SessionWidget::showBottomStatusLabel(int row, int /*col*/, int /*button*/, 
         bottom_status_timer_.stop();
         bottom_status_timer_.start(5 * 1000, true);
     }
+    */
 }
 
 void SessionWidget::clearBottomStatusLabel()

@@ -40,23 +40,23 @@ public:
                int column_index_URL = 1);
     virtual ~ResultView();
 
-    virtual void insertResult(LinkStatus const* linkstatus) = 0;
+    //virtual void insertResult(LinkStatus const* linkstatus) = 0;
     virtual void clear() = 0;
     virtual void show(Status const& status) = 0;
     virtual void showAll() = 0;
-    virtual void ensureCellVisible(int row, int col) = 0;
+    //virtual void ensureCellVisible(int row, int col) = 0;
 
     virtual void setColumns(QStringList const& columns);
     static bool displayableWithStatus(LinkStatus const* ls, Status const& status);
 
 protected:
-    virtual bool textFitsInCell(int row, int col) const = 0;
+    //virtual bool textFitsInCell(int row, int col) const = 0;
     virtual bool isEmpty() const = 0;
     virtual void loadContextTableMenu(QValueVector<KURL> const& referrers, bool is_root = false) = 0;
 
 protected slots:
 
-    virtual void slotPopupContextMenu(int row, int col, const QPoint& pos) = 0;
+    //virtual void slotPopupContextMenu(int row, int col, const QPoint& pos) = 0;
     virtual void slotCopyUrlToClipboard() const = 0;
     virtual void slotCopyParentUrlToClipboard() const = 0;
     virtual void slotCopyCellTextToClipboard() const = 0;
