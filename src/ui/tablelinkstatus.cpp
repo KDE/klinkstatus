@@ -226,7 +226,7 @@ void TableLinkstatus::loadContextTableMenu(QValueVector<KURL> const& referrers)
 {
     context_table_menu_.clear();
     sub_menu_->clear();
-
+    
     if(Global::isQuantaAvailableViaDCOP())
     {
         sub_menu_->insertItem(i18n("All"), this, SLOT(slotEditReferrersWithQuanta()));
@@ -337,8 +337,6 @@ void TableLinkstatus::slotEditReferrerWithQuanta(KURL const& url)
 
     if(!success)
     {
-        kdDebug(23100) << "NOT sucess" << endl;
-
         QString message = QString(i18n("<qt>File <b>%1</b> cannot be opened. Might be a DCOP problem.</qt>")).arg(filePath);
         KMessageBox::error(parentWidget(), message);
     }
@@ -437,6 +435,10 @@ QColor const& TableItem::textStatusColor() const
         else
             return red;
     }
+    
+    else if(linkStatus()->absoluteUrl().hasRef())
+            return blue;
+    
     else if(linkStatus()->absoluteUrl().protocol() != "http" &&
             linkStatus()->absoluteUrl().protocol() != "https")
         return darkGreen;
@@ -447,9 +449,9 @@ QColor const& TableItem::textStatusColor() const
 
         if(status_code[0] == '0')
         {
-            kdDebug(23100) <<  "statuc code == 0: " << endl;
-            kdDebug(23100) <<  linkStatus()->toString() << endl;
-            kdDebug(23100) <<  linkStatus()->httpHeader().toString() << endl;
+            kdWarning(23100) <<  "status code == 0: " << endl;
+            kdWarning(23100) <<  linkStatus()->toString() << endl;
+            kdWarning(23100) <<  linkStatus()->httpHeader().toString() << endl;
         }
         //Q_ASSERT(status_code[0] != '0');
 
@@ -610,6 +612,7 @@ void TableItemStatus::setPixmap()
 QString TableItemStatus::toolTip() const
 {
     if(linkStatus()->errorOccurred() ||
+            linkStatus()->absoluteUrl().hasRef() ||
             (linkStatus()->absoluteUrl().protocol() != "http" &&
              linkStatus()->absoluteUrl().protocol() != "https"))
     {
