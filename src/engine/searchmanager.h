@@ -54,6 +54,7 @@ public:
 
     void startSearch(KURL const& root);
     void startSearch(KURL const& root, SearchMode const& modo);
+    void resume();
     void cancelSearch();
 
     void setSearchMode(SearchMode modo);
@@ -88,6 +89,7 @@ private:
     void startSearch();
     void continueSearch();
     void finnish();
+    void pause();
     vector<LinkStatus*> const& nodeToAnalize() const;
     vector<LinkStatus*> chooseLinks(vector<LinkStatus*> const& links);
     void checkLinksSimultaneously(vector<LinkStatus*> const& links);
@@ -117,6 +119,7 @@ signals:
     void signalRootChecked(const LinkStatus * link, LinkChecker * checker);
     void signalLinkChecked(const LinkStatus * link, LinkChecker * checker);
     void signalSearchFinished();
+    void signalSearchPaused();
     void signalAddingLevelTotalSteps(uint number_of_links);
     void signalAddingLevelProgress();
     void signalLinksToCheckTotalSteps(uint links_to_check);

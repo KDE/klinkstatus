@@ -45,6 +45,7 @@
 #include <kprogress.h>
 #include <kmessagebox.h>
 #include <kconfig.h>
+#include <kiconloader.h>
 
 
 KConfig * SessionWidget::combo_config_ = 0;
@@ -58,6 +59,9 @@ SessionWidget::SessionWidget(int max_simultaneous_connections, int time_out,
     newSearchManager();
 
     initComboUrl();
+    
+    pushbutton_check->setIconSet(SmallIconSet("viewmag"));
+    pushbutton_cancel->setIconSet(SmallIconSet("player_pause"));
 
     connect(combobox_url, SIGNAL( textChanged ( const QString & ) ),
             this, SLOT( slotEnableCheckButton( const QString & ) ) );
@@ -93,6 +97,8 @@ void SessionWidget::newSearchManager()
             this, SLOT(slotLinkChecked(const LinkStatus *, LinkChecker *)));
     connect(gestor_pesquisa_, SIGNAL(signalSearchFinished()),
             this, SLOT(slotSearchFinished()));
+    connect(gestor_pesquisa_, SIGNAL(signalSearchPaused()),
+            this, SLOT(slotSearchPaused()));
     connect(gestor_pesquisa_, SIGNAL(signalAddingLevelTotalSteps(uint)),
             this, SLOT(slotAddingLevelTotalSteps(uint)));
     connect(gestor_pesquisa_, SIGNAL(signalAddingLevelProgress()),
@@ -113,27 +119,27 @@ void SessionWidget::setUrl(KURL const& url)
 
 void SessionWidget::displayAllLinks()
 {
-    table_linkstatus->showAll();   
+    table_linkstatus->showAll();
 }
 
 void SessionWidget::displayGoodLinks()
 {
-    table_linkstatus->show(ResultView::good);   
+    table_linkstatus->show(ResultView::good);
 }
 
 void SessionWidget::displayBadLinks()
 {
-    table_linkstatus->show(ResultView::bad);   
+    table_linkstatus->show(ResultView::bad);
 }
 
 void SessionWidget::displayMalformedLinks()
 {
-    table_linkstatus->show(ResultView::malformed);   
+    table_linkstatus->show(ResultView::malformed);
 }
 
 void SessionWidget::displayUndeterminedLinks()
 {
-    table_linkstatus->show(ResultView::undetermined);   
+    table_linkstatus->show(ResultView::undetermined);
 }
 
 bool SessionWidget::isEmpty() const
@@ -196,6 +202,8 @@ void SessionWidget::slotCheck()
     //buttongroup_search->setEnabled(false);
     pushbutton_check->setEnabled(false);
     pushbutton_cancel->setEnabled(true);
+    pushbutton_cancel->setText("&Pause");
+    pushbutton_cancel->setIconSet(SmallIconSet("player_pause"));
     textlabel_elapsed_time->setEnabled(true);
     //textlabel_elapsed_time_value->setText("");
     textlabel_elapsed_time_value->setEnabled(true);
@@ -258,9 +266,23 @@ void SessionWidget::slotCheck()
 
 void SessionWidget::slotCancel()
 {
-    Q_ASSERT(!ready_);
-    pushbutton_cancel->setEnabled(false);
-    gestor_pesquisa_->cancelSearch();
+    if(gestor_pesquisa_->searching())
+    {
+        Q_ASSERT(!ready_);
+        pushbutton_cancel->setEnabled(false);
+        gestor_pesquisa_->cancelSearch();
+    }
+    else
+    {
+        Q_ASSERT(ready_);
+        Q_ASSERT(pushbutton_cancel->text() == "&Resume");
+        pushbutton_check->setEnabled(false);
+        pushbutton_cancel->setText("&Pause");
+        pushbutton_cancel->setIconSet(SmallIconSet("player_pause"));
+        textlabel_progressbar->setText("Checking...");
+        ready_ = false;
+        gestor_pesquisa_->resume();
+    }
 }
 
 void SessionWidget::keyPressEvent ( QKeyEvent* e )
@@ -373,7 +395,25 @@ void SessionWidget::slotSearchFinished()
     textlabel_elapsed_time->setEnabled(true);
     textlabel_elapsed_time_value->setEnabled(true);
     textlabel_elapsed_time_value->setText(gestor_pesquisa_->timeElapsed().toString("hh:mm:ss"));
-    
+
+    emit signalSearchFinnished();
+}
+
+void SessionWidget::slotSearchPaused()
+{
+    KApplication::beep ();
+
+    textlabel_progressbar->setText("Stopped");
+
+    ready_ = true;
+    pushbutton_check->setEnabled(true);
+    pushbutton_cancel->setEnabled(true);
+    pushbutton_cancel->setText("&Resume");
+    pushbutton_cancel->setIconSet(SmallIconSet("player_play"));
+    textlabel_elapsed_time->setEnabled(true);
+    textlabel_elapsed_time_value->setEnabled(true);
+    textlabel_elapsed_time_value->setText(gestor_pesquisa_->timeElapsed().toString("hh:mm:ss"));
+
     emit signalSearchFinnished();
 }
 

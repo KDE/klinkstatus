@@ -135,6 +135,13 @@ void SearchManager::startSearch(KURL const& root, SearchMode const& modo)
     checkRoot();
 }
 
+void SearchManager::resume()
+{
+    searching_ = true;
+    canceled_ = false;
+    continueSearch();
+}
+
 void SearchManager::finnish()
 {
     searching_ = false;
@@ -144,6 +151,17 @@ void SearchManager::finnish()
         sleep(1);
     }
     emit signalSearchFinished();
+}
+
+void SearchManager::pause()
+{
+    searching_ = false;
+    while(links_being_checked_)
+    {
+        kdDebug(23100) <<  "links_being_checked_: " << links_being_checked_ << endl;
+        sleep(1);
+    }
+    emit signalSearchPaused();
 }
 
 void SearchManager::cancelSearch()
@@ -320,7 +338,7 @@ LinkStatus const* SearchManager::linkStatus(QString const& s_url) const
             for(uint l = 0; l != (search_results_[i])[j].size(); ++l)
             {
                 ++count;
-                
+
                 LinkStatus* ls = search_results_[i][j][l];
                 Q_ASSERT(ls);
                 if(ls->absoluteUrl().url() == s_url and ls->checked())
@@ -503,7 +521,7 @@ void SearchManager::slotLinkChecked(const LinkStatus * link, LinkChecker * check
 
     if(canceled_ and searching_ and !links_being_checked_)
     {
-        finnish();
+        pause();
     }
 
     else if(!canceled_ && finished_connections_ == maximumCurrentConnections() )

@@ -65,7 +65,7 @@ public:
 signals:
     void signalUpdateTabLabel(const LinkStatus *);
     void signalSearchFinnished();
-
+    
 private slots:
 
     virtual void slotCheck();
@@ -76,6 +76,7 @@ private slots:
     void slotRootChecked(LinkStatus const* linkstatus, LinkChecker * anal);
     void slotLinkChecked(LinkStatus const* linkstatus, LinkChecker * anal);
     void slotSearchFinished();
+    void slotSearchPaused();
     /** Shows the status of the clicked URL (row) for 5 seconds */
     void showBottomStatusLabel(int row, int col, int button, QPoint const&  mousePos);
     void clearBottomStatusLabel();
