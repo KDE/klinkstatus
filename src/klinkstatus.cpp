@@ -41,6 +41,8 @@ KLinkStatus::KLinkStatus()
     // set the shell's ui resource file
     setXMLFile("klinkstatus_shell.rc");
 
+    setupActions();
+    
     // and a status bar
     //statusBar()->show();
 
@@ -81,8 +83,7 @@ KLinkStatus::KLinkStatus()
     // position, icon size, etc.
     setAutoSaveSettings();
     
-    // then, setup our actions
-    setupActions();
+    setupPartActions();
 }
 
 KLinkStatus::~KLinkStatus()
@@ -94,15 +95,18 @@ void KLinkStatus::load(const KURL& url)
 }
 
 void KLinkStatus::setupActions()
-{
+{    
     KStdAction::quit(kapp, SLOT(quit()), actionCollection());
 
     m_toolbarAction = KStdAction::showToolbar(this, SLOT(optionsShowToolbar()), actionCollection());
     //m_statusbarAction = KStdAction::showStatusbar(this, SLOT(optionsShowStatusbar()), actionCollection());
 
     KStdAction::keyBindings(this, SLOT(optionsConfigureKeys()), actionCollection());
-    KStdAction::configureToolbars(this, SLOT(optionsConfigureToolbars()), actionCollection());
-    
+    KStdAction::configureToolbars(this, SLOT(optionsConfigureToolbars()), actionCollection());    
+}
+
+void KLinkStatus::setupPartActions()
+{
     Q_ASSERT(m_part);
     KActionCollection* part_action_collection = m_part->actionCollection();
     part_action_collection->action("new_link_check")->setShortcut(KStdAccel::shortcut(KStdAccel::New));
