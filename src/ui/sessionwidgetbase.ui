@@ -18,6 +18,9 @@
             <height>500</height>
         </size>
     </property>
+    <property name="caption">
+        <string>SessionWidgetBase</string>
+    </property>
     <vbox>
         <property name="name">
             <cstring>unnamed</cstring>
@@ -354,10 +357,13 @@
                                 <cstring>progressbar_checker</cstring>
                             </property>
                             <property name="totalSteps">
-                                <number>0</number>
+                                <number>1</number>
                             </property>
                             <property name="progress">
                                 <number>0</number>
+                            </property>
+                            <property name="percentageVisible">
+                                <bool>false</bool>
                             </property>
                         </widget>
                     </hbox>

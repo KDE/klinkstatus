@@ -212,6 +212,7 @@ void SessionWidget::slotCheck()
 
     insertUrlAtCombobox(combobox_url->currentText());
     progressbar_checker->reset();
+    progressbar_checker->setPercentageVisible(true);
     progressbar_checker->setTotalSteps(1); // check root page
     progressbar_checker->setProgress(0);
     textlabel_progressbar->setText(i18n( "Checking..." ));
@@ -412,6 +413,7 @@ void SessionWidget::slotSearchFinished()
 
     textlabel_progressbar->setText(i18n( "Ready" ));
     progressbar_checker->reset();
+    progressbar_checker->setPercentageVisible(false);
     progressbar_checker->setTotalSteps(1);
     progressbar_checker->setProgress(0);
 
