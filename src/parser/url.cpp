@@ -232,24 +232,12 @@ bool hasProtocol(QString const& url)
 /**
 	http://linkstatus.paradigma.co.pt/en/index.html&bix=bix -> /en/index.html&bix=bix
 */
-QString convertToLocal(KURL const& url)
+QString convertToLocal(LinkStatus const* ls)
 {
-    assert(url.protocol() == "http" || url.protocol() == "https");
-
-    QString string_url = url.prettyURL();
-    QString host = url.host();
-
-    int i_host = findWord(string_url, host);
-    if(i_host == -1)
-        return string_url;
-    else
-    {
-        QString s = string_url.mid(i_host);
-        if(s.isEmpty())
-            return "/";
-        else
-            return s;
-    }
+    KURL url = ls->absoluteUrl();
+    KURL base_url = ls->rootUrl();
+    
+    return KURL::relativeURL(base_url, url);
 }
 
 /**

@@ -41,7 +41,7 @@ bool validUrl(KURL const& url);
 bool existUrl(KURL const& url, vector<LinkStatus*> const& v);
 bool equalHost(QString const& host1, QString const& host2, bool restrict = false);
 bool hasProtocol(QString const& url);
-QString convertToLocal(KURL const& url);
+QString convertToLocal(LinkStatus const* ls);
 bool localDomain(KURL const& url1, KURL const& url2, bool restrict = true);
 bool parentDir(KURL const& url1, KURL const& url2);
 bool externalLink(KURL const& url1, KURL const& url2, bool restrict = true);

@@ -181,9 +181,9 @@ bool TableLinkstatus::textoCabeNaCelula(int row, int col) const
     QTableItem* itm(myItem(row, col));
     assert(itm);
 
-    QSize size_hint(itm->sizeHint());    
+    QSize size_hint(itm->sizeHint());
     int visible_width = 0;
-    
+
     if(col == numCols() - 1)
         visible_width = contentsX() + visibleWidth();
     else
@@ -280,7 +280,6 @@ void TableLinkstatus::slotViewParentUrlInBrowser()
     {
         KMessageBox::sorry(this, i18n("ROOT URL."));
     }
-
     else
     {
         LinkStatus const* ls_parent = _item->linkStatus()->parent();
@@ -353,7 +352,6 @@ QColor const& TableItem::textStatusColor() const
         else
             return red;
     }
-
     else if(linkStatus()->absoluteUrl().protocol() != "http" &&
             linkStatus()->absoluteUrl().protocol() != "https")
         return darkGreen;
@@ -410,22 +408,10 @@ void TableItemURL::setText()
         else
             QTableItem::setText( linkStatus()->node()->url() );
     }
-
     else
     {
         KURL url = linkStatus()->absoluteUrl();
-
-        if(url.protocol() == "http" || url.protocol() == "https")
-        {
-            if(linkStatus()->isLocalRestrict())
-            {
-                QTableItem::setText(::convertToLocal(url));
-            }
-            else
-                QTableItem::setText(linkStatus()->absoluteUrl().prettyURL());
-        }
-        else
-            QTableItem::setText(linkStatus()->absoluteUrl().prettyURL());
+        QTableItem::setText(::convertToLocal(linkStatus()));
     }
 }
 
@@ -463,7 +449,6 @@ QColor const& TableItemURL::textStatusColor() const
         else
             return red;
     }
-
     else if(linkStatus()->absoluteUrl().protocol() != "http" &&
             linkStatus()->absoluteUrl().protocol() != "https")
         return black;
@@ -499,7 +484,6 @@ void TableItemStatus::setText()
     {
         QTableItem::setText("");
     }
-
     else
     {
         /*
@@ -546,7 +530,6 @@ QString TableItemStatus::toolTip() const
     {
         return i18n("%1").arg(linkStatus()->status());
     }
-
     else
         return i18n("%1").arg(linkStatus()->httpHeader().reasonPhrase());
 }

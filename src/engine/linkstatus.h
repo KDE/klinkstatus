@@ -50,6 +50,7 @@ public:
     ~LinkStatus();
 
     void reset();
+    void setRootUrl(KURL const& url);
     void setDepth(uint depth);
     void setParent(LinkStatus* parent);
     void setOriginalUrl(QString const& url_original);
@@ -78,6 +79,7 @@ public:
     void setIsErrorPage(bool flag);
 	void setIsLocalRestrict(bool flag);
 
+    KURL const& rootUrl() const;
     uint depth() const;
     bool local() const; 		// linkstatus.paradigma.co.pt == paradigma.co.pt
     bool isLocalRestrict() const; // linkstatus.paradigma.co.pt != paradigma.co.pt
@@ -119,6 +121,7 @@ private:
 
 private:
 
+    KURL root_url_; // The URL which made the search start
     int depth_;
     int external_domain_depth_; // Para se poder escolher esplorar domains diferentes ate n depth
     QString original_url_;

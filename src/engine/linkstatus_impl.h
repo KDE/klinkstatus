@@ -24,8 +24,7 @@ inline LinkStatus::LinkStatus()
         only_check_header_(true), malformed_(false),
         node_(0), has_base_URI_(false), ignored_(false),
         mimetype_(""), is_error_page_(false)
-{
-}
+{}
 
 inline LinkStatus::LinkStatus(KURL const& absolute_url)
         : depth_(-1), external_domain_depth_(-1), is_root_(false),
@@ -48,6 +47,12 @@ inline LinkStatus::LinkStatus(Node* node, LinkStatus* parent)
 
     setDepth(parent->depth() + 1);
     setParent(parent);
+    setRootUrl(parent->rootUrl());
+}
+
+inline void LinkStatus::setRootUrl(KURL const& url)
+{
+    root_url_ = url;   
 }
 
 inline void LinkStatus::setDepth(uint depth)
@@ -157,8 +162,7 @@ inline void LinkStatus::setHasBaseURI(bool flag)
 
 inline void LinkStatus::setBaseURI(KURL const& base_url)
 {
-    if(!base_url.isValid())
-    {
+    if(!base_url.isValid()) {
         kdDebug(23100) <<  "base url not valid: " << endl
         << "parent: " << parent()->absoluteUrl().prettyURL() << endl
         << "url: " << absoluteUrl().prettyURL() << endl
@@ -188,11 +192,16 @@ inline void LinkStatus::setIsErrorPage(bool flag)
 
 inline void LinkStatus::setIsLocalRestrict(bool flag)
 {
-	is_local_restrict_ = flag;
+    is_local_restrict_ = flag;
 }
 
 
 
+
+inline KURL const& LinkStatus::rootUrl() const
+{
+    return root_url_;   
+}
 
 inline uint LinkStatus::depth() const
 {
@@ -206,7 +215,7 @@ inline bool LinkStatus::local() const
 
 inline bool LinkStatus::isLocalRestrict() const
 {
-	return is_local_restrict_;
+    return is_local_restrict_;
 }
 
 inline LinkStatus const* LinkStatus::parent() const
@@ -251,8 +260,7 @@ inline QString LinkStatus::status() const
     else if(absoluteUrl().protocol() != "http" &&
             absoluteUrl().protocol() != "https")
         return status_;
-    else
-    {
+    else {
         QString string_code = QString::number(httpHeader().statusCode());
         if(string_code == "200")
             return "OK";
@@ -330,7 +338,7 @@ inline bool LinkStatus::ignored() const
 
 inline QString LinkStatus::mimeType() const
 {
-	assert(!mimetype_.isNull());
+    assert(!mimetype_.isNull());
     return mimetype_;
 }
 

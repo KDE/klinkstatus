@@ -333,6 +333,7 @@ void LinkChecker::slotPermanentRedirection (KIO::Job* /*job*/, const KURL &/*fro
     linkstatus_->setChecked(true);
 
     LinkStatus* ls_red = new LinkStatus(toUrl);
+    ls_red->setRootUrl(linkstatus_->rootUrl());
 
     if(!linkstatus_->onlyCheckHeader())
         ls_red->setOnlyCheckHeader(false);

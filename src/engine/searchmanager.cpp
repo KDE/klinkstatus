@@ -116,8 +116,9 @@ void SearchManager::startSearch(KURL const& root, SearchMode const& modo)
     root_.setIsRoot(true);
     root_.setDepth(0);
     root_.setOriginalUrl(root.prettyURL());
-    root_.setAbsoluteUrl(KURL(root));
+    root_.setAbsoluteUrl(root);
     root_.setOnlyCheckHeader(false);
+    root_.setRootUrl(root);
 
     search_mode_ = modo;
     if(modo == depth)
