@@ -286,7 +286,7 @@
                                                         <cstring>textLabel1</cstring>
                                                     </property>
                                                     <property name="text">
-                                                        <string>Don't check Regular Expression:</string>
+                                                        <string>Do-not-check Regular Expression:</string>
                                                     </property>
                                                 </widget>
                                                 <widget class="QLineEdit">
