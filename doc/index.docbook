@@ -205,12 +205,12 @@ or menu bars. -->
 <varlistentry>
 <term><menuchoice>
 <shortcut>
-<keycombo action="simul">&Ctrl;<keycap>C</keycap></keycombo>
+<keycombo action="simul">&Ctrl;<keycap>W</keycap></keycombo>
 </shortcut>
 <guimenu>File</guimenu>
 <guimenuitem>Close Tab</guimenuitem>
 </menuchoice></term>
-<listitem><para><action>Close the current tab.</action> &klinkstatus;</para></listitem>
+<listitem><para><action>Close the current tab.</action></para></listitem>
 </varlistentry>
 </variablelist>
 </para>
