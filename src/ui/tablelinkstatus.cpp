@@ -39,9 +39,6 @@
 #include <dcopclient.h>
 #include <dcopref.h>
 
-#include <sys/types.h>
-#include <unistd.h>
-
 
 /*
  
