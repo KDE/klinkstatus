@@ -515,25 +515,6 @@ void SessionWidget::showBottomStatusLabel(QListViewItem * item)
         bottom_status_timer_.stop();
         bottom_status_timer_.start(5 * 1000, true);
     }
-
-    
-    /*
-    if(table_linkstatus->myItem(row, 0))
-    {
-        QString status = table_linkstatus->myItem(row, 0)->toolTip(); // tooltip of the status column
-        textlabel_status->setText(status);
-
-        if(textlabel_status->sizeHint().width() > textlabel_status->maximumWidth())
-            QToolTip::add
-                (textlabel_status, status);
-        else
-            QToolTip::remove
-                (textlabel_status);
-
-        bottom_status_timer_.stop();
-        bottom_status_timer_.start(5 * 1000, true);
-    }
-    */
 }
 
 void SessionWidget::clearBottomStatusLabel()
