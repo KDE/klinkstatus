@@ -32,7 +32,7 @@
                         <cstring>kcfg_DisplayTreeView</cstring>
                     </property>
                     <property name="text">
-                        <string>Tree View</string>
+                        <string>Tree view</string>
                     </property>
                 </widget>
                 <widget class="QRadioButton">
@@ -40,7 +40,7 @@
                         <cstring>kcfg_DisplayFlatView</cstring>
                     </property>
                     <property name="text">
-                        <string>Flat View</string>
+                        <string>Flat view</string>
                     </property>
                 </widget>
             </vbox>
@@ -61,7 +61,7 @@
                         <cstring>kcfg_FollowLastLinkChecked</cstring>
                     </property>
                     <property name="text">
-                        <string>Follow Last Link Checked</string>
+                        <string>Follow last link checked</string>
                     </property>
                 </widget>
             </vbox>
