@@ -43,7 +43,8 @@ static KCmdLineOptions options[] =
 int main(int argc, char *argv[])
 {
     KAboutData about("klinkstatus", I18N_NOOP("KLinkStatus"), version, description,
-                     KAboutData::License_GPL_V2, "(C) 2004 Paulo Moura Guedes", 0, 0, "moura@kdewebdev.org");
+                     KAboutData::License_GPL_V2, "(C) 2004 Paulo Moura Guedes", 0,
+                     "http://kde-apps.org/content/show.php?content=12318", 0);
 
     about.addAuthor("Paulo Moura Guedes", 0, "moura@kdewebdev.org");
 
@@ -54,8 +55,8 @@ int main(int argc, char *argv[])
     about.addCredit("Andras Mantia", 0, "amantia@kde.org");
     about.addCredit("Michal Rudolf", 0, "mrudolf@kdewebdev.org");
     about.addCredit("Mathieu Kooiman", 0, " quanta@map-is.nl");
-	about.addCredit("Jens Herden", 0, "jens@kdewebdev.org");
-	about.addCredit("Helge Hielscher", 0, "hhielscher@unternehmen.com");
+    about.addCredit("Jens Herden", 0, "jens@kdewebdev.org");
+    about.addCredit("Helge Hielscher", 0, "hhielscher@unternehmen.com");
 
     KCmdLineArgs::init(argc, argv, &about);
     KCmdLineArgs::addCmdLineOptions( options );
