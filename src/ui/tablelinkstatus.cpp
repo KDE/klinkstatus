@@ -125,7 +125,7 @@ void TableLinkstatus::insereLinha(vector<TableItem*> items)
         setColumnWidth(col_url_ - 1, items[col_url_ - 1]->sizeHint().width());
     }
 
-    ensureCellVisible ( row, 0 );
+    ensureCellVisible(row, 0);
 }
 
 void TableLinkstatus::removeLinhas()
@@ -172,7 +172,7 @@ void TableLinkstatus::mostraPorStatusCode(int status_code)
 void TableLinkstatus::ensureCellVisible(int row, int col)
 {
     // table viewport is at the bottom
-    if( rowPos(row - 1) <= (contentsY() + visibleHeight()) )
+    if(rowPos(row - 1) <= (contentsY() + visibleHeight()))
         QTable::ensureCellVisible(row, col);
 }
 
@@ -181,9 +181,15 @@ bool TableLinkstatus::textoCabeNaCelula(int row, int col) const
     QTableItem* itm(myItem(row, col));
     assert(itm);
 
-    QSize size_hint(itm->sizeHint());
+    QSize size_hint(itm->sizeHint());    
+    int visible_width = 0;
+    
+    if(col == numCols() - 1)
+        visible_width = contentsX() + visibleWidth();
+    else
+        visible_width = columnPos(col) + columnWidth(col);
 
-    if(columnWidth(col) < size_hint.width())
+    if(columnPos(col) + size_hint.width() > visible_width)
         return false;
     else
         return true;
