@@ -20,9 +20,7 @@ bin_PROGRAMS = klinkstatus
 klinkstatus_LDFLAGS = $(KDE_RPATH) $(all_libraries)
 klinkstatus_LDADD   = $(LIB_KPARTS)
 
-# this is where the desktop file will go 
-shelldesktopdir   = $(kde_appsdir)/Utilities
-shelldesktop_DATA = klinkstatus.desktop
+xdg_apps_DATA = klinkstatus.desktop
 
 # this is where the shell's XML-GUI resource file goes
 shellrcdir   = $(kde_datadir)/klinkstatus
