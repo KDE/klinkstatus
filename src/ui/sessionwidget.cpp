@@ -37,7 +37,7 @@
 #include <qlistbox.h>
 #include <qstringlist.h>
 #include <qbuttongroup.h>
-#include <qtoolbutton.h> 
+#include <qtoolbutton.h>
 
 #include <kapplication.h>
 #include <kurl.h>
@@ -72,18 +72,21 @@ SessionWidget::SessionWidget(int max_simultaneous_connections, int time_out,
 SessionWidget::~SessionWidget()
 {
     combobox_url->saveItems();
-    
+
     if(KLSConfig::rememberCheckSettings())
         saveCurrentCheckSettings();
 }
 
-void SessionWidget::slotLoadSettings()
+void SessionWidget::slotLoadSettings(bool modify_current_widget_settings)
 {
-    checkbox_recursively->setChecked(KLSConfig::recursiveCheck());
-    spinbox_depth->setValue(KLSConfig::depth());
-    checkbox_subdirs_only->setChecked(not KLSConfig::checkParentFolders());
-    checkbox_external_links->setChecked(KLSConfig::checkExternalLinks());
-    
+    if(modify_current_widget_settings)
+    {
+        checkbox_recursively->setChecked(KLSConfig::recursiveCheck());
+        spinbox_depth->setValue(KLSConfig::depth());
+        checkbox_subdirs_only->setChecked(not KLSConfig::checkParentFolders());
+        checkbox_external_links->setChecked(KLSConfig::checkExternalLinks());
+    }
+
     search_manager_->setTimeOut(KLSConfig::timeOut());
 }
 
@@ -93,7 +96,7 @@ void SessionWidget::saveCurrentCheckSettings()
     KLSConfig::setDepth(spinbox_depth->value());
     KLSConfig::setCheckParentFolders(not checkbox_subdirs_only->isChecked());
     KLSConfig::setCheckExternalLinks(checkbox_external_links->isChecked());
-    
+
     KLSConfig::writeConfig();
 }
 
@@ -103,8 +106,8 @@ void SessionWidget::newSearchManager()
         delete search_manager_;
 
     search_manager_ = new SearchManager(KLSConfig::maxConnectionsNumber(),
-                                         KLSConfig::timeOut(),
-                                         this, "search_manager");
+                                        KLSConfig::timeOut(),
+                                        this, "search_manager");
     Q_ASSERT(search_manager_);
 
     connect(search_manager_, SIGNAL(signalRootChecked(const LinkStatus *, LinkChecker *)),
@@ -490,15 +493,15 @@ void SessionWidget::slotLinksToCheckTotalSteps(uint steps)
 }
 
 void SessionWidget::initIcons()
-{    
+{
     pushbutton_check->setIconSet(SmallIconSet("viewmag"));
     pushbutton_cancel->setIconSet(SmallIconSet("player_pause"));
-    toolButton_clear_combo->setIconSet(SmallIconSet("locationbar_erase"));   
+    toolButton_clear_combo->setIconSet(SmallIconSet("locationbar_erase"));
 }
 
 void SessionWidget::slotClearComboUrl()
 {
-    combobox_url->setCurrentText("");   
+    combobox_url->setCurrentText("");
 }
 
 

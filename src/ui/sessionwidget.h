@@ -69,7 +69,7 @@ signals:
 public slots:
     
     virtual void slotClearComboUrl();    
-    void slotLoadSettings();
+    void slotLoadSettings(bool modify_current_widget_settings = true);
     
 private slots:
 

@@ -41,7 +41,7 @@ TabWidgetSession::TabWidgetSession(QWidget* parent, const char* name, WFlags f)
     setFocusPolicy( QTabWidget::NoFocus );
     setMargin( 0 );
 
-    tabs_.setAutoDelete(true);
+    tabs_.setAutoDelete(false);
 }
 
 TabWidgetSession::~TabWidgetSession()
@@ -71,12 +71,18 @@ SessionWidget* TabWidgetSession::getEmptySession() const
     Q_ASSERT(emptySessionsExist());
     Q_ASSERT(count() != 0);
 
-    for(uint i = 0; i != tabs_.size(); ++i)
+    for(uint i = 0; i != tabs_.count(); ++i)
     {
         if(tabs_[i]->isEmpty())
             return tabs_[i];
     }
     return 0;
+}
+
+// Remember to use count() and not size()
+QIntDict<SessionWidget> const& TabWidgetSession::sessions() const
+{
+    return tabs_;
 }
 
 SessionWidget* TabWidgetSession::newSession()
@@ -90,7 +96,7 @@ SessionWidget* TabWidgetSession::newSession()
     tabs_.insert(count() - 1, session_widget);
     Q_ASSERT(tabs_[count() - 1]);
     setCurrentPage(count() - 1);
-    
+
     return session_widget;
 }
 
@@ -98,7 +104,7 @@ SessionWidget* TabWidgetSession::newSession(KURL const& url)
 {
     SessionWidget* sessionwidget = newSession();
     currentSession()->setUrl(url);
-    
+
     return sessionwidget;
 }
 
@@ -130,6 +136,21 @@ void TabWidgetSession::updateTabLabel(LinkStatus const* linkstatus)
     {
         KURL url = linkstatus->absoluteUrl();
         changeTab(currentPage(), url.prettyURL());
+    }
+}
+
+void TabWidgetSession::slotLoadSettings()
+{
+    for(uint i = 0; i != tabs_.count(); ++i)
+    {
+        if(tabs_[i]->isEmpty())
+        {
+            SessionWidget* session_widget = tabs_[i];
+            if(session_widget->isEmpty())
+                session_widget->slotLoadSettings(true);
+            else
+                session_widget->slotLoadSettings(false);
+        }
     }
 }
 

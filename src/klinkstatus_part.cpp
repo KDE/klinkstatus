@@ -206,7 +206,7 @@ void KLinkStatusPart::slotConfigureKLinkStatus()
     KConfigDialog *dialog = new KConfigDialog(tabwidget_, "klsconfig", KLSConfig::self());
     dialog->addPage(new ConfigSearchDialog(0, "config_search_dialog"), i18n("Check"), "viewmag");
     dialog->show();
-    connect(dialog, SIGNAL(settingsChanged()), tabwidget_->currentSession(), SLOT(slotLoadSettings()));
+    connect(dialog, SIGNAL(settingsChanged()), tabwidget_, SLOT(slotLoadSettings()));
 }
 
 void KLinkStatusPart::slotDisplayAllLinks()

@@ -49,12 +49,15 @@ public:
     bool emptySessionsExist() const;
     /** Returns the first empty session it finds */
     SessionWidget* getEmptySession() const;
+    QIntDict<SessionWidget> const& sessions() const;
+    
 
 public slots:
     SessionWidget* newSession();
     SessionWidget* newSession(KURL const& url);
     void closeSession();
     void updateTabLabel(LinkStatus const* linkstatus);
+    void slotLoadSettings();
 
 private:
     SessionWidget* newSessionWidget();
