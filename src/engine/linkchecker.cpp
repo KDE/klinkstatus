@@ -85,16 +85,20 @@ void LinkChecker::slotTimeOut()
     if(not finnished_ and not parsing_)
     {
         Q_ASSERT(t_job_);
+        if(not(t_job_->error() and t_job_->error() == KIO::ERR_USER_CANCELED))
+        {
+            linkstatus_->setErrorOccurred(true);
+            linkstatus_->setError("Timeout");
+            //kdDebug(23100) << "timeout: " << linkstatus_->absoluteUrl().url() << endl;
 
-        linkstatus_->setErrorOccurred(true);
-        linkstatus_->setError("Timeout");
+            t_job_->kill(true); // quietly
+            t_job_ = 0;
 
-        t_job_->kill(true); // quietly
-        t_job_ = 0;
-
-        finnish();
+            finnish();
+        }
     }
 }
+
 void LinkChecker::slotMimetype (KIO::Job* /*job*/, const QString &type)
 {
     if(finnished_)
@@ -246,7 +250,10 @@ void LinkChecker::slotResult(KIO::Job* /*job*/)
 
     if(t_job_->error() and t_job_->error() == KIO::ERR_USER_CANCELED)
     {
-        kdWarning(23100) << "\n\nJob killed quietly, yet signal result was emited...\n\n\n";
+        kdWarning(23100) << endl << "Job killed quietly, yet signal result was emited..." << endl;
+        kdDebug(23100) << linkstatus_->toString() << endl;
+        t_job_ = 0;
+        finnish();
         return;
     }
 
