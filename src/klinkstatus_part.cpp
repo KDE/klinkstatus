@@ -298,8 +298,9 @@ void KLinkStatusPart::slotAbout()
 
 void KLinkStatusPart::slotReportBug()
 {
-    KBugReport dlg(widget(), true, createAboutData());
-    dlg.exec();
+    KAboutData aboutData("klinkstatus", I18N_NOOP("KLinkStatus"), version_);
+    KBugReport bugReportDlg(0, true, &aboutData);
+    bugReportDlg.exec();
 }
 
 KAboutData* KLinkStatusPart::createAboutData()
