@@ -37,6 +37,7 @@
 #include <qlistbox.h>
 #include <qstringlist.h>
 #include <qbuttongroup.h>
+#include <qtoolbutton.h> 
 
 #include <kapplication.h>
 #include <kurl.h>
@@ -59,9 +60,7 @@ SessionWidget::SessionWidget(int max_simultaneous_connections, int time_out,
     newSearchManager();
 
     initComboUrl();
-    
-    pushbutton_check->setIconSet(SmallIconSet("viewmag"));
-    pushbutton_cancel->setIconSet(SmallIconSet("player_pause"));
+    initIcons();
 
     connect(combobox_url, SIGNAL( textChanged ( const QString & ) ),
             this, SLOT( slotEnableCheckButton( const QString & ) ) );
@@ -471,6 +470,18 @@ void SessionWidget::slotLinksToCheckTotalSteps(uint steps)
     progressbar_checker->reset();
     progressbar_checker->setTotalSteps(steps);
     progressbar_checker->setProgress(0);
+}
+
+void SessionWidget::initIcons()
+{    
+    pushbutton_check->setIconSet(SmallIconSet("viewmag"));
+    pushbutton_cancel->setIconSet(SmallIconSet("player_pause"));
+    toolButton_clear_combo->setIconSet(SmallIconSet("locationbar_erase"));   
+}
+
+void SessionWidget::slotClearComboUrl()
+{
+    combobox_url->setCurrentText("");   
 }
 
 

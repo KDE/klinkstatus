@@ -66,6 +66,10 @@ signals:
     void signalUpdateTabLabel(const LinkStatus *);
     void signalSearchFinnished();
     
+public slots:
+    
+    virtual void slotClearComboUrl();
+    
 private slots:
 
     virtual void slotCheck();
@@ -94,7 +98,7 @@ private:
     bool validFields();
     //vector<TableItem*> generateRowOfTableItems(LinkStatus const* linkstatus) const;
     void insertUrlAtCombobox(QString const& url);
-
+    void initIcons();
 
 private:
     static KConfig* combo_config_;
