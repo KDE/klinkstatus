@@ -442,7 +442,7 @@
                                         </sizepolicy>
                                     </property>
                                     <property name="text">
-                                        <string>Elapsed Time:</string>
+                                        <string>Elapsed time:</string>
                                     </property>
                                     <property name="toolTip" stdset="0">
                                         <string>hh:mm:ss.zzz</string>
