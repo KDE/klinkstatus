@@ -36,7 +36,7 @@ class KToggleAction;
  *
  * @short Application Shell
  * @author Paulo Moura Guedes <moura@kdewebdev.org>
- * @version 0.1.0
+ * @version 0.1.3
  */
 class KLinkStatus : public KParts::MainWindow
 {
