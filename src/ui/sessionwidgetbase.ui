@@ -273,6 +273,46 @@
                                                 </spacer>
                                             </hbox>
                                         </widget>
+                                        <widget class="QLayoutWidget">
+                                            <property name="name">
+                                                <cstring>layout11</cstring>
+                                            </property>
+                                            <hbox>
+                                                <property name="name">
+                                                    <cstring>unnamed</cstring>
+                                                </property>
+                                                <widget class="QLabel">
+                                                    <property name="name">
+                                                        <cstring>textLabel1</cstring>
+                                                    </property>
+                                                    <property name="text">
+                                                        <string>Don't check Regular Expression:</string>
+                                                    </property>
+                                                </widget>
+                                                <widget class="QLineEdit">
+                                                    <property name="name">
+                                                        <cstring>lineedit_reg_exp</cstring>
+                                                    </property>
+                                                </widget>
+                                                <spacer>
+                                                    <property name="name">
+                                                        <cstring>spacer5_2</cstring>
+                                                    </property>
+                                                    <property name="orientation">
+                                                        <enum>Horizontal</enum>
+                                                    </property>
+                                                    <property name="sizeType">
+                                                        <enum>Maximum</enum>
+                                                    </property>
+                                                    <property name="sizeHint">
+                                                        <size>
+                                                            <width>16</width>
+                                                            <height>20</height>
+                                                        </size>
+                                                    </property>
+                                                </spacer>
+                                            </hbox>
+                                        </widget>
                                     </vbox>
                                 </widget>
                                 <widget class="QLayoutWidget">
@@ -568,5 +608,7 @@
 <includehints>
     <includehint>klshistorycombo.h</includehint>
     <includehint>treeview.h</includehint>
+    <includehint>kprogress.h</includehint>
+    <includehint>ksqueezedtextlabel.h</includehint>
 </includehints>
 </UI>

@@ -18,15 +18,14 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "sessionwidget.h"
-#include "tablelinkstatus.h"
-#include "treeview.h"
-#include "klshistorycombo.h"
-#include "resultview.h"
-#include "../global.h"
-#include "../engine/linkstatus.h"
-#include "../engine/linkchecker.h"
-#include "../engine/searchmanager.h"
+#include <kapplication.h>
+#include <kurl.h>
+#include <kcombobox.h>
+#include <ksqueezedtextlabel.h>
+#include <kprogress.h>
+#include <kmessagebox.h>
+#include <kconfig.h>
+#include <kiconloader.h>
 #include "klsconfig.h"
 
 #include <qevent.h>
@@ -40,15 +39,17 @@
 #include <qstringlist.h>
 #include <qbuttongroup.h>
 #include <qtoolbutton.h>
+#include <qregexp.h>
 
-#include <kapplication.h>
-#include <kurl.h>
-#include <kcombobox.h>
-#include <ksqueezedtextlabel.h>
-#include <kprogress.h>
-#include <kmessagebox.h>
-#include <kconfig.h>
-#include <kiconloader.h>
+#include "sessionwidget.h"
+#include "tablelinkstatus.h"
+#include "treeview.h"
+#include "klshistorycombo.h"
+#include "resultview.h"
+#include "../global.h"
+#include "../engine/linkstatus.h"
+#include "../engine/linkchecker.h"
+#include "../engine/searchmanager.h"
 
 
 SessionWidget::SessionWidget(int max_simultaneous_connections, int time_out,
@@ -303,6 +304,11 @@ void SessionWidget::slotCheck()
             search_manager_->setCheckExternalLinks(false);
             search_manager_->setExternalDomainDepth(0);
         }
+    }
+    if(!lineedit_reg_exp->text().isEmpty())
+    {
+    	search_manager_->setCheckRegularExpressions(true);
+	search_manager_->setRegularExpression(lineedit_reg_exp->text(), false);
     }
 
     kdDebug(23100) <<  "URI: " << url.prettyURL() << endl;

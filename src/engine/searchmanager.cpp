@@ -18,18 +18,19 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "searchmanager.h"
-#include "../parser/mstring.h"
-
-#include <qstring.h>
-#include <qvaluevector.h>
-
 #include <kapplication.h>
 #include <kdebug.h>
 #include <klocale.h>
 
+#include <qstring.h>
+#include <qvaluevector.h>
+
 #include <iostream>
 #include <unistd.h>
+
+#include "searchmanager.h"
+#include "../parser/mstring.h"
+
 
 SearchManager::SearchManager(int max_simultaneous_connections, int time_out,
                              QObject *parent, const char *name)
@@ -41,7 +42,7 @@ SearchManager::SearchManager(int max_simultaneous_connections, int time_out,
         maximum_current_connections_(-1), general_domain_(false),
         checked_general_domain_(false), time_out_(time_out), current_connections_(0),
         canceled_(false), searching_(false), checked_links_(0), ignored_links_(0),
-        check_parent_dirs_(true), check_external_links_(true),
+        check_parent_dirs_(true), check_external_links_(true), check_regular_expressions_(false),
         number_of_level_links_(0), number_of_links_to_check_(0)
 {
     root_.setIsRoot(true);
@@ -64,6 +65,7 @@ void SearchManager::reset()
     maximum_current_connections_ = -1;
     general_domain_ = false;
     checked_general_domain_ = false;
+    check_regular_expressions_ = false;
     current_connections_ = 0;
     canceled_ = false;
     searching_ = false;
@@ -237,10 +239,10 @@ void SearchManager::slotRootChecked(const LinkStatus * link, LinkChecker * check
 vector<LinkStatus*> SearchManager::children(LinkStatus* link)
 {
     vector<LinkStatus*> children;
-    
+
     if(!link || link->absoluteUrl().hasRef())
         return children;
-    
+
     vector<Node*> const& nodes = link->childrenNodes();
 
     int count = 0;
@@ -598,6 +600,13 @@ bool SearchManager::checkable(KURL const& url, LinkStatus const& link_parent) co
         if(::externalLink(root_.absoluteUrl(), url))
             return false;
     }
+    if(check_regular_expressions_)
+    {
+        Q_ASSERT(!reg_exp_.isEmpty());
+
+        if(reg_exp_.search(url.url()) != -1)
+            return false;
+    }
 
     //kdDebug(23100) <<  "url " << url.url() << " is checkable!" << endl;
     return true;
@@ -620,12 +629,12 @@ bool SearchManager::checkableByDomain(KURL const& url, LinkStatus const& link_pa
 }
 /*
 bool SearchManager::localDomain(KURL const& url) const
-{
+    {
     KURL url_root = root_.absoluteUrl();
-
+ 
     if(url_root.protocol() != url.protocol())
         return false;
-
+ 
     if(url_root.hasHost())
     {
         if(generalDomain())
@@ -636,7 +645,7 @@ bool SearchManager::localDomain(KURL const& url) const
         {
             vector<QString> referencia = tokenizeWordsSeparatedBy(domain_, QChar('/'));
             vector<QString> a_comparar = tokenizeWordsSeparatedBy(url.host() + url.directory(), QChar('/'));
-
+ 
             if(a_comparar.size() < referencia.size())
                 return false;
             else
@@ -659,7 +668,7 @@ bool SearchManager::localDomain(KURL const& url) const
         return true;
     else
         return url_root.isParentOf(url);
-}
+    }
 */
 
 /**
@@ -668,19 +677,19 @@ bool SearchManager::localDomain(KURL const& url) const
 */
 /*
 bool SearchManager::isLocalRestrict(KURL const& url) const
-{
+    {
     Q_ASSERT(url.protocol() == "http" || url.protocol() == "https");
-
+ 
     KURL url_root = root_.absoluteUrl();
-
+ 
     if(url_root.protocol() != url.protocol())
         return false;
-
+ 
     if(url_root.hasHost())
     {
         vector<QString> referencia = tokenizeWordsSeparatedBy(domain_, QChar('/'));
         vector<QString> a_comparar = tokenizeWordsSeparatedBy(url.host() + url.directory(), QChar('/'));
-
+ 
         if(a_comparar.size() < referencia.size())
             return false;
         else
@@ -700,7 +709,7 @@ bool SearchManager::isLocalRestrict(KURL const& url) const
     }
     else
         return false;
-}
+    }
 */
 bool SearchManager::generalDomain() const
 {

@@ -23,106 +23,117 @@
 
 inline int SearchManager::maximumCurrentConnections() const
 {
-  Q_ASSERT(maximum_current_connections_ != -1);
-  return maximum_current_connections_;
+    Q_ASSERT(maximum_current_connections_ != -1);
+    return maximum_current_connections_;
 }
 
 inline SearchManager::SearchMode const& SearchManager::searchMode() const
 {
-  return search_mode_;
+    return search_mode_;
 }
 
 inline int SearchManager::checkedLinks() const
 {
-  Q_ASSERT(checked_links_ > 0);
-  return checked_links_;
+    Q_ASSERT(checked_links_ > 0);
+    return checked_links_;
 }
 
 inline QTime SearchManager::timeElapsed() const
 {
-  int ms = time_.elapsed();
-  //kdDebug(23100) <<  "Time elapsed (ms): " << ms << endl;
-  return QTime(0, 0).addMSecs(ms);
+    int ms = time_.elapsed();
+    //kdDebug(23100) <<  "Time elapsed (ms): " << ms << endl;
+    return QTime(0, 0).addMSecs(ms);
 }
 
 inline void SearchManager::startSearch(KURL const& root)
 {
-  startSearch(root, search_mode_);
+    startSearch(root, search_mode_);
 }
 
 inline void SearchManager::setSearchMode(SearchMode modo)
 {
-  search_mode_ = modo;
+    search_mode_ = modo;
 }
 
 inline void SearchManager::setDepth(int depth)
 {
-  depth_ = depth;
+    depth_ = depth;
 }
 
 inline void SearchManager::setExternalDomainDepth(int depth)
 {
-  external_domain_depth_ = depth;
+    external_domain_depth_ = depth;
 }
 
 inline void SearchManager::setDomain(QString const& domain)
 {
-  Q_ASSERT(domain.find("http://") == -1);
-  domain_ = domain;
-  general_domain_ = generalDomain();
-  checked_general_domain_ = true;
+    Q_ASSERT(domain.find("http://") == -1);
+    domain_ = domain;
+    general_domain_ = generalDomain();
+    checked_general_domain_ = true;
 }
 
 inline void SearchManager::setCheckParentDirs(bool flag)
 {
-	check_parent_dirs_ = flag;
+    check_parent_dirs_ = flag;
 }
 
 inline void SearchManager::setCheckExternalLinks(bool flag)
 {
-	check_external_links_ = flag;
+    check_external_links_ = flag;
+}
+
+inline void SearchManager::setCheckRegularExpressions(bool flag)
+{
+    check_regular_expressions_ = flag;
+}
+
+inline void SearchManager::setRegularExpression(QString const& reg_exp, bool case_sensitive)
+{
+    QRegExp aux(reg_exp, case_sensitive);
+    reg_exp_ = aux;
 }
 
 inline void SearchManager::setTimeOut(int time_out)
 {
     Q_ASSERT(time_out > 0);
-    time_out_ = time_out;   
+    time_out_ = time_out;
 }
 
 
 
 inline bool SearchManager::checkParentDirs() const
 {
-	return check_parent_dirs_;
+    return check_parent_dirs_;
 }
 
 inline bool SearchManager::checkExternalLinks() const
 {
-	return check_external_links_;
+    return check_external_links_;
 }
 
 inline LinkStatus const* SearchManager::linkStatusRoot() const
 {
-	return &root_;
+    return &root_;
 }
 
 inline bool SearchManager::searching() const
 {
-	return searching_;
+    return searching_;
 }
 
 inline bool SearchManager::localDomain(KURL const& url, bool restrict) const
 {
-	return ::localDomain(root_.absoluteUrl(), url, restrict);
+    return ::localDomain(root_.absoluteUrl(), url, restrict);
 }
 
 inline int SearchManager::maxSimultaneousConnections() const
 {
-	return max_simultaneous_connections_;
+    return max_simultaneous_connections_;
 }
-	
+
 inline int SearchManager::timeOut() const
 {
-	return time_out_;
+    return time_out_;
 }
 

@@ -21,12 +21,14 @@
 #ifndef GESTOR_PESQUISA_H
 #define GESTOR_PESQUISA_H
 
-#include <vector>
+#include <kurl.h>
 
 #include <qobject.h>
 #include <qstring.h>
-#include <kurl.h>
 #include <qdatetime.h>
+#include <qregexp.h>
+
+#include <vector>
 
 #include "linkstatus.h"
 #include "linkchecker.h"
@@ -62,9 +64,11 @@ public:
     void setExternalDomainDepth(int depth);
     void setDomain(QString const& domain);
     void setCheckParentDirs(bool flag);
-	void setCheckExternalLinks(bool flag);
+    void setCheckExternalLinks(bool flag);
+    void setCheckRegularExpressions(bool flag);
+    void setRegularExpression(QString const& reg_exp, bool case_sensitive);
     void setTimeOut(int time_out);
-	
+
     void cleanItems();
     void reset();
 
@@ -77,7 +81,7 @@ public:
     int checkedLinks() const;
     QTime timeElapsed() const;
     bool checkParentDirs() const;
-	bool checkExternalLinks() const;
+    bool checkExternalLinks() const;
     LinkStatus const* linkStatusRoot() const;
     int maxSimultaneousConnections() const;
     int timeOut() const;
@@ -139,10 +143,10 @@ private:
     int links_being_checked_;
     int finished_connections_;
     int maximum_current_connections_;
+    QRegExp reg_exp_;
     QString domain_;
     bool general_domain_;
     bool checked_general_domain_;
-    //QMutex mutex;
     int time_out_;
     int current_connections_;
     bool canceled_;
@@ -151,7 +155,8 @@ private:
     QTime time_;
     int ignored_links_;
     bool check_parent_dirs_;
-	bool check_external_links_;
+    bool check_external_links_;
+    bool check_regular_expressions_;
     uint number_of_level_links_;
     uint number_of_links_to_check_;
     vector< vector< vector <LinkStatus*> > > search_results_;
