@@ -223,7 +223,7 @@ void SessionWidget::slotCheck()
     }
     
     emit signalSearchStarted();
-    slotLoadSettings(true); // it seems that KConfigDialogManager is not trigering this slot
+    slotLoadSettings(false); // it seems that KConfigDialogManager is not trigering this slot
 
     newSearchManager();
 
