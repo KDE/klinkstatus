@@ -54,7 +54,7 @@ TableLinkstatus::TableLinkstatus(QWidget * parent, const char * name,
         col_status_(column_index_status),
         col_label_(column_index_label),
         col_url_(column_index_URL),
-        context_table_menu_(this, "context_table_menu")
+        context_table_menu_(this, "context_table_menu"), sub_menu_(0)
 {
     setShowGrid(false);
     setSorting(false);
@@ -66,7 +66,11 @@ TableLinkstatus::TableLinkstatus(QWidget * parent, const char * name,
     setLeftMargin(0);
 
     cell_tip_ = new CellToolTip(this);
-    loadContextTableMenu();
+
+    sub_menu_ = new QPopupMenu(this, "sub_menu_referrers");
+
+    connect(this, SIGNAL( contextMenuRequested ( int, int, const QPoint&  )),
+            this, SLOT( slotPopupContextMenu( int, int, const QPoint&)) );
 }
 
 TableLinkstatus::~TableLinkstatus()
@@ -209,18 +213,34 @@ TableItem* TableLinkstatus::myItem(int row, int col) const
 
 void TableLinkstatus::slotPopupContextMenu(int r, int w, const QPoint& pos)
 {
-    if(myItem(r, w))
+    TableItem* table_item = myItem(r, w);
+    if(table_item)
+    {
+        QValueVector<KURL> referrers = table_item->linkStatus()->referrers();
+        loadContextTableMenu(referrers);
         context_table_menu_.popup(pos);
+    }
 }
 
-void TableLinkstatus::loadContextTableMenu()
+void TableLinkstatus::loadContextTableMenu(QValueVector<KURL> const& referrers)
 {
-    connect(this, SIGNAL( contextMenuRequested ( int, int, const QPoint&  )),
-            this, SLOT( slotPopupContextMenu( int, int, const QPoint&)) );
+    context_table_menu_.clear();
+    sub_menu_->clear();
 
     if(Global::isQuantaAvailableViaDCOP())
+    {
+        sub_menu_->insertItem(i18n("All"), this, SLOT(slotEditReferrersWithQuanta()));
+        sub_menu_->insertSeparator();
+
+        for(uint i = 0; i != referrers.size(); ++i)
+        {
+            sub_menu_->insertItem(referrers[i].prettyURL());
+        }
+        connect(sub_menu_, SIGNAL(activated(int)), this, SLOT(slotEditReferrerWithQuanta(int)));
+
         context_table_menu_.insertItem(SmallIconSet("fileopen"), i18n("Edit referrer with Quanta"),
-                                       this, SLOT(slotEditReferrerWithQuanta()));
+                                       sub_menu_);
+    }
 
     context_table_menu_.insertItem(SmallIconSet("fileopen"), i18n("Open URL"),
                                    this, SLOT(slotViewUrlInBrowser()));
@@ -263,17 +283,49 @@ void TableLinkstatus::slotCopyCellTextToClipboard() const
     cb->setText(cell_text);
 }
 
-void TableLinkstatus::slotEditReferrerWithQuanta()
+void TableLinkstatus::slotEditReferrersWithQuanta()
+{
+    TableItem* _item = myItem(currentRow(), currentColumn());
+    QValueVector<KURL> referrers = _item->linkStatus()->referrers();
+
+    for(uint i = 0; i != referrers.size(); ++i)
+        slotEditReferrerWithQuanta(referrers[i]);
+}
+
+void TableLinkstatus::slotEditReferrerWithQuanta(int id)
 {
     Q_ASSERT(Global::isQuantaAvailableViaDCOP());
+
+    int index = sub_menu_->indexOf(id);
     
+    if(index == 0)
+        return;
+    Q_ASSERT(index != -1);
+    Q_ASSERT(index != 1); // separator
+
+    //kdDebug(23100) << "id: " << id << endl;
+    //kdDebug(23100) << "index: " << index << endl;
+    
+    index -= 2; // The list of referrers starts on index = 2
+
+    TableItem* _item = myItem(currentRow(), currentColumn());
+    QValueVector<KURL> referrers = _item->linkStatus()->referrers();
+    Q_ASSERT(index >= 0 and (uint)index < referrers.size());
+
+    slotEditReferrerWithQuanta(referrers[index]);
+}
+
+void TableLinkstatus::slotEditReferrerWithQuanta(KURL const& url)
+{
+    Q_ASSERT(Global::isQuantaAvailableViaDCOP());
+
     TableItem* _item = myItem(currentRow(), currentColumn());
     if(_item->linkStatus()->isRoot())
     {
         KMessageBox::sorry(this, i18n("Root URL."));
         return;
     }
-    QString filePath = _item->linkStatus()->parent()->absoluteUrl().url();
+    QString filePath = url.url();
 
     DCOPRef quanta(Global::quantaDCOPAppId(),"WindowManagerIf");
     bool success = quanta.send("openFile", filePath, 0, 0);

@@ -23,9 +23,11 @@
 
 #include <qtable.h>
 #include <qstring.h>
-#include <qptrvector.h>
 #include <qcolor.h>
 #include <qpopupmenu.h>
+#include <qvaluevector.h>
+
+class KURL;
 
 #include <vector>
 
@@ -74,13 +76,15 @@ private slots:
     void slotCopyUrlToClipboard() const;
     void slotCopyParentUrlToClipboard() const;
     void slotCopyCellTextToClipboard() const;
-    void slotEditReferrerWithQuanta();
+    void slotEditReferrersWithQuanta();
+    void slotEditReferrerWithQuanta(int id);
+    void slotEditReferrerWithQuanta(KURL const& url);
     void slotViewUrlInBrowser();
     void slotViewParentUrlInBrowser();
-    
+
 private:
 
-    void loadContextTableMenu();
+    void loadContextTableMenu(QValueVector<KURL> const& referrers);
     //void slotViewInBrowser(KURL const& url);
 
 private:
@@ -90,7 +94,7 @@ private:
     int col_url_;
     CellToolTip* cell_tip_;
     QPopupMenu context_table_menu_;
-
+    QPopupMenu* sub_menu_;
 };
 
 
