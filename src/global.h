@@ -15,6 +15,8 @@
 #include <qobject.h>
 class QCString;
 
+class DCOPClient;
+
 /**
 @author Paulo Moura Guedes
 */
@@ -22,11 +24,19 @@ class Global : public QObject
 {
     Q_OBJECT
 public:
-    Global(QObject *parent = 0, const char *name = 0);
+    static Global* self();
     ~Global();
 
+    static bool isKLinkStatusEmbeddedinQuanta();
+    static bool isQuantaRunningAsUnique();
     static bool isQuantaAvailableViaDCOP();
     static QCString quantaDCOPAppId();
+
+private:
+    Global(QObject *parent = 0, const char *name = 0);
+    static Global* m_self_;
+    
+    DCOPClient* dcop_client_;
 };
 
 #endif

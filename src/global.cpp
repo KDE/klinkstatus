@@ -17,31 +17,60 @@
 #include <dcopref.h>
 #include <kdebug.h>
 #include <kapplication.h>
+#include <kstaticdeleter.h>
 
 #include <sys/types.h>
 #include <unistd.h>
 
 
+Global* Global::m_self_ = 0;
+static KStaticDeleter<Global> staticDeleter;
+
+
+Global* Global::self()
+{
+    if (not m_self_)
+    {
+        staticDeleter.setObject(m_self_, new Global());
+    }
+
+    return m_self_;
+}
+
 Global::Global(QObject *parent, const char *name)
         : QObject(parent, name)
-{}
+{
+    m_self_ = this;
+    dcop_client_ = kapp->dcopClient();
+}
 
 Global::~Global()
-{}
+{
+    if(m_self_ == this)
+        staticDeleter.setObject(m_self_, 0, false);
+}
+
+bool Global::isKLinkStatusEmbeddedinQuanta()
+{
+    QCString app_id = "quanta-" + QCString().setNum(getpid());
+    return self()->dcop_client_->isApplicationRegistered(app_id);
+}
+
+bool Global::isQuantaRunningAsUnique()
+{
+    return self()->dcop_client_->isApplicationRegistered("quanta");
+}
 
 bool Global::isQuantaAvailableViaDCOP()
 {
-    DCOPClient* client = kapp->dcopClient();
-
-    if(client->isApplicationRegistered("quanta")) // quanta is unnique application
+    if(isQuantaRunningAsUnique() or isKLinkStatusEmbeddedinQuanta())
         return true;
 
-    QCString app = "quanta-";
-    QCString pid = QCString().setNum(getpid());
-    QCString app_id = app + pid;
-    //kdDebug(23100) << "app_id: " << app_id << endl;
-
-    return client->isApplicationRegistered(app_id); // if true, klinkstatus is running as a part inside quanta
+    else
+    {
+        return false;
+        //QStringList quanta_pid = quanta;
+    }
 }
 
 QCString Global::quantaDCOPAppId()

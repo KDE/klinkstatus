@@ -1,4 +1,4 @@
-klinkstatusicondir = $(kde_datadir)/klinkstatus/icons
+klinkstatusicondir = $(kde_datadir)/klinkstatuspart/pics
 
 klinkstatusicon_DATA = 
 
