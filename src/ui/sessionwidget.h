@@ -104,7 +104,7 @@ private:
 private:
     static KConfig* combo_config_;
 
-    SearchManager* gestor_pesquisa_;
+    SearchManager* search_manager_;
     bool ready_;
     QTimer bottom_status_timer_;
     int max_simultaneous_connections_;

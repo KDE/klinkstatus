@@ -53,7 +53,7 @@ KConfig * SessionWidget::combo_config_ = 0;
 
 SessionWidget::SessionWidget(int max_simultaneous_connections, int time_out,
                              QWidget* parent, const char* name, WFlags f)
-        : SessionWidgetBase(parent, name, f), gestor_pesquisa_(0),
+        : SessionWidgetBase(parent, name, f), search_manager_(0),
         ready_(true), bottom_status_timer_(this, "bottom_status_timer"),
         max_simultaneous_connections_(max_simultaneous_connections), time_out_(time_out)
 {
@@ -99,27 +99,27 @@ void SessionWidget::saveCurrentCheckSettings()
 
 void SessionWidget::newSearchManager()
 {
-    if(gestor_pesquisa_)
-        delete gestor_pesquisa_;
+    if(search_manager_)
+        delete search_manager_;
 
-    gestor_pesquisa_ = new SearchManager(KLSConfig::maxConnectionsNumber(),
+    search_manager_ = new SearchManager(KLSConfig::maxConnectionsNumber(),
                                          KLSConfig::timeOut(),
                                          this, "search_manager");
-    Q_ASSERT(gestor_pesquisa_);
+    Q_ASSERT(search_manager_);
 
-    connect(gestor_pesquisa_, SIGNAL(signalRootChecked(const LinkStatus *, LinkChecker *)),
+    connect(search_manager_, SIGNAL(signalRootChecked(const LinkStatus *, LinkChecker *)),
             this, SLOT(slotRootChecked(const LinkStatus *, LinkChecker *)));
-    connect(gestor_pesquisa_, SIGNAL(signalLinkChecked(const LinkStatus *, LinkChecker *)),
+    connect(search_manager_, SIGNAL(signalLinkChecked(const LinkStatus *, LinkChecker *)),
             this, SLOT(slotLinkChecked(const LinkStatus *, LinkChecker *)));
-    connect(gestor_pesquisa_, SIGNAL(signalSearchFinished()),
+    connect(search_manager_, SIGNAL(signalSearchFinished()),
             this, SLOT(slotSearchFinished()));
-    connect(gestor_pesquisa_, SIGNAL(signalSearchPaused()),
+    connect(search_manager_, SIGNAL(signalSearchPaused()),
             this, SLOT(slotSearchPaused()));
-    connect(gestor_pesquisa_, SIGNAL(signalAddingLevelTotalSteps(uint)),
+    connect(search_manager_, SIGNAL(signalAddingLevelTotalSteps(uint)),
             this, SLOT(slotAddingLevelTotalSteps(uint)));
-    connect(gestor_pesquisa_, SIGNAL(signalAddingLevelProgress()),
+    connect(search_manager_, SIGNAL(signalAddingLevelProgress()),
             this, SLOT(slotAddingLevelProgress()));
-    connect(gestor_pesquisa_, SIGNAL(signalLinksToCheckTotalSteps(uint)),
+    connect(search_manager_, SIGNAL(signalLinksToCheckTotalSteps(uint)),
             this, SLOT(slotLinksToCheckTotalSteps(uint)));
 }
 
@@ -166,12 +166,12 @@ bool SessionWidget::isEmpty() const
 
 SearchManager const* SessionWidget::getSearchManager() const
 {
-    return gestor_pesquisa_;
+    return search_manager_;
 }
 
 void SessionWidget::slotEnableCheckButton(const QString & s)
 {
-    if(not s.isEmpty() and not gestor_pesquisa_->searching())
+    if(not s.isEmpty() and not search_manager_->searching())
         pushbutton_check->setEnabled(true);
     else
         pushbutton_check->setEnabled(false);
@@ -232,61 +232,61 @@ void SessionWidget::slotCheck()
 
     if(not checkbox_recursively->isChecked())
     {
-        gestor_pesquisa_->setSearchMode(SearchManager::depth);
-        gestor_pesquisa_->setDepth(0);
+        search_manager_->setSearchMode(SearchManager::depth);
+        search_manager_->setDepth(0);
     }
 
     else if(checkbox_recursively->isChecked())
     {
         if(spinbox_depth->value() == 0)
         {
-            gestor_pesquisa_->setSearchMode(SearchManager::domain);
+            search_manager_->setSearchMode(SearchManager::domain);
         }
         else
         {
-            gestor_pesquisa_->setSearchMode(SearchManager::depth_and_domain);
-            gestor_pesquisa_->setDepth(spinbox_depth->value());
+            search_manager_->setSearchMode(SearchManager::depth_and_domain);
+            search_manager_->setDepth(spinbox_depth->value());
         }
 
         if(checkbox_subdirs_only->isChecked())
         {
-            gestor_pesquisa_->setCheckParentDirs(false);
+            search_manager_->setCheckParentDirs(false);
 
             if(url.hasHost())
-                gestor_pesquisa_->setDomain(url.host() + url.directory(true, false));
+                search_manager_->setDomain(url.host() + url.directory(true, false));
         }
         else
         {
-            gestor_pesquisa_->setCheckParentDirs(true);
+            search_manager_->setCheckParentDirs(true);
 
             if(url.hasHost())
-                gestor_pesquisa_->setDomain(url.host());
+                search_manager_->setDomain(url.host());
         }
         if(checkbox_external_links->isChecked())
         {
-            gestor_pesquisa_->setCheckExternalLinks(true);
-            gestor_pesquisa_->setExternalDomainDepth(1);
+            search_manager_->setCheckExternalLinks(true);
+            search_manager_->setExternalDomainDepth(1);
         }
         else
         {
-            gestor_pesquisa_->setCheckExternalLinks(false);
-            gestor_pesquisa_->setExternalDomainDepth(0);
+            search_manager_->setCheckExternalLinks(false);
+            search_manager_->setExternalDomainDepth(0);
         }
     }
 
     kdDebug(23100) <<  "URI: " << url.prettyURL() << endl;
     combobox_url->setCurrentText(url.prettyURL());
-    gestor_pesquisa_->startSearch(url);
+    search_manager_->startSearch(url);
     slotSetTimeElapsed();
 }
 
 void SessionWidget::slotCancel()
 {
-    if(gestor_pesquisa_->searching())
+    if(search_manager_->searching())
     {
         Q_ASSERT(!ready_);
         pushbutton_cancel->setEnabled(false);
-        gestor_pesquisa_->cancelSearch();
+        search_manager_->cancelSearch();
     }
     else
     {
@@ -297,7 +297,7 @@ void SessionWidget::slotCancel()
         pushbutton_cancel->setIconSet(SmallIconSet("player_pause"));
         textlabel_progressbar->setText("Checking...");
         ready_ = false;
-        gestor_pesquisa_->resume();
+        search_manager_->resume();
     }
 }
 
@@ -345,7 +345,7 @@ bool SessionWidget::validFields()
 void SessionWidget::slotRootChecked(LinkStatus const* linkstatus, LinkChecker * anal)
 {
     slotSetTimeElapsed();
-    emit signalUpdateTabLabel(gestor_pesquisa_->linkStatusRoot());
+    emit signalUpdateTabLabel(search_manager_->linkStatusRoot());
 
     Q_ASSERT(textlabel_progressbar->text() == "Checking...");
     progressbar_checker->setProgress(1);
@@ -410,7 +410,7 @@ void SessionWidget::slotSearchFinished()
     //buttongroup_search->setEnabled(true);
     textlabel_elapsed_time->setEnabled(true);
     textlabel_elapsed_time_value->setEnabled(true);
-    textlabel_elapsed_time_value->setText(gestor_pesquisa_->timeElapsed().toString("hh:mm:ss"));
+    textlabel_elapsed_time_value->setText(search_manager_->timeElapsed().toString("hh:mm:ss"));
 
     emit signalSearchFinnished();
 }
@@ -428,7 +428,7 @@ void SessionWidget::slotSearchPaused()
     pushbutton_cancel->setIconSet(SmallIconSet("player_play"));
     textlabel_elapsed_time->setEnabled(true);
     textlabel_elapsed_time_value->setEnabled(true);
-    textlabel_elapsed_time_value->setText(gestor_pesquisa_->timeElapsed().toString("hh:mm:ss"));
+    textlabel_elapsed_time_value->setText(search_manager_->timeElapsed().toString("hh:mm:ss"));
 
     emit signalSearchFinnished();
 }
@@ -464,7 +464,7 @@ void SessionWidget::clearBottomStatusLabel()
 
 void SessionWidget::slotSetTimeElapsed()
 {
-    textlabel_elapsed_time_value->setText(gestor_pesquisa_->timeElapsed().toString("hh:mm:ss"));
+    textlabel_elapsed_time_value->setText(search_manager_->timeElapsed().toString("hh:mm:ss"));
 }
 
 void SessionWidget::slotAddingLevelTotalSteps(uint steps)
