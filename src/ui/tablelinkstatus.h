@@ -74,9 +74,10 @@ private slots:
     void slotCopyUrlToClipboard() const;
     void slotCopyParentUrlToClipboard() const;
     void slotCopyCellTextToClipboard() const;
+    void slotEditReferrerWithQuanta();
     void slotViewUrlInBrowser();
     void slotViewParentUrlInBrowser();
-
+    
 private:
 
     void loadContextTableMenu();
