@@ -291,7 +291,7 @@ void TableLinkstatus::loadContextTableMenu(QValueVector<KURL> const& referrers, 
     }
     else
     {
-        int id = context_table_menu_.insertItem(SmallIconSet("fileopen"), i18n("Edit referrer with Quanta"));
+        int id = context_table_menu_.insertItem(SmallIconSet("fileopen"), i18n("Edit Referrer with Quanta"));
         context_table_menu_.setItemEnabled(id, false);
     }
 

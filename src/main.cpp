@@ -30,7 +30,7 @@ using namespace std;
 
 
 static const char description[] =
-    I18N_NOOP("A Link Checker");
+    I18N_NOOP("A link checker");
 
 static const char version[] = "0.1.3";
 
