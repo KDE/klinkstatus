@@ -270,7 +270,7 @@ inline QString LinkStatus::status() const
         return status_;
     else {
         QString string_code = QString::number(httpHeader().statusCode());
-        if(string_code == "200")
+        if(string_code == "200" or string_code == "304")
             return "OK";
         else
             return string_code;
