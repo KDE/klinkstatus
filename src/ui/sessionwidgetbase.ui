@@ -1,4 +1,4 @@
-<!DOCTYPE UI><UI version="3.3" stdsetdef="1">
+<!DOCTYPE UI><UI version="3.2" stdsetdef="1">
 <class>SessionWidgetBase</class>
 <widget class="QWidget">
     <property name="name">
@@ -459,7 +459,7 @@
 <customwidgets>
     <customwidget>
         <class>TableLinkstatus</class>
-        <header location="local">tablelinkstatus.H</header>
+        <header location="local">tablelinkstatus.h</header>
         <sizehint>
             <width>-1</width>
             <height>-1</height>

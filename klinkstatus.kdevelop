@@ -14,7 +14,7 @@
     </keywords>
     <projectdirectory>.</projectdirectory>
     <absoluteprojectpath>false</absoluteprojectpath>
-    <description/>
+    <description></description>
     <ignoreparts/>
     <secondaryLanguages/>
   </general>
@@ -56,7 +56,7 @@
         <cflags/>
         <f77flags/>
         <envvars>
-          <envvar value="kfilereplace kommander kimagemapeditor kxsldbg quanta" name="DO_NOT_COMPILE" />
+          <envvar value="kfilereplace kommander kimagemapeditor kxsldbg quanta lib" name="DO_NOT_COMPILE" />
         </envvars>
       </debug>
     </configurations>
@@ -133,11 +133,11 @@
   <kdevdebugger>
     <general>
       <dbgshell>libtool</dbgshell>
-      <programargs/>
-      <gdbpath/>
-      <configGdbScript/>
-      <runShellScript/>
-      <runGdbScript/>
+      <programargs></programargs>
+      <gdbpath></gdbpath>
+      <configGdbScript></configGdbScript>
+      <runShellScript></runShellScript>
+      <runGdbScript></runGdbScript>
       <breakonloadinglibs>true</breakonloadinglibs>
       <separatetty>false</separatetty>
       <floatingtoolbar>false</floatingtoolbar>
