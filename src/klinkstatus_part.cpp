@@ -54,7 +54,7 @@ KLinkStatusPart::KLinkStatusPart(QWidget *parentWidget, const char *widgetName,
 
     // we are not modified since we haven't done anything yet
     setModified(false);
-	
+
 	openURL("");
 }
 
@@ -106,17 +106,16 @@ bool KLinkStatusPart::openURL(KURL const& url)
 {
     //emit setWindowCaption( url.prettyURL() );
 
-    if(m_tabwidget->count() == 0 ||
-            !m_tabwidget->emptySessionsExist())
+    if(m_tabwidget->count() == 0 || !m_tabwidget->emptySessionsExist() )
     {
         m_tabwidget->newSession(url);
-
-        action_close_tab_->setEnabled(true);
     }
     else
     {
         m_tabwidget->getEmptySession()->setUrl(url);
     }
+
+    action_close_tab_->setEnabled(( m_tabwidget->count()>1 ));
 
     return true;
 }
@@ -176,36 +175,36 @@ void KLinkStatusPart::fileNew()
     // this slot is called whenever the File->New menu is selected,
     // the New shortcut is pressed (usually CTRL+N) or the New toolbar
     // button is clicked
- 
+
     // About this function, the style guide (
     // http://developer.kde.org/documentation/standards/kde/style/basics/index.html )
     // says that it should open a new window if the document is _not_
     // in its initial state.  This is what we do here.. -> i don't think so
     openURL(KURL());
- 
+
     if(m_tabwidget->count() > 1)
         actionCollection()->action(KStdAction::stdName(KStdAction::Close))->setEnabled(true);
     else
         actionCollection()->action(KStdAction::stdName(KStdAction::Close))->setEnabled(false);
 }
- 
+
 void KLinkStatusPart::fileOpen()
 {
     // this slot is called whenever the File->Open menu is selected,
     // the Open shortcut is pressed (usually CTRL+O) or the Open toolbar
     // button is clicked
     QString file_name = KFileDialog::getOpenFileName();
- 
+
     if (file_name.isEmpty() == false)
     {
         openURL(file_name);
     }
 }
- 
+
 void KLinkStatusPart::fileClose()
 {
     m_tabwidget->closeSession();
- 
+
     if(m_tabwidget->count() > 1)
         actionCollection()->action(KStdAction::stdName(KStdAction::Close))->setEnabled(true);
     else
