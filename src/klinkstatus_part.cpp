@@ -33,7 +33,7 @@
 #include <kglobalsettings.h>
 #include <kshortcut.h>
 #include <kaccel.h>
-#include <kkeydialog.h> 
+#include <kkeydialog.h>
 
 #include "global.h"
 #include "cfg/klsconfig.h"
@@ -111,7 +111,7 @@ void KLinkStatusPart::initGUI()
                        0, this, SLOT(slotConfigureToolbars()),
                        actionCollection(), "options_configure_toolbars");
     */
-    (void) new KAction(i18n("Configure KLinkStatus"), "configure",
+    (void) new KAction(i18n("Configure KLinkStatus..."), "configure",
                        0, this, SLOT(slotConfigureKLinkStatus()),
                        actionCollection(), "configure_klinkstatus");
 
@@ -330,14 +330,14 @@ void KLinkStatusPart::slotReportBug()
 /*
 void KLinkStatusPart::slotShowToolbar()
 {
-    KToggleAction* action_show_toolbar = 
+    KToggleAction* action_show_toolbar =
             static_cast<KToggleAction*> (actionCollection()->action("options_show_toolbar"));
     if(action_show_toolbar)
     {
         if(action_show_toolbar->isChecked())
             toolBar()->show();
         else
-            toolBar()->hide();           
+            toolBar()->hide();
     }
 }
 
