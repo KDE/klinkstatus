@@ -133,17 +133,17 @@ void NodeLink::parseAttributeHREF()
 void NodeLink::parseLinkLabel()
 {
     int fim_tag = 0;
-    char proximo_caractere;
-
+    char proximo_caractere = ' ';
+    
     do
     {
         fim_tag = content_.find(">", fim_tag);
-
+ 
         if(fim_tag != -1)
             proximo_caractere = QChar(content_[++fim_tag]);
-
+ 
     }
-    while(fim_tag != -1 && proximo_caractere == '<');
+    while(fim_tag != -1 && proximo_caractere == '<'/*If the label starts by <*/);
 
     if(fim_tag != -1)
     {
