@@ -93,7 +93,7 @@ SessionWidget* TabWidgetSession::newSession()
     connect(session_widget, SIGNAL(signalUpdateTabLabel(const LinkStatus * )),
             this, SLOT(updateTabLabel(const LinkStatus * )));
 
-    insertTab(session_widget, QString("Session") + QString::number(count() + 1));
+    insertTab(session_widget, i18n("Session") + i18n(QString::number(count() + 1).ascii()));
     
     tabs_.insert(count() - 1, session_widget);
     Q_ASSERT(tabs_[count() - 1]);
