@@ -31,7 +31,7 @@
 #include <kbugreport.h>
 #include <kconfigdialog.h>
 
-#include "klsconfig.h"
+#include "cfg/klsconfig.h"
 #include "klinkstatus_part.h"
 #include "ui/tabwidgetsession.h"
 #include "ui/sessionwidget.h"
@@ -39,7 +39,7 @@
 
 
 const char KLinkStatusPart::description_[] = "A Link Checker";
-const char KLinkStatusPart::version_[] = "0.1.0-CVS";
+const char KLinkStatusPart::version_[] = "0.1.2";
 
 // Factory code for KDE 3
 typedef KParts::GenericFactory<KLinkStatusPart> KLinkStatusFactory;

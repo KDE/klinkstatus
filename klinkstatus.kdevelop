@@ -3,7 +3,7 @@
   <general>
     <author>Paulo Moura Guedes</author>
     <email>moura@kdewebdev.org</email>
-    <version>0.1.1</version>
+    <version>0.1.2</version>
     <projectmanagement>KDevKDEAutoProject</projectmanagement>
     <primarylanguage>C++</primarylanguage>
     <keywords>
@@ -150,7 +150,7 @@
   </kdevdebugger>
   <kdevfilecreate>
     <filetypes>
-      <type icon="" ext="H" create="template" name="C++ Header" >
+      <type icon="" ext="H" name="C++ Header" create="template" >
         <descr/>
       </type>
     </filetypes>

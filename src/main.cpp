@@ -32,7 +32,7 @@ using namespace std;
 static const char description[] =
     I18N_NOOP("A Link Checker");
 
-static const char version[] = "0.1.0";
+static const char version[] = "0.1.2";
 
 static KCmdLineOptions options[] =
     {
