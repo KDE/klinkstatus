@@ -25,6 +25,7 @@
 #include "../engine/linkchecker.h"
 #include "../engine/linkstatus.h"
 class SearchManager;
+class TableItem;
 
 #include <qtimer.h>
 #include <qstring.h>
@@ -34,7 +35,7 @@ class SearchManager;
 using namespace std;
 
 class KURL;
-class TableItem;
+class KConfig;
 
 class SessionWidget: public SessionWidgetBase
 {
@@ -51,10 +52,10 @@ public:
     void setUrl(KURL const& url);
 
     bool isEmpty() const;
-	SearchManager const* getSearchManager() const;
+    SearchManager const* getSearchManager() const;
 
 signals:
-	void signalCheckUrl(const LinkStatus *);
+    void signalCheckUrl(const LinkStatus *);
 
 private slots:
 
@@ -70,27 +71,29 @@ private slots:
     void showBottomStatusLabel(int row, int col, int button, QPoint const&  mousePos);
     void clearBottomStatusLabel();
     void slotSetTimeElapsed();
-	void newSearchManager();
-	
-	void slotAddingLevelTotalSteps(uint steps);
-	void slotAddingLevelProgress();
-	void slotLinksToCheckTotalSteps(uint steps);
-	
+    void newSearchManager();
+
+    void slotAddingLevelTotalSteps(uint steps);
+    void slotAddingLevelProgress();
+    void slotLinksToCheckTotalSteps(uint steps);
+
 private:
 
     virtual void keyPressEvent ( QKeyEvent* e );
+    void initComboUrl();
     bool validFields();
     vector<TableItem*> generateRowOfTableItems(LinkStatus const* linkstatus) const;
     void insertUrlAtCombobox(QString const& url);
-	
+
 
 private:
+    static KConfig* combo_config_;
 
     SearchManager* gestor_pesquisa_;
     bool ready_;
     QTimer bottom_status_timer_;
-	int max_simultaneous_connections_;
-	int time_out_;
+    int max_simultaneous_connections_;
+    int time_out_;
 };
 
 

@@ -20,6 +20,7 @@
 
 #include "sessionwidget.h"
 #include "tablelinkstatus.h"
+#include "klshistorycombo.h"
 #include "../engine/linkstatus.h"
 #include "../engine/linkchecker.h"
 #include "../engine/searchmanager.h"
@@ -40,7 +41,10 @@
 #include <ksqueezedtextlabel.h>
 #include <kprogress.h>
 #include <kmessagebox.h>
+#include <kconfig.h>
 
+
+KConfig * SessionWidget::combo_config_ = 0;
 
 SessionWidget::SessionWidget(int max_simultaneous_connections, int time_out,
                              QWidget* parent, const char* name, WFlags f)
@@ -49,6 +53,8 @@ SessionWidget::SessionWidget(int max_simultaneous_connections, int time_out,
         max_simultaneous_connections_(max_simultaneous_connections), time_out_(time_out)
 {
     newSearchManager();
+
+    initComboUrl();
 
     connect(combobox_url, SIGNAL( textChanged ( const QString & ) ),
             this, SLOT( slotEnableCheckButton( const QString & ) ) );
@@ -60,7 +66,15 @@ SessionWidget::SessionWidget(int max_simultaneous_connections, int time_out,
 
 SessionWidget::~SessionWidget()
 {
-    delete gestor_pesquisa_;
+    combobox_url->saveItems();
+}
+
+void SessionWidget::initComboUrl()
+{
+    combo_config_ = new KConfig("url_history", false, false);
+    KLSHistoryCombo::setConfig(combo_config_);
+    combo_config_->setGroup("Location Bar");
+    combobox_url->init();
 }
 
 void SessionWidget::newSearchManager()
@@ -109,7 +123,7 @@ SearchManager const* SessionWidget::getSearchManager() const
 
 void SessionWidget::slotEnableCheckButton(const QString & s)
 {
-    if(!s.isEmpty())
+    if(not s.isEmpty() and not gestor_pesquisa_->searching())
         pushbutton_check->setEnabled(true);
     else
         pushbutton_check->setEnabled(false);
@@ -160,7 +174,7 @@ void SessionWidget::slotCheck()
     //textlabel_elapsed_time_value->setText("");
     textlabel_elapsed_time_value->setEnabled(true);
 
-    assert(!pushbutton_check->isEnabled()); // pushbutton_check sometimes doesn't show disable. Qt bug?
+    assert(!pushbutton_check->isEnabled()); // FIXME pushbutton_check sometimes doesn't show disable. Qt bug?
 
     table_linkstatus->removeLinhas();
 
