@@ -21,6 +21,7 @@
 #include "tablelinkstatus.h"
 #include "../utils/utils.h"
 #include "../parser/url.h"
+#include "../global.h"
 
 #include <qmemarray.h>
 #include <qtooltip.h>
@@ -38,7 +39,8 @@
 #include <dcopclient.h>
 #include <dcopref.h>
 
-#include <iostream>
+#include <sys/types.h>
+#include <unistd.h>
 
 
 /*
@@ -219,8 +221,9 @@ void TableLinkstatus::loadContextTableMenu()
     connect(this, SIGNAL( contextMenuRequested ( int, int, const QPoint&  )),
             this, SLOT( slotPopupContextMenu( int, int, const QPoint&)) );
 
-    context_table_menu_.insertItem(SmallIconSet("fileopen"), i18n("Edit referrer with Quanta"),
-                                   this, SLOT(slotEditReferrerWithQuanta()));
+    if(Global::isQuantaAvailableViaDCOP())
+        context_table_menu_.insertItem(SmallIconSet("fileopen"), i18n("Edit referrer with Quanta"),
+                                       this, SLOT(slotEditReferrerWithQuanta()));
 
     context_table_menu_.insertItem(SmallIconSet("fileopen"), i18n("Open URL"),
                                    this, SLOT(slotViewUrlInBrowser()));
@@ -265,6 +268,8 @@ void TableLinkstatus::slotCopyCellTextToClipboard() const
 
 void TableLinkstatus::slotEditReferrerWithQuanta()
 {
+    Q_ASSERT(Global::isQuantaAvailableViaDCOP());
+    
     TableItem* _item = myItem(currentRow(), currentColumn());
     if(_item->linkStatus()->isRoot())
     {
@@ -272,17 +277,14 @@ void TableLinkstatus::slotEditReferrerWithQuanta()
         return;
     }
     QString filePath = _item->linkStatus()->parent()->absoluteUrl().url();
-    
-    DCOPClient *client = kapp->dcopClient();
-    kdDebug(23100) << client->appId() << endl;
-    
-    DCOPRef quanta(client->appId(),"WindowManagerIf");
+
+    DCOPRef quanta(Global::quantaDCOPAppId(),"WindowManagerIf");
     bool success = quanta.send("openFile", filePath, 0, 0);
 
     if(!success)
     {
         kdDebug(23100) << "NOT sucess" << endl;
-        
+
         QString message = QString(i18n("<qt>File <b>%1</b> cannot be opened. Might be a DCOP problem.</qt>")).arg(filePath);
         KMessageBox::error(parentWidget(), message);
     }
