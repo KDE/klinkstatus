@@ -265,14 +265,21 @@ void LinkChecker::slotResult(KIO::Job* /*job*/)
     {
         kdDebug(23100) <<  t_job_->errorString() << endl;
 
-        ls->setErrorOccurred(true);
-        
-		if(t_job_->errorString().isEmpty())
-            kdWarning(23100) << "\n\nError string is empty, error = " << t_job_->error() << "\n\n\n";
-		if(t_job_->error() != KIO::ERR_NO_CONTENT)
-            ls->setError(t_job_->errorString());
+        if(t_job_->error() == KIO::ERR_IS_DIRECTORY)
+        {
+            ls->setStatus("OK");
+        }
         else
-            ls->setError("No Content");
+        {
+            ls->setErrorOccurred(true);
+
+            if(t_job_->errorString().isEmpty())
+                kdWarning(23100) << "\n\nError string is empty, error = " << t_job_->error() << "\n\n\n";
+            if(t_job_->error() != KIO::ERR_NO_CONTENT)
+                ls->setError(t_job_->errorString());
+            else
+                ls->setError("No Content");
+        }
     }
 
     else
@@ -291,8 +298,8 @@ void LinkChecker::slotResult(KIO::Job* /*job*/)
             }
             assert(header_checked_);
         }
-        
-		if(!doc_html_.isNull() && !doc_html_.isEmpty())
+
+        if(!doc_html_.isNull() && !doc_html_.isEmpty())
         {
             ls->setDocHtml(doc_html_);
 
