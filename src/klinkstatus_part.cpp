@@ -31,6 +31,9 @@
 #include <kbugreport.h>
 #include <kconfigdialog.h>
 #include <kglobalsettings.h>
+#include <kshortcut.h>
+#include <kaccel.h>
+#include <kglobal.h>
 
 #include "cfg/klsconfig.h"
 #include "klinkstatus_part.h"
@@ -76,15 +79,18 @@ void KLinkStatusPart::initGUI()
     // *************** File menu *********************
 
     action_new_link_check_ = new KAction(i18n("New Link Check"), "filenew",
-                                         0, this, SLOT(slotNewLinkCheck()),
+                                         KStdAccel::shortcut(KStdAccel::New),
+                                         this, SLOT(slotNewLinkCheck()),
                                          actionCollection(), "new_link_check");
 
     action_open_link_ = new KAction(i18n("Open URL..."), "fileopen",
-                                    0, this, SLOT(slotOpenLink()),
+                                    KStdAccel::shortcut(KStdAccel::Open),
+                                    this, SLOT(slotOpenLink()),
                                     actionCollection(), "open_link");
 
     action_close_tab_ = new KAction(i18n("Close Tab"), "fileclose",
-                                    0, this, SLOT(slotClose()),
+                                    KStdAccel::shortcut(KStdAccel::Close),
+                                    this, SLOT(slotClose()),
                                     actionCollection(), "close_tab");
     action_close_tab_->setEnabled(false);
 
@@ -313,7 +319,7 @@ KAboutData* KLinkStatusPart::createAboutData()
     about->addCredit("Michal Rudolf", 0, "mrudolf@kdewebdev.org");
     about->addCredit("Mathieu Kooiman", 0, " quanta@map-is.nl");
     about->addCredit("Jens Herden", 0, "jens@kdewebdev.org");
-    
+
     KGlobal::dirs()->addResourceType("appicon",KStandardDirs::kde_default("data") + "klinkstatuspart/pics/");
 
     return about;
