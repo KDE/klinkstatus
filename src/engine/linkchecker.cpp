@@ -30,6 +30,7 @@
 #include <kio/job.h>
 #include <kio/scheduler.h>
 #include <kmimetype.h>
+#include <kapplication.h>
 
 
 LinkChecker::LinkChecker(LinkStatus* linkstatus, int time_out,
@@ -42,7 +43,7 @@ LinkChecker::LinkChecker(LinkStatus* linkstatus, int time_out,
     Q_ASSERT(!linkstatus_->checked());
     Q_ASSERT(QString(parent->className()) == QString("SearchManager"));
 
-    //kdDebug(23100) <<  "Checking " << linkstatus_->absoluteUrl().url() << endl;
+    kdDebug(23100) <<  "Checking " << linkstatus_->absoluteUrl().url() << endl;
 }
 
 LinkChecker::~LinkChecker()
@@ -55,21 +56,28 @@ void LinkChecker::check()
     KURL url = linkStatus()->absoluteUrl();
     Q_ASSERT(url.isValid());
 
-    t_job_ = KIO::get
-                 (url, false, false);
+    if(url.hasRef())
+        checkRef();
+    //if(linkStatus()->originalUrl().startsWith("#")) // ref in parent doc
+    //checkLocalRef();
+    else
+    {
+        t_job_ = KIO::get
+                     (url, false, false);
 
-    t_job_->addMetaData("PropagateHttpHeader", "true"); // to see the http header
+        t_job_->addMetaData("PropagateHttpHeader", "true"); // to see the http header
 
-    QObject::connect(t_job_, SIGNAL(data(KIO::Job *, const QByteArray &)),
-                     this, SLOT(slotData(KIO::Job *, const QByteArray &)));
-    QObject::connect(t_job_, SIGNAL(mimetype(KIO::Job *, const QString &)),
-                     this, SLOT(slotMimetype(KIO::Job *, const QString &)));
-    QObject::connect(t_job_, SIGNAL(result(KIO::Job *)),
-                     this, SLOT(slotResult(KIO::Job *)));
-    QObject::connect(t_job_, SIGNAL(permanentRedirection(KIO::Job *, const KURL &, const KURL &)),
-                     this, SLOT(slotPermanentRedirection(KIO::Job *, const KURL &, const KURL &)));
+        QObject::connect(t_job_, SIGNAL(data(KIO::Job *, const QByteArray &)),
+                         this, SLOT(slotData(KIO::Job *, const QByteArray &)));
+        QObject::connect(t_job_, SIGNAL(mimetype(KIO::Job *, const QString &)),
+                         this, SLOT(slotMimetype(KIO::Job *, const QString &)));
+        QObject::connect(t_job_, SIGNAL(result(KIO::Job *)),
+                         this, SLOT(slotResult(KIO::Job *)));
+        QObject::connect(t_job_, SIGNAL(permanentRedirection(KIO::Job *, const KURL &, const KURL &)),
+                         this, SLOT(slotPermanentRedirection(KIO::Job *, const KURL &, const KURL &)));
 
-    QTimer::singleShot( time_out_ * 1000, this, SLOT(slotTimeOut()) );
+        QTimer::singleShot( time_out_ * 1000, this, SLOT(slotTimeOut()) );
+    }
 }
 
 void LinkChecker::slotTimeOut()
@@ -330,7 +338,7 @@ void LinkChecker::slotPermanentRedirection (KIO::Job* /*job*/, const KURL &fromU
 
     Q_ASSERT(t_job_);
     Q_ASSERT(linkstatus_->absoluteUrl().protocol() == "http" ||
-           linkstatus_->absoluteUrl().protocol() == "https");
+             linkstatus_->absoluteUrl().protocol() == "https");
 
     redirection_ = true;
 
@@ -412,6 +420,76 @@ HttpResponseHeader LinkChecker::getHttpHeader(KIO::Job* /*job*/, bool remember_c
         header_checked_ = true;
 
     return HttpResponseHeader(header_string);
+}
+void LinkChecker::checkRef()
+{
+    KURL url = linkStatus()->absoluteUrl();
+    Q_ASSERT(url.hasRef());
+    QString url_base;
+    LinkStatus const* ls_parent = 0;
+
+    if(linkStatus()->originalUrl().startsWith("#"))
+        ls_parent = linkStatus()->parent();
+
+    else
+    {
+        int i_ref = url.url().find("#");
+        url_base = url.url().left(i_ref);
+        //kdDebug(23100) << "url_base: " << url_base << endl;
+
+        SearchManager const* gp = dynamic_cast<SearchManager*>(parent());
+        Q_ASSERT(gp);
+
+        ls_parent = gp->linkStatus(url_base);
+    }
+
+    if(ls_parent)
+        checkRef(ls_parent);
+    else
+    {
+        kdDebug(23100) << QString("URL " + url_base + " not checked yet") << endl;
+        linkstatus_->setStatus(QString("URL " + url_base + " not checked yet"));
+        finnish();
+    }
+}
+
+void LinkChecker::checkRef(LinkStatus const* linkstatus_parent)
+{
+    //kdDebug(23100) << "linkstatus_parent: " << linkstatus_parent->absoluteUrl().url() << endl;
+
+    vector<Node*> nodes = linkstatus_parent->childrenNodes();
+    QString ref = linkStatus()->originalUrl();
+    Q_ASSERT(ref.find("#") != -1);
+    QString name_ref = ref.mid(ref.find("#") + 1);
+    //kdDebug(23100) << "name_ref: " << name_ref << endl;
+
+    int count = 0;
+    for(vector<Node*>::size_type i = 0; i != nodes.size(); ++i)
+    {
+        ++count;
+
+        if(nodes[i]->element() == Node::A)
+        {
+            NodeA* node_A = dynamic_cast<NodeA*> (nodes[i]);
+            Q_ASSERT(node_A);
+            if(node_A->attributeNAME() == name_ref) // ref OK
+            {
+                linkstatus_->setStatus("OK");
+                finnish();
+                return;
+            }
+        }
+
+        if(count == 50)
+        {
+            count = 0;
+            kapp->processEvents();
+        }
+    }
+
+    linkstatus_->setErrorOccurred(true);
+    linkstatus_->setError("Link destination not found.");
+    finnish();
 }
 
 #include "linkchecker.moc"

@@ -125,6 +125,23 @@ inline NodeA::NodeA(QString const& content)
         : NodeLink(content)
 {
     element_ = A;
+    parse();
+}
+
+inline QString const& NodeA::attributeNAME() const
+{
+    return attribute_name_;   
+}
+
+inline void NodeA::parse()
+{
+    parseAttributeNAME();
+}
+
+inline void NodeA::parseAttributeNAME()
+{
+    attribute_name_ = getAttribute("NAME=");
+    //kdDebug(23100) << "NodeA::parseAttributeNAME: " << attribute_name_ << endl;
 }
 
 // class NodeLINK________________________________________

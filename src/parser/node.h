@@ -25,7 +25,7 @@
 
 #include <qstring.h>
 
-
+#include <kdebug.h>
 
 using namespace std;
 
@@ -113,6 +113,15 @@ public:
     ~NodeA()
     {}
     ;
+    QString const& attributeNAME() const;
+    
+    virtual void parse();
+    
+private:
+    void parseAttributeNAME();
+    
+private:
+    QString attribute_name_;
 };
 
 class NodeLINK: public NodeLink

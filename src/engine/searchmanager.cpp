@@ -294,11 +294,11 @@ bool SearchManager::existUrl(KURL const& url, KURL const& url_parent) const
                 if(tmp->absoluteUrl() == url)
                 { // URL exists
                     QValueVector<KURL> referrers(tmp->referrers());
-                    
+
                     for(uint i = 0; i != referrers.size(); ++i)
                         if(referrers[i] == url_parent)
                             return true;
-                    
+
                     tmp->addReferrer(url_parent);
                     return true;
                 }
@@ -306,6 +306,37 @@ bool SearchManager::existUrl(KURL const& url, KURL const& url_parent) const
 
     return false;
 }
+
+LinkStatus const* SearchManager::linkStatus(QString const& s_url) const
+{
+    Q_ASSERT(not s_url.isEmpty());
+
+    if(root_.absoluteUrl().url() == s_url)
+        return &root_;
+
+    int count = 0;
+    for(uint i = 0; i != search_results_.size(); ++i)
+        for(uint j = 0; j != search_results_[i].size(); ++j)
+            for(uint l = 0; l != (search_results_[i])[j].size(); ++l)
+            {
+                ++count;
+                
+                LinkStatus* ls = search_results_[i][j][l];
+                Q_ASSERT(ls);
+                if(ls->absoluteUrl().url() == s_url and ls->checked())
+                    return ls;
+
+                if(count == 50)
+                {
+                    count = 0;
+                    kapp->processEvents();
+                }
+
+            }
+
+    return 0;
+}
+
 
 void SearchManager::startSearch()
 {

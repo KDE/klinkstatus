@@ -62,12 +62,16 @@ protected slots:
     void slotPermanentRedirection(KIO::Job *, const KURL &fromUrl, const KURL &toUrl);
     void slotMimetype(KIO::Job *, const QString &type);
     void slotResult(KIO::Job* job);
-	void slotTimeOut();
+    void slotTimeOut();
 
 protected:
 
     void finnish();
     HttpResponseHeader getHttpHeader(KIO::Job* job, bool remember_check = true);
+    void checkRef(); // #...
+
+private:
+    void checkRef(LinkStatus const* linkstatus_parent);
 
 private:
 
@@ -79,7 +83,7 @@ private:
     QString doc_html_;
     bool header_checked_;
     bool finnished_;
-	bool parsing_;
+    bool parsing_;
 };
 
 inline LinkStatus const* const LinkChecker::linkStatus() const

@@ -71,13 +71,14 @@ public:
     //bool isLocalRestrict(KURL const& url) const;
     SearchMode const& searchMode() const;
     bool existUrl(KURL const& url, KURL const& url_parent) const;
+    LinkStatus const* linkStatus(QString const& s_url) const;
     int checkedLinks() const;
     QTime timeElapsed() const;
     bool checkParentDirs() const;
 	bool checkExternalLinks() const;
     LinkStatus const* linkStatusRoot() const;
     int maxSimultaneousConnections() const;
-    int timeOut() const;	
+    int timeOut() const;
 
 private:
 
