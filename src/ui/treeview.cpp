@@ -568,7 +568,7 @@ QString TreeColumnViewItem::text(int column) const
         else
         {
             KURL url = linkStatus()->absoluteUrl();
-            return ::convertToLocal(linkStatus());
+            return Url::convertToLocal(linkStatus());
         }
         break;
 

@@ -24,6 +24,7 @@
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
 #include <klocale.h>
+#include <kdebug.h>
 
 #include <iostream>
 using namespace std;
@@ -32,7 +33,7 @@ using namespace std;
 static const char description[] =
     I18N_NOOP("A link checker");
 
-static const char version[] = "0.2.0";
+static const char version[] = "0.2.1";
 
 static KCmdLineOptions options[] =
     {
@@ -42,6 +43,8 @@ static KCmdLineOptions options[] =
 
 int main(int argc, char *argv[])
 {
+    //____________________________________________________
+    
     KAboutData about("klinkstatus", I18N_NOOP("KLinkStatus"), version, description,
                      KAboutData::License_GPL_V2, "(C) 2004 Paulo Moura Guedes", 0,
                      "http://kde-apps.org/content/show.php?content=12318");

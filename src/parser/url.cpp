@@ -23,7 +23,7 @@
 #include "../utils/utils.h"
 
 
-Node::LinkType resolveLinkType(QString const& url)
+Node::LinkType Url::resolveLinkType(QString const& url)
 {
     QString aux(url);
     aux = KURL::decode_string(aux);
@@ -41,7 +41,7 @@ Node::LinkType resolveLinkType(QString const& url)
         return Node::relative;
 }
 
-KURL normalizeUrl(QString const& string_url, LinkStatus const& link_parent)
+KURL Url::normalizeUrl(QString const& string_url, LinkStatus const& link_parent)
 {
     QString _string_url = string_url.stripWhiteSpace();
 
@@ -57,7 +57,7 @@ KURL normalizeUrl(QString const& string_url, LinkStatus const& link_parent)
     // resolve relative url
     if(_string_url.isEmpty())
         return base_url;
-    else if(::hasProtocol(_string_url))
+    else if(Url::hasProtocol(_string_url))
         return KURL(_string_url);
     else
     {
@@ -89,7 +89,7 @@ KURL normalizeUrl(QString const& string_url, LinkStatus const& link_parent)
     }
 }
 
-KURL normalizeUrl(QString const& string_url)
+KURL Url::normalizeUrl(QString const& string_url)
 {
     QString qs_url = string_url.stripWhiteSpace();
 
@@ -103,7 +103,7 @@ KURL normalizeUrl(QString const& string_url)
 
     else
     {
-        if(!::hasProtocol(qs_url))
+        if(!Url::hasProtocol(qs_url))
             qs_url.prepend("http://");
 
         KURL url(qs_url);
@@ -112,7 +112,7 @@ KURL normalizeUrl(QString const& string_url)
     }
 }
 
-bool existUrl(KURL const& url, vector<LinkStatus*> const& v)
+bool Url::existUrl(KURL const& url, vector<LinkStatus*> const& v)
 {
     if(url.prettyURL().isEmpty())
         return true;
@@ -133,7 +133,7 @@ bool existUrl(KURL const& url, vector<LinkStatus*> const& v)
    alunos.iscte.pt, iscte.pt => false.
 */
 // FIXME - Rename this function to sameDomain
-bool equalHost(QString const& host1, QString const& host2, bool restrict)
+bool Url::equalHost(QString const& host1, QString const& host2, bool restrict)
 {
     //Q_ASSERT(!host1.isEmpty());
     //Q_ASSERT(!host2.isEmpty()); // this fails if href="javascript:......."
@@ -185,8 +185,8 @@ bool equalHost(QString const& host1, QString const& host2, bool restrict)
     return true;
 }
 
-/* This should be done by parsing but I won't to know when some new scheme comes along :) */
-bool hasProtocol(QString const& url)
+/* This should be done by parsing but I wan't to know when some new scheme comes along :) */
+bool Url::hasProtocol(QString const& url)
 {
     QString s_url(url);
     s_url.stripWhiteSpace();
@@ -196,6 +196,10 @@ bool hasProtocol(QString const& url)
 
     else
     {
+        KURL url = KURL::fromPathOrURL(s_url);
+        if(!url.protocol().isEmpty())
+            return true;
+        /*
         if(s_url.startsWith("http:") ||
                 s_url.startsWith("https:") ||
                 s_url.startsWith("ftp:") ||
@@ -223,7 +227,7 @@ bool hasProtocol(QString const& url)
         {
             return true;
         }
-
+        */
         else
             return false;
     }
@@ -232,7 +236,7 @@ bool hasProtocol(QString const& url)
 /**
 	http://linkstatus.paradigma.co.pt/en/index.html&bix=bix -> /en/index.html&bix=bix
 */
-QString convertToLocal(LinkStatus const* ls)
+QString Url::convertToLocal(LinkStatus const* ls)
 {
     KURL url = ls->absoluteUrl();
     KURL base_url = ls->rootUrl();
@@ -245,7 +249,7 @@ QString convertToLocal(LinkStatus const* ls)
 	If restrict, sourceforge.net != quanta.sourceforge.net.
 	Else is equal.
 */
-bool localDomain(KURL const& url1, KURL const& url2, bool restrict)
+bool Url::localDomain(KURL const& url1, KURL const& url2, bool restrict)
 {
     if(url1.protocol() != url2.protocol())
     {
@@ -260,7 +264,7 @@ bool localDomain(KURL const& url1, KURL const& url2, bool restrict)
     else
     {
         //return ::equalHost(url1.host(), url2.host(), restrict);
-        if(::equalHost(url1.host(), url2.host(), restrict))
+        if(Url::equalHost(url1.host(), url2.host(), restrict))
         {
             //kdDebug(23100) <<  "localDomain" << endl;
             return true;
@@ -277,7 +281,7 @@ bool localDomain(KURL const& url1, KURL const& url2, bool restrict)
 /**
 	Returns true if url2 is a parent of url1.
 */
-bool parentDir(KURL const& url1, KURL const& url2)
+bool Url::parentDir(KURL const& url1, KURL const& url2)
 {
     if(url1.protocol() != url2.protocol())
         return false;
@@ -314,7 +318,7 @@ bool parentDir(KURL const& url1, KURL const& url2)
     return false;
 }
 
-bool externalLink(KURL const& url1, KURL const& url2, bool restrict)
+bool Url::externalLink(KURL const& url1, KURL const& url2, bool restrict)
 {
     if(url1.protocol() != url2.protocol())
     {
@@ -327,5 +331,5 @@ bool externalLink(KURL const& url1, KURL const& url2, bool restrict)
         return false;
     }
     else
-        return !::equalHost(url1.host(), url2.host(), restrict);
+        return !Url::equalHost(url1.host(), url2.host(), restrict);
 }

@@ -34,6 +34,8 @@ using namespace std;
 
 class LinkStatus;
 
+namespace Url
+{
 Node::LinkType resolveLinkType(QString const& url);
 KURL normalizeUrl(QString const& string_url, LinkStatus const& link_parent);
 KURL normalizeUrl(QString const& string_url);
@@ -45,7 +47,7 @@ QString convertToLocal(LinkStatus const* ls);
 bool localDomain(KURL const& url1, KURL const& url2, bool restrict = true);
 bool parentDir(KURL const& url1, KURL const& url2);
 bool externalLink(KURL const& url1, KURL const& url2, bool restrict = true);
-
+}
 
 inline bool validUrl(KURL const& url)
 {

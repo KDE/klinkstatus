@@ -123,7 +123,7 @@ void NodeLink::parseAttributeHREF()
         if( !(malformed() || attribute_href_.isEmpty()) )
         {
             // Definnishr o tipo de link
-            linktype_ = resolveLinkType(attribute_href_);
+            linktype_ = Url::resolveLinkType(attribute_href_);
 
             parseLinkLabel();
         }
@@ -194,7 +194,7 @@ void NodeMETA::parseAttributeURL()
             << content_ << endl << attribute_http_equiv_ << endl << attribute_url_ << endl;
         Q_ASSERT(!attribute_url_.isEmpty());
 
-        linktype_ = resolveLinkType(attribute_url_);
+        linktype_ = Url::resolveLinkType(attribute_url_);
     }
 }
 
@@ -213,7 +213,7 @@ void NodeIMG::parseAttributeSRC()
     }
 
     attribute_src_ = getAttribute("SRC=");
-    linktype_ = resolveLinkType(attribute_src_);
+    linktype_ = Url::resolveLinkType(attribute_src_);
 }
 
 
@@ -230,6 +230,6 @@ void NodeFRAME::parseAttributeSRC()
     }
 
     attribute_src_ = getAttribute("SRC=");
-    linktype_ = resolveLinkType(attribute_src_);
+    linktype_ = Url::resolveLinkType(attribute_src_);
 }
 

@@ -255,11 +255,11 @@ vector<LinkStatus*> SearchManager::children(LinkStatus* link)
         if(node->url().isEmpty())
             url = "";
         else
-            url = ::normalizeUrl( node->url(), *link );
+            url = Url::normalizeUrl( node->url(), *link );
 
         if( (node->isLink() &&
                 checkable(url, *link) &&
-                !::existUrl(url, children) &&
+                !Url::existUrl(url, children) &&
                 !node->url().isEmpty())
                 ||
                 node->malformed() )
@@ -592,12 +592,12 @@ bool SearchManager::checkable(KURL const& url, LinkStatus const& link_parent) co
 
     if(!check_parent_dirs_)
     {
-        if(::parentDir(root_.absoluteUrl(), url))
+        if(Url::parentDir(root_.absoluteUrl(), url))
             return false;
     }
     if(!check_external_links_)
     {
-        if(::externalLink(root_.absoluteUrl(), url))
+        if(Url::externalLink(root_.absoluteUrl(), url))
             return false;
     }
     if(check_regular_expressions_)

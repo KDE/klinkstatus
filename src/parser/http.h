@@ -48,7 +48,7 @@ inline HttpResponseHeader::HttpResponseHeader()
 {
 }
 
-inline HttpResponseHeader::HttpResponseHeader(const QHttpResponseHeader & header)
+inline HttpResponseHeader::HttpResponseHeader(const QHttpResponseHeader & /*header*/)
   : QHttpResponseHeader()
 {
 }

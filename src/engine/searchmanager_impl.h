@@ -124,7 +124,7 @@ inline bool SearchManager::searching() const
 
 inline bool SearchManager::localDomain(KURL const& url, bool restrict) const
 {
-    return ::localDomain(root_.absoluteUrl(), url, restrict);
+	return Url::localDomain(root_.absoluteUrl(), url, restrict);
 }
 
 inline int SearchManager::maxSimultaneousConnections() const
