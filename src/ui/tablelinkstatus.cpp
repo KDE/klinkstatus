@@ -241,6 +241,11 @@ void TableLinkstatus::loadContextTableMenu(QValueVector<KURL> const& referrers)
         context_table_menu_.insertItem(SmallIconSet("fileopen"), i18n("Edit referrer with Quanta"),
                                        sub_menu_);
     }
+    else
+    {
+        int id = context_table_menu_.insertItem(SmallIconSet("fileopen"), i18n("Edit referrer with Quanta"));
+        context_table_menu_.setItemEnabled(id, false);
+    }
 
     context_table_menu_.insertItem(SmallIconSet("fileopen"), i18n("Open URL"),
                                    this, SLOT(slotViewUrlInBrowser()));
