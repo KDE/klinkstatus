@@ -88,7 +88,6 @@ void TabWidgetSession::newSession()
     insertTab(session_widget, QString("Session") + QString::number(count() + 1));
     tabs_.insert(count() - 1, session_widget);
 	assert(tabs_[count() - 1]);
-	cerr << "count - 1: " << count() - 1 << endl;
     setCurrentPage(count() - 1);
 }
 

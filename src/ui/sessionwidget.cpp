@@ -210,7 +210,7 @@ void SessionWidget::slotCheck()
         }
     }
 
-    cerr << "URI: " << url.prettyURL() << endl;
+    kdDebug(2121) <<  "URI: " << url.prettyURL() << endl;
     combobox_url->setCurrentText(url.prettyURL());
     gestor_pesquisa_->startSearch(url);
     slotSetTimeElapsed();

@@ -41,7 +41,7 @@ inline int SearchManager::checkedLinks() const
 inline QTime SearchManager::timeElapsed() const
 {
   int ms = time_.elapsed();
-  //cerr << "Time elapsed (ms): " << ms << endl;
+  //kdDebug(2121) <<  "Time elapsed (ms): " << ms << endl;
   return QTime(0, 0).addMSecs(ms);
 }
 

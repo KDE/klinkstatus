@@ -47,8 +47,8 @@ KLinkStatusPart::KLinkStatusPart(QWidget *parentWidget, const char *widgetName,
 
     m_dlgAbout = 0;
 
-    m_tabwidget = new TabWidgetSession( parentWidget, widgetName );
-    setWidget(m_tabwidget);
+    tabwidget_ = new TabWidgetSession( parentWidget, widgetName );
+    setWidget(tabwidget_);
 
     initGUI();
 
@@ -106,16 +106,16 @@ bool KLinkStatusPart::openURL(KURL const& url)
 {
     //emit setWindowCaption( url.prettyURL() );
 
-    if(m_tabwidget->count() == 0 || !m_tabwidget->emptySessionsExist() )
+    if(tabwidget_->count() == 0 || !tabwidget_->emptySessionsExist() )
     {
-        m_tabwidget->newSession(url);
+        tabwidget_->newSession(url);
     }
     else
     {
-        m_tabwidget->getEmptySession()->setUrl(url);
+        tabwidget_->getEmptySession()->setUrl(url);
     }
 
-    action_close_tab_->setEnabled(( m_tabwidget->count()>1 ));
+    action_close_tab_->setEnabled(tabwidget_->count() > 1);
 
     return true;
 }
@@ -142,9 +142,9 @@ void KLinkStatusPart::slotOpenLink()
 
 void KLinkStatusPart::slotClose()
 {
-    m_tabwidget->closeSession();
+    tabwidget_->closeSession();
 
-    if(m_tabwidget->count() > 1)
+    if(tabwidget_->count() > 1)
 		assert(action_close_tab_->isEnabled());
     else
 		action_close_tab_->setEnabled(false);
@@ -154,7 +154,7 @@ void KLinkStatusPart::slotAbout()
 {
     if(m_dlgAbout == 0)
     {
-        m_dlgAbout = new KAboutApplication(createAboutData(), m_tabwidget, "about_app");
+        m_dlgAbout = new KAboutApplication(createAboutData(), tabwidget_, "about_app");
         if(m_dlgAbout == 0)
             return;
     }
@@ -182,7 +182,7 @@ void KLinkStatusPart::fileNew()
     // in its initial state.  This is what we do here.. -> i don't think so
     openURL(KURL());
 
-    if(m_tabwidget->count() > 1)
+    if(tabwidget_->count() > 1)
         actionCollection()->action(KStdAction::stdName(KStdAction::Close))->setEnabled(true);
     else
         actionCollection()->action(KStdAction::stdName(KStdAction::Close))->setEnabled(false);
@@ -203,9 +203,9 @@ void KLinkStatusPart::fileOpen()
 
 void KLinkStatusPart::fileClose()
 {
-    m_tabwidget->closeSession();
+    tabwidget_->closeSession();
 
-    if(m_tabwidget->count() > 1)
+    if(tabwidget_->count() > 1)
         actionCollection()->action(KStdAction::stdName(KStdAction::Close))->setEnabled(true);
     else
         actionCollection()->action(KStdAction::stdName(KStdAction::Close))->setEnabled(false);

@@ -83,7 +83,7 @@ KURL normalizeUrl(QString const& string_url, LinkStatus const& link_parent)
             url.setPass(base_url.pass());
         url.cleanPath();
 
-        //cerr << url.url() << endl;
+        //kdDebug(2121) <<  url.url() << endl;
 
         return url;
     }
@@ -156,7 +156,7 @@ bool equalHost(QString const& host1, QString const& host2, bool restrict)
     if( !(size1 >= 1 && size2 >= 1) && // localhost would have size = 1
             !(host1_[0].isNumber() || host2_[0].isNumber()) ) // not (host == IP)
     {
-        cerr << "Invalid host: " << host2 << endl;
+        kdDebug(2121) <<  "Invalid host: " << host2 << endl;
         return false;
     }
 
@@ -261,12 +261,12 @@ bool localDomain(KURL const& url1, KURL const& url2, bool restrict)
 {
     if(url1.protocol() != url2.protocol())
     {
-        //cerr << "NOT localDomain" << endl;
+        //kdDebug(2121) <<  "NOT localDomain" << endl;
         return false;
     }
     else if(not url1.hasHost())
     {
-        //cerr << "localDomain" << endl;
+        //kdDebug(2121) <<  "localDomain" << endl;
         return true;
     }
     else
@@ -274,12 +274,12 @@ bool localDomain(KURL const& url1, KURL const& url2, bool restrict)
         //return ::equalHost(url1.host(), url2.host(), restrict);
         if(::equalHost(url1.host(), url2.host(), restrict))
         {
-            //cerr << "localDomain" << endl;
+            //kdDebug(2121) <<  "localDomain" << endl;
             return true;
         }
         else
         {
-            //cerr << "NOT localDomain" << endl;
+            //kdDebug(2121) <<  "NOT localDomain" << endl;
             return false;
         }
 
@@ -330,12 +330,12 @@ bool externalLink(KURL const& url1, KURL const& url2, bool restrict)
 {
     if(url1.protocol() != url2.protocol())
     {
-        cerr << "externalLink" << endl;
+        kdDebug(2121) <<  "externalLink" << endl;
         return true;
     }
     else if(not url1.hasHost() and not url2.hasHost())
     {
-        cerr << "NOT externalLink" << endl;
+        kdDebug(2121) <<  "NOT externalLink" << endl;
         return false;
     }
     else

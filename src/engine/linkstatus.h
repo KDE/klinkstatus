@@ -26,6 +26,7 @@
 
 #include <kurl.h>
 #include <klocale.h>
+#include <kdebug.h>
 
 #include <qstring.h>
 #include <qobject.h>

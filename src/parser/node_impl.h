@@ -24,7 +24,7 @@ inline Node::Node()
 
 inline Node::~Node()
 {
-    //cerr << "/";
+    //kdDebug(2121) <<  "/";
 }
 
 inline Node::Node(QString const& content)

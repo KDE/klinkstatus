@@ -63,7 +63,7 @@ private:
     void initGUI();
 
 private:
-    TabWidgetSession* m_tabwidget;
+    TabWidgetSession* tabwidget_;
 	KAboutApplication* m_dlgAbout;
 	KAction* action_new_link_check_;
 	KAction* action_open_link_;
