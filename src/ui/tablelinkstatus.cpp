@@ -659,7 +659,6 @@ void TableItemStatus::setPixmap()
         }
     }
     else if(linkStatus()->status() == "304")
-        //QTableItem::setPixmap(QPixmap(locate("data", "klinkstatuspart/icons/304.png")));
         QTableItem::setPixmap(UserIcon("304"));
 
     else if(linkStatus()->status() == "OK")
