@@ -1,4 +1,4 @@
-<!DOCTYPE UI><UI version="3.2" stdsetdef="1">
+<!DOCTYPE UI><UI version="3.3" stdsetdef="1">
 <class>ConfigSearchDialog</class>
 <widget class="QWidget">
     <property name="name">
@@ -219,6 +219,20 @@
         </widget>
     </vbox>
 </widget>
+<connections>
+    <connection>
+        <sender>kcfg_RecursiveCheck</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>kcfg_Depth</receiver>
+        <slot>setEnabled(bool)</slot>
+    </connection>
+    <connection>
+        <sender>kcfg_RecursiveCheck</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>textLabel1_2_2_2</receiver>
+        <slot>setEnabled(bool)</slot>
+    </connection>
+</connections>
 <tabstops>
     <tabstop>kcfg_MaxConnectionsNumber</tabstop>
     <tabstop>kcfg_TimeOut</tabstop>

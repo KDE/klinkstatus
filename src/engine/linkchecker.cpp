@@ -58,8 +58,6 @@ void LinkChecker::check()
 
     if(url.hasRef())
         checkRef();
-    //if(linkStatus()->originalUrl().startsWith("#")) // ref in parent doc
-    //checkLocalRef();
     else
     {
         t_job_ = KIO::get

@@ -93,6 +93,7 @@ SessionWidget* TabWidgetSession::newSession()
             this, SLOT(updateTabLabel(const LinkStatus * )));
 
     insertTab(session_widget, QString("Session") + QString::number(count() + 1));
+    
     tabs_.insert(count() - 1, session_widget);
     Q_ASSERT(tabs_[count() - 1]);
     setCurrentPage(count() - 1);
