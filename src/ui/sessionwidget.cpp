@@ -156,7 +156,7 @@ void SessionWidget::slotCheck()
 
     newSearchManager();
 
-    //insertUrlAtCombobox(combobox_url->currentText());
+    insertUrlAtCombobox(combobox_url->currentText());
     progressbar_checker->reset();
     progressbar_checker->setTotalSteps(1); // check root page
     progressbar_checker->setProgress(0);
@@ -348,20 +348,7 @@ void SessionWidget::slotSearchFinished()
 
 void SessionWidget::insertUrlAtCombobox(QString const& url)
 {
-    QListBox* list = combobox_url->listBox();
-    bool do_insert = true;
-
-    for(unsigned int i = 0; i != list->count(); ++i)
-    {
-        if(url == list->text(i))
-        {
-            do_insert = false;
-            break;
-        }
-    }
-
-    if(do_insert)
-        combobox_url->insertItem(combobox_url->currentText());
+    combobox_url->addToHistory(url);
 }
 
 void SessionWidget::showBottomStatusLabel(int row, int /*col*/, int /*button*/, QPoint const&  /*mousePos*/)
