@@ -40,7 +40,7 @@ void CellToolTip::maybeTip ( const QPoint & p )
 
     if( row != -1 && col != -1)
     {
-        if(col == 0 || !table_->textoCabeNaCelula(row, col))
+        if(col == 0 || !table_->textFitsInCell(row, col))
         {
             TableItem* item = table_->myItem(row, col);
             QString tip_string = item->toolTip();

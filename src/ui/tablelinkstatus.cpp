@@ -51,10 +51,8 @@ TableLinkstatus::TableLinkstatus(QWidget * parent, const char * name,
                                  int column_index_label,
                                  int column_index_URL)
         : QTable(parent, name),
-        col_status_(column_index_status),
-        col_label_(column_index_label),
-        col_url_(column_index_URL),
-        context_table_menu_(this, "context_table_menu"), sub_menu_(0)
+        ResultView(column_index_status, column_index_label, column_index_URL)
+        //context_table_menu_(this, "context_table_menu")
 {
     setShowGrid(false);
     setSorting(false);
@@ -78,15 +76,15 @@ TableLinkstatus::~TableLinkstatus()
     delete cell_tip_;
 }
 
-void TableLinkstatus::setColunas(vector<QString> const& columns)
+void TableLinkstatus::setColumns(QStringList const& columns)
 {
-    Q_ASSERT(columns.size() != 0);
+    ResultView::setColumns(columns);
 
     removeColunas();
     setNumCols(columns.size());
 
     QHeader* horizontal_header = horizontalHeader();
-    for(vector<QString>::size_type i = 0; i != columns.size(); ++i)
+    for(uint i = 0; i != columns.size(); ++i)
     {
         if(i == 0)
         {
@@ -106,6 +104,32 @@ void TableLinkstatus::setColunas(vector<QString> const& columns)
 
     setColumnStretchable(col_url_ - 1, true);
     horizontal_header->adjustHeaderSize();
+}
+
+void TableLinkstatus::insertResult(LinkStatus const* linkstatus)
+{
+    insereLinha(generateRowOfTableItems(linkstatus));
+}
+
+vector<TableItem*> TableLinkstatus::generateRowOfTableItems(LinkStatus const* linkstatus)
+{
+    vector<TableItem*> items;
+    int column = 1;
+
+    TableItem* item1 = new TableItemStatus(this, QTableItem::Never,
+                                           linkstatus, column++);
+    TableItem* item2 = new TableItemNome(this, QTableItem::Never,
+                                         linkstatus, column++);
+    TableItem* item3 = new TableItemURL(this, QTableItem::Never,
+                                        linkstatus, column++);
+    items.push_back(item1);
+    items.push_back(item2);
+    items.push_back(item3);
+
+    // If more columns are choosed in the settings, create and add the items here
+    // ...
+
+    return items;
 }
 
 void TableLinkstatus::insereLinha(vector<TableItem*> items)
@@ -132,7 +156,7 @@ void TableLinkstatus::insereLinha(vector<TableItem*> items)
     ensureCellVisible(row, 0);
 }
 
-void TableLinkstatus::removeLinhas()
+void TableLinkstatus::clear()
 {
     QMemArray<int> linhas(numRows());
     for(uint i = 0; i != linhas.size(); ++i)
@@ -154,6 +178,30 @@ void TableLinkstatus::removeColunas()
     Q_ASSERT(numCols() == 0);
 }
 
+void TableLinkstatus::show(ResultView::Status const& status)
+{
+    for(int i = 0; i != numRows(); ++i)
+    {
+        int row = i;
+        TableItem* _item = myItem(row, col_status_);
+
+        if(not ResultView::displayableWithStatus(_item->linkStatus(), status))
+            hideRow(row);
+        else
+            showRow(row);
+    }
+}
+
+void TableLinkstatus::showAll()
+{
+    for(int i = 0; i != numRows(); ++i)
+    {
+        int row = i;
+        showRow(row);   
+    }       
+}
+
+/*
 void TableLinkstatus::mostraPorStatusCode(int status_code)
 {
     for(int i = 0; i != numRows(); ++i)
@@ -165,7 +213,7 @@ void TableLinkstatus::mostraPorStatusCode(int status_code)
             hideRow(row);
     }
 }
-
+*/
 /**
    Use this procedure when you insert a row at the bottom of the table, 
    and you only want the to scroll down if you were already at the bottom, 
@@ -180,7 +228,7 @@ void TableLinkstatus::ensureCellVisible(int row, int col)
         QTable::ensureCellVisible(row, col);
 }
 
-bool TableLinkstatus::textoCabeNaCelula(int row, int col) const
+bool TableLinkstatus::textFitsInCell(int row, int col) const
 {
     QTableItem* itm(myItem(row, col));
     Q_ASSERT(itm);
@@ -226,7 +274,7 @@ void TableLinkstatus::loadContextTableMenu(QValueVector<KURL> const& referrers)
 {
     context_table_menu_.clear();
     sub_menu_->clear();
-    
+
     if(Global::isQuantaAvailableViaDCOP())
     {
         sub_menu_->insertItem(i18n("All"), this, SLOT(slotEditReferrersWithQuanta()));
@@ -302,7 +350,7 @@ void TableLinkstatus::slotEditReferrerWithQuanta(int id)
     Q_ASSERT(Global::isQuantaAvailableViaDCOP());
 
     int index = sub_menu_->indexOf(id);
-    
+
     if(index == 0)
         return;
     Q_ASSERT(index != -1);
@@ -310,7 +358,7 @@ void TableLinkstatus::slotEditReferrerWithQuanta(int id)
 
     //kdDebug(23100) << "id: " << id << endl;
     //kdDebug(23100) << "index: " << index << endl;
-    
+
     index -= 2; // The list of referrers starts on index = 2
 
     TableItem* _item = myItem(currentRow(), currentColumn());
@@ -422,6 +470,7 @@ int TableItem::alignment() const
 
 LinkStatus const* const TableItem::linkStatus() const
 {
+    Q_ASSERT(ls_);
     return ls_;
 }
 
@@ -435,10 +484,10 @@ QColor const& TableItem::textStatusColor() const
         else
             return red;
     }
-    
+
     else if(linkStatus()->absoluteUrl().hasRef())
-            return blue;
-    
+        return blue;
+
     else if(linkStatus()->absoluteUrl().protocol() != "http" &&
             linkStatus()->absoluteUrl().protocol() != "https")
         return darkGreen;

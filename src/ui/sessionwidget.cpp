@@ -21,6 +21,7 @@
 #include "sessionwidget.h"
 #include "tablelinkstatus.h"
 #include "klshistorycombo.h"
+#include "resultview.h"
 #include "../engine/linkstatus.h"
 #include "../engine/linkchecker.h"
 #include "../engine/searchmanager.h"
@@ -34,6 +35,7 @@
 #include <qlayout.h>
 #include <qlabel.h>
 #include <qlistbox.h>
+#include <qstringlist.h>
 #include <qbuttongroup.h>
 
 #include <kapplication.h>
@@ -99,14 +101,39 @@ void SessionWidget::newSearchManager()
             this, SLOT(slotLinksToCheckTotalSteps(uint)));
 }
 
-void SessionWidget::setColumns(vector<QString> const& colunas)
+void SessionWidget::setColumns(QStringList const& colunas)
 {
-    table_linkstatus->setColunas(colunas);
+    table_linkstatus->setColumns(colunas);
 }
 
 void SessionWidget::setUrl(KURL const& url)
 {
     combobox_url->setCurrentText(url.prettyURL());
+}
+
+void SessionWidget::displayAllLinks()
+{
+    table_linkstatus->showAll();   
+}
+
+void SessionWidget::displayGoodLinks()
+{
+    table_linkstatus->show(ResultView::good);   
+}
+
+void SessionWidget::displayBadLinks()
+{
+    table_linkstatus->show(ResultView::bad);   
+}
+
+void SessionWidget::displayMalformedLinks()
+{
+    table_linkstatus->show(ResultView::malformed);   
+}
+
+void SessionWidget::displayUndeterminedLinks()
+{
+    table_linkstatus->show(ResultView::undetermined);   
 }
 
 bool SessionWidget::isEmpty() const
@@ -175,7 +202,7 @@ void SessionWidget::slotCheck()
 
     Q_ASSERT(!pushbutton_check->isEnabled()); // FIXME pushbutton_check sometimes doesn't show disable. Qt bug?
 
-    table_linkstatus->removeLinhas();
+    table_linkstatus->clear();
 
     KURL url = ::normalizeUrl(combobox_url->currentText());
 
@@ -285,7 +312,8 @@ void SessionWidget::slotRootChecked(LinkStatus const* linkstatus, LinkChecker * 
     Q_ASSERT(textlabel_progressbar->text() == "Checking...");
     progressbar_checker->setProgress(1);
 
-    table_linkstatus->insereLinha(generateRowOfTableItems(linkstatus));
+    //table_linkstatus->insereLinha(generateRowOfTableItems(linkstatus));
+    table_linkstatus->insertResult(linkstatus);
 
     if(linkstatus->isRedirection() && linkstatus->redirection())
         slotLinkChecked(linkstatus->redirection(), anal);
@@ -300,18 +328,19 @@ void SessionWidget::slotLinkChecked(LinkStatus const* linkstatus, LinkChecker * 
 
     if(linkstatus->checked())
     {
-        table_linkstatus->insereLinha(generateRowOfTableItems(linkstatus));
+        //table_linkstatus->insereLinha(generateRowOfTableItems(linkstatus));
+        table_linkstatus->insertResult(linkstatus);
 
         if(linkstatus->isRedirection() && linkstatus->redirection())
             slotLinkChecked(linkstatus->redirection(), anal);
     }
 }
-
+/*
 vector<TableItem*> SessionWidget::generateRowOfTableItems(LinkStatus const* linkstatus) const
 {
     vector<TableItem*> items;
     int column = 1;
-
+ 
     TableItem* item1 = new TableItemStatus(table_linkstatus, QTableItem::Never,
                                            linkstatus, column++);
     TableItem* item2 = new TableItemNome(table_linkstatus, QTableItem::Never,
@@ -321,13 +350,13 @@ vector<TableItem*> SessionWidget::generateRowOfTableItems(LinkStatus const* link
     items.push_back(item1);
     items.push_back(item2);
     items.push_back(item3);
-
+ 
     // If more columns are choosed in the settings, create and add the items here
     // ...
-
+ 
     return items;
 }
-
+*/
 void SessionWidget::slotSearchFinished()
 {
     KApplication::beep ();

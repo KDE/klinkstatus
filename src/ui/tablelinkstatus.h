@@ -26,6 +26,7 @@
 #include <qcolor.h>
 #include <qpopupmenu.h>
 #include <qvaluevector.h>
+class QStringList;
 
 class KURL;
 
@@ -33,6 +34,7 @@ class KURL;
 
 #include "../engine/linkstatus.h"
 #include "celltooltip.h"
+#include "resultview.h"
 
 using namespace std;
 
@@ -41,10 +43,9 @@ int const STATUS_COLUMN_WIDTH = 50;
 
 class TableItem;
 
-class TableLinkstatus: public QTable
+class TableLinkstatus: public QTable, public ResultView
 {
     Q_OBJECT
-
 public:
 
     TableLinkstatus(QWidget * parent = 0, const char * name = 0,
@@ -53,48 +54,53 @@ public:
                     int column_index_URL = 3);
     ~TableLinkstatus();
 
-    void setColunas(vector<QString> const& columns);
+    virtual void setColumns(QStringList const& columns);
 
     /* Insere uma nova entrada no fim da tabela */
-    void insereLinha(vector<TableItem*> items);
+    virtual void insertResult(LinkStatus const* linkstatus);
 
-    void removeLinhas();
+
+    virtual void clear();
     void removeColunas();
-    void mostraPorStatusCode(int status_code);
+    virtual void show(ResultView::Status const& status);
+    virtual void showAll();
+
 
     /* Specialization of QTable::ensureCellVisible */
     virtual void ensureCellVisible(int row, int col);
 
-    bool textoCabeNaCelula(int row, int col) const;
-    bool isEmpty() const;
+    virtual bool textFitsInCell(int row, int col) const;
+    virtual bool isEmpty() const;
 
     TableItem* myItem(int row, int col) const;
 
 private slots:
 
-    void slotPopupContextMenu(int row, int col, const QPoint& pos);
-    void slotCopyUrlToClipboard() const;
-    void slotCopyParentUrlToClipboard() const;
-    void slotCopyCellTextToClipboard() const;
-    void slotEditReferrersWithQuanta();
-    void slotEditReferrerWithQuanta(int id);
-    void slotEditReferrerWithQuanta(KURL const& url);
-    void slotViewUrlInBrowser();
-    void slotViewParentUrlInBrowser();
+    virtual void slotPopupContextMenu(int row, int col, const QPoint& pos);
+    virtual void slotCopyUrlToClipboard() const;
+    virtual void slotCopyParentUrlToClipboard() const;
+    virtual void slotCopyCellTextToClipboard() const;
+    virtual void slotEditReferrersWithQuanta();
+    virtual void slotEditReferrerWithQuanta(int id);
+    virtual void slotEditReferrerWithQuanta(KURL const& url);
+    virtual void slotViewUrlInBrowser();
+    virtual void slotViewParentUrlInBrowser();
 
 private:
 
     void loadContextTableMenu(QValueVector<KURL> const& referrers);
-    //void slotViewInBrowser(KURL const& url);
+    vector<TableItem*> generateRowOfTableItems(LinkStatus const* linkstatus);
+    void insereLinha(vector<TableItem*> items);
 
 private:
-
+/*
     int col_status_;
     int col_label_;
     int col_url_;
     CellToolTip* cell_tip_;
     QPopupMenu context_table_menu_;
     QPopupMenu* sub_menu_;
+*/
 };
 
 

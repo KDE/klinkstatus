@@ -69,6 +69,8 @@ void KLinkStatusPart::initGUI()
 {
     setXMLFile("klinkstatus_part.rc", true);
 
+    // File menu
+
     action_new_link_check_ = new KAction(i18n("New Link Check"), "filenew",
                                          0, this, SLOT(slotNewLinkCheck()),
                                          actionCollection(), "new_link_check");
@@ -82,14 +84,36 @@ void KLinkStatusPart::initGUI()
                                     actionCollection(), "close_tab");
     action_close_tab_->setEnabled(false);
 
-    //_____________________________________________________________________________________
+    // View menu
 
-    (void) new KAction(i18n("About KLinkStatus")," klinkstatus",
+    (void) new KAction(i18n("All links"), "",
+                       0, this, SLOT(slotDisplayAllLinks()),
+                       actionCollection(), "display_all_links");
+    
+    (void) new KAction(i18n("Good links"), "ok",
+                       0, this, SLOT(slotDisplayGoodLinks()),
+                       actionCollection(), "display_good_links");
+
+    (void) new KAction(i18n("Broken links"), "no",
+                       0, this, SLOT(slotDisplayBadLinks()),
+                       actionCollection(), "display_bad_links");
+
+    (void) new KAction(i18n("Malformed links"), "khtml/icons/crystalsvg/16x16/actions/bug.png",
+                       0, this, SLOT(slotDisplayMalformedLinks()),
+                       actionCollection(), "display_malformed_links");
+
+    (void) new KAction(i18n("Undetermined links"), "help",
+                       0, this, SLOT(slotDisplayUndeterminedLinks()),
+                       actionCollection(), "display_undetermined_links");
+
+    // Help menu
+
+    (void) new KAction(i18n("About KLinkStatus"), "klinkstatus",
                        0, this, SLOT(slotAbout()),
                        actionCollection(), "about_klinkstatus");
 
     (void) new KAction(i18n("&Report Bug..."), 0, 0, this,
-                        SLOT(slotReportBug()), actionCollection(), "report_bug");
+                       SLOT(slotReportBug()), actionCollection(), "report_bug");
 }
 
 void KLinkStatusPart::setModified(bool modified)
@@ -153,6 +177,31 @@ void KLinkStatusPart::slotClose()
         Q_ASSERT(action_close_tab_->isEnabled());
     else
         action_close_tab_->setEnabled(false);
+}
+
+void KLinkStatusPart::slotDisplayAllLinks()
+{
+    tabwidget_->currentSession()->displayAllLinks();
+}
+
+void KLinkStatusPart::slotDisplayGoodLinks()
+{
+    tabwidget_->currentSession()->displayGoodLinks();
+}
+
+void KLinkStatusPart::slotDisplayBadLinks()
+{
+    tabwidget_->currentSession()->displayBadLinks();
+}
+
+void KLinkStatusPart::slotDisplayMalformedLinks()
+{
+    tabwidget_->currentSession()->displayMalformedLinks();
+}
+
+void KLinkStatusPart::slotDisplayUndeterminedLinks()
+{
+    tabwidget_->currentSession()->displayUndeterminedLinks();
 }
 
 void KLinkStatusPart::slotAbout()

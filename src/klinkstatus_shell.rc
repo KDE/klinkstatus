@@ -8,6 +8,10 @@
     <Action name="file_quit"/>
   </Menu>
 
+  <Menu noMerge="1" name="view"><text>&amp;View</text>
+    <Separator/>
+  </Menu>
+            
   <Menu noMerge="1" name="settings"><text>&amp;Settings</text>
     <Action name="options_show_toolbar"/>
     <Merge name="show_merge"/>

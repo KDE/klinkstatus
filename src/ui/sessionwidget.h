@@ -29,6 +29,7 @@ class TableItem;
 
 #include <qtimer.h>
 #include <qstring.h>
+class QStringList;
 
 #include <vector>
 
@@ -48,8 +49,15 @@ public:
 
     ~SessionWidget();
 
-    void setColumns(vector<QString> const& colunas);
+    void setColumns(QStringList const& colunas);
     void setUrl(KURL const& url);
+    void displayAllLinks();
+    void displayGoodLinks();
+    void displayBadLinks();
+    void displayMalformedLinks();
+    void displayUndeterminedLinks();
+
+
 
     bool isEmpty() const;
     SearchManager const* getSearchManager() const;
@@ -82,7 +90,7 @@ private:
     virtual void keyPressEvent ( QKeyEvent* e );
     void initComboUrl();
     bool validFields();
-    vector<TableItem*> generateRowOfTableItems(LinkStatus const* linkstatus) const;
+    //vector<TableItem*> generateRowOfTableItems(LinkStatus const* linkstatus) const;
     void insertUrlAtCombobox(QString const& url);
 
 

@@ -31,36 +31,36 @@ class KURL;
 
 /**
 This class handles the creation and destruction of sessions, i.e, severals instances of searching tabs.
-
+ 
 @author Paulo Moura Guedes
 */
 class TabWidgetSession : public QTabWidget
 {
-	Q_OBJECT
+    Q_OBJECT
 
 public:
-	TabWidgetSession(QWidget * parent = 0, const char * name = 0, WFlags f = 0);
-	~TabWidgetSession();
-	
-	/** Set the URL in the current session widget */
-	void setUrl(KURL const& url);
-	
-	SessionWidget* currentSession() const;
-	bool emptySessionsExist() const;
-	/** Returns the first empty session it finds */
-	SessionWidget* getEmptySession() const;
+    TabWidgetSession(QWidget * parent = 0, const char * name = 0, WFlags f = 0);
+    ~TabWidgetSession();
+
+    /** Set the URL in the current session widget */
+    void setUrl(KURL const& url);
+
+    SessionWidget* currentSession() const;
+    bool emptySessionsExist() const;
+    /** Returns the first empty session it finds */
+    SessionWidget* getEmptySession() const;
 
 public slots:
-	void newSession();
-	void newSession(KURL const& url);
-	void closeSession();
-	void updateTabLabel(LinkStatus const* linkstatus);
-	
+    void newSession();
+    void newSession(KURL const& url);
+    void closeSession();
+    void updateTabLabel(LinkStatus const* linkstatus);
+
 private:
-	SessionWidget* newSessionWidget();
-	
+    SessionWidget* newSessionWidget();
+
 private:
-	QIntDict<SessionWidget> tabs_;
+    QIntDict<SessionWidget> tabs_;
 };
 
 #endif

@@ -27,6 +27,7 @@
 #include <qpushbutton.h>
 #include <qpixmap.h>
 #include <qiconset.h>
+#include <qstringlist.h>
 
 #include <kapplication.h>
 #include <kstandarddirs.h>
@@ -108,7 +109,7 @@ SessionWidget* TabWidgetSession::newSessionWidget()
     // TODO: settings: number of connections, timeout
     SessionWidget* session_widget = new SessionWidget( 5, 30, this, "session_widget");
 
-    vector<QString> columns;
+    QStringList columns;
     columns.push_back(i18n("Status"));
     columns.push_back(i18n("Label"));
     columns.push_back(i18n("URL"));

@@ -55,23 +55,28 @@ protected:
 
 protected slots:
     void slotNewLinkCheck();
-	void slotOpenLink();
-	void slotClose();
-	void slotAbout();
-	void slotReportBug();
-	
+    void slotOpenLink();
+    void slotClose();
+    void slotDisplayAllLinks();
+    void slotDisplayGoodLinks();
+    void slotDisplayBadLinks();
+    void slotDisplayMalformedLinks();
+    void slotDisplayUndeterminedLinks();
+    void slotAbout();
+    void slotReportBug();
+
 private:
     void initGUI();
 
 private:
-	static const char description_[];
-	static const char version_[];
-	
+    static const char description_[];
+    static const char version_[];
+
     TabWidgetSession* tabwidget_;
-	KAboutApplication* m_dlgAbout;
-	KAction* action_new_link_check_;
-	KAction* action_open_link_;
-	KAction* action_close_tab_;
+    KAboutApplication* m_dlgAbout;
+    KAction* action_new_link_check_;
+    KAction* action_open_link_;
+    KAction* action_close_tab_;
 };
 
 #endif // _KLINKSTATUSPART_H_
