@@ -7,7 +7,7 @@ INCLUDES = -I$(top_builddir)/klinkstatus/src/ui -I$(top_srcdir)/klinkstatus/cfg 
 # let automoc handle all of the meta source files (moc)
 METASOURCES = AUTO
 
-KDE_ICON = klinkstatus
+#KDE_ICON = klinkstatus
 
 # this Makefile creates both a KPart application and a KPart
 #########################################################################

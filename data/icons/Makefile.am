@@ -1,0 +1,2 @@
+SUBDIRS = 32x32 22x22 16x16
+KDE_ICON = klinkstatus
