@@ -107,9 +107,13 @@ void KLinkStatus::removeDuplicatedActions()
 {
     KActionCollection* part_action_collection = m_part->actionCollection();
     KAction* part_about_action = part_action_collection->action("about_klinkstatus");
+    KAction* part_report_action = part_action_collection->action("report_bug");
     
-    part_about_action->unplug(part_about_action->container(0));
+    QWidget* container = part_about_action->container(0); // call this only once or segfault
+    part_about_action->unplug(container);
+    part_report_action->unplug(container);
     part_action_collection->remove(part_about_action);
+    part_action_collection->remove(part_report_action);
 }
 
 void KLinkStatus::saveProperties(KConfig* /*config*/)
