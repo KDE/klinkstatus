@@ -1,0 +1,21 @@
+<!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
+<kpartgui name="klinkstatus_part" version="1">
+<MenuBar>
+  <Menu name="file"><text>File</text>
+    <Separator/>
+    <Action name="new_link_check"/>
+    <Action name="open_link"/>
+    <Action name="close_tab"/>
+    <Separator/>
+  </Menu>
+  <Menu name="help"><text>&amp;Help</text>
+#    <Action name="about_klinkstatus"/>
+  </Menu>
+</MenuBar>
+<ToolBar name="linksToolBar">
+    <Action name="new_link_check"/>
+    <Action name="open_link"/>
+    <Action name="close_tab"/>
+  	<Separator/>
+</ToolBar>
+</kpartgui>

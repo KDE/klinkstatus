@@ -1,0 +1,53 @@
+# set the include path for X, qt and KDE
+INCLUDES = -I$(top_builddir)/klinkstatus/src/ui $(all_includes)
+
+# these are the headers for your project
+
+
+# let automoc handle all of the meta source files (moc)
+METASOURCES = AUTO
+
+KDE_ICON = klinkstatus
+
+# this Makefile creates both a KPart application and a KPart
+#########################################################################
+# APPLICATION SECTION
+#########################################################################
+# this is the program that gets installed.  it's name is used for all
+# of the other Makefile.am variables
+bin_PROGRAMS = klinkstatus
+
+# the application source, library search path, and link libraries
+
+klinkstatus_LDFLAGS = $(KDE_RPATH) $(all_libraries)
+klinkstatus_LDADD   = $(LIB_KPARTS)
+
+# this is where the desktop file will go 
+shelldesktopdir   = $(kde_appsdir)/Utilities
+shelldesktop_DATA = klinkstatus.desktop
+
+# this is where the shell's XML-GUI resource file goes
+shellrcdir   = $(kde_datadir)/klinkstatus
+shellrc_DATA = klinkstatus_shell.rc
+
+#########################################################################
+# KPART SECTION
+#########################################################################
+kde_module_LTLIBRARIES = libklinkstatuspart.la
+
+# the Part's source, library search path, and link libraries
+
+libklinkstatuspart_la_LDFLAGS = -module $(KDE_PLUGIN) $(all_libraries)
+libklinkstatuspart_la_LIBADD = $(top_builddir)/klinkstatus/src/ui/libui.la $(top_builddir)/klinkstatus/src/engine/libengine.la $(top_builddir)/klinkstatus/src/parser/libparser.la $(top_builddir)/klinkstatus/src/utils/libutils.la $(LIB_KPARTS) $(LIB_KFILE)
+
+# this is where the desktop file will go 
+partdesktopdir   = $(kde_servicesdir)
+partdesktop_DATA = klinkstatus_part.desktop
+
+# this is where the part's XML-GUI resource file goes
+partrcdir   = $(kde_datadir)/klinkstatuspart
+partrc_DATA = klinkstatus_part.rc
+noinst_HEADERS =  klinkstatus.h klinkstatus_part.h
+klinkstatus_SOURCES =  klinkstatus.cpp main.cpp
+libklinkstatuspart_la_SOURCES =  klinkstatus_part.cpp
+SUBDIRS =  utils parser engine ui

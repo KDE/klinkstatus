@@ -1,0 +1,30 @@
+Do list:
+
+- Filter to display links (bad links, etc...)
+
+- Ability to do edit actions after a search is finished,
+  like findind links, etc
+
+- GUI for search stats
+
+- GUI for info about a page/URL
+
+- GUI for configure settings
+
+- Send email with broken links
+
+- Save the last entries to the combo box of URLs
+
+- Check the size for complete request on homepage
+
+- Support resuming
+
+- Use proper charset for the pages
+
+- Advanced search features like:
+	- check only files modified recently
+	- check only files matching given regular expression
+	- check only files in given path
+
+- Write better documentation
+ 

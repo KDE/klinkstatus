@@ -1,0 +1,98 @@
+/***************************************************************************
+ *   Copyright (C) 2004 by Paulo Moura Guedes                              *
+ *   pmg@netcabo.pt                                                        *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the                         *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
+
+#ifndef SESSION_WIDGET_H
+#define SESSION_WIDGET_H
+
+#include "sessionwidgetbase.h"
+#include "../engine/linkchecker.h"
+#include "../engine/linkstatus.h"
+class SearchManager;
+
+#include <qtimer.h>
+#include <qstring.h>
+
+#include <vector>
+
+using namespace std;
+
+class KURL;
+class TableItem;
+
+class SessionWidget: public SessionWidgetBase
+{
+    Q_OBJECT
+
+public:
+
+    SessionWidget(int max_simultaneous_connections = 3, int time_out = 50,
+                  QWidget* parent = 0, const char* name = 0, WFlags f = 0);
+
+    ~SessionWidget();
+
+    void setColumns(vector<QString> const& colunas);
+    void setUrl(KURL const& url);
+
+    bool isEmpty() const;
+	SearchManager const* getSearchManager() const;
+
+signals:
+	void signalCheckUrl(const LinkStatus *);
+
+private slots:
+
+    virtual void slotCheck();
+    virtual void slotCancel();
+    //virtual void slotSuggestDomain(bool toogle);
+
+    void slotEnableCheckButton(const QString &);
+    void slotRootChecked(LinkStatus const* linkstatus, LinkChecker * anal);
+    void slotLinkChecked(LinkStatus const* linkstatus, LinkChecker * anal);
+    void slotSearchFinished();
+    /** Shows the status of the clicked URL (row) for 5 seconds */
+    void showBottomStatusLabel(int row, int col, int button, QPoint const&  mousePos);
+    void clearBottomStatusLabel();
+    void slotSetTimeElapsed();
+	void newSearchManager();
+	
+	void slotAddingLevelTotalSteps(uint steps);
+	void slotAddingLevelProgress();
+	void slotLinksToCheckTotalSteps(uint steps);
+	
+private:
+
+    virtual void keyPressEvent ( QKeyEvent* e );
+    bool validFields();
+    vector<TableItem*> generateRowOfTableItems(LinkStatus const* linkstatus) const;
+    void insertUrlAtCombobox(QString const& url);
+	
+
+private:
+
+    SearchManager* gestor_pesquisa_;
+    bool ready_;
+    QTimer bottom_status_timer_;
+	int max_simultaneous_connections_;
+	int time_out_;
+};
+
+
+
+#endif
