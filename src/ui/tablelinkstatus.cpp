@@ -286,7 +286,7 @@ void TableLinkstatus::loadContextTableMenu(QValueVector<KURL> const& referrers)
         }
         connect(sub_menu_, SIGNAL(activated(int)), this, SLOT(slotEditReferrerWithQuanta(int)));
 
-        context_table_menu_.insertItem(SmallIconSet("fileopen"), i18n("Edit referrer with Quanta"),
+        context_table_menu_.insertItem(SmallIconSet("fileopen"), i18n("Edit Referrer with Quanta"),
                                        sub_menu_);
     }
     else
@@ -309,7 +309,7 @@ void TableLinkstatus::loadContextTableMenu(QValueVector<KURL> const& referrers)
     context_table_menu_.insertItem(SmallIconSet("editcopy"), i18n("Copy Referrer URL"),
                                    this, SLOT(slotCopyParentUrlToClipboard()));
 
-    context_table_menu_.insertItem(SmallIconSet("editcopy"), i18n("Copy cell text"),
+    context_table_menu_.insertItem(SmallIconSet("editcopy"), i18n("Copy Cell Text"),
                                    this, SLOT(slotCopyCellTextToClipboard()));
 }
 

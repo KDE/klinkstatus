@@ -101,28 +101,28 @@ void KLinkStatusPart::initGUI()
 
     // *************** View menu *********************
 
-    action_display_all_links_ = new KAction(i18n("All links"), "",
+    action_display_all_links_ = new KAction(i18n("All Links"), "",
                                             0, this, SLOT(slotDisplayAllLinks()),
                                             actionCollection(), "display_all_links");
     action_display_all_links_->setEnabled(false);
 
-    action_display_good_links_ = new KAction(i18n("Good links"), "ok",
+    action_display_good_links_ = new KAction(i18n("Good Links"), "ok",
                                  0, this, SLOT(slotDisplayGoodLinks()),
                                  actionCollection(), "display_good_links");
     action_display_good_links_->setEnabled(false);
 
-    action_display_bad_links_ = new KAction(i18n("Broken links"), "no",
+    action_display_bad_links_ = new KAction(i18n("Broken Links"), "no",
                                             0, this, SLOT(slotDisplayBadLinks()),
                                             actionCollection(), "display_bad_links");
     action_display_bad_links_->setEnabled(false);
 
-    action_display_malformed_links_ = new KAction(i18n("Malformed links"),
+    action_display_malformed_links_ = new KAction(i18n("Malformed Links"),
                                       "bug",
                                       0, this, SLOT(slotDisplayMalformedLinks()),
                                       actionCollection(), "display_malformed_links");
     action_display_malformed_links_->setEnabled(false);
 
-    action_display_undetermined_links_ = new KAction(i18n("Undetermined links"), "help",
+    action_display_undetermined_links_ = new KAction(i18n("Undetermined Links"), "help",
                                          0, this, SLOT(slotDisplayUndeterminedLinks()),
                                          actionCollection(), "display_undetermined_links");
     action_display_undetermined_links_->setEnabled(false);
