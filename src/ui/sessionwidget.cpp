@@ -214,7 +214,7 @@ void SessionWidget::slotCheck()
     progressbar_checker->reset();
     progressbar_checker->setTotalSteps(1); // check root page
     progressbar_checker->setProgress(0);
-    textlabel_progressbar->setText("Checking...");
+    textlabel_progressbar->setText(i18n( "Checking..." ));
 
     table_linkstatus->verticalHeader()->show();
     table_linkstatus->verticalHeader()->adjustHeaderSize();
@@ -223,7 +223,7 @@ void SessionWidget::slotCheck()
     //buttongroup_search->setEnabled(false);
     pushbutton_check->setEnabled(false);
     pushbutton_cancel->setEnabled(true);
-    pushbutton_cancel->setText("&Pause");
+    pushbutton_cancel->setText(i18n( "&Pause" ));
     pushbutton_cancel->setIconSet(SmallIconSet("player_pause"));
     textlabel_elapsed_time->setEnabled(true);
     //textlabel_elapsed_time_value->setText("");
@@ -238,7 +238,7 @@ void SessionWidget::slotCheck()
     {
         KURL url_aux = Global::urlWithQuantaPreviewPrefix(url);
         if(url_aux.isValid() && !url_aux.isEmpty())
-            url = url_aux;   
+            url = url_aux;
     }
     
     if(!checkbox_recursively->isChecked())
@@ -302,11 +302,11 @@ void SessionWidget::slotCancel()
     else
     {
         Q_ASSERT(ready_);
-        Q_ASSERT(pushbutton_cancel->text() == "&Resume");
+        Q_ASSERT(pushbutton_cancel->text() == i18n( "&Resume" ));
         pushbutton_check->setEnabled(false);
-        pushbutton_cancel->setText("&Pause");
+        pushbutton_cancel->setText(i18n( "&Pause" ));
         pushbutton_cancel->setIconSet(SmallIconSet("player_pause"));
-        textlabel_progressbar->setText("Checking...");
+        textlabel_progressbar->setText(i18n( "Checking..." ));
         ready_ = false;
         search_manager_->resume();
     }
@@ -358,7 +358,7 @@ void SessionWidget::slotRootChecked(LinkStatus const* linkstatus, LinkChecker * 
     slotSetTimeElapsed();
     emit signalUpdateTabLabel(search_manager_->linkStatusRoot());
 
-    Q_ASSERT(textlabel_progressbar->text() == "Checking...");
+    Q_ASSERT(textlabel_progressbar->text() == i18n( "Checking..." ));
     progressbar_checker->setProgress(1);
 
     //table_linkstatus->insereLinha(generateRowOfTableItems(linkstatus));
@@ -372,7 +372,7 @@ void SessionWidget::slotLinkChecked(LinkStatus const* linkstatus, LinkChecker * 
 {
     slotSetTimeElapsed();
 
-    Q_ASSERT(textlabel_progressbar->text() == "Checking...");
+    Q_ASSERT(textlabel_progressbar->text() == i18n( "Checking..." ));
     progressbar_checker->setProgress(progressbar_checker->progress() + 1);
 
     if(linkstatus->checked())
@@ -389,7 +389,7 @@ vector<TableItem*> SessionWidget::generateRowOfTableItems(LinkStatus const* link
 {
     vector<TableItem*> items;
     int column = 1;
- 
+
     TableItem* item1 = new TableItemStatus(table_linkstatus, QTableItem::Never,
                                            linkstatus, column++);
     TableItem* item2 = new TableItemNome(table_linkstatus, QTableItem::Never,
@@ -399,10 +399,10 @@ vector<TableItem*> SessionWidget::generateRowOfTableItems(LinkStatus const* link
     items.push_back(item1);
     items.push_back(item2);
     items.push_back(item3);
- 
+
     // If more columns are choosed in the settings, create and add the items here
     // ...
- 
+
     return items;
 }
 */
@@ -410,7 +410,7 @@ void SessionWidget::slotSearchFinished()
 {
     KApplication::beep ();
 
-    textlabel_progressbar->setText("Ready");
+    textlabel_progressbar->setText(i18n( "Ready" ));
     progressbar_checker->reset();
     progressbar_checker->setTotalSteps(1);
     progressbar_checker->setProgress(0);
@@ -430,12 +430,12 @@ void SessionWidget::slotSearchPaused()
 {
     KApplication::beep ();
 
-    textlabel_progressbar->setText("Stopped");
+    textlabel_progressbar->setText(i18n( "Stopped" ));
 
     ready_ = true;
     pushbutton_check->setEnabled(true);
     pushbutton_cancel->setEnabled(true);
-    pushbutton_cancel->setText("&Resume");
+    pushbutton_cancel->setText(i18n( "&Resume" ));
     pushbutton_cancel->setIconSet(SmallIconSet("player_play"));
     textlabel_elapsed_time->setEnabled(true);
     textlabel_elapsed_time_value->setEnabled(true);
@@ -480,7 +480,7 @@ void SessionWidget::slotSetTimeElapsed()
 
 void SessionWidget::slotAddingLevelTotalSteps(uint steps)
 {
-    textlabel_progressbar->setText("Adding level...");
+    textlabel_progressbar->setText(i18n( "Adding level..." ));
     progressbar_checker->reset();
     progressbar_checker->setTotalSteps(steps);
     progressbar_checker->setProgress(0);
@@ -488,13 +488,13 @@ void SessionWidget::slotAddingLevelTotalSteps(uint steps)
 
 void SessionWidget::slotAddingLevelProgress()
 {
-    Q_ASSERT(textlabel_progressbar->text() == "Adding level...");
+    Q_ASSERT(textlabel_progressbar->text() == i18n( "Adding level..." ));
     progressbar_checker->setProgress(progressbar_checker->progress() + 1);
 }
 
 void SessionWidget::slotLinksToCheckTotalSteps(uint steps)
 {
-    textlabel_progressbar->setText("Checking...");
+    textlabel_progressbar->setText(i18n( "Checking..." ));
     progressbar_checker->reset();
     progressbar_checker->setTotalSteps(steps);
     progressbar_checker->setProgress(0);

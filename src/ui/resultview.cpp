@@ -44,11 +44,11 @@ void ResultView::setColumns(QStringList const& columns)
     {
         columns_.push_back(columns[i]);
 
-        if(columns[i] == "Status")
+        if(columns[i] == i18n( "Status" ))
             Q_ASSERT(i + 1 == col_status_);
-        else if(columns[i] == "Label")
+        else if(columns[i] == i18n( "Label" ))
             Q_ASSERT(i + 1 == col_label_);
-        else if(columns[i] == "URL")
+        else if(columns[i] == i18n( "URL" ))
             Q_ASSERT(i + 1 == col_url_);
     }
 }
@@ -75,15 +75,15 @@ bool ResultView::displayableWithStatus(LinkStatus const* ls, Status const& statu
     }
     else if(status == ResultView::bad)
     {
-        return (!displayableWithStatus(ls, ResultView::good) && !ls->error().contains("Timeout"));
+        return (!displayableWithStatus(ls, ResultView::good) && !ls->error().contains(i18n("Timeout")));
     }
     else if(status == ResultView::malformed)
     {
-        return (ls->error() == "Malformed");
+        return (ls->error() == i18n( "Malformed" ));
     }
     else if(status == ResultView::undetermined)
     {
-        return (ls->error().contains("Timeout") ||
+        return (ls->error().contains(i18n("Timeout")) ||
                 (ls->absoluteUrl().hasRef() && ls->status() != "OK"));
     }
     else
@@ -125,7 +125,7 @@ QColor const& ResultViewItem::textStatusColor() const
     if(linkStatus()->errorOccurred())
     {
         //kdDebug(23100) <<  "ERROR: " << linkStatus()->error() << ": " << linkStatus()->absoluteUrl().prettyURL() << endl;
-        if(linkStatus()->error() == "Javascript not suported")
+        if(linkStatus()->error() == i18n( "Javascript not supported" ))
             return Qt::lightGray;
         else
             return Qt::red;

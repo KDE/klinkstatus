@@ -41,9 +41,9 @@
 
 
 /*
- 
+
 ********************* TableLinkstatus ***************************
- 
+
 */
 
 TableLinkstatus::TableLinkstatus(QWidget * parent, const char * name,
@@ -208,17 +208,17 @@ void TableLinkstatus::mostraPorStatusCode(int status_code)
     {
         int row = i + 1;
         QTableItem* _item = myItem(row, col_status_);
- 
+
         if(status_code != _item->text().toInt())
             hideRow(row);
     }
 }
 */
 /**
-   Use this procedure when you insert a row at the bottom of the table, 
-   and you only want the to scroll down if you were already at the bottom, 
+   Use this procedure when you insert a row at the bottom of the table,
+   and you only want the to scroll down if you were already at the bottom,
    before inserting the row.
-   This allows you to see what's going on on other cells without having 
+   This allows you to see what's going on on other cells without having
    the table always scrolling down when every row is inserted.
 */
 void TableLinkstatus::ensureCellVisible(int row, int col)
@@ -349,10 +349,10 @@ void TableLinkstatus::slotEditReferrersWithQuanta()
     else
     {
         QStringList list_urls;
-        
+
         for(uint i = 0; i != referrers.size(); ++i)
             list_urls.append(referrers[i].url());
-        
+
         Global::openQuanta(list_urls);
     }
 }
@@ -381,7 +381,7 @@ void TableLinkstatus::slotEditReferrerWithQuanta(int id)
 void TableLinkstatus::slotEditReferrerWithQuanta(KURL const& url)
 {
     QString filePath = url.url();
-    
+
     if(Global::isQuantaAvailableViaDCOP())
     {
         DCOPRef quanta(Global::quantaDCOPAppId(),"WindowManagerIf");
@@ -389,7 +389,7 @@ void TableLinkstatus::slotEditReferrerWithQuanta(KURL const& url)
 
         if(!success)
         {
-            QString message = QString(i18n("<qt>File <b>%1</b> cannot be opened. Might be a DCOP problem.</qt>")).arg(filePath);
+            QString message = i18n("<qt>File <b>%1</b> cannot be opened. Might be a DCOP problem.</qt>").arg(filePath);
             KMessageBox::error(parentWidget(), message);
         }
     }
@@ -436,9 +436,9 @@ void TableLinkstatus::slotViewParentUrlInBrowser()
 }
 
 /*
- 
+
 ********************* TableItem ***************************
- 
+
 */
 
 TableItem::TableItem(QTable* table, EditType et,
@@ -485,29 +485,29 @@ LinkStatus const* const TableItem::linkStatus() const
     Q_ASSERT(ls_);
     return ls_;
 }
- 
+
 QColor const& TableItem::textStatusColor() const
 {
     if(linkStatus()->errorOccurred())
     {
         //kdDebug(23100) <<  "ERROR: " << linkStatus()->error() << ": " << linkStatus()->absoluteUrl().prettyURL() << endl;
-        if(linkStatus()->error() == "Javascript not suported")
+        if(linkStatus()->error() == i18n( "Javascript not supported" ))
             return Qt::lightGray;
         else
             return Qt::red;
     }
- 
+
     else if(linkStatus()->absoluteUrl().hasRef())
         return Qt::blue;
- 
+
     else if(linkStatus()->absoluteUrl().protocol() != "http" &&
             linkStatus()->absoluteUrl().protocol() != "https")
         return Qt::darkGreen;
- 
+
     else
     {
         QString status_code(QString::number(linkStatus()->httpHeader().statusCode()));
- 
+
         if(status_code[0] == '0')
         {
             kdWarning(23100) <<  "status code == 0: " << endl;
@@ -515,19 +515,19 @@ QColor const& TableItem::textStatusColor() const
             kdWarning(23100) <<  linkStatus()->httpHeader().toString() << endl;
         }
         //Q_ASSERT(status_code[0] != '0');
- 
+
         if(status_code[0] == '5')
             return Qt::darkMagenta;
- 
+
         else if(status_code[0] == '4')
             return Qt::red;
- 
+
         else if(status_code[0] == '3')
             return Qt::blue;
- 
+
         else if(status_code[0] == '2')
             return Qt::darkGreen;
- 
+
         else
             return Qt::red;
     }
@@ -535,9 +535,9 @@ QColor const& TableItem::textStatusColor() const
 */
 
 /*
- 
+
 ********************* TableItemURL ***************************
- 
+
 */
 
 TableItemURL::TableItemURL(QTable* table, EditType et,
@@ -590,9 +590,9 @@ QColor const& TableItemURL::textStatusColor() const
 
     if(linkStatus()->errorOccurred())
     {
-        if(linkStatus()->error().contains("Timeout"))
+        if(linkStatus()->error().contains(i18n( "Timeout" )))
             return darkMagenta;
-        else if(linkStatus()->error().contains("not suported"))
+        else if(linkStatus()->error().contains(i18n( "not supported" )))
             return lightGray;
         else
             return red;
@@ -612,9 +612,9 @@ QColor const& TableItemURL::textStatusColor() const
 }
 
 /*
- 
+
 ********************* TableItemStatus ***************************
- 
+
 */
 
 TableItemStatus::TableItemStatus(QTable* table, EditType et,
@@ -655,11 +655,11 @@ void TableItemStatus::setPixmap()
     if(linkStatus()->errorOccurred())
     {
 
-        if(linkStatus()->error().contains("Timeout"))
+        if(linkStatus()->error().contains(i18n( "Timeout" )))
         {
             QTableItem::setPixmap(SmallIcon("kalarm"));
         }
-        else if(linkStatus()->error() == "Malformed")
+        else if(linkStatus()->error() == i18n( "Malformed" ))
         {
             QTableItem::setPixmap(SmallIcon("bug"));
         }
@@ -723,9 +723,9 @@ void TableItemStatus::paint( QPainter *p, const QColorGroup &cg,
 }
 
 /*
- 
+
 ********************* TableItemNome ***************************
- 
+
 */
 
 TableItemNome::TableItemNome(QTable* table, EditType et,

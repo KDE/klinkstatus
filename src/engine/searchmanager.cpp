@@ -26,7 +26,7 @@
 
 #include <kapplication.h>
 #include <kdebug.h>
-
+#include <klocale.h>
 
 #include <iostream>
 #include <unistd.h>
@@ -464,7 +464,7 @@ void SearchManager::checkLinksSimultaneously(vector<LinkStatus*> const& links)
         if(ls->malformed())
         {
             Q_ASSERT(ls->errorOccurred());
-            Q_ASSERT(ls->error() == "Malformed");
+            Q_ASSERT(ls->error() == i18n( "Malformed" ));
 
             ls->setChecked(true);
             slotLinkChecked(ls, 0);
@@ -475,7 +475,7 @@ void SearchManager::checkLinksSimultaneously(vector<LinkStatus*> const& links)
             ++ignored_links_;
             ls->setIgnored(true);
             ls->setErrorOccurred(true);
-            ls->setError("Javascript not suported");
+            ls->setError(i18n( "Javascript not supported" ));
             ls->setChecked(true);
             slotLinkChecked(ls, 0);
         }
@@ -485,7 +485,7 @@ void SearchManager::checkLinksSimultaneously(vector<LinkStatus*> const& links)
                     ++ignored_links_;
                     ls->setIgnored(true);
                     ls->setErrorOccurred(true);
-                    ls->setError("Protocol " + protocol + " not suported");
+                    ls->setError(i18n("Protocol %1 not supported").arg(protocol));
                     ls->setChecked(true);
                     slotLinkChecked(ls, 0);
                 }
@@ -618,10 +618,10 @@ bool SearchManager::checkableByDomain(KURL const& url, LinkStatus const& link_pa
 bool SearchManager::localDomain(KURL const& url) const
 {
     KURL url_root = root_.absoluteUrl();
- 
+
     if(url_root.protocol() != url.protocol())
         return false;
- 
+
     if(url_root.hasHost())
     {
         if(generalDomain())
@@ -632,7 +632,7 @@ bool SearchManager::localDomain(KURL const& url) const
         {
             vector<QString> referencia = tokenizeWordsSeparatedBy(domain_, QChar('/'));
             vector<QString> a_comparar = tokenizeWordsSeparatedBy(url.host() + url.directory(), QChar('/'));
- 
+
             if(a_comparar.size() < referencia.size())
                 return false;
             else
@@ -666,17 +666,17 @@ bool SearchManager::localDomain(KURL const& url) const
 bool SearchManager::isLocalRestrict(KURL const& url) const
 {
     Q_ASSERT(url.protocol() == "http" || url.protocol() == "https");
- 
+
     KURL url_root = root_.absoluteUrl();
- 
+
     if(url_root.protocol() != url.protocol())
         return false;
- 
+
     if(url_root.hasHost())
     {
         vector<QString> referencia = tokenizeWordsSeparatedBy(domain_, QChar('/'));
         vector<QString> a_comparar = tokenizeWordsSeparatedBy(url.host() + url.directory(), QChar('/'));
- 
+
         if(a_comparar.size() < referencia.size())
             return false;
         else

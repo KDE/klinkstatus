@@ -43,7 +43,7 @@
 #include "ui/settings/configsearchdialog.h"
 
 
-const char KLinkStatusPart::description_[] = "A Link Checker";
+const char KLinkStatusPart::description_[] = I18N_NOOP( "A Link Checker" );
 const char KLinkStatusPart::version_[] = "0.1.3";
 
 // Factory code for KDE 3

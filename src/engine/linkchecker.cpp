@@ -31,6 +31,7 @@
 #include <kio/scheduler.h>
 #include <kmimetype.h>
 #include <kapplication.h>
+#include <klocale.h>
 
 
 LinkChecker::LinkChecker(LinkStatus* linkstatus, int time_out,
@@ -86,7 +87,7 @@ void LinkChecker::slotTimeOut()
         if(t_job_->error() != KIO::ERR_USER_CANCELED)
         {
             linkstatus_->setErrorOccurred(true);
-            linkstatus_->setError("Timeout");
+            linkstatus_->setError(i18n( "Timeout" ));
             //kdDebug(23100) << "timeout: " << linkstatus_->absoluteUrl().url() << endl;
 
             t_job_->kill(true); // quietly
@@ -291,7 +292,7 @@ void LinkChecker::slotResult(KIO::Job* /*job*/)
             if(t_job_->error() != KIO::ERR_NO_CONTENT)
                 ls->setError(t_job_->errorString());
             else
-                ls->setError("No Content");
+                ls->setError(i18n( "No Content") );
         }
     }
 
@@ -494,7 +495,7 @@ void LinkChecker::checkRef(LinkStatus const* linkstatus_parent)
     }
 
     linkstatus_->setErrorOccurred(true);
-    linkstatus_->setError("Link destination not found.");
+    linkstatus_->setError(i18n( "Link destination not found." ));
     finnish();
 }
 

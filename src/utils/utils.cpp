@@ -198,7 +198,7 @@ void viewUrlInBrowser(KURL const& url, QWidget* parent, QString browser)
 
     if( !process->start() )
     {
-        KMessageBox::critical(parent, "Error - KLinkStatus", "Can't open Browser",
+        KMessageBox::critical(parent, i18n( "Error - KLinkStatus" ), i18n( "Can't open Browser" ),
                               KMessageBox::Ok | KMessageBox::Default, KMessageBox::NoButton);
     }
 #endif
