@@ -434,11 +434,12 @@ void TableLinkstatus::slotViewParentUrlInBrowser()
 TableItem::TableItem(QTable* table, EditType et,
                      LinkStatus const* linkstatus,
                      int column_index, int alignment)
-        : QTableItem(table, et, ""), ls_((LinkStatus*)linkstatus),
-        column_index_(column_index), alignment_(alignment)
+        : QTableItem(table, et, ""), ResultViewItem(linkstatus, column_index),
+        /*ls_((LinkStatus*)linkstatus),
+        column_index_(column_index),*/ alignment_(alignment)
 {
-    Q_ASSERT(ls_);
-    Q_ASSERT(column_index_ > 0);
+    //Q_ASSERT(ls_);
+    //Q_ASSERT(column_index_ > 0);
 }
 
 TableItem::~TableItem()
@@ -448,14 +449,15 @@ void TableItem::setColumnIndex(int i)
 {
     Q_ASSERT(i > 0 && i <= table()->numCols());
 
-    column_index_ = i;
+    //column_index_ = i;
+    ResultViewItem::setColumnIndex(i);
 }
 
 int TableItem::columnIndex() const
 {
     Q_ASSERT(column_index_ <= table()->numCols());
 
-    return column_index_;
+    return ResultViewItem::columnIndex();
 }
 
 void TableItem::setAlignment(int aFlags)
@@ -467,7 +469,7 @@ int TableItem::alignment() const
 {
     return alignment_;
 }
-
+/*
 LinkStatus const* const TableItem::linkStatus() const
 {
     Q_ASSERT(ls_);
@@ -480,17 +482,17 @@ QColor const& TableItem::textStatusColor() const
     {
         //kdDebug(23100) <<  "ERROR: " << linkStatus()->error() << ": " << linkStatus()->absoluteUrl().prettyURL() << endl;
         if(linkStatus()->error() == "Javascript not suported")
-            return lightGray;
+            return Qt::lightGray;
         else
-            return red;
+            return Qt::red;
     }
 
     else if(linkStatus()->absoluteUrl().hasRef())
-        return blue;
+        return Qt::blue;
 
     else if(linkStatus()->absoluteUrl().protocol() != "http" &&
             linkStatus()->absoluteUrl().protocol() != "https")
-        return darkGreen;
+        return Qt::darkGreen;
 
     else
     {
@@ -505,22 +507,22 @@ QColor const& TableItem::textStatusColor() const
         //Q_ASSERT(status_code[0] != '0');
 
         if(status_code[0] == '5')
-            return darkMagenta;
+            return Qt::darkMagenta;
 
         else if(status_code[0] == '4')
-            return red;
+            return Qt::red;
 
         else if(status_code[0] == '3')
-            return blue;
+            return Qt::blue;
 
         else if(status_code[0] == '2')
-            return darkGreen;
+            return Qt::darkGreen;
 
         else
-            return red;
+            return Qt::red;
     }
 }
-
+*/
 
 /*
  

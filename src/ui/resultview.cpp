@@ -12,10 +12,14 @@
 #include "resultview.h"
 #include "../engine/linkstatus.h"
 
+#include <qpainter.h>
+#include <qcolor.h>
+
 #include <klocale.h>
 #include <kurl.h>
 #include <kiconloader.h>
 
+// ******************************* ResultView ********************************
 
 ResultView::ResultView(int column_index_status,
                        int column_index_label,
@@ -85,4 +89,88 @@ bool ResultView::displayableWithStatus(LinkStatus const* ls, Status const& statu
     else
         return true;
 }
+
+
+// ******************************* ResultViewItem *****************************
+
+ResultViewItem::ResultViewItem(LinkStatus const* linkstatus, int column_index)
+        : ls_((LinkStatus*)linkstatus), column_index_(column_index)
+{
+    Q_ASSERT(ls_);
+    Q_ASSERT(column_index_ > 0);
+}
+
+ResultViewItem::~ResultViewItem()
+{}
+
+void ResultViewItem::setColumnIndex(int i)
+{
+    Q_ASSERT(i > 0);
+    column_index_ = i;
+}
+
+int ResultViewItem::columnIndex() const
+{
+    return column_index_;
+}
+
+LinkStatus const* const ResultViewItem::linkStatus() const
+{
+    Q_ASSERT(ls_);
+    return ls_;
+}
+
+QColor const& ResultViewItem::textStatusColor() const
+{
+    if(linkStatus()->errorOccurred())
+    {
+        //kdDebug(23100) <<  "ERROR: " << linkStatus()->error() << ": " << linkStatus()->absoluteUrl().prettyURL() << endl;
+        if(linkStatus()->error() == "Javascript not suported")
+            return Qt::lightGray;
+        else
+            return Qt::red;
+    }
+
+    else if(linkStatus()->absoluteUrl().hasRef())
+        return Qt::blue;
+
+    else if(linkStatus()->absoluteUrl().protocol() != "http" &&
+            linkStatus()->absoluteUrl().protocol() != "https")
+        return Qt::darkGreen;
+
+    else
+    {
+        QString status_code(QString::number(linkStatus()->httpHeader().statusCode()));
+
+        if(status_code[0] == '0')
+        {
+            kdWarning(23100) <<  "status code == 0: " << endl;
+            kdWarning(23100) <<  linkStatus()->toString() << endl;
+            kdWarning(23100) <<  linkStatus()->httpHeader().toString() << endl;
+        }
+        //Q_ASSERT(status_code[0] != '0');
+
+        if(status_code[0] == '5')
+            return Qt::darkMagenta;
+
+        else if(status_code[0] == '4')
+            return Qt::red;
+
+        else if(status_code[0] == '3')
+            return Qt::blue;
+
+        else if(status_code[0] == '2')
+            return Qt::darkGreen;
+
+        else
+            return Qt::red;
+    }
+}
+
+
+
+
+
+
+
 

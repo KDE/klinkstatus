@@ -104,7 +104,7 @@ private:
 };
 
 
-class TableItem: public QTableItem
+class TableItem: public QTableItem, public ResultViewItem
 {
 public:
 
@@ -113,18 +113,18 @@ public:
               int column_index, int alignment = Qt::AlignLeft);
     virtual ~TableItem();
 
-    void setColumnIndex(int i);
-    int columnIndex() const;
+    virtual void setColumnIndex(int i);
+    virtual int columnIndex() const;
 
     void setAlignment(int aFlags);
     virtual int alignment() const;
 
     virtual QString toolTip() const = 0;
-    LinkStatus const* const linkStatus() const;
+    //LinkStatus const* const linkStatus() const;
 
 protected:
 
-    QColor const& textStatusColor() const;
+    //QColor const& textStatusColor() const;
     virtual void paint( QPainter *p, const QColorGroup &cg,
                         const QRect &cr, bool selected );
     virtual void setText() = 0;
@@ -132,8 +132,8 @@ protected:
 
 private:
 
-    LinkStatus* ls_;
-    int column_index_;
+    //LinkStatus* ls_;
+    //int column_index_;
     int alignment_;
 };
 

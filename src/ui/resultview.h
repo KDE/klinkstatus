@@ -1,7 +1,7 @@
 //
 // C++ Interface: resultview
 //
-// Description: 
+// Description:
 //
 //
 // Author: Paulo Moura Guedes <pmg@netcabo.pt>, (C) 2004
@@ -36,10 +36,10 @@ public:
     };
 
     ResultView(int column_index_status = 1,
-                   int column_index_label = 2,
-                   int column_index_URL = 3);
+               int column_index_label = 2,
+               int column_index_URL = 3);
     virtual ~ResultView();
-    
+
     virtual void insertResult(LinkStatus const* linkstatus) = 0;
     virtual void clear() = 0;
     virtual void show(Status const& status) = 0;
@@ -53,7 +53,7 @@ protected:
     virtual bool textFitsInCell(int row, int col) const = 0;
     virtual bool isEmpty() const = 0;
     virtual void loadContextTableMenu(QValueVector<KURL> const& referrers) = 0;
-    
+
 protected slots:
 
     virtual void slotPopupContextMenu(int row, int col, const QPoint& pos) = 0;
@@ -75,5 +75,35 @@ protected:
     QPopupMenu* sub_menu_;
     CellToolTip* cell_tip_;
 };
+
+
+class ResultViewItem
+{
+public:
+    ResultViewItem(LinkStatus const* linkstatus,
+                   int column_index);
+    virtual ~ResultViewItem();
+    
+    virtual void setColumnIndex(int i);
+    virtual int columnIndex() const;
+
+    virtual QString toolTip() const = 0;
+    LinkStatus const* const linkStatus() const;
+
+protected:
+
+    QColor const& textStatusColor() const;
+    virtual void paint( QPainter *p, const QColorGroup &cg,
+                        const QRect &cr, bool selected ) = 0;
+    virtual void setText() = 0;
+    virtual void setPixmap() = 0;
+
+protected:
+
+    LinkStatus* ls_;
+    int column_index_;
+    int alignment_;
+};
+
 
 #endif
