@@ -10,6 +10,7 @@ Type=Application
 DocPath=klinkstatus/klinkstatus.html
 Terminal=0
 GenericName=Link Checker
+GenericName[ar]=فاحص للارتباط
 GenericName[bg]=Проверка на адреси
 GenericName[ca]=Comprovador d'enllaços
 GenericName[da]=Link-tjekker
