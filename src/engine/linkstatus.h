@@ -30,6 +30,7 @@
 
 #include <qstring.h>
 #include <qobject.h>
+#include <qvaluevector.h>
 
 #include <cassert>
 #include <vector>
@@ -58,7 +59,7 @@ public:
     void setAbsoluteUrl(KURL const& url_absoluto);
     void setDocHtml(QString const& doc_html);
     void setHttpHeader(HttpResponseHeader const& cabecalho_http);
-	void setStatus(QString const& status);
+    void setStatus(QString const& status);
     void setError(QString const& error);
     void setIsRoot(bool flag);
     void setErrorOccurred(bool houve_error);
@@ -75,9 +76,10 @@ public:
     void setHasBaseURI(bool flag = true);
     void setBaseURI(KURL const& base_url);
     void setIgnored(bool flag = true);
-	void setMimeType(QString const& mimetype);
+    void setMimeType(QString const& mimetype);
     void setIsErrorPage(bool flag);
-	void setIsLocalRestrict(bool flag);
+    void setIsLocalRestrict(bool flag);
+    void addReferrer(KURL const& url);
 
     KURL const& rootUrl() const;
     uint depth() const;
@@ -90,7 +92,7 @@ public:
     QString const& docHtml() const;
     HttpResponseHeader const& httpHeader() const;
     HttpResponseHeader& httpHeader();
-	QString status() const;
+    QString status() const;
     QString const& error() const;
     bool isRoot() const;
     bool errorOccurred() const;
@@ -107,8 +109,9 @@ public:
     KURL const& baseURI() const;
     bool ignored() const;
     bool redirectionExists(KURL const& url) const; // to avoid cyclic links
-	QString mimeType() const;
+    QString mimeType() const;
     bool isErrorPage() const;
+    QValueVector<KURL> const& referrers() const;
 
     static LinkStatus* lastRedirection(LinkStatus* ls);
 
@@ -123,13 +126,13 @@ private:
 
     KURL root_url_; // The URL which made the search start
     int depth_;
-    int external_domain_depth_; // Para se poder escolher esplorar domains diferentes ate n depth
+    int external_domain_depth_; // Para se poder escolher explorar domains diferentes ate n depth
     QString original_url_;
     QString label_;
     KURL absolute_url_;
     QString doc_html_;
     HttpResponseHeader http_header_;
-	QString status_;
+    QString status_;
     QString error_;
     bool is_root_;
     bool error_occurred_;
@@ -147,6 +150,7 @@ private:
     QString mimetype_;
     bool is_error_page_;
     bool is_local_restrict_;
+    QValueVector<KURL> referrers_;
 };
 
 #include "../parser/url.h"

@@ -279,7 +279,7 @@ vector<LinkStatus*> SearchManager::children(LinkStatus* link)
     return children;
 }
 
-bool SearchManager::existUrl(KURL const& url) const
+bool SearchManager::existUrl(KURL const& url, KURL const& url_parent) const
 {
     if(url.prettyURL().isEmpty() || root_.originalUrl() == url.prettyURL())
         return true;
@@ -288,8 +288,12 @@ bool SearchManager::existUrl(KURL const& url) const
         for(uint j = 0; j != search_results_[i].size(); ++j)
             for(uint l = 0; l != (search_results_[i])[j].size(); ++l)
             {
-                if(( (search_results_[i])[j] )[l]->absoluteUrl() == url )
+                LinkStatus* tmp = search_results_[i][j][l];
+                Q_ASSERT(tmp);
+                if(tmp->absoluteUrl() == url)
                 {
+                    tmp->addReferrer(url_parent);
+                    kdDebug(23100) << "Another referrer: " << url_parent.url() << endl;
                     return true;
                 }
             }
@@ -519,7 +523,7 @@ void SearchManager::addLevel()
 
 bool SearchManager::checkable(KURL const& url, LinkStatus const& link_parent) const
 {
-    if(existUrl(url))
+    if(existUrl(url, link_parent.absoluteUrl()))
         return false;
 
     if(not checkableByDomain(url, link_parent))
@@ -696,8 +700,8 @@ bool SearchManager::onlyCheckHeader(LinkStatus* ls) const
         return
             current_depth_ == depth_ or
             (not ls->local() and
-            ls->externalDomainDepth() == external_domain_depth_ - 1);
-    }
+             ls->externalDomainDepth() == external_domain_depth_ - 1);
+}
 
 void SearchManager::slotSearchFinished()
 {}

@@ -65,6 +65,7 @@ inline void LinkStatus::setParent(LinkStatus* parent)
     assert(parent);
 
     parent_ = parent;
+    addReferrer(parent->absoluteUrl());
 }
 
 inline void LinkStatus::setAbsoluteUrl(KURL const& url_absoluto)
@@ -193,6 +194,13 @@ inline void LinkStatus::setIsErrorPage(bool flag)
 inline void LinkStatus::setIsLocalRestrict(bool flag)
 {
     is_local_restrict_ = flag;
+}
+
+inline void LinkStatus::addReferrer(KURL const& url)
+{
+    assert(url.isValid());
+    
+    referrers_.push_back(url);
 }
 
 
@@ -345,5 +353,10 @@ inline QString LinkStatus::mimeType() const
 inline bool LinkStatus::isErrorPage() const
 {
     return is_error_page_;
+}
+
+inline QValueVector<KURL> const& LinkStatus::referrers() const
+{
+    return referrers_;   
 }
 

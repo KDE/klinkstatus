@@ -70,7 +70,7 @@ public:
     bool localDomain(KURL const& url, bool restrict = true) const;
     //bool isLocalRestrict(KURL const& url) const;
     SearchMode const& searchMode() const;
-    bool existUrl(KURL const& url) const;
+    bool existUrl(KURL const& url, KURL const& url_parent) const;
     int checkedLinks() const;
     QTime timeElapsed() const;
     bool checkParentDirs() const;

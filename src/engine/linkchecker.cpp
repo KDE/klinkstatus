@@ -321,7 +321,7 @@ void LinkChecker::slotRedirection (KIO::Job* job, const KURL &url)
 {}
 */
 
-void LinkChecker::slotPermanentRedirection (KIO::Job* /*job*/, const KURL &/*fromUrl*/, const KURL &toUrl)
+void LinkChecker::slotPermanentRedirection (KIO::Job* /*job*/, const KURL &fromUrl, const KURL &toUrl)
 {
     if(finnished_)
         return;
@@ -362,7 +362,7 @@ void LinkChecker::slotPermanentRedirection (KIO::Job* /*job*/, const KURL &/*fro
             ls_red->setExternalDomainDepth(linkstatus_->externalDomainDepth());
     }
 
-    if(!toUrl.isValid() || gp->existUrl(toUrl))
+    if(!toUrl.isValid() || gp->existUrl(toUrl, fromUrl))
     {
         linkStatus()->redirection()->setChecked(false);
         //t_job_->kill(true); // causes the terrible segfault bug
