@@ -33,6 +33,7 @@
 #include <kstandarddirs.h>
 #include <kurl.h>
 #include <klocale.h>
+#include <kstringhandler.h> 
 
 
 TabWidgetSession::TabWidgetSession(QWidget* parent, const char* name, WFlags f)
@@ -131,13 +132,24 @@ SessionWidget* TabWidgetSession::newSessionWidget()
 
 void TabWidgetSession::updateTabLabel(LinkStatus const* linkstatus)
 {
+    QString label;
+    
     if(linkstatus->hasHtmlDocTitle())
-        changeTab(currentPage(), linkstatus->htmlDocTitle());
+    {
+        label = linkstatus->htmlDocTitle();
+        label = KStringHandler::csqueeze(label, 30);
+    }
     else
     {
         KURL url = linkstatus->absoluteUrl();
-        changeTab(currentPage(), url.prettyURL());
+        if(url.fileName(false).isEmpty())
+            label = url.prettyURL();
+        else
+            label = url.fileName(false);
+        
+        label = KStringHandler::lsqueeze(label, 30);        
     }
+    changeTab(currentPage(), label);
 }
 
 void TabWidgetSession::slotLoadSettings()
