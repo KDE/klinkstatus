@@ -61,8 +61,6 @@ TableLinkstatus::TableLinkstatus(QWidget * parent, const char * name,
     setSelectionMode(QTable::NoSelection);
     setFocusStyle(QTable::FollowStyle);
     setReadOnly(true);
-    //setMinimumWidth(800);
-    //setMinimumHeight(450);
 
     verticalHeader()->hide();
     setLeftMargin(0);
@@ -119,6 +117,12 @@ void TableLinkstatus::insereLinha(vector<TableItem*> items)
 
         int col = items[i]->columnIndex() - 1;
         setItem(row, col, items[i]);
+    }
+
+    if(items[col_url_ - 1]->sizeHint().width() > columnWidth(col_url_ - 1))
+    {
+        setColumnStretchable(col_url_ - 1, false);
+        setColumnWidth(col_url_ - 1, items[col_url_ - 1]->sizeHint().width());
     }
 
     ensureCellVisible ( row, 0 );
