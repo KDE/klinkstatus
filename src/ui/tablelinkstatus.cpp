@@ -185,7 +185,7 @@ void TableLinkstatus::show(ResultView::Status const& status)
         int row = i;
         TableItem* _item = myItem(row, col_status_);
 
-        if(not ResultView::displayableWithStatus(_item->linkStatus(), status))
+        if(!ResultView::displayableWithStatus(_item->linkStatus(), status))
             hideRow(row);
         else
             showRow(row);
@@ -373,7 +373,7 @@ void TableLinkstatus::slotEditReferrerWithQuanta(int id)
 
     TableItem* _item = myItem(currentRow(), currentColumn());
     QValueVector<KURL> referrers = _item->linkStatus()->referrers();
-    Q_ASSERT(index >= 0 and (uint)index < referrers.size());
+    Q_ASSERT(index >= 0 && (uint)index < referrers.size());
 
     slotEditReferrerWithQuanta(referrers[index]);
 }
@@ -628,8 +628,8 @@ TableItemStatus::TableItemStatus(QTable* table, EditType et,
 
 void TableItemStatus::setText()
 {
-    if(linkStatus()->errorOccurred() or
-            linkStatus()->status() == "OK" or
+    if(linkStatus()->errorOccurred() ||
+            linkStatus()->status() == "OK" ||
             linkStatus()->status() == "304")
     {
         QTableItem::setText("");

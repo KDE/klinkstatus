@@ -327,7 +327,7 @@ bool SearchManager::existUrl(KURL const& url, KURL const& url_parent) const
 
 LinkStatus const* SearchManager::linkStatus(QString const& s_url) const
 {
-    Q_ASSERT(not s_url.isEmpty());
+    Q_ASSERT(!s_url.isEmpty());
 
     if(root_.absoluteUrl().url() == s_url)
         return &root_;
@@ -341,7 +341,7 @@ LinkStatus const* SearchManager::linkStatus(QString const& s_url) const
 
                 LinkStatus* ls = search_results_[i][j][l];
                 Q_ASSERT(ls);
-                if(ls->absoluteUrl().url() == s_url and ls->checked())
+                if(ls->absoluteUrl().url() == s_url && ls->checked())
                     return ls;
 
                 if(count == 50)
@@ -373,7 +373,7 @@ void SearchManager::startSearch()
 
 void SearchManager::continueSearch()
 {
-    Q_ASSERT(not links_being_checked_);
+    Q_ASSERT(!links_being_checked_);
 
     vector<LinkStatus*> const& no = nodeToAnalize();
 
@@ -390,7 +390,7 @@ void SearchManager::continueSearch()
         else
         {
             kdDebug(23100) <<  "Next Level_____________________________________________________________________________________\n\n\n";
-            if(search_mode_ == SearchManager::domain or
+            if(search_mode_ == SearchManager::domain ||
                     current_depth_ < depth_)
             {
                 current_node_ = 0;
@@ -519,7 +519,7 @@ void SearchManager::slotLinkChecked(const LinkStatus * link, LinkChecker * check
         kdDebug(23100) <<  link->toString() << endl;
     Q_ASSERT(links_being_checked_ >= 0);
 
-    if(canceled_ and searching_ and !links_being_checked_)
+    if(canceled_ && searching_ && !links_being_checked_)
     {
         pause();
     }
@@ -581,15 +581,15 @@ bool SearchManager::checkable(KURL const& url, LinkStatus const& link_parent) co
     if(existUrl(url, link_parent.absoluteUrl()))
         return false;
 
-    if(not checkableByDomain(url, link_parent))
+    if(!checkableByDomain(url, link_parent))
         return false;
 
-    if(not check_parent_dirs_)
+    if(!check_parent_dirs_)
     {
         if(::parentDir(root_.absoluteUrl(), url))
             return false;
     }
-    if(not check_external_links_)
+    if(!check_external_links_)
     {
         if(::externalLink(root_.absoluteUrl(), url))
             return false;
@@ -748,13 +748,13 @@ bool SearchManager::onlyCheckHeader(LinkStatus* ls) const
         return current_depth_ == depth_;
 
     else if(search_mode_ == domain)
-        return not ls->local() and
+        return !ls->local() &&
                ls->externalDomainDepth() == external_domain_depth_ - 1;
 
     else
         return
-            current_depth_ == depth_ or
-            (not ls->local() and
+            current_depth_ == depth_ ||
+            (!ls->local() &&
              ls->externalDomainDepth() == external_domain_depth_ - 1);
 }
 

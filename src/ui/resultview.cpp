@@ -62,20 +62,20 @@ bool ResultView::displayableWithStatus(LinkStatus const* ls, Status const& statu
         else
             if(ls->absoluteUrl().protocol() != "http" &&
                     ls->absoluteUrl().protocol() != "https")
-                return (ls->status() == "OK" or
-                        (not ls->absoluteUrl().hasRef()));
+                return (ls->status() == "OK" ||
+                        (!ls->absoluteUrl().hasRef()));
             else
             {
                 QString status_code(QString::number(ls->httpHeader().statusCode()));
-                return (ls->status() == "OK" or
-                        (not ls->absoluteUrl().hasRef() and
-                         status_code[0] != '5' and
+                return (ls->status() == "OK" ||
+                        (!ls->absoluteUrl().hasRef() &&
+                         status_code[0] != '5' &&
                          status_code[0] != '4'));
             }
     }
     else if(status == ResultView::bad)
     {
-        return (not displayableWithStatus(ls, ResultView::good) and not ls->error().contains("Timeout"));
+        return (!displayableWithStatus(ls, ResultView::good) && !ls->error().contains("Timeout"));
     }
     else if(status == ResultView::malformed)
     {
@@ -83,8 +83,8 @@ bool ResultView::displayableWithStatus(LinkStatus const* ls, Status const& statu
     }
     else if(status == ResultView::undetermined)
     {
-        return (ls->error().contains("Timeout") or
-                (ls->absoluteUrl().hasRef() and ls->status() != "OK"));
+        return (ls->error().contains("Timeout") ||
+                (ls->absoluteUrl().hasRef() && ls->status() != "OK"));
     }
     else
         return true;

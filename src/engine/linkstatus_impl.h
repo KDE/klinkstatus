@@ -183,12 +183,12 @@ inline void LinkStatus::setBaseURI(KURL const& base_url)
 
 inline void LinkStatus::setHtmlDocTitle(QString const& title)
 {
-    if(title.isNull() or title.isEmpty())
+    if(title.isNull() || title.isEmpty())
     {
         kdError(23100) << "HTML doc title is null or empty!" << endl
         << toString() << endl;
     }
-    Q_ASSERT(not title.isNull() and not title.isEmpty());
+    Q_ASSERT(!title.isNull() && !title.isEmpty());
 
     has_html_doc_title_ = true;
     html_doc_title_ = title;
@@ -201,7 +201,7 @@ inline void LinkStatus::setIgnored(bool flag)
 
 inline void LinkStatus::setMimeType(QString const& mimetype)
 {
-    Q_ASSERT(!mimetype.isNull() and !mimetype.isEmpty());
+    Q_ASSERT(!mimetype.isNull() && !mimetype.isEmpty());
     mimetype_ = mimetype;
 }
 

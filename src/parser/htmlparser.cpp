@@ -219,7 +219,7 @@ void HtmlParser::parseNodesOfTypeBASE()
     int inicio = 0, fim = 0;
 
     inicio = findSeparableWord(doc, "<BASE");
-    if(inicio == -1 or not doc[inicio].isSpace())
+    if(inicio == -1 || !doc[inicio].isSpace())
         return;
 
     fim = doc.find(">", inicio);

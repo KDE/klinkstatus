@@ -84,7 +84,7 @@ void SessionWidget::slotLoadSettings(bool modify_current_widget_settings)
     {
         checkbox_recursively->setChecked(KLSConfig::recursiveCheck());
         spinbox_depth->setValue(KLSConfig::depth());
-        checkbox_subdirs_only->setChecked(not KLSConfig::checkParentFolders());
+        checkbox_subdirs_only->setChecked(!KLSConfig::checkParentFolders());
         checkbox_external_links->setChecked(KLSConfig::checkExternalLinks());
     }
 
@@ -95,7 +95,7 @@ void SessionWidget::saveCurrentCheckSettings()
 {
     KLSConfig::setRecursiveCheck(checkbox_recursively->isChecked());
     KLSConfig::setDepth(spinbox_depth->value());
-    KLSConfig::setCheckParentFolders(not checkbox_subdirs_only->isChecked());
+    KLSConfig::setCheckParentFolders(!checkbox_subdirs_only->isChecked());
     KLSConfig::setCheckExternalLinks(checkbox_external_links->isChecked());
 
     KLSConfig::writeConfig();
@@ -176,7 +176,7 @@ SearchManager const* SessionWidget::getSearchManager() const
 
 void SessionWidget::slotEnableCheckButton(const QString & s)
 {
-    if(not s.isEmpty() and not search_manager_->searching())
+    if(!s.isEmpty() && !search_manager_->searching())
         pushbutton_check->setEnabled(true);
     else
         pushbutton_check->setEnabled(false);
@@ -241,7 +241,7 @@ void SessionWidget::slotCheck()
             url = url_aux;   
     }
     
-    if(not checkbox_recursively->isChecked())
+    if(!checkbox_recursively->isChecked())
     {
         search_manager_->setSearchMode(SearchManager::depth);
         search_manager_->setDepth(0);

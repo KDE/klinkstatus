@@ -252,7 +252,7 @@ bool localDomain(KURL const& url1, KURL const& url2, bool restrict)
         //kdDebug(23100) <<  "NOT localDomain" << endl;
         return false;
     }
-    else if(not url1.hasHost())
+    else if(!url1.hasHost())
     {
         //kdDebug(23100) <<  "localDomain" << endl;
         return true;
@@ -282,12 +282,12 @@ bool parentDir(KURL const& url1, KURL const& url2)
     if(url1.protocol() != url2.protocol())
         return false;
 
-    else if(not url1.hasHost())
+    else if(!url1.hasHost())
         return url2.isParentOf(url1);
 
     else
     {
-        if(not equalHost(url1.host(), url2.host()))
+        if(!equalHost(url1.host(), url2.host()))
             return false;
 		
         vector<QString> tokens_1 = tokenizeWordsSeparatedBy(url1.directory(true, false), QChar('/'));
@@ -321,11 +321,11 @@ bool externalLink(KURL const& url1, KURL const& url2, bool restrict)
         kdDebug(23100) <<  "externalLink" << endl;
         return true;
     }
-    else if(not url1.hasHost() and not url2.hasHost())
+    else if(!url1.hasHost() && !url2.hasHost())
     {
         kdDebug(23100) <<  "NOT externalLink" << endl;
         return false;
     }
     else
-        return not ::equalHost(url1.host(), url2.host(), restrict);
+        return !::equalHost(url1.host(), url2.host(), restrict);
 }

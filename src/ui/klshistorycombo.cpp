@@ -184,7 +184,7 @@ void KLSHistoryCombo::selectWord(QKeyEvent *e)
             QString text = edit->text();
             int pos_to_right = text.length() - pos - 1;
             QString cut = text.left(pos_old) +
-                          (pos_to_right > 0 ? text.right(pos_to_right) : "" );
+                          (pos_to_right > 0 ? text.right(pos_to_right) : QString() );
             edit->setText(cut);
             edit->setCursorPosition(pos_old);
         }

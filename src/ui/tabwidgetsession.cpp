@@ -60,7 +60,7 @@ bool TabWidgetSession::emptySessionsExist() const
     for(int i = 0; i != count(); ++i)
     {
         Q_ASSERT(tabs_[i]);
-        if(tabs_[i]->isEmpty() and not tabs_[i]->getSearchManager()->searching())
+        if(tabs_[i]->isEmpty() && !tabs_[i]->getSearchManager()->searching())
             return true;
     }
     return false;

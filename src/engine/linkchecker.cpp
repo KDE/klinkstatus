@@ -80,7 +80,7 @@ void LinkChecker::check()
 
 void LinkChecker::slotTimeOut()
 {
-    if(not finnished_ and not parsing_)
+    if(!finnished_ && !parsing_)
     {
         Q_ASSERT(t_job_);
         if(t_job_->error() != KIO::ERR_USER_CANCELED)
@@ -205,14 +205,14 @@ void LinkChecker::slotData(KIO::Job* /*job*/, const QByteArray& data)
                 {
                     ls->setHttpHeader(getHttpHeader(t_job_));
                 }
-                if(ls->mimeType() != "text/html" and header_checked_)
+                if(ls->mimeType() != "text/html" && header_checked_)
                 {
                     //kdDebug(23100) <<  "mimetype of " << ls->absoluteUrl().prettyURL() << ": " << ls->mimeType() << endl;
                     t_job_->kill(true); // quietly
                     t_job_ = 0;
                     finnish(); // if finnish is called before kill what you get is a segfault, don't know why
                 }
-                else if(t_job_->isErrorPage() and header_checked_)
+                else if(t_job_->isErrorPage() && header_checked_)
                 {
                     //kdDebug(23100) <<  "ERROR PAGE" << endl;
                     ls->setIsErrorPage(true);
@@ -262,17 +262,17 @@ void LinkChecker::slotResult(KIO::Job* /*job*/)
         ls = linkstatus_;
     Q_ASSERT(ls);
 
-    if(!(!ls->onlyCheckHeader() or
-            t_job_->error() or
-            not header_checked_))
+    if(!(!ls->onlyCheckHeader() ||
+            t_job_->error() ||
+	    !header_checked_))
         kdWarning(23100) << ls->toString() << endl;
 
-    Q_ASSERT(not ls->onlyCheckHeader() or t_job_->error() or !header_checked_);
+    Q_ASSERT(!ls->onlyCheckHeader() || t_job_->error() || !header_checked_);
 
     if(ls->isErrorPage())
         kdWarning(23100) << "\n\n" << ls->toString() << endl << endl;
 
-    Q_ASSERT(not t_job_->isErrorPage());
+    Q_ASSERT(!t_job_->isErrorPage());
 
     if(t_job_->error())
     {
@@ -302,7 +302,7 @@ void LinkChecker::slotResult(KIO::Job* /*job*/)
             ls->setStatus("OK");
         else
         {
-            if(not header_checked_)
+            if(!header_checked_)
             {
                 kdDebug(23100) <<  "\n\nheader not received... checking again...\n\n\n";
                 //check again
@@ -466,7 +466,7 @@ void LinkChecker::checkRef(LinkStatus const* linkstatus_parent)
 
     vector<Node*> nodes = linkstatus_parent->childrenNodes();
     QString name_ref = linkStatus()->absoluteUrl().ref();
-    Q_ASSERT(not name_ref.isNull());
+    Q_ASSERT(!name_ref.isNull());
     //kdDebug(23100) << "name_ref: " << name_ref << endl;
 
     int count = 0;

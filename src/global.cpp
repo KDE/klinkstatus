@@ -32,7 +32,7 @@ static KStaticDeleter<Global> staticDeleter;
 
 Global* Global::self()
 {
-    if (not m_self_)
+    if (!m_self_)
     {
         staticDeleter.setObject(m_self_, new Global());
     }
@@ -66,7 +66,7 @@ bool Global::isQuantaRunningAsUnique()
 
 bool Global::isQuantaAvailableViaDCOP()
 {
-    if(isQuantaRunningAsUnique() or isKLinkStatusEmbeddedInQuanta())
+    if(isQuantaRunningAsUnique() || isKLinkStatusEmbeddedInQuanta())
         return true;
 
     else
