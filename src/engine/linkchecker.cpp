@@ -33,6 +33,7 @@
 #include <kapplication.h>
 #include <klocale.h>
 
+int LinkChecker::count_ = 0;
 
 LinkChecker::LinkChecker(LinkStatus* linkstatus, int time_out,
                          QObject *parent, const char *name)
@@ -44,7 +45,7 @@ LinkChecker::LinkChecker(LinkStatus* linkstatus, int time_out,
     Q_ASSERT(!linkstatus_->checked());
     Q_ASSERT(QString(parent->className()) == QString("SearchManager"));
 
-    kdDebug(23100) <<  "Checking " << linkstatus_->absoluteUrl().url() << endl;
+    kdDebug(23100) << ++count_ << ": " << "Checking " << linkstatus_->absoluteUrl().url() << endl;
 }
 
 LinkChecker::~LinkChecker()

@@ -20,6 +20,7 @@
 
 #include "linkstatus.h"
 #include "../parser/node.h"
+#include "../ui/treeview.h"
 
 #include <klocale.h>
 

@@ -29,7 +29,16 @@ ResultView::ResultView(int column_index_status,
         col_url_(column_index_URL),
         sub_menu_(0),
         cell_tip_(0)
-{}
+{
+    kdDebug(23100) << "col_url_: " << col_url_ << endl;
+    kdDebug(23100) << "col_status_: " << col_status_ << endl;
+    kdDebug(23100) << "col_label_: " << col_label_ << endl;
+    
+    kdDebug(23100) << "column_index_URL: " << column_index_URL << endl;
+    kdDebug(23100) << "column_index_status: " << column_index_status << endl;
+    kdDebug(23100) << "column_index_label: " << column_index_label << endl;
+
+}
 
 
 ResultView::~ResultView()
@@ -38,7 +47,7 @@ ResultView::~ResultView()
 void ResultView::setColumns(QStringList const& columns)
 {
     Q_ASSERT(columns.size() != 0);
-
+    
     columns_.clear();
     for(uint i = 0; i != columns.size(); ++i)
     {

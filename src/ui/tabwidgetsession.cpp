@@ -122,9 +122,14 @@ SessionWidget* TabWidgetSession::newSessionWidget()
     SessionWidget* session_widget = new SessionWidget( 5, 30, this, "session_widget");
 
     QStringList columns;
+    /*
     columns.push_back(i18n("Status"));
     columns.push_back(i18n("Label"));
     columns.push_back(i18n("URL"));
+    */
+    columns.push_back(i18n("URL"));
+    columns.push_back(i18n("Status"));
+    columns.push_back(i18n("Label"));
     session_widget->setColumns(columns);
 
     return session_widget;

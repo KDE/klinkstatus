@@ -23,7 +23,7 @@ inline LinkStatus::LinkStatus()
         error_occurred_(false), is_redirection_(false), parent_(0), checked_(false),
         only_check_header_(true), malformed_(false),
         node_(0), has_base_URI_(false), has_html_doc_title_(false), ignored_(false),
-        mimetype_(""), is_error_page_(false)
+        mimetype_(""), is_error_page_(false), tree_view_item_(0)
 {}
 
 inline LinkStatus::LinkStatus(KURL const& absolute_url)
@@ -31,7 +31,7 @@ inline LinkStatus::LinkStatus(KURL const& absolute_url)
         error_occurred_(false), is_redirection_(false), parent_(0), checked_(false),
         only_check_header_(true), malformed_(false),
         node_(0), has_base_URI_(false), has_html_doc_title_(false), ignored_(false),
-        mimetype_(""), is_error_page_(false)
+        mimetype_(""), is_error_page_(false), tree_view_item_(0)
 {
     setAbsoluteUrl(absolute_url);
 }
@@ -41,7 +41,7 @@ inline LinkStatus::LinkStatus(Node* node, LinkStatus* parent)
         error_occurred_(false), is_redirection_(false), parent_(0), checked_(false),
         only_check_header_(true), malformed_(false),
         node_(node), has_base_URI_(false), has_html_doc_title_(false), ignored_(false),
-        mimetype_(""), is_error_page_(false)
+        mimetype_(""), is_error_page_(false), tree_view_item_(0)
 {
     loadNode();
 
@@ -215,6 +215,12 @@ inline void LinkStatus::setIsLocalRestrict(bool flag)
     is_local_restrict_ = flag;
 }
 
+inline void LinkStatus::setTreeViewItem(TreeViewItem* tree_view_item)
+{
+    Q_ASSERT(tree_view_item);
+    tree_view_item_ = tree_view_item;
+}
+
 inline void LinkStatus::addReferrer(KURL const& url)
 {
     Q_ASSERT(url.isValid());
@@ -386,6 +392,11 @@ inline QString LinkStatus::mimeType() const
 inline bool LinkStatus::isErrorPage() const
 {
     return is_error_page_;
+}
+
+inline TreeViewItem* LinkStatus::treeViewItem() const
+{
+    return tree_view_item_;
 }
 
 inline QValueVector<KURL> const& LinkStatus::referrers() const

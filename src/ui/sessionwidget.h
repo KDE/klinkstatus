@@ -26,6 +26,7 @@
 #include "../engine/linkstatus.h"
 class SearchManager;
 class TableItem;
+class TableLinkstatus; // TODO remove this when possible
 
 #include <qtimer.h>
 #include <qstring.h>
@@ -64,6 +65,7 @@ public:
 
 signals:
     void signalUpdateTabLabel(const LinkStatus *);
+    void signalSearchStarted();
     void signalSearchFinnished();
     
 public slots:
@@ -107,6 +109,8 @@ private:
     QTimer bottom_status_timer_;
     int max_simultaneous_connections_;
     int time_out_;
+    TableLinkstatus* table_linkstatus;
+    bool tree_display_; // tree/flat result display
 };
 
 

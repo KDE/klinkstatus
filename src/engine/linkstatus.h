@@ -27,6 +27,8 @@
 #include <kurl.h>
 #include <klocale.h>
 #include <kdebug.h>
+class TreeView;
+class TreeViewItem;
 
 #include <qstring.h>
 #include <qobject.h>
@@ -81,6 +83,7 @@ public:
     void setMimeType(QString const& mimetype);
     void setIsErrorPage(bool flag);
     void setIsLocalRestrict(bool flag);
+    void setTreeViewItem(TreeViewItem* tree_view_item);
     void addReferrer(KURL const& url);
 
     KURL const& rootUrl() const;
@@ -115,6 +118,7 @@ public:
     bool redirectionExists(KURL const& url) const; // to avoid cyclic links
     QString mimeType() const;
     bool isErrorPage() const;
+    TreeViewItem* treeViewItem() const;
     QValueVector<KURL> const& referrers() const;
 
     static LinkStatus* lastRedirection(LinkStatus* ls);
@@ -156,6 +160,7 @@ private:
     QString mimetype_;
     bool is_error_page_;
     bool is_local_restrict_;
+    TreeViewItem* tree_view_item_;
     QValueVector<KURL> referrers_;
 };
 

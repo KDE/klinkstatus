@@ -35,9 +35,9 @@ public:
         undetermined // timeouts and refs
     };
 
-    ResultView(int column_index_status = 1,
-               int column_index_label = 2,
-               int column_index_URL = 3);
+    ResultView(int column_index_status = 2,
+               int column_index_label = 3,
+               int column_index_URL = 1);
     virtual ~ResultView();
 
     virtual void insertResult(LinkStatus const* linkstatus) = 0;

@@ -41,6 +41,7 @@
 #include "ui/tabwidgetsession.h"
 #include "ui/sessionwidget.h"
 #include "ui/settings/configsearchdialog.h"
+#include "ui/settings/configresultsdialog.h"
 
 
 const char KLinkStatusPart::description_[] = I18N_NOOP( "A Link Checker" );
@@ -183,8 +184,11 @@ bool KLinkStatusPart::openURL(KURL const& url)
 
     if(tabwidget_->count() == 0 || !tabwidget_->emptySessionsExist() )
     {
-        connect(tabwidget_->newSession(url_aux), SIGNAL(signalSearchFinnished()),
+        SessionWidget* sessionwidget = tabwidget_->newSession(url_aux);
+        connect(sessionwidget, SIGNAL(signalSearchFinnished()),
                 this, SLOT(slotEnableDisplayLinksActions()));
+        connect(sessionwidget, SIGNAL(signalSearchStarted()),
+                this, SLOT(slotDisableDisplayLinksActions()));
     }
     else
     {
@@ -230,6 +234,7 @@ void KLinkStatusPart::slotConfigureKLinkStatus()
 {
     KConfigDialog *dialog = new KConfigDialog(tabwidget_, "klsconfig", KLSConfig::self());
     dialog->addPage(new ConfigSearchDialog(0, "config_search_dialog"), i18n("Check"), "viewmag");
+    dialog->addPage(new ConfigResultsDialog(0, "config_results_dialog"), i18n("Results"), "player_playlist");
     dialog->show();
     connect(dialog, SIGNAL(settingsChanged()), tabwidget_, SLOT(slotLoadSettings()));
 }
@@ -296,10 +301,21 @@ void KLinkStatusPart::slotDisplayUndeterminedLinks()
 
 void KLinkStatusPart::slotEnableDisplayLinksActions()
 {
+    if(KLSConfig::displayTreeView())
+        return;
+    
     action_display_good_links_->setEnabled(true);
     action_display_bad_links_->setEnabled(true);
     action_display_malformed_links_->setEnabled(true);
     action_display_undetermined_links_->setEnabled(true);
+}
+
+void KLinkStatusPart::slotDisableDisplayLinksActions()
+{
+    action_display_good_links_->setEnabled(false);
+    action_display_bad_links_->setEnabled(false);
+    action_display_malformed_links_->setEnabled(false);
+    action_display_undetermined_links_->setEnabled(false);
 }
 
 void KLinkStatusPart::slotAbout()

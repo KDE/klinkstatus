@@ -84,6 +84,8 @@ private:
     bool header_checked_;
     bool finnished_;
     bool parsing_;
+    
+    static int count_; // debug attribute that counts how many links were checked
 };
 
 inline LinkStatus const* const LinkChecker::linkStatus() const

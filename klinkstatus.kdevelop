@@ -150,7 +150,7 @@
   </kdevdebugger>
   <kdevfilecreate>
     <filetypes>
-      <type icon="" ext="H" create="template" name="C++ Header" >
+      <type icon="" ext="H" name="C++ Header" create="template" >
         <descr/>
       </type>
     </filetypes>
@@ -212,4 +212,15 @@
     <recursivewhencommitremove>true</recursivewhencommitremove>
     <revertoptions>-C</revertoptions>
   </kdevcvsservice>
+  <kdevcvs>
+    <cvsoptions>-f</cvsoptions>
+    <commitoptions/>
+    <addoptions/>
+    <logoptions/>
+    <updateoptions>-dP</updateoptions>
+    <removeoptions>-f</removeoptions>
+    <revertoptions>-C -d -P</revertoptions>
+    <diffoptions>-u3 -p</diffoptions>
+    <rshoptions/>
+  </kdevcvs>
 </kdevelop>

@@ -72,7 +72,7 @@ protected slots:
     
 private slots:
     void slotEnableDisplayLinksActions();
-
+    void slotDisableDisplayLinksActions();
 private:
     void initGUI();
 

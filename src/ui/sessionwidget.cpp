@@ -20,6 +20,7 @@
 
 #include "sessionwidget.h"
 #include "tablelinkstatus.h"
+#include "treeview.h"
 #include "klshistorycombo.h"
 #include "resultview.h"
 #include "../global.h"
@@ -50,6 +51,8 @@
 #include <kiconloader.h>
 
 
+#include "plot2dcanvas.h"
+#include <qvaluevector.h>
 SessionWidget::SessionWidget(int max_simultaneous_connections, int time_out,
                              QWidget* parent, const char* name, WFlags f)
         : SessionWidgetBase(parent, name, f), search_manager_(0),
@@ -64,15 +67,16 @@ SessionWidget::SessionWidget(int max_simultaneous_connections, int time_out,
 
     connect(combobox_url, SIGNAL( textChanged ( const QString & ) ),
             this, SLOT( slotEnableCheckButton( const QString & ) ) );
+    /*
     connect(table_linkstatus, SIGNAL( clicked ( int, int, int, const QPoint & ) ),
             this, SLOT( showBottomStatusLabel( int, int, int, const QPoint & ) ) );
-
+    */
     connect(&bottom_status_timer_, SIGNAL(timeout()), this, SLOT(clearBottomStatusLabel()) );
 }
 
 SessionWidget::~SessionWidget()
 {
-    combobox_url->saveItems();
+    //combobox_url->saveItems(); This is done every time a URL is checked
 
     if(KLSConfig::rememberCheckSettings())
         saveCurrentCheckSettings();
@@ -86,9 +90,13 @@ void SessionWidget::slotLoadSettings(bool modify_current_widget_settings)
         spinbox_depth->setValue(KLSConfig::depth());
         checkbox_subdirs_only->setChecked(!KLSConfig::checkParentFolders());
         checkbox_external_links->setChecked(KLSConfig::checkExternalLinks());
+        tree_view->setRootIsDecorated(tree_display_);
+        tree_display_ = KLSConfig::displayTreeView();
     }
 
     search_manager_->setTimeOut(KLSConfig::timeOut());
+    
+    //kdDebug(23100) << "tree_display_: " << tree_display_ << endl;
 }
 
 void SessionWidget::saveCurrentCheckSettings()
@@ -129,7 +137,8 @@ void SessionWidget::newSearchManager()
 
 void SessionWidget::setColumns(QStringList const& colunas)
 {
-    table_linkstatus->setColumns(colunas);
+    //table_linkstatus->setColumns(colunas);
+    tree_view->setColumns(colunas);
 }
 
 void SessionWidget::setUrl(KURL const& url)
@@ -140,33 +149,40 @@ void SessionWidget::setUrl(KURL const& url)
 
 void SessionWidget::displayAllLinks()
 {
-    table_linkstatus->showAll();
+    //table_linkstatus->showAll();
+    tree_view->showAll();
 }
 
 void SessionWidget::displayGoodLinks()
 {
-    table_linkstatus->show(ResultView::good);
+    //table_linkstatus->show(ResultView::good);
+    tree_view->show(ResultView::good);
 }
 
 void SessionWidget::displayBadLinks()
 {
-    table_linkstatus->show(ResultView::bad);
+    //table_linkstatus->show(ResultView::bad);
+    tree_view->show(ResultView::bad);
 }
 
 void SessionWidget::displayMalformedLinks()
 {
-    table_linkstatus->show(ResultView::malformed);
+    //table_linkstatus->show(ResultView::malformed);
+    tree_view->show(ResultView::malformed);
 }
 
 void SessionWidget::displayUndeterminedLinks()
 {
-    table_linkstatus->show(ResultView::undetermined);
+    //table_linkstatus->show(ResultView::undetermined);
+    tree_view->show(ResultView::undetermined);
 }
 
 bool SessionWidget::isEmpty() const
 {
-    Q_ASSERT(table_linkstatus);
-    return table_linkstatus->isEmpty();
+    //Q_ASSERT(table_linkstatus);
+    //return table_linkstatus->isEmpty();
+    Q_ASSERT(tree_view);
+    return tree_view->isEmpty();
 }
 
 SearchManager const* SessionWidget::getSearchManager() const
@@ -207,19 +223,23 @@ void SessionWidget::slotCheck()
         KApplication::beep ();
         return;
     }
+    
+    emit signalSearchStarted();
+    slotLoadSettings(isEmpty()); // it seems that KConfigDialogManager is not trigering this slot
 
     newSearchManager();
 
     insertUrlAtCombobox(combobox_url->currentText());
+    combobox_url->saveItems();
     progressbar_checker->reset();
     progressbar_checker->setPercentageVisible(true);
     progressbar_checker->setTotalSteps(1); // check root page
     progressbar_checker->setProgress(0);
     textlabel_progressbar->setText(i18n( "Checking..." ));
 
-    table_linkstatus->verticalHeader()->show();
-    table_linkstatus->verticalHeader()->adjustHeaderSize();
-    table_linkstatus->setLeftMargin(table_linkstatus->verticalHeader()->width());
+    //table_linkstatus->verticalHeader()->show();
+    //table_linkstatus->verticalHeader()->adjustHeaderSize();
+    //table_linkstatus->setLeftMargin(table_linkstatus->verticalHeader()->width());
 
     //buttongroup_search->setEnabled(false);
     pushbutton_check->setEnabled(false);
@@ -232,8 +252,9 @@ void SessionWidget::slotCheck()
 
     Q_ASSERT(!pushbutton_check->isEnabled()); // FIXME pushbutton_check sometimes doesn't show disable. Qt bug?
 
-    table_linkstatus->clear();
-
+    //table_linkstatus->clear();
+    tree_view->clear();
+    
     KURL url = ::normalizeUrl(combobox_url->currentText());
     if(KLSConfig::useQuantaUrlPreviewPrefix() && Global::isKLinkStatusEmbeddedInQuanta())
     {
@@ -310,6 +331,10 @@ void SessionWidget::slotCancel()
         textlabel_progressbar->setText(i18n( "Checking..." ));
         ready_ = false;
         search_manager_->resume();
+        
+        displayAllLinks();
+        emit signalSearchStarted();
+        slotLoadSettings(isEmpty()); // it seems that KConfigDialogManager is not trigering this slot
     }
 }
 
@@ -362,8 +387,10 @@ void SessionWidget::slotRootChecked(LinkStatus const* linkstatus, LinkChecker * 
     Q_ASSERT(textlabel_progressbar->text() == i18n( "Checking..." ));
     progressbar_checker->setProgress(1);
 
-    //table_linkstatus->insereLinha(generateRowOfTableItems(linkstatus));
-    table_linkstatus->insertResult(linkstatus);
+    //table_linkstatus->insertResult(linkstatus);
+    TreeViewItem* tree_view_item = new TreeViewItem(tree_view, tree_view->lastItem(), linkstatus, 3);
+    LinkStatus* ls = const_cast<LinkStatus*> (linkstatus);
+    ls->setTreeViewItem(tree_view_item);
 
     if(linkstatus->isRedirection() && linkstatus->redirection())
         slotLinkChecked(linkstatus->redirection(), anal);
@@ -378,9 +405,28 @@ void SessionWidget::slotLinkChecked(LinkStatus const* linkstatus, LinkChecker * 
 
     if(linkstatus->checked())
     {
-        //table_linkstatus->insereLinha(generateRowOfTableItems(linkstatus));
-        table_linkstatus->insertResult(linkstatus);
-
+        TreeViewItem* tree_view_item = 0;
+        
+        if(tree_display_)
+        {
+            //kdDebug(23100) << "TREE!!!!!" << endl;
+            TreeViewItem* parent_item = linkstatus->parent()->treeViewItem();
+            tree_view_item = new TreeViewItem(parent_item, parent_item->lastChild(), linkstatus, 3);
+            parent_item->setLastChild(tree_view_item);
+            if(KLSConfig::followLastLinkChecked())
+                tree_view->ensureRowVisible(tree_view_item, tree_display_);
+            else
+                tree_view->ensureRowVisible(tree_view->lastItem(), tree_display_);
+        }
+        else
+        {
+            //kdDebug(23100) << "FLAT!!!!!" << endl;
+            tree_view_item = new TreeViewItem(tree_view, tree_view->lastItem(), linkstatus, 3);
+            tree_view->ensureRowVisible(tree_view_item, tree_display_);
+        }   
+        LinkStatus* ls = const_cast<LinkStatus*> (linkstatus);
+        ls->setTreeViewItem(tree_view_item);
+        
         if(linkstatus->isRedirection() && linkstatus->redirection())
             slotLinkChecked(linkstatus->redirection(), anal);
     }

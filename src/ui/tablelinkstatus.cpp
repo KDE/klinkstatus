@@ -195,10 +195,7 @@ void TableLinkstatus::show(ResultView::Status const& status)
 void TableLinkstatus::showAll()
 {
     for(int i = 0; i != numRows(); ++i)
-    {
-        int row = i;
-        showRow(row);
-    }
+        showRow(i);
 }
 
 /*
@@ -255,7 +252,7 @@ bool TableLinkstatus::isEmpty() const
 TableItem* TableLinkstatus::myItem(int row, int col) const
 {
     TableItem* _item = dynamic_cast<TableItem*> (QTable::item(row, col));
-    //Q_ASSERT(_item);
+    Q_ASSERT(_item);
     return _item;
 }
 

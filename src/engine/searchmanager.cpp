@@ -237,6 +237,10 @@ void SearchManager::slotRootChecked(const LinkStatus * link, LinkChecker * check
 vector<LinkStatus*> SearchManager::children(LinkStatus* link)
 {
     vector<LinkStatus*> children;
+    
+    if(!link || link->absoluteUrl().hasRef())
+        return children;
+    
     vector<Node*> const& nodes = link->childrenNodes();
 
     int count = 0;

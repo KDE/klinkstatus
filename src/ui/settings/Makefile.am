@@ -2,4 +2,4 @@ INCLUDES = -I$(top_builddir)/klinkstatus/src/cfg -I$(top_builddir)/klinkstatus/s
 METASOURCES = AUTO
 libsettings_la_LDFLAGS = $(all_libraries)
 noinst_LTLIBRARIES =  libsettings.la
-libsettings_la_SOURCES =  configsearchdialog.ui dummy.cpp
+libsettings_la_SOURCES = configsearchdialog.ui dummy.cpp configresultsdialog.ui
