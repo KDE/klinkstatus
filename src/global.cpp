@@ -152,7 +152,7 @@ void Global::execCommandPS(QString const& command)
 
     //if KProcess fails I think a message box is needed... I will fix it
     if (!self()->process_PS_->start(KProcess::NotifyOnExit,KProcess::All))
-        kdError() << "Failed to query for running Quanta instances!" << endl;
+        kdError() << "Failed to query for running KLinkStatus instances!" << endl;
     //TODO: Replace the above error with a real messagebox after the message freeze is over
     else
     {

@@ -65,6 +65,10 @@ protected slots:
     void slotDisplayUndeterminedLinks();
     void slotAbout();
     void slotReportBug();
+    //void slotShowToolbar();
+    //void slotConfigureShortcuts();
+    //void slotConfigureToolbars();
+    //void applyNewToolbarConfig();
     
 private slots:
     void slotEnableDisplayLinksActions();

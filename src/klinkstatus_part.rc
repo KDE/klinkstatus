@@ -1,6 +1,7 @@
 <!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
 <kpartgui name="klinkstatus_part" version="1">
 <MenuBar>
+  
   <Menu name="file"><text>File</text>
     <Separator/>
     <Action name="new_link_check"/>
@@ -8,11 +9,13 @@
     <Action name="close_tab"/>
     <Separator/>
   </Menu>
-  <Menu name="settings"><text>Settings</text>
+  
+  <Menu name="settings"><text>&amp;Settings</text>
     <Separator/>
     <Action name="configure_klinkstatus"/>
     <Separator/>
   </Menu>
+  
   <Menu name="view"><text>&amp;View</text>
     <Separator/>
     <Action name="display_all_links"/>
@@ -23,12 +26,14 @@
     <Action name="display_undetermined_links"/>
     <Separator/>
   </Menu>
+  
   <Menu name="help"><text>&amp;Help</text>
     <Separator/>
     <Action name="about_klinkstatus"/>
 	<Action name="report_bug"/>
   </Menu>
 </MenuBar>
+
 <ToolBar name="linksToolBar">
     <Action name="new_link_check"/>
     <Action name="open_link"/>

@@ -33,6 +33,7 @@
 #include <kglobalsettings.h>
 #include <kshortcut.h>
 #include <kaccel.h>
+#include <kkeydialog.h> 
 
 #include "global.h"
 #include "cfg/klsconfig.h"
@@ -70,8 +71,7 @@ KLinkStatusPart::KLinkStatusPart(QWidget *parentWidget, const char *widgetName,
 }
 
 KLinkStatusPart::~KLinkStatusPart()
-{
-}
+{}
 
 void KLinkStatusPart::initGUI()
 {
@@ -96,7 +96,21 @@ void KLinkStatusPart::initGUI()
     action_close_tab_->setEnabled(false);
 
     // *************** Settings menu *********************
-
+    /*
+    (void) new KToggleAction(i18n("Show &Toolbar"),
+                       0, this, SLOT(slotShowToolbar()),
+                       actionCollection(), "options_show_toolbar");
+    */
+    /*
+    (void) new KAction(i18n("Configure S&hortcuts..."),
+                       0, this, SLOT(slotConfigureShortcuts()),
+                       actionCollection(), "options_configure_keybinding");
+    */
+    /*
+    (void) new KAction(i18n("Configure Tool&bars..."),
+                       0, this, SLOT(slotConfigureToolbars()),
+                       actionCollection(), "options_configure_toolbars");
+    */
     (void) new KAction(i18n("Configure KLinkStatus"), "configure",
                        0, this, SLOT(slotConfigureKLinkStatus()),
                        actionCollection(), "configure_klinkstatus");
@@ -157,7 +171,7 @@ void KLinkStatusPart::setModified(bool modified)
 bool KLinkStatusPart::openURL(KURL const& url)
 {
     KURL url_aux = url;
-    
+
     if(KLSConfig::useQuantaUrlPreviewPrefix() && Global::isKLinkStatusEmbeddedInQuanta())
     {
         url_aux = Global::urlWithQuantaPreviewPrefix(url);
@@ -166,7 +180,7 @@ bool KLinkStatusPart::openURL(KURL const& url)
     }
     else
         url_aux = url;
-    
+
     if(tabwidget_->count() == 0 || !tabwidget_->emptySessionsExist() )
     {
         connect(tabwidget_->newSession(url_aux), SIGNAL(signalSearchFinnished()),
@@ -313,7 +327,42 @@ void KLinkStatusPart::slotReportBug()
     KBugReport bugReportDlg(0, true, &aboutData);
     bugReportDlg.exec();
 }
+/*
+void KLinkStatusPart::slotShowToolbar()
+{
+    KToggleAction* action_show_toolbar = 
+            static_cast<KToggleAction*> (actionCollection()->action("options_show_toolbar"));
+    if(action_show_toolbar)
+    {
+        if(action_show_toolbar->isChecked())
+            toolBar()->show();
+        else
+            toolBar()->hide();           
+    }
+}
 
+void KLinkStatusPart::slotConfigureShortcuts()
+{
+    KKeyDialog::configure(actionCollection());
+}
+*/
+/*
+void KLinkStatusPart::slotConfigureToolbars()
+{
+    saveMainWindowSettings(KGlobal::config(), autoSaveGroup());
+
+    // use the standard toolbar editor
+    KEditToolbar dlg(factory());
+    connect(&dlg, SIGNAL(newToolbarConfig()),
+             this, SLOT(applyNewToolbarConfig()));
+    dlg.exec();
+}
+
+void KLinkStatusPart::applyNewToolbarConfig()
+{
+    applyMainWindowSettings(KGlobal::config(), autoSaveGroup());
+}
+*/
 KAboutData* KLinkStatusPart::createAboutData()
 {
     KAboutData * about = new KAboutData("klinkstatuspart", I18N_NOOP("KLinkStatus Part"), version_,

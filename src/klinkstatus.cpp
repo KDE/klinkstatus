@@ -36,13 +36,13 @@
 
 
 KLinkStatus::KLinkStatus()
-    : KParts::MainWindow( 0L, "KLinkStatus" )
+        : KParts::MainWindow( 0L, "KLinkStatus" )
 {
     // set the shell's ui resource file
     setXMLFile("klinkstatus_shell.rc");
 
     setupActions();
-    
+
     // and a status bar
     //statusBar()->show();
 
@@ -82,7 +82,7 @@ KLinkStatus::KLinkStatus()
     // to automatically save settings if changed: window size, toolbar
     // position, icon size, etc.
     setAutoSaveSettings();
-    
+
     setupPartActions();
 }
 
@@ -95,14 +95,14 @@ void KLinkStatus::load(const KURL& url)
 }
 
 void KLinkStatus::setupActions()
-{    
+{
     KStdAction::quit(kapp, SLOT(quit()), actionCollection());
 
-    m_toolbarAction = KStdAction::showToolbar(this, SLOT(optionsShowToolbar()), actionCollection());
+    //m_toolbarAction = KStdAction::showToolbar(this, SLOT(optionsShowToolbar()), actionCollection());
     //m_statusbarAction = KStdAction::showStatusbar(this, SLOT(optionsShowStatusbar()), actionCollection());
 
     KStdAction::keyBindings(this, SLOT(optionsConfigureKeys()), actionCollection());
-    KStdAction::configureToolbars(this, SLOT(optionsConfigureToolbars()), actionCollection());    
+    KStdAction::configureToolbars(this, SLOT(optionsConfigureToolbars()), actionCollection());
 }
 
 void KLinkStatus::setupPartActions()
@@ -119,12 +119,14 @@ void KLinkStatus::removeDuplicatedActions()
     KActionCollection* part_action_collection = m_part->actionCollection();
     KAction* part_about_action = part_action_collection->action("about_klinkstatus");
     KAction* part_report_action = part_action_collection->action("report_bug");
-    
+
     QWidget* container = part_about_action->container(0); // call this only once or segfault
     part_about_action->unplug(container);
     part_report_action->unplug(container);
-    part_action_collection->remove(part_about_action);
-    part_action_collection->remove(part_report_action);
+    part_action_collection->remove
+    (part_about_action);
+    part_action_collection->remove
+    (part_report_action);
 }
 
 void KLinkStatus::saveProperties(KConfig* /*config*/)
@@ -164,7 +166,16 @@ void KLinkStatus::optionsShowStatusbar()
 
 void KLinkStatus::optionsConfigureKeys()
 {
-    KKeyDialog::configure(actionCollection());
+    //KKeyDialog::configure(actionCollection());
+    
+    KKeyDialog dlg( false, this );
+    QPtrList<KXMLGUIClient> clients = guiFactory()->clients();
+    for( QPtrListIterator<KXMLGUIClient> it( clients );
+            it.current(); ++it )
+    {
+        dlg.insert( (*it)->actionCollection() );
+    }
+    dlg.configure();
 }
 
 void KLinkStatus::optionsConfigureToolbars()
