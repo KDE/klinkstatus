@@ -73,7 +73,7 @@ void KLinkStatusPart::initGUI()
                                          0, this, SLOT(slotNewLinkCheck()),
                                          actionCollection(), "new_link_check");
 
-    action_open_link_ = new KAction(i18n("Open URL"), "fileopen",
+    action_open_link_ = new KAction(i18n("Open URL..."), "fileopen",
                                     0, this, SLOT(slotOpenLink()),
                                     actionCollection(), "open_link");
 
