@@ -71,7 +71,7 @@ KLinkStatus::KLinkStatus()
     {
         // if we couldn't find our Part, we exit since the Shell by
         // itself can't do anything useful
-        KMessageBox::error(this, i18n("Could not find our part! Did you configure with '--prefix=/$KDEDIR' or did a 'make install'?"));
+        KMessageBox::error(this, i18n("Could not find the KLinkStatus part; did you configure with '--prefix=/$KDEDIR' and perform 'make install'?"));
         kapp->quit();
         // we return here, cause kapp->quit() only means "exit the
         // next time we enter the event loop...

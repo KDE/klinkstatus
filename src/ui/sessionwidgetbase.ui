@@ -201,7 +201,7 @@
                                                         <bool>true</bool>
                                                     </property>
                                                     <property name="text">
-                                                        <string>Don't check parent folders</string>
+                                                        <string>Do not check parent folders</string>
                                                     </property>
                                                 </widget>
                                                 <spacer>
