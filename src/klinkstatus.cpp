@@ -97,7 +97,23 @@ void KLinkStatus::load(const KURL& url)
 
 void KLinkStatus::setupActions()
 {
-    KStdAction::quit(kapp, SLOT(quit()), actionCollection());
+    //     KStdAction::quit(kapp, SLOT(quit()), actionCollection()); 
+    // The above causes a segfault when using File->Quit.
+    // Here's Waldo's explanation:
+/*    I had a look. The problem is due to the SessionWidget destructor calling 
+    KLSConfig. If you use the window button, the window and the SessionWidget is 
+    destructed first and then later the application is destructed.
+    If you use File->Quit it calls kapp->quit which destructs the application 
+    without destructing the window first. The application first destructs all 
+    static deleters and its administration, and then goes on to kill the 
+    remaining windows that it owns. Therein lies the problem because by then the 
+    static deleters aren't usable any longer, and calling KLSConfig from the 
+    SessionWidget destructor crashes when it tries to recreate KLSConfig and 
+    register it with staticKLSConfigDeleter due to the lack of static deleter 
+    administration.
+    The easiest solution is to call close() on the mainwindow instead of 
+    KApplication::quit()*/
+    KStdAction::quit(this, SLOT(close()), actionCollection());
 
     //m_toolbarAction = KStdAction::showToolbar(this, SLOT(optionsShowToolbar()), actionCollection());
     //m_statusbarAction = KStdAction::showStatusbar(this, SLOT(optionsShowStatusbar()), actionCollection());
