@@ -24,6 +24,7 @@
 #include "../engine/linkstatus.h"
 #include "../engine/linkchecker.h"
 #include "../engine/searchmanager.h"
+#include "../klsconfig.h"
 
 #include <qevent.h>
 #include <qlineedit.h>
@@ -71,9 +72,6 @@ SessionWidget::~SessionWidget()
 
 void SessionWidget::initComboUrl()
 {
-    combo_config_ = new KConfig("url_history", false, false);
-    KLSHistoryCombo::setConfig(combo_config_);
-    combo_config_->setGroup("Location Bar");
     combobox_url->init();
 }
 
@@ -82,7 +80,8 @@ void SessionWidget::newSearchManager()
     if(gestor_pesquisa_)
         delete gestor_pesquisa_;
 
-    gestor_pesquisa_ = new SearchManager(max_simultaneous_connections_, time_out_,
+    gestor_pesquisa_ = new SearchManager(KLSConfig::maxConnectionsNumber(),
+                                         KLSConfig::timeOut(),
                                          this, "search_manager");
     assert(gestor_pesquisa_);
 

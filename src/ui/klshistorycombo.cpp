@@ -10,6 +10,7 @@
 //
 //
 #include "klshistorycombo.h"
+#include "../klsconfig.h"
 
 #include <kapplication.h>
 #include <kconfig.h>
@@ -17,18 +18,17 @@
 #include <kdebug.h>
 #include <kstdaccel.h>
 #include <kurldrag.h>
-#include <kglobalsettings.h> 
+#include <kglobalsettings.h>
 
 
-KConfig* KLSHistoryCombo::config_ = 0L;
 bool KLSHistoryCombo::items_saved_ = false;
 
 
 KLSHistoryCombo::KLSHistoryCombo(QWidget *parent, const char *name)
         : KHistoryCombo(parent, name)
 {
-    // @todo settings
-    setMaxCount(50);
+    setMaxCount(KLSConfig::maxCountComboUrl());
+    
     setDuplicatesEnabled(false);
     setAutoCompletion(false);
 
@@ -41,8 +41,6 @@ KLSHistoryCombo::~KLSHistoryCombo()
 
 void KLSHistoryCombo::init()
 {
-    Q_ASSERT(config_);
-
     loadItems();
 }
 
@@ -52,24 +50,18 @@ void KLSHistoryCombo::saveItems()
         return;
 
     QStringList items = historyItems();
+
+    KLSConfig::setComboUrlHistory(items);
+    KLSConfig::writeConfig();
     
-    config_->setGroup("Location Bar");
-    config_->writeEntry("ComboContents", items);
-
-    config_->sync();
-
     items_saved_ = true;
 }
 
 void KLSHistoryCombo::loadItems()
 {
     clear();
-
-    config_->setGroup( "History" );
-    config_->writeEntry( "CompletionItems", "unused" );
-
-    config_->setGroup( "Location Bar" );
-    QStringList items = config_->readListEntry( "ComboContents" );
+    
+    QStringList items = KLSConfig::comboUrlHistory();
 
     bool block = signalsBlocked();
     blockSignals( true );
@@ -201,11 +193,6 @@ void KLSHistoryCombo::selectWord(QKeyEvent *e)
             edit->cursorForward(false, count+1);
         }
     }
-}
-
-void KLSHistoryCombo::setConfig(KConfig *kc)
-{
-    config_ = kc;
 }
 
 #include "klshistorycombo.moc"

@@ -1,0 +1,7 @@
+# Code generation options for kconfig_compiler
+File=klinkstatus.kcfg
+#IncludeFiles=defines.h
+ClassName=KLSConfig
+Singleton=true
+#CustomAdditions=true
+Mutators=true

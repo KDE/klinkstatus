@@ -182,7 +182,7 @@ void KLinkStatusPart::slotReportBug()
 
 KAboutData* KLinkStatusPart::createAboutData()
 {
-    KAboutData * about = new KAboutData("klinkstatuspart", I18N_NOOP("KLinkStatus"), version_,
+    KAboutData * about = new KAboutData("klinkstatuspart", I18N_NOOP("KLinkStatus Part"), version_,
                                         description_, KAboutData::License_GPL_V2,
                                         "(C) 2004 Paulo Moura Guedes", 0, 0, "pmg@netcabo.pt");
 

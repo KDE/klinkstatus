@@ -31,14 +31,11 @@ public:
     void loadItems();
     void saveItems();
 
-    static void setConfig(KConfig* kc);
-
 protected:
     virtual bool eventFilter(QObject* o, QEvent* ev);
     void selectWord(QKeyEvent* e);
     
 private:
-    static KConfig* config_;
     static bool items_saved_;
 };
 

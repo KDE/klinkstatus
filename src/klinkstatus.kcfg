@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE kcfg SYSTEM "http://www.kde.org/standards/kcfg/1.0/kcfg.dtd">
+<kcfg>
+  <kcfgfile name="klinkstatus_shell.rc"/>
+  <group name="kdewebdev">
+    <entry name="MaxCountComboUrl" type="Int">
+      <label>Maximum number of entries in the combo url.</label>
+      <default>50</default>
+    </entry>
+    <entry name="MaxConnectionsNumber" type="Int">
+      <label>Maximum number of simultaneous connections.</label>
+      <default>5</default>
+    </entry>
+    <entry name="TimeOut" type="Int">
+      <label>Timeout on getting an URL.</label>
+      <default>35</default>
+    </entry>
+    <entry name="ComboUrlHistory" type="StringList">
+      <label>History of combo url.</label>
+    </entry>
+  </group>
+</kcfg>
+

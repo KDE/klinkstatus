@@ -22,6 +22,7 @@
 #include "../parser/mstring.h"
 
 #include <qstring.h>
+#include <qvaluevector.h>
 
 #include <kapplication.h>
 #include <kdebug.h>
@@ -291,9 +292,14 @@ bool SearchManager::existUrl(KURL const& url, KURL const& url_parent) const
                 LinkStatus* tmp = search_results_[i][j][l];
                 Q_ASSERT(tmp);
                 if(tmp->absoluteUrl() == url)
-                {
+                { // URL exists
+                    QValueVector<KURL> referrers(tmp->referrers());
+                    
+                    for(uint i = 0; i != referrers.size(); ++i)
+                        if(referrers[i] == url_parent)
+                            return true;
+                    
                     tmp->addReferrer(url_parent);
-                    kdDebug(23100) << "Another referrer: " << url_parent.url() << endl;
                     return true;
                 }
             }
