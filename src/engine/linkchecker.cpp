@@ -85,7 +85,7 @@ void LinkChecker::slotTimeOut()
     if(not finnished_ and not parsing_)
     {
         Q_ASSERT(t_job_);
-        if(not(t_job_->error() and t_job_->error() == KIO::ERR_USER_CANCELED))
+        if(t_job_->error() != KIO::ERR_USER_CANCELED)
         {
             linkstatus_->setErrorOccurred(true);
             linkstatus_->setError("Timeout");
@@ -248,7 +248,7 @@ void LinkChecker::slotResult(KIO::Job* /*job*/)
 
     Q_ASSERT(t_job_);
 
-    if(t_job_->error() and t_job_->error() == KIO::ERR_USER_CANCELED)
+    if(t_job_->error() == KIO::ERR_USER_CANCELED)
     {
         kdWarning(23100) << endl << "Job killed quietly, yet signal result was emited..." << endl;
         kdDebug(23100) << linkstatus_->toString() << endl;
