@@ -49,8 +49,6 @@
 #include <kiconloader.h>
 
 
-KConfig * SessionWidget::combo_config_ = 0;
-
 SessionWidget::SessionWidget(int max_simultaneous_connections, int time_out,
                              QWidget* parent, const char* name, WFlags f)
         : SessionWidgetBase(parent, name, f), search_manager_(0),

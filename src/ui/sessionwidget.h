@@ -102,8 +102,6 @@ private:
     void saveCurrentCheckSettings();
 
 private:
-    static KConfig* combo_config_;
-
     SearchManager* search_manager_;
     bool ready_;
     QTimer bottom_status_timer_;
