@@ -51,8 +51,8 @@ public:
     SessionWidget* getEmptySession() const;
 
 public slots:
-    void newSession();
-    void newSession(KURL const& url);
+    SessionWidget* newSession();
+    SessionWidget* newSession(KURL const& url);
     void closeSession();
     void updateTabLabel(LinkStatus const* linkstatus);
 

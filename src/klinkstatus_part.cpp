@@ -86,25 +86,31 @@ void KLinkStatusPart::initGUI()
 
     // View menu
 
-    (void) new KAction(i18n("All links"), "",
-                       0, this, SLOT(slotDisplayAllLinks()),
-                       actionCollection(), "display_all_links");
-    
-    (void) new KAction(i18n("Good links"), "ok",
-                       0, this, SLOT(slotDisplayGoodLinks()),
-                       actionCollection(), "display_good_links");
+    action_display_all_links_ = new KAction(i18n("All links"), "",
+                                            0, this, SLOT(slotDisplayAllLinks()),
+                                            actionCollection(), "display_all_links");
+    action_display_all_links_->setEnabled(false);
 
-    (void) new KAction(i18n("Broken links"), "no",
-                       0, this, SLOT(slotDisplayBadLinks()),
-                       actionCollection(), "display_bad_links");
+    action_display_good_links_ = new KAction(i18n("Good links"), "ok",
+                                 0, this, SLOT(slotDisplayGoodLinks()),
+                                 actionCollection(), "display_good_links");
+    action_display_good_links_->setEnabled(false);
 
-    (void) new KAction(i18n("Malformed links"), "khtml/icons/crystalsvg/16x16/actions/bug.png",
-                       0, this, SLOT(slotDisplayMalformedLinks()),
-                       actionCollection(), "display_malformed_links");
+    action_display_bad_links_ = new KAction(i18n("Broken links"), "no",
+                                            0, this, SLOT(slotDisplayBadLinks()),
+                                            actionCollection(), "display_bad_links");
+    action_display_bad_links_->setEnabled(false);
 
-    (void) new KAction(i18n("Undetermined links"), "help",
-                       0, this, SLOT(slotDisplayUndeterminedLinks()),
-                       actionCollection(), "display_undetermined_links");
+    action_display_malformed_links_ = new KAction(i18n("Malformed links"),
+                                      "khtml/icons/crystalsvg/16x16/actions/bug.png",
+                                      0, this, SLOT(slotDisplayMalformedLinks()),
+                                      actionCollection(), "display_malformed_links");
+    action_display_malformed_links_->setEnabled(false);
+
+    action_display_undetermined_links_ = new KAction(i18n("Undetermined links"), "help",
+                                         0, this, SLOT(slotDisplayUndeterminedLinks()),
+                                         actionCollection(), "display_undetermined_links");
+    action_display_undetermined_links_->setEnabled(false);
 
     // Help menu
 
@@ -137,7 +143,8 @@ bool KLinkStatusPart::openURL(KURL const& url)
 
     if(tabwidget_->count() == 0 || !tabwidget_->emptySessionsExist() )
     {
-        tabwidget_->newSession(url);
+        connect(tabwidget_->newSession(url), SIGNAL(signalSearchFinnished()),
+                this, SLOT(slotEnableDisplayLinksActions()));
     }
     else
     {
@@ -182,26 +189,69 @@ void KLinkStatusPart::slotClose()
 void KLinkStatusPart::slotDisplayAllLinks()
 {
     tabwidget_->currentSession()->displayAllLinks();
+
+    action_display_all_links_->setEnabled(false);
+
+    action_display_good_links_->setEnabled(true);
+    action_display_bad_links_->setEnabled(true);
+    action_display_malformed_links_->setEnabled(true);
+    action_display_undetermined_links_->setEnabled(true);
 }
 
 void KLinkStatusPart::slotDisplayGoodLinks()
 {
     tabwidget_->currentSession()->displayGoodLinks();
+
+    action_display_good_links_->setEnabled(false);
+
+    action_display_all_links_->setEnabled(true);
+    action_display_bad_links_->setEnabled(true);
+    action_display_malformed_links_->setEnabled(true);
+    action_display_undetermined_links_->setEnabled(true);
 }
 
 void KLinkStatusPart::slotDisplayBadLinks()
 {
     tabwidget_->currentSession()->displayBadLinks();
+
+    action_display_bad_links_->setEnabled(false);
+
+    action_display_all_links_->setEnabled(true);
+    action_display_good_links_->setEnabled(true);
+    action_display_malformed_links_->setEnabled(true);
+    action_display_undetermined_links_->setEnabled(true);
 }
 
 void KLinkStatusPart::slotDisplayMalformedLinks()
 {
     tabwidget_->currentSession()->displayMalformedLinks();
+
+    action_display_malformed_links_->setEnabled(false);
+
+    action_display_all_links_->setEnabled(true);
+    action_display_good_links_->setEnabled(true);
+    action_display_bad_links_->setEnabled(true);
+    action_display_undetermined_links_->setEnabled(true);
 }
 
 void KLinkStatusPart::slotDisplayUndeterminedLinks()
 {
     tabwidget_->currentSession()->displayUndeterminedLinks();
+
+    action_display_undetermined_links_->setEnabled(false);
+
+    action_display_all_links_->setEnabled(true);
+    action_display_good_links_->setEnabled(true);
+    action_display_bad_links_->setEnabled(true);
+    action_display_malformed_links_->setEnabled(true);
+}
+
+void KLinkStatusPart::slotEnableDisplayLinksActions()
+{
+    action_display_good_links_->setEnabled(true);
+    action_display_bad_links_->setEnabled(true);
+    action_display_malformed_links_->setEnabled(true);
+    action_display_undetermined_links_->setEnabled(true);
 }
 
 void KLinkStatusPart::slotAbout()

@@ -64,6 +64,9 @@ protected slots:
     void slotDisplayUndeterminedLinks();
     void slotAbout();
     void slotReportBug();
+    
+private slots:
+    void slotEnableDisplayLinksActions();
 
 private:
     void initGUI();
@@ -77,6 +80,11 @@ private:
     KAction* action_new_link_check_;
     KAction* action_open_link_;
     KAction* action_close_tab_;
+    KAction* action_display_all_links_;
+    KAction* action_display_good_links_;
+    KAction* action_display_bad_links_;
+    KAction* action_display_malformed_links_;
+    KAction* action_display_undetermined_links_;
 };
 
 #endif // _KLINKSTATUSPART_H_

@@ -79,7 +79,7 @@ SessionWidget* TabWidgetSession::getEmptySession() const
     return 0;
 }
 
-void TabWidgetSession::newSession()
+SessionWidget* TabWidgetSession::newSession()
 {
     // TODO: settings: number of connections, timeout
     SessionWidget* session_widget = newSessionWidget();
@@ -90,12 +90,16 @@ void TabWidgetSession::newSession()
     tabs_.insert(count() - 1, session_widget);
     Q_ASSERT(tabs_[count() - 1]);
     setCurrentPage(count() - 1);
+    
+    return session_widget;
 }
 
-void TabWidgetSession::newSession(KURL const& url)
+SessionWidget* TabWidgetSession::newSession(KURL const& url)
 {
-    newSession();
+    SessionWidget* sessionwidget = newSession();
     currentSession()->setUrl(url);
+    
+    return sessionwidget;
 }
 
 void TabWidgetSession::closeSession()

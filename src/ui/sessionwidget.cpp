@@ -373,6 +373,8 @@ void SessionWidget::slotSearchFinished()
     textlabel_elapsed_time->setEnabled(true);
     textlabel_elapsed_time_value->setEnabled(true);
     textlabel_elapsed_time_value->setText(gestor_pesquisa_->timeElapsed().toString("hh:mm:ss"));
+    
+    emit signalSearchFinnished();
 }
 
 void SessionWidget::insertUrlAtCombobox(QString const& url)

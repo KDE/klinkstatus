@@ -64,6 +64,7 @@ public:
 
 signals:
     void signalUpdateTabLabel(const LinkStatus *);
+    void signalSearchFinnished();
 
 private slots:
 
