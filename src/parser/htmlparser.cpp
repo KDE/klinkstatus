@@ -245,7 +245,6 @@ void HtmlParser::parseNodesOfTypeTITLE()
         return;
     
     node = doc.mid(inicio, fim-inicio);
-    kdDebug(23100) << "HtmlParser::parseNodesOfTypeTITLE: " << node << endl;
 
     node_TITLE_.setNode(node);
 }

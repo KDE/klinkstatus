@@ -371,12 +371,10 @@ inline QString const& NodeTITLE::attributeTITLE() const
 
 inline void NodeTITLE::parseAttributeTITLE()
 {
-    kdDebug(23100) << "Content: " << content_ << endl;
-     
     attribute_title_ = content_;
     attribute_title_.replace("<TITLE>", "", false);
     attribute_title_.replace("</TITLE>", "", false);
     attribute_title_.stripWhiteSpace();
     
-    kdDebug(23100) << "TITLE: " << attribute_title_ << endl;
+    //kdDebug(23100) << "TITLE: " << attribute_title_ << endl;
 }
