@@ -85,6 +85,8 @@ void SessionWidget::slotLoadSettings()
     spinbox_depth->setValue(KLSConfig::depth());
     checkbox_subdirs_only->setChecked(not KLSConfig::checkParentFolders());
     checkbox_external_links->setChecked(KLSConfig::checkExternalLinks());
+    
+    search_manager_->setTimeOut(KLSConfig::timeOut());
 }
 
 void SessionWidget::saveCurrentCheckSettings()
