@@ -30,6 +30,7 @@
 #include <kaboutapplication.h>
 #include <kbugreport.h>
 #include <kconfigdialog.h>
+#include <kglobalsettings.h>
 
 #include "cfg/klsconfig.h"
 #include "klinkstatus_part.h"
@@ -312,6 +313,8 @@ KAboutData* KLinkStatusPart::createAboutData()
     about->addCredit("Michal Rudolf", 0, "mrudolf@kdewebdev.org");
     about->addCredit("Mathieu Kooiman", 0, " quanta@map-is.nl");
     about->addCredit("Jens Herden", 0, "jens@kdewebdev.org");
+    
+    KGlobal::dirs()->addResourceType("appicon",KStandardDirs::kde_default("data") + "klinkstatuspart/pics/");
 
     return about;
 }
