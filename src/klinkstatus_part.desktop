@@ -1,10 +1,12 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=KLinkStatusPart
-Name[et]=KLinkStatus komponent
-Name[hi]=KLinkStatusपार्ट
-Name[sv]=KLinkStatus-del
-Name[ta]=KLinkStatusபாகம்
+Name[fr]=Composant de KLinkStatus
+Name[pt_BR]=Componente do KLinkStatus
+Name[ru]=Компонент KLinkStatus
+Name[sv]=Klinkstatus-delprogram
+Name[ta]=Kதொகுதி நிலைமை பகுதி
+Name[tg]=Қисми KLinkStatus
 Name[xx]=xxKLinkStatusPartxx
 MimeType=text/english;text/plain;text/x-makefile;text/x-c++hdr;text/x-c++src;text/x-chdr;text/x-csrc;text/x-java;text/x-moc;text/x-pascal;text/x-tcl;text/x-tex;application/x-shellscript;text/x-c;text/x-c++;
 ServiceTypes=KParts/ReadOnlyPart,KParts/ReadWritePart
