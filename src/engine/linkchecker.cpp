@@ -238,7 +238,7 @@ void LinkChecker::slotResult(KIO::Job* /*job*/)
 
     if(t_job_->error() and t_job_->error() == KIO::ERR_USER_CANCELED)
     {
-        cerr << "\n\nJob killed quietly, yet signal result was emited...\n\n\n";
+        kdDebug(2121) << "\n\nJob killed quietly, yet signal result was emited...\n\n\n";
         return;
     }
 
@@ -250,10 +250,10 @@ void LinkChecker::slotResult(KIO::Job* /*job*/)
     assert(ls);
 
     if(!(!ls->onlyCheckHeader() || t_job_->error() || !header_checked_))
-        cerr << ls->toString() << endl;
+        kdDebug(2121) << ls->toString() << endl;
     assert(!ls->onlyCheckHeader() || t_job_->error() || !header_checked_);
     if(ls->isErrorPage())
-        cerr << "\n\n" << ls->toString() << endl << endl;
+        kdDebug(2121) << "\n\n" << ls->toString() << endl << endl;
     // @todo remove bellow assert for release
     assert(!t_job_->isErrorPage());
 
@@ -263,7 +263,7 @@ void LinkChecker::slotResult(KIO::Job* /*job*/)
 
         ls->setErrorOccurred(true);
         if(t_job_->errorString().isEmpty())
-            cerr << "\n\nError string is empty, error = " << t_job_->error() << "\n\n\n";
+            kdDebug(2121) << "\n\nError string is empty, error = " << t_job_->error() << "\n\n\n";
         if(t_job_->error() != KIO::ERR_NO_CONTENT)
             ls->setError(t_job_->errorString());
         else
