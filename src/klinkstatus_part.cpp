@@ -33,7 +33,6 @@
 #include <kglobalsettings.h>
 #include <kshortcut.h>
 #include <kaccel.h>
-#include <kglobal.h>
 
 #include "cfg/klsconfig.h"
 #include "klinkstatus_part.h"
@@ -79,17 +78,17 @@ void KLinkStatusPart::initGUI()
     // *************** File menu *********************
 
     action_new_link_check_ = new KAction(i18n("New Link Check"), "filenew",
-                                         KStdAccel::shortcut(KStdAccel::New),
+                                         0,
                                          this, SLOT(slotNewLinkCheck()),
                                          actionCollection(), "new_link_check");
 
     action_open_link_ = new KAction(i18n("Open URL..."), "fileopen",
-                                    KStdAccel::shortcut(KStdAccel::Open),
+                                    0,
                                     this, SLOT(slotOpenLink()),
                                     actionCollection(), "open_link");
 
     action_close_tab_ = new KAction(i18n("Close Tab"), "fileclose",
-                                    KStdAccel::shortcut(KStdAccel::Close),
+                                    0,
                                     this, SLOT(slotClose()),
                                     actionCollection(), "close_tab");
     action_close_tab_->setEnabled(false);

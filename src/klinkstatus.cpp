@@ -32,6 +32,7 @@
 #include <kstatusbar.h>
 #include <klocale.h>
 #include <kdebug.h>
+#include <kaccel.h>
 
 
 KLinkStatus::KLinkStatus()
@@ -39,9 +40,6 @@ KLinkStatus::KLinkStatus()
 {
     // set the shell's ui resource file
     setXMLFile("klinkstatus_shell.rc");
-
-    // then, setup our actions
-    setupActions();
 
     // and a status bar
     //statusBar()->show();
@@ -82,6 +80,9 @@ KLinkStatus::KLinkStatus()
     // to automatically save settings if changed: window size, toolbar
     // position, icon size, etc.
     setAutoSaveSettings();
+    
+    // then, setup our actions
+    setupActions();
 }
 
 KLinkStatus::~KLinkStatus()
@@ -101,6 +102,12 @@ void KLinkStatus::setupActions()
 
     KStdAction::keyBindings(this, SLOT(optionsConfigureKeys()), actionCollection());
     KStdAction::configureToolbars(this, SLOT(optionsConfigureToolbars()), actionCollection());
+    
+    Q_ASSERT(m_part);
+    KActionCollection* part_action_collection = m_part->actionCollection();
+    part_action_collection->action("new_link_check")->setShortcut(KStdAccel::shortcut(KStdAccel::New));
+    part_action_collection->action("open_link")->setShortcut(KStdAccel::shortcut(KStdAccel::Open));
+    part_action_collection->action("close_tab")->setShortcut(KStdAccel::shortcut(KStdAccel::Close));
 }
 
 void KLinkStatus::removeDuplicatedActions()
