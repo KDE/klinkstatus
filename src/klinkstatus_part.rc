@@ -8,6 +8,11 @@
     <Action name="close_tab"/>
     <Separator/>
   </Menu>
+  <Menu name="settings"><text>Settings</text>
+    <Separator/>
+    <Action name="configure_klinkstatus"/>
+    <Separator/>
+  </Menu>
   <Menu name="view"><text>&amp;View</text>
     <Separator/>
     <Action name="display_all_links"/>

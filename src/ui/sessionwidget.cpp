@@ -59,7 +59,8 @@ SessionWidget::SessionWidget(int max_simultaneous_connections, int time_out,
 {
     newSearchManager();
 
-    initComboUrl();
+    combobox_url->init();
+    slotLoadSettings();
     initIcons();
 
     connect(combobox_url, SIGNAL( textChanged ( const QString & ) ),
@@ -73,11 +74,27 @@ SessionWidget::SessionWidget(int max_simultaneous_connections, int time_out,
 SessionWidget::~SessionWidget()
 {
     combobox_url->saveItems();
+    
+    if(KLSConfig::rememberCheckSettings())
+        saveCurrentCheckSettings();
 }
 
-void SessionWidget::initComboUrl()
+void SessionWidget::slotLoadSettings()
 {
-    combobox_url->init();
+    checkbox_recursively->setChecked(KLSConfig::recursiveCheck());
+    spinbox_depth->setValue(KLSConfig::depth());
+    checkbox_subdirs_only->setChecked(not KLSConfig::checkParentFolders());
+    checkbox_external_links->setChecked(KLSConfig::checkExternalLinks());
+}
+
+void SessionWidget::saveCurrentCheckSettings()
+{
+    KLSConfig::setRecursiveCheck(checkbox_recursively->isChecked());
+    KLSConfig::setDepth(spinbox_depth->value());
+    KLSConfig::setCheckParentFolders(not checkbox_subdirs_only->isChecked());
+    KLSConfig::setCheckExternalLinks(checkbox_external_links->isChecked());
+    
+    KLSConfig::writeConfig();
 }
 
 void SessionWidget::newSearchManager()

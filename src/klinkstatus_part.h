@@ -57,6 +57,7 @@ protected slots:
     void slotNewLinkCheck();
     void slotOpenLink();
     void slotClose();
+    void slotConfigureKLinkStatus();
     void slotDisplayAllLinks();
     void slotDisplayGoodLinks();
     void slotDisplayBadLinks();

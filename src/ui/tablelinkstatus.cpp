@@ -642,9 +642,6 @@ void TableItemStatus::setText()
 
 void TableItemStatus::setPixmap()
 {
-    //kdDebug(23100) << locate("data", "klinkstatuspart/icons/304.png") << endl;
-    //kdDebug(23100) << locate("data", "klinkstatuspart/iconsbug.png") << endl;
-
     if(linkStatus()->errorOccurred())
     {
 
@@ -654,9 +651,8 @@ void TableItemStatus::setPixmap()
         }
         else if(linkStatus()->error() == "Malformed")
         {
-            QTableItem::setPixmap(
-                locate("data",
-                       "/usr/share/apps/klinkstatuspart/icons/crystalsvg/16x16/actions/bug.png"));
+            locate("data",
+                   "/usr/share/apps/klinkstatuspart/icons/crystalsvg/16x16/actions/bug.png"));
         }
         else
         {
@@ -670,8 +666,7 @@ void TableItemStatus::setPixmap()
         QTableItem::setPixmap(SmallIcon("ok"));
 }
 
-QString TableItemStatus::toolTip()
-const
+QString TableItemStatus::toolTip() const
 {
     if(linkStatus()->errorOccurred() ||
             linkStatus()->absoluteUrl().hasRef() ||

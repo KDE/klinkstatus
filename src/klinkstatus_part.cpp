@@ -29,10 +29,13 @@
 #include <kstandarddirs.h>
 #include <kaboutapplication.h>
 #include <kbugreport.h>
+#include <kconfigdialog.h>
 
+#include "klsconfig.h"
 #include "klinkstatus_part.h"
 #include "ui/tabwidgetsession.h"
 #include "ui/sessionwidget.h"
+#include "ui/settings/configsearchdialog.h"
 
 
 const char KLinkStatusPart::description_[] = "A Link Checker";
@@ -69,7 +72,7 @@ void KLinkStatusPart::initGUI()
 {
     setXMLFile("klinkstatus_part.rc", true);
 
-    // File menu
+    // *************** File menu *********************
 
     action_new_link_check_ = new KAction(i18n("New Link Check"), "filenew",
                                          0, this, SLOT(slotNewLinkCheck()),
@@ -84,7 +87,13 @@ void KLinkStatusPart::initGUI()
                                     actionCollection(), "close_tab");
     action_close_tab_->setEnabled(false);
 
-    // View menu
+    // *************** Settings menu *********************
+
+    (void) new KAction(i18n("Configure KLinkStatus"), "configure",
+                       0, this, SLOT(slotConfigureKLinkStatus()),
+                       actionCollection(), "configure_klinkstatus");
+
+    // *************** View menu *********************
 
     action_display_all_links_ = new KAction(i18n("All links"), "",
                                             0, this, SLOT(slotDisplayAllLinks()),
@@ -112,7 +121,7 @@ void KLinkStatusPart::initGUI()
                                          actionCollection(), "display_undetermined_links");
     action_display_undetermined_links_->setEnabled(false);
 
-    // Help menu
+    // *************** Help menu *********************
 
     (void) new KAction(i18n("About KLinkStatus"), "klinkstatus",
                        0, this, SLOT(slotAbout()),
@@ -184,6 +193,14 @@ void KLinkStatusPart::slotClose()
         Q_ASSERT(action_close_tab_->isEnabled());
     else
         action_close_tab_->setEnabled(false);
+}
+
+void KLinkStatusPart::slotConfigureKLinkStatus()
+{
+    KConfigDialog *dialog = new KConfigDialog(tabwidget_, "klsconfig", KLSConfig::self());
+    dialog->addPage(new ConfigSearchDialog(0, "config_search_dialog"), i18n("Check"), "viewmag");
+    dialog->show();
+    connect(dialog, SIGNAL(settingsChanged()), tabwidget_->currentSession(), SLOT(slotLoadSettings()));
 }
 
 void KLinkStatusPart::slotDisplayAllLinks()

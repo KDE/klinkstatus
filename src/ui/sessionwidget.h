@@ -68,7 +68,8 @@ signals:
     
 public slots:
     
-    virtual void slotClearComboUrl();
+    virtual void slotClearComboUrl();    
+    void slotLoadSettings();
     
 private slots:
 
@@ -94,11 +95,11 @@ private slots:
 private:
 
     virtual void keyPressEvent ( QKeyEvent* e );
-    void initComboUrl();
     bool validFields();
     //vector<TableItem*> generateRowOfTableItems(LinkStatus const* linkstatus) const;
     void insertUrlAtCombobox(QString const& url);
     void initIcons();
+    void saveCurrentCheckSettings();
 
 private:
     static KConfig* combo_config_;
