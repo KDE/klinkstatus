@@ -1,6 +1,6 @@
 Do list:
 
-- Filter to display links (bad links, etc...)
+- Add a tree view
 
 - Ability to do edit actions after a search is finished,
   like findind links, etc
@@ -9,15 +9,9 @@ Do list:
 
 - GUI for info about a page/URL
 
-- GUI for configure settings
-
 - Send email with broken links
 
-- Save the last entries to the combo box of URLs
-
 - Check the size for complete request on homepage
-
-- Support resuming
 
 - Use proper charset for the pages
 

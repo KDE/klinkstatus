@@ -1,18 +1,39 @@
-2004-05-12  Paulo Moura Guedes  <pmg@netcabo.pt>
+Changes for 0.1.3
+-----------------------------------------------------
 
-	* Made relative URLs other than http display fine
+- Added some shortcuts and improve their configuration.
+- Improved settings update.
+- Use Quanta project preview prefix on the URL to check.
+- Improved 'Edit referrer with Quanta' action.
+- Other bugfixes and minor improvements.
 
-2004-05-11  Paulo Moura Guedes  <pmg@netcabo.pt>
 
-	* Added report bug in help menu
+Changes for 0.1.2
+-----------------------------------------------------
 
-2004-05-11  Paulo Moura Guedes  <pmg@netcabo.pt>
+- Dialog for configuring settings added.
+- Tool button to clear the combo url.
+- Pause and resume feature.
+- View menu to display good, broken, etc, links.
+- Use title page for tab labels.
+- Validate URLs with reference (#)
+- Edit referrers in Quanta (can open all at a time).
+  Quanta needs to be run with --unnique or embed KLinkStatus (for now...)
+- other minor improvements and bug fixes.
 
-	* Sow table horizontal scrollbar when URL is too long.
 
-2004-05-11  Paulo Moura Guedes  <pmg@netcabo.pt>
+Changes for 0.1.1
+-----------------------------------------------------
 
-	* Fix enable/disable close tab (Laurent Montel)
+- KConfigXT (no GUI yet)
+- File Dialog opens remote files now.
+- Fixed error status when URL is a directory
+- Combo url saves history and has autocompletion
+- Combo url navigation improved (like Konqueror)
+- Improved display of relative URLs
+- Show horizontal scroll when URL is too long
+- other improvements and bug fixes.
+
 
 Changes for 0.1.0
 -----------------------------------------------------
