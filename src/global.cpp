@@ -12,6 +12,7 @@
 #include "global.h"
 
 #include <qstring.h>
+#include <qtimer.h>
 
 #include <dcopclient.h>
 #include <dcopref.h>
@@ -19,6 +20,7 @@
 #include <kapplication.h>
 #include <kstaticdeleter.h>
 #include <kurl.h>
+#include <kprocess.h>
 
 #include <sys/types.h>
 #include <unistd.h>
@@ -39,7 +41,7 @@ Global* Global::self()
 }
 
 Global::Global(QObject *parent, const char *name)
-        : QObject(parent, name)
+        : QObject(parent, name), loop_started_(false)
 {
     m_self_ = this;
     dcop_client_ = kapp->dcopClient();
@@ -69,55 +71,128 @@ bool Global::isQuantaAvailableViaDCOP()
 
     else
     {
+        self()->execCommandPS("ps h -o pid -C quanta -C quanta_be");
+        QStringList ps_list = QStringList::split("\n", self()->script_output_);
+
+        for(uint i = 0; i != ps_list.size(); ++i)
+        {
+            ps_list[i] = ps_list[i].stripWhiteSpace ();
+            if(self()->dcop_client_->isApplicationRegistered("quanta-" + ps_list[i].local8Bit()))
+            {
+                //kdDebug(23100) << "Application registered!" << endl;
+                return true;
+            }
+        }
         return false;
-        //QStringList quanta_pid = quanta;
     }
 }
 
 QCString Global::quantaDCOPAppId()
 {
     DCOPClient* client = kapp->dcopClient();
+    QCString app_id;
 
     if(client->isApplicationRegistered("quanta")) // quanta is unnique application
-        return "quanta";
+        app_id = "quanta";
 
-    QCString app = "quanta-";
-    QCString pid = QCString().setNum(getpid());
-    QCString app_id = app + pid;
+    else if(self()->isKLinkStatusEmbeddedInQuanta()) // klinkstatus is running as a part inside quanta
+    {
+        QCString app = "quanta-";
+        QCString pid = QCString().setNum(getpid());
+        app_id = app + pid;
+    }
 
-    if(client->isApplicationRegistered(app_id)) // klinkstatus is running as a part inside quanta
+    else
+    {
+        self()->execCommandPS("ps h -o pid -C quanta -C quanta_be");
+        QStringList ps_list = QStringList::split("\n", self()->script_output_);
+
+        for(uint i = 0; i != ps_list.size(); ++i)
+        {
+            ps_list[i] = ps_list[i].stripWhiteSpace ();
+            if(self()->dcop_client_->isApplicationRegistered("quanta-" + ps_list[i].local8Bit()))
+                app_id = "quanta-" + ps_list[i];
+        }
+    }
+
+    if(self()->dcop_client_->isApplicationRegistered(app_id))
         return app_id;
     else
     {
         kdError(23100) << "You didn't check if Global::isQuantaAvailableViaDCOP!" << endl;
         return "";
     }
-
-    /*
-        else
-        {
-            QCStringList apps = client->registeredApplications();
-     
-            for(QCStringList::ConstIterator it = apps.begin(); it != apps.end(); ++it)
-            {
-                if( (*it).contains("quanta-") )
-                    return (*it);
-            }
-            kdError(23100) << "You didn't check if Global::isQuantaAvailableViaDCOP!" << endl;
-            return "";
-        }
-    */
 }
 
 KURL Global::urlWithQuantaPreviewPrefix(KURL const& url)
 {
     Q_ASSERT(isKLinkStatusEmbeddedInQuanta());
-    
+
     DCOPRef quanta(Global::quantaDCOPAppId(),"WindowManagerIf");
     QString string_url_with_prefix = quanta.call("urlWithPreviewPrefix", url.url());
     //kdDebug(23100) << "string_url_with_prefix: " << string_url_with_prefix << endl;
 
     return KURL(string_url_with_prefix);
+}
+
+void Global::execCommandPS(QString const& command)
+{
+
+    //We create a KProcess that executes the "ps" *nix command to get the PIDs of the
+    //other instances of quanta actually running
+    self()->process_PS_ = new KProcess();
+    *(self()->process_PS_) << QStringList::split(" ",command);
+
+    connect( self()->process_PS_, SIGNAL(receivedStdout(KProcess*,char*,int)),
+             self(), SLOT(slotGetScriptOutput(KProcess*,char*,int)));
+    connect( self()->process_PS_, SIGNAL(receivedStderr(KProcess*,char*,int)),
+             self(), SLOT(slotGetScriptError(KProcess*,char*,int)));
+    connect( self()->process_PS_, SIGNAL(processExited(KProcess*)),
+             self(), SLOT(slotProcessExited(KProcess*)));
+
+    //if KProcess fails I think a message box is needed... I will fix it
+    if (!self()->process_PS_->start(KProcess::NotifyOnExit,KProcess::All))
+        kdError() << "Failed to query for running Quanta instances!" << endl;
+    //TODO: Replace the above error with a real messagebox after the message freeze is over
+    else
+    {
+        //To avoid lock-ups, start a timer.
+        QTimer* timer = new QTimer(self());
+        connect(timer, SIGNAL(timeout()),
+                self(), SLOT(slotProcessTimeout()));
+        timer->start(120*1000, true);
+        self()->loop_started_ = true;
+        kapp->enter_loop();
+        delete timer;
+    }
+}
+
+void Global::slotGetScriptOutput(KProcess* /*process*/, char* buf, int buflen)
+{
+    QCString tmp( buf, buflen + 1 );
+    script_output_ = QString::null;
+    script_output_ = QString::fromLocal8Bit(tmp).remove(" ");
+}
+
+void Global::slotGetScriptError(KProcess*, char* buf, int buflen)
+{
+    //TODO: Implement some error handling?
+    Q_UNUSED(buf);
+    Q_UNUSED(buflen);
+}
+
+void Global::slotProcessExited(KProcess*)
+{
+    slotProcessTimeout();
+}
+
+void Global::slotProcessTimeout()
+{
+    if (loop_started_)
+    {
+        kapp->exit_loop();
+        loop_started_ = false;
+    }
 }
 
 

@@ -17,6 +17,7 @@ class QCString;
 
 class DCOPClient;
 class KURL;
+class KProcess;
 
 /**
 @author Paulo Moura Guedes
@@ -32,14 +33,27 @@ public:
     static bool isQuantaRunningAsUnique();
     static bool isQuantaAvailableViaDCOP();
     static QCString quantaDCOPAppId();
-    
     static KURL urlWithQuantaPreviewPrefix(KURL const& url);
-
+    
+    static void setLoopStarted(bool flag);
+    static void execCommandPS(QString const& command);
+    
 private:
     Global(QObject *parent = 0, const char *name = 0);
+
+private slots:
+    void slotGetScriptOutput(KProcess* process, char* buffer, int buflen);
+    void slotGetScriptError(KProcess* process, char* buffer, int buflen);
+    void slotProcessExited(KProcess* process);
+    void slotProcessTimeout();
+
+private:
     static Global* m_self_;
-    
+
     DCOPClient* dcop_client_;
+    bool loop_started_;
+    QString script_output_;
+    KProcess* process_PS_;
 };
 
 #endif
