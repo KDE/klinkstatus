@@ -28,28 +28,27 @@ using namespace std;
 
 
 CellToolTip::CellToolTip ( TableLinkstatus * table, QToolTipGroup * group)
-  : QToolTip(table->viewport(), group), table_(table)
-{
-}
+        : QToolTip(table->viewport(), group), table_(table)
+{}
 
 void CellToolTip::maybeTip ( const QPoint & p )
 {
-  QPoint cp =  table_->viewportToContents(p);
+    QPoint cp =  table_->viewportToContents(p);
 
-  int row = table_->rowAt(cp.y());
-  int col = table_->columnAt(cp.x());
+    int row = table_->rowAt(cp.y());
+    int col = table_->columnAt(cp.x());
 
-  if( row != -1 && col != -1)
+    if( row != -1 && col != -1)
     {
-      if(col == 0 || !table_->textoCabeNaCelula(row, col))
-	{
-	  TableItem* item = table_->myItem(row, col);
-          QString tip_string = item->toolTip();
+        if(col == 0 || !table_->textoCabeNaCelula(row, col))
+        {
+            TableItem* item = table_->myItem(row, col);
+            QString tip_string = item->toolTip();
 
-          QRect cr = table_->cellGeometry( row, col );
-          cr.moveTopLeft( table_->contentsToViewport( cr.topLeft() ) );
+            QRect cr = table_->cellGeometry( row, col );
+            cr.moveTopLeft( table_->contentsToViewport( cr.topLeft() ) );
 
-          tip(cr, tip_string);
-	}
+            tip(cr, tip_string);
+        }
     }
 }
