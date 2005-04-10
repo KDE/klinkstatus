@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
     
     KAboutData about("klinkstatus", I18N_NOOP("KLinkStatus"), version, description,
                      KAboutData::License_GPL_V2, "(C) 2004 Paulo Moura Guedes", 0,
-                     "http://klinkstatus/kdewebdev.org");
+                     "http://klinkstatus.kdewebdev.org");
 
     about.addAuthor("Paulo Moura Guedes", 0, "moura@kdewebdev.org");
 
