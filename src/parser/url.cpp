@@ -143,8 +143,8 @@ bool Url::equalHost(QString const& host1, QString const& host2, bool restrict)
     if(host1 == host2)
         return true;
 
-    QString host1_(host1);
-    QString host2_(host2);
+    QString host1_(host1.lower());
+    QString host2_(host2.lower());
     removeLastCharIfExists(host1_, '/');
     removeLastCharIfExists(host2_, '/');
 
