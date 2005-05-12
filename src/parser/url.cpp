@@ -18,6 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include <kresolver.h>
+
 #include "url.h"
 #include "mstring.h"
 #include "../utils/utils.h"
@@ -143,8 +145,8 @@ bool Url::equalHost(QString const& host1, QString const& host2, bool restrict)
     if(host1 == host2)
         return true;
 
-    QString host1_(host1.lower());
-    QString host2_(host2.lower());
+    QString host1_(KNetwork::KResolver::normalizeDomain(host1));
+    QString host2_(KNetwork::KResolver::normalizeDomain(host2));
     removeLastCharIfExists(host1_, '/');
     removeLastCharIfExists(host2_, '/');
 
