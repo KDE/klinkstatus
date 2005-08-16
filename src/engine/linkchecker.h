@@ -72,6 +72,7 @@ protected:
 
 private:
     void checkRef(LinkStatus const* linkstatus_parent);
+    void killJob();
 
 private:
 
