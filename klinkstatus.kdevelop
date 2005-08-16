@@ -3,7 +3,7 @@
   <general>
     <author>Paulo Moura Guedes</author>
     <email>moura@kdewebdev.org</email>
-    <version>0.1.2</version>
+    <version>0.2.2</version>
     <projectmanagement>KDevKDEAutoProject</projectmanagement>
     <primarylanguage>C++</primarylanguage>
     <keywords>
@@ -17,6 +17,7 @@
     <description/>
     <ignoreparts/>
     <secondaryLanguages/>
+    <versioncontrol>kdevsubversion</versioncontrol>
   </general>
   <kdevautoproject>
     <general>
@@ -69,6 +70,7 @@
       <numberofjobs>1</numberofjobs>
       <dontact>false</dontact>
       <makebin/>
+      <prio>0</prio>
     </make>
   </kdevautoproject>
   <kdevfileview>
@@ -149,11 +151,7 @@
     </display>
   </kdevdebugger>
   <kdevfilecreate>
-    <filetypes>
-      <type icon="" ext="H" name="C++ Header" create="template" >
-        <descr/>
-      </type>
-    </filetypes>
+    <filetypes/>
     <useglobaltypes>
       <type ext="ui" />
       <type ext="cpp" />
@@ -172,14 +170,30 @@
       <includeTypes>true</includeTypes>
       <includeEnums>true</includeEnums>
       <includeTypedefs>true</includeTypedefs>
-      <automaticCodeCompletion>true</automaticCodeCompletion>
-      <automaticArgumentsHint>true</automaticArgumentsHint>
+      <automaticCodeCompletion>false</automaticCodeCompletion>
+      <automaticArgumentsHint>false</automaticArgumentsHint>
       <automaticHeaderCompletion>true</automaticHeaderCompletion>
       <codeCompletionDelay>250</codeCompletionDelay>
       <argumentsHintDelay>400</argumentsHintDelay>
       <headerCompletionDelay>250</headerCompletionDelay>
     </codecompletion>
-    <references/>
+    <references>
+      <pcs>Qt</pcs>
+      <pcs>KDElibs</pcs>
+    </references>
+    <qt>
+      <used>true</used>
+      <version>3</version>
+      <root>/usr/lib/qt-3.3</root>
+    </qt>
+    <creategettersetter>
+      <prefixGet/>
+      <prefixSet>set</prefixSet>
+      <prefixVariable>m_,_</prefixVariable>
+      <parameterName>theValue</parameterName>
+      <inlineGet>true</inlineGet>
+      <inlineSet>true</inlineSet>
+    </creategettersetter>
   </kdevcppsupport>
   <dist>
     <custom>false</custom>
@@ -223,4 +237,11 @@
     <diffoptions>-u3 -p</diffoptions>
     <rshoptions/>
   </kdevcvs>
+  <kdevdocumentation>
+    <projectdoc>
+      <docsystem/>
+      <docurl/>
+      <usermanualurl/>
+    </projectdoc>
+  </kdevdocumentation>
 </kdevelop>
