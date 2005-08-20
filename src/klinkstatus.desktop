@@ -41,4 +41,5 @@ GenericName[tr]=Bağlantı Kontrolcüsü
 GenericName[uk]=Перевірка посилань
 GenericName[xx]=xxLink Checkerxx
 GenericName[zh_CN]=链接检查器
-Categories=Qt;KDE;Development;
+Categories=Qt;KDE;Development;WebDevelopment;
+
