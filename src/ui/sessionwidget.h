@@ -94,6 +94,8 @@ private slots:
     void slotAddingLevelTotalSteps(uint steps);
     void slotAddingLevelProgress();
     void slotLinksToCheckTotalSteps(uint steps);
+	
+	void slotChooseUrlDialog();
 
 private:
 
@@ -101,7 +103,7 @@ private:
     bool validFields();
     //vector<TableItem*> generateRowOfTableItems(LinkStatus const* linkstatus) const;
     void insertUrlAtCombobox(QString const& url);
-    void initIcons();
+    void init();
     void saveCurrentCheckSettings();
 
 private:
