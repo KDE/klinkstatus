@@ -26,7 +26,9 @@
 #include <kmessagebox.h>
 #include <kconfig.h>
 #include <kiconloader.h>
-#include "klsconfig.h"
+#include <kglobal.h>
+#include <kpushbutton.h>
+#include <kfiledialog.h>
 
 #include <qevent.h>
 #include <qlineedit.h>
@@ -45,6 +47,7 @@
 #include "tablelinkstatus.h"
 #include "treeview.h"
 #include "klshistorycombo.h"
+#include "klsconfig.h"
 #include "resultview.h"
 #include "../global.h"
 #include "../engine/linkstatus.h"
@@ -60,9 +63,8 @@ SessionWidget::SessionWidget(int max_simultaneous_connections, int time_out,
 {
     newSearchManager();
 
-    combobox_url->init();
+    init();
     slotLoadSettings();
-    initIcons();
 
     connect(combobox_url, SIGNAL( textChanged ( const QString & ) ),
             this, SLOT( slotEnableCheckButton( const QString & ) ) );
@@ -555,16 +557,29 @@ void SessionWidget::slotLinksToCheckTotalSteps(uint steps)
     progressbar_checker->setProgress(0);
 }
 
-void SessionWidget::initIcons()
+void SessionWidget::init()
 {
+    combobox_url->init();
+
     pushbutton_check->setIconSet(SmallIconSet("viewmag"));
     pushbutton_cancel->setIconSet(SmallIconSet("player_pause"));
     toolButton_clear_combo->setIconSet(SmallIconSet("locationbar_erase"));
+	
+	pushbutton_url->setIconSet(KGlobal::iconLoader()->loadIconSet("fileopen", KIcon::Small));
+	QPixmap pixMap = KGlobal::iconLoader()->loadIcon("fileopen", KIcon::Small);
+	pushbutton_url->setFixedSize(pixMap.width() + 8, pixMap.height() + 8);
+	connect(pushbutton_url, SIGNAL(clicked()), this, SLOT(slotChooseUrlDialog()));
+
 }
 
 void SessionWidget::slotClearComboUrl()
 {
     combobox_url->setCurrentText("");
+}
+
+void SessionWidget::slotChooseUrlDialog()
+{
+	setUrl(KFileDialog::getOpenURL());
 }
 
 
