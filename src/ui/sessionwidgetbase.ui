@@ -183,7 +183,7 @@
                                                         <cstring>checkbox_recursively</cstring>
                                                     </property>
                                                     <property name="text">
-                                                        <string>Recursively:</string>
+                                                        <string>Recursivel&amp;y:</string>
                                                     </property>
                                                     <property name="checked">
                                                         <bool>true</bool>
@@ -223,7 +223,7 @@
                                                         <bool>true</bool>
                                                     </property>
                                                     <property name="text">
-                                                        <string>Do not check parent folders</string>
+                                                        <string>Do &amp;not check parent folders</string>
                                                     </property>
                                                 </widget>
                                                 <spacer>
@@ -261,7 +261,7 @@
                                                         <bool>true</bool>
                                                     </property>
                                                     <property name="text">
-                                                        <string>Check external links</string>
+                                                        <string>Chec&amp;k external links</string>
                                                     </property>
                                                     <property name="checked">
                                                         <bool>true</bool>
@@ -377,7 +377,7 @@
                     <property name="minimumSize">
                         <size>
                             <width>0</width>
-                            <height>450</height>
+                            <height>350</height>
                         </size>
                     </property>
                 </widget>
