@@ -242,8 +242,11 @@ QString Url::convertToLocal(LinkStatus const* ls)
 {
     KURL url = ls->absoluteUrl();
     KURL base_url = ls->rootUrl();
-    
-    return KURL::relativeURL(base_url, url);
+
+    if(base_url == url)
+        return "./" + url.fileName();
+    else
+        return KURL::relativeURL(base_url, url);
 }
 
 /**
