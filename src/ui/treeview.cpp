@@ -44,7 +44,8 @@ TreeView::TreeView(QWidget *parent, const char *name,
     //setFocusPolicy( WheelFocus );
     setRootIsDecorated(KLSConfig::displayTreeView());
     //setResizeMode(QListView::LastColumn);
-    
+    setColumnWidthMode(0, QListView::Manual);
+
     sub_menu_ = new QPopupMenu(this, "sub_menu_referrers");
     
     connect(this, SIGNAL( rightButtonClicked ( QListViewItem *, const QPoint &, int )),
@@ -53,7 +54,9 @@ TreeView::TreeView(QWidget *parent, const char *name,
 
 
 TreeView::~TreeView()
-{}
+{
+    saveLayout(KLSConfig::self()->config(), "klinkstatus");
+}
 
 void TreeView::setColumns(QStringList const& columns)
 {

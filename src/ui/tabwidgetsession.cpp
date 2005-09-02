@@ -19,6 +19,8 @@
  ***************************************************************************/
 #include "tabwidgetsession.h"
 #include "sessionwidget.h"
+#include "klsconfig.h"
+#include "treeview.h"
 #include "../engine/searchmanager.h"
 
 #include <qtoolbutton.h>
@@ -118,19 +120,17 @@ void TabWidgetSession::closeSession()
 
 SessionWidget* TabWidgetSession::newSessionWidget()
 {
-    // TODO: settings: number of connections, timeout
-    SessionWidget* session_widget = new SessionWidget( 5, 30, this, "session_widget");
+    KLSConfig* config = KLSConfig::self();
+
+    SessionWidget* session_widget = new SessionWidget(config->maxConnectionsNumber(), config->timeOut(), this, "session_widget");
 
     QStringList columns;
-    /*
-    columns.push_back(i18n("Status"));
-    columns.push_back(i18n("Label"));
-    columns.push_back(i18n("URL"));
-    */
     columns.push_back(i18n("URL"));
     columns.push_back(i18n("Status"));
     columns.push_back(i18n("Label"));
     session_widget->setColumns(columns);
+
+    session_widget->tree_view->restoreLayout(config->config(), "klinkstatus");
 
     return session_widget;
 }
