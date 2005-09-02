@@ -389,11 +389,6 @@ void TreeViewItem::init(LinkStatus const* linkstatus)
     {
         TreeColumnViewItem item(linkstatus, i + 1);
         column_items_.push_back(item);
-    }
-    for(uint i = 0; i != column_items_.size(); ++i)
-    {
-        TreeColumnViewItem item = column_items_[i];
-
         setText(item.columnIndex() - 1, item.text(i + 1));
         setPixmap(item.columnIndex() - 1, item.pixmap(i + 1));
     }
