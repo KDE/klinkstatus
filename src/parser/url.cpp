@@ -83,9 +83,12 @@ KURL Url::normalizeUrl(QString const& string_url, LinkStatus const& link_parent)
             url.setUser(base_url.user());
         if(base_url.hasPass())
             url.setPass(base_url.pass());
+
+        url.setPort(base_url.port());
+
         url.cleanPath();
 
-        //kdDebug(23100) <<  url.url() << endl;
+//         kdDebug(23100) <<  url.url() << endl;
 
         return url;
     }
