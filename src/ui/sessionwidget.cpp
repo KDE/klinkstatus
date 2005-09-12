@@ -390,7 +390,8 @@ void SessionWidget::slotRootChecked(LinkStatus const* linkstatus, LinkChecker * 
     slotSetTimeElapsed();
     emit signalUpdateTabLabel(search_manager_->linkStatusRoot());
 
-    Q_ASSERT(textlabel_progressbar->text() == i18n( "Checking..." ));
+    Q_ASSERT(textlabel_progressbar->text() == i18n("Checking...") || 
+                textlabel_progressbar->text() == i18n("Stopped"));
     progressbar_checker->setProgress(1);
 
     //table_linkstatus->insertResult(linkstatus);
@@ -406,7 +407,9 @@ void SessionWidget::slotLinkChecked(LinkStatus const* linkstatus, LinkChecker * 
 {
     slotSetTimeElapsed();
 
-    Q_ASSERT(textlabel_progressbar->text() == i18n( "Checking..." ));
+    kdDebug(23100) << textlabel_progressbar->text() << endl;
+    Q_ASSERT(textlabel_progressbar->text() == i18n("Checking...") || 
+                textlabel_progressbar->text() == i18n("Stopped"));
     progressbar_checker->setProgress(progressbar_checker->progress() + 1);
 
     if(linkstatus->checked())
