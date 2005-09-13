@@ -25,6 +25,8 @@
 
 #include <kapplication.h>
 #include <kmessagebox.h>
+#include <kdebug.h>
+
 
 QString htmlDocCharset[NUMBER_OF_HTML_CODES][2] = {
 
@@ -179,28 +181,24 @@ int smallerUnsigned(int a, int b)
     else
         return -1;
 }
-/*
-void viewUrlInBrowser(KURL const& url, QWidget* parent, QString browser)
+
+namespace FileManager
 {
-    Q_ASSERT(url.isValid());
+QString read(QString const& path)
+{
+    QFile file(path);
 
-#ifdef Q_WS_WIN
-
-    HINSTANCE status =::ShellExecute( KApplication::kApplication()->mainWidget()->winId(), NULL,
-                                      ( TCHAR * ) qt_winTchar( url.prettyURL(), true ), NULL, NULL, SW_SHOW );
-#else
-
-    QProcess* process = new QProcess( parent, "process_browser" );
-    process->clearArguments();
-    process->addArgument(browser);
-
-    process->addArgument(url.prettyURL());
-
-    if( !process->start() )
+    if(!file.open(IO_ReadOnly))
     {
-        KMessageBox::critical(parent, i18n( "Error - KLinkStatus" ), i18n( "Can Not Open Browser" ),
-                              KMessageBox::Ok | KMessageBox::Default, KMessageBox::NoButton);
+        kdDebug() << "File " << path << " not found." << endl;
+        return QString();
     }
-#endif
+
+    QTextStream stream(&file);
+    QString fileString = stream.read();
+
+    file.close();
+
+    return fileString;
 }
-*/
+}
