@@ -27,6 +27,7 @@
 #include <qstring.h>
 #include <qdatetime.h>
 #include <qregexp.h>
+#include <qmap.h>
 
 #include <vector>
 
@@ -37,6 +38,7 @@
 
 using namespace std;
 
+typedef QMap<QString, KHTMLPart*> KHTMLPartMap;
 
 class SearchManager: public QObject
 {
@@ -53,6 +55,13 @@ public:
     SearchManager(int max_simultaneous_connections = 3, int time_out = 50,
                   QObject *parent = 0, const char *name = 0);
     ~SearchManager();
+
+    KHTMLPartMap const& htmlParts() const { return html_parts_; }
+//     KHTMLPartMap& htmlParts() { return html_parts_; }
+
+    KHTMLPart* htmlPart(QString const& key_url) const;
+    void addHtmlPart(QString const& key_url, KHTMLPart* html_part);
+    void removeHtmlParts();
 
     void startSearch(KURL const& root);
     void startSearch(KURL const& root, SearchMode const& modo);
@@ -160,6 +169,7 @@ private:
     uint number_of_level_links_;
     uint number_of_links_to_check_;
     vector< vector< vector <LinkStatus*> > > search_results_;
+    KHTMLPartMap html_parts_;
 };
 
 #include "searchmanager_impl.h"

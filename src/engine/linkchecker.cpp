@@ -20,6 +20,7 @@
 #include "linkchecker.h"
 #include "linkstatus.h"
 #include "searchmanager.h"
+#include "../utils/utils.h"
 #include "../parser/htmlparser.h"
 
 #include <qstring.h>
@@ -33,24 +34,34 @@
 #include <kmimetype.h>
 #include <kapplication.h>
 #include <klocale.h>
+#include <khtml_part.h>
+#include <dom/html_misc.h>
+#include <dom/dom_node.h>
+#include <dom/dom_string.h>
+
 
 int LinkChecker::count_ = 0;
 
 LinkChecker::LinkChecker(LinkStatus* linkstatus, int time_out,
                          QObject *parent, const char *name)
-        : QObject(parent, name), //QThread(),
+        : QObject(parent, name), search_manager_(0), 
         linkstatus_(linkstatus), t_job_(0), time_out_(time_out), checker_(0),
         redirection_(false), header_checked_(false), finnished_(false), parsing_(false)
 {
     Q_ASSERT(linkstatus_);
     Q_ASSERT(!linkstatus_->checked());
-    Q_ASSERT(QString(parent->className()) == QString("SearchManager"));
 
     kdDebug(23100) << ++count_ << ": " << "Checking " << linkstatus_->absoluteUrl().url() << endl;
 }
 
 LinkChecker::~LinkChecker()
 {}
+
+void LinkChecker::setSearchManager(SearchManager* search_manager)
+{
+    Q_ASSERT(search_manager);
+    search_manager_ = search_manager;
+}
 
 void LinkChecker::check()
 {
@@ -368,20 +379,19 @@ void LinkChecker::slotPermanentRedirection (KIO::Job* /*job*/, const KURL &fromU
     linkstatus_->redirection()->setParent(linkstatus_);
     linkstatus_->redirection()->setOriginalUrl(toUrl.url());
 
-    SearchManager* gp = dynamic_cast<SearchManager*>(parent());
-    Q_ASSERT(gp);
+    Q_ASSERT(search_manager_);
 
-    if(gp->localDomain(ls_red->absoluteUrl()))
+    if(search_manager_->localDomain(ls_red->absoluteUrl()))
         ls_red->setExternalDomainDepth(-1);
     else
     {
-        if(gp->localDomain(linkstatus_->absoluteUrl()))
+        if(search_manager_->localDomain(linkstatus_->absoluteUrl()))
             ls_red->setExternalDomainDepth(linkstatus_->externalDomainDepth() + 1);
         else
             ls_red->setExternalDomainDepth(linkstatus_->externalDomainDepth());
     }
 
-    if(!toUrl.isValid() || gp->existUrl(toUrl, fromUrl))
+    if(!toUrl.isValid() || search_manager_->existUrl(toUrl, fromUrl))
     {
         linkStatus()->redirection()->setChecked(false);
         //t_job_->kill(true); // causes the terrible segfault bug
@@ -439,68 +449,126 @@ void LinkChecker::checkRef()
     Q_ASSERT(url.hasRef());
     QString url_base;
     LinkStatus const* ls_parent = 0;
+    int i_ref = -1;
 
     if(linkStatus()->originalUrl().startsWith("#"))
         ls_parent = linkStatus()->parent();
 
     else
     {
-        int i_ref = url.url().find("#");
+        i_ref = url.url().find("#");
         url_base = url.url().left(i_ref);
         //kdDebug(23100) << "url_base: " << url_base << endl;
 
-        SearchManager const* gp = dynamic_cast<SearchManager*>(parent());
-        Q_ASSERT(gp);
+        Q_ASSERT(search_manager_);
 
-        ls_parent = gp->linkStatus(url_base);
+        ls_parent = search_manager_->linkStatus(url_base);
     }
 
     if(ls_parent)
         checkRef(ls_parent);
     else
     {
-        kdDebug(23100) << QString("URL " + url_base + " not checked yet") << endl;
-        linkstatus_->setStatus(QString("URL " + url_base + " not checked yet"));
-        finnish();
+        KURL url(url.url().left(i_ref));
+        checkRef(url);
     }
+}
+
+void LinkChecker::checkRef(KURL const& url)
+{
+    Q_ASSERT(search_manager_);
+
+    QString url_string = url.url();
+    KHTMLPart* html_part = search_manager_->htmlPart(url_string);
+    if(!html_part)
+    {
+        kdDebug() << "new KHTMLPart: " +  url_string << endl;
+
+        html_part = new KHTMLPart();
+        html_part->setOnlyLocalReferences(true);
+
+        QString tmpFile;
+        if(KIO::NetAccess::download(url, tmpFile, 0))
+        {
+            QString doc_html = FileManager::read(tmpFile);
+            html_part->begin();
+            html_part->write(doc_html);
+            html_part->end();
+
+            KIO::NetAccess::removeTempFile(tmpFile);
+        } 
+        else 
+        {
+            kdDebug(23100) <<  KIO::NetAccess::lastErrorString() << endl;
+        }
+
+        search_manager_->addHtmlPart(url_string, html_part);
+    }
+
+    if(hasAnchor(html_part, linkStatus()->absoluteUrl().ref()))
+    {
+        linkstatus_->setStatus("OK");
+    }
+    else
+    {
+        linkstatus_->setErrorOccurred(true);
+        linkstatus_->setError(i18n( "Link destination not found." ));
+    }
+
+    finnish();
 }
 
 void LinkChecker::checkRef(LinkStatus const* linkstatus_parent)
 {
-    //kdDebug(23100) << "linkstatus_parent: " << linkstatus_parent->absoluteUrl().url() << endl;
+    Q_ASSERT(search_manager_);
 
-    vector<Node*> nodes = linkstatus_parent->childrenNodes();
-    QString name_ref = linkStatus()->absoluteUrl().ref();
-    Q_ASSERT(!name_ref.isNull());
-    //kdDebug(23100) << "name_ref: " << name_ref << endl;
-
-    int count = 0;
-    for(vector<Node*>::size_type i = 0; i != nodes.size(); ++i)
+    QString url_string = linkstatus_parent->absoluteUrl().url();
+    KHTMLPart* html_part = search_manager_->htmlPart(url_string);
+    if(!html_part)
     {
-        ++count;
+        kdDebug() << "new KHTMLPart: " +  url_string << endl;
 
-        if(nodes[i]->element() == Node::A)
-        {
-            NodeA* node_A = dynamic_cast<NodeA*> (nodes[i]);
-            Q_ASSERT(node_A);
-            if(node_A->attributeNAME() == name_ref) // ref OK
-            {
-                linkstatus_->setStatus("OK");
-                finnish();
-                return;
-            }
-        }
+        html_part = new KHTMLPart();
+        html_part->setOnlyLocalReferences(true);
 
-        if(count == 50)
-        {
-            count = 0;
-            kapp->processEvents();
-        }
+        html_part->begin();
+        html_part->write(linkstatus_parent->docHtml());
+        html_part->end();
+
+        search_manager_->addHtmlPart(url_string, html_part);
     }
 
-    linkstatus_->setErrorOccurred(true);
-    linkstatus_->setError(i18n( "Link destination not found." ));
+    if(hasAnchor(html_part, linkStatus()->absoluteUrl().ref()))
+    {
+        linkstatus_->setStatus("OK");
+    }
+    else
+    {
+        linkstatus_->setErrorOccurred(true);
+        linkstatus_->setError(i18n( "Link destination not found." ));
+    }
+
     finnish();
+}
+
+bool LinkChecker::hasAnchor(KHTMLPart* html_part, QString const& anchor)
+{
+    DOM::HTMLDocument htmlDocument = html_part->htmlDocument();
+    DOM::HTMLCollection anchors = htmlDocument.anchors();
+
+    DOM::DOMString name_ref(anchor);
+    Q_ASSERT(!name_ref.isNull());
+
+    DOM::Node node = anchors.namedItem(name_ref);
+    if(node.isNull())
+    {
+        node = htmlDocument.getElementById(name_ref);
+    }
+
+    if(!node.isNull())
+        return true;
+    else
+        return false;
 }
 
 void LinkChecker::killJob()

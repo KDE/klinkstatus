@@ -25,10 +25,11 @@
 #include <qstring.h>
 
 #include <kio/jobclasses.h>
+class KHTMLPart;
 
 #include "../parser/http.h"
 class LinkStatus;
-
+class SearchManager;
 
 #include <iostream>
 using namespace std;
@@ -46,8 +47,11 @@ public:
 
     //virtual void run();
     void check();
+    void setSearchManager(SearchManager* search_manager);
 
     LinkStatus const* const linkStatus() const;
+
+    static bool hasAnchor(KHTMLPart* html_part, QString const& anchor);
 
 signals:
 
@@ -72,10 +76,12 @@ protected:
 
 private:
     void checkRef(LinkStatus const* linkstatus_parent);
+    void checkRef(KURL const& url);
     void killJob();
 
 private:
 
+    SearchManager* search_manager_;
     LinkStatus* const linkstatus_;
     KIO::TransferJob* t_job_;
     int time_out_;

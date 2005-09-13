@@ -21,6 +21,7 @@
 #include <kapplication.h>
 #include <kdebug.h>
 #include <klocale.h>
+#include <khtml_part.h>
 
 #include <qstring.h>
 #include <qvaluevector.h>
@@ -70,6 +71,8 @@ void SearchManager::reset()
     canceled_ = false;
     searching_ = false;
     checked_links_ = 0;
+
+    removeHtmlParts();
 }
 
 SearchManager::~SearchManager()
@@ -174,6 +177,8 @@ void SearchManager::cancelSearch()
 void SearchManager::checkRoot()
 {
     LinkChecker* checker = new LinkChecker(&root_, time_out_, this, "link_checker");
+    checker->setSearchManager(this);
+
     connect(checker, SIGNAL(transactionFinished(const LinkStatus *, LinkChecker *)),
             this, SLOT(slotRootChecked(const LinkStatus *, LinkChecker *)));
     /*
@@ -499,6 +504,7 @@ void SearchManager::checkLinksSimultaneously(vector<LinkStatus*> const& links)
         else
         {
             LinkChecker* checker = new LinkChecker(ls, time_out_, this, "link_checker");
+            checker->setSearchManager(this);
 
             connect(checker, SIGNAL(transactionFinished(const LinkStatus *, LinkChecker *)),
                     this, SLOT(slotLinkChecked(const LinkStatus *, LinkChecker *)));
@@ -783,6 +789,38 @@ void SearchManager::slotLinkCheckerFinnished(LinkChecker * checker)
 
     delete checker;
     checker = 0;
+}
+
+KHTMLPart* SearchManager::htmlPart(QString const& key_url) const
+{
+    if(!html_parts_.contains(key_url))
+        return 0;
+
+    return html_parts_[key_url];
+}
+
+void SearchManager::addHtmlPart(QString const& key_url, KHTMLPart* html_part)
+{
+    Q_ASSERT(!key_url.isEmpty());
+    Q_ASSERT(html_part);
+
+    // FIXME configurable
+    if(html_parts_.count() > 150)
+        removeHtmlParts();
+
+    html_parts_.insert(key_url, html_part);
+}
+
+void SearchManager::removeHtmlParts()
+{
+    KHTMLPartMap::Iterator it;
+    for(it = html_parts_.begin(); it != html_parts_.end(); ++it) 
+    {
+        delete it.data();
+        it.data() = 0;
+    }
+
+    html_parts_.clear();
 }
 
 #include "searchmanager.moc"
