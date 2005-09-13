@@ -1,3 +1,38 @@
+Changes for 0.2.3
+-----------------------------------------------------
+
+- Find anchors identified with id attribute (BUG #112030).
+- Check anchors of all documents even if not searched yet (no more "URL ... not checked yet").
+- Remember port when resolving relative links (BUG 112249).
+- Display correctly link labels with HTML entities (BUG #111694).
+- Remember layout (order of columns, etc) of the result tree view.
+- Show the filename on the root link.
+- Add a folder button in the search field so one can easily set the URL to search.
+- Fixed the KIO problem in kdelibs that was causing random crashes.
+- New KLinkStatus logo from Alberto Gamez.
+
+
+Changes for 0.2.2
+-----------------------------------------------------
+
+- Compare domains in a case insensitive way (BUG #105415)
+- Fix crash when using File -> Quit (BUG #82617)
+
+
+Changes for 0.2.1
+-----------------------------------------------------
+
+- New feature: don't check URLs given a regular expression.
+- Fix current search settings being reseted when check button is pressed.
+
+
+Changes for 0.2.0
+-----------------------------------------------------
+
+- Added a tree view that reflects the structure of the website. 
+It is possible to switch choose a tree view or a flat view in settings.
+- Other bugfixes and minor improvements.
+
 Changes for 0.1.3
 -----------------------------------------------------
 
