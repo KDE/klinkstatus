@@ -36,6 +36,7 @@
 #include <kurl.h>
 #include <klocale.h>
 #include <kstringhandler.h> 
+#include <kcharsets.h>
 
 
 TabWidgetSession::TabWidgetSession(QWidget* parent, const char* name, WFlags f)
@@ -154,7 +155,7 @@ void TabWidgetSession::updateTabLabel(LinkStatus const* linkstatus)
         
         label = KStringHandler::lsqueeze(label, 30);        
     }
-    changeTab(currentPage(), label);
+    changeTab(currentPage(), KCharsets::resolveEntities(label));
 }
 
 void TabWidgetSession::slotLoadSettings()
