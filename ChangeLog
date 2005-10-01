@@ -1,6 +1,7 @@
 Changes for 0.2.3
 -----------------------------------------------------
 
+- Display correctly the page title with HTML entities (BUG #113560).
 - Find anchors identified with id attribute (BUG #112030).
 - Check anchors of all documents even if not searched yet (no more "URL ... not checked yet").
 - Remember port when resolving relative links (BUG 112249).
@@ -53,7 +54,7 @@ Changes for 0.1.2
 - Use title page for tab labels.
 - Validate URLs with reference (#)
 - Edit referrers in Quanta (can open all at a time).
-  Quanta needs to be run with --unnique or embed KLinkStatus (for now...)
+  Quanta needs to be run with --unique or embed KLinkStatus (for now...)
 - other minor improvements and bug fixes.
 
 
