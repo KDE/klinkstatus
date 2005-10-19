@@ -45,7 +45,6 @@ TreeView::TreeView(QWidget *parent, const char *name,
     //setFocusPolicy( WheelFocus );
     setRootIsDecorated(KLSConfig::displayTreeView());
     //setResizeMode(QListView::LastColumn);
-    setColumnWidthMode(0, QListView::Manual);
 
     sub_menu_ = new QPopupMenu(this, "sub_menu_referrers");
     
@@ -67,8 +66,6 @@ void TreeView::setColumns(QStringList const& columns)
     // resetColumns is called automatically
     for(uint i = 0; i != columns.size(); ++i)
     {
-        setColumnWidthMode(i, Manual);
-
         if(i == 0)
         {
             Q_ASSERT(columns[i] == i18n("URL") && col_url_ == 1);
@@ -84,6 +81,8 @@ void TreeView::setColumns(QStringList const& columns)
             Q_ASSERT(columns[i] == i18n("Label") && col_label_ == 3);
             addColumn(i18n(columns[i])/*, (int)(0.45 * width() - 79)*/);
         }
+
+        setColumnWidthMode(i, Manual);
     }
 
     setColumnAlignment(col_status_ - 1, Qt::AlignCenter);
