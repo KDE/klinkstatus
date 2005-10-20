@@ -57,7 +57,6 @@ public:
     ~SearchManager();
 
     KHTMLPartMap const& htmlParts() const { return html_parts_; }
-//     KHTMLPartMap& htmlParts() { return html_parts_; }
 
     KHTMLPart* htmlPart(QString const& key_url) const;
     void addHtmlPart(QString const& key_url, KHTMLPart* html_part);
