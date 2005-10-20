@@ -1,39 +1,43 @@
 <!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
 <kpartgui name="klinkstatus_part" version="2">
-<MenuBar>
-  
-  <Menu name="file"><text>File</text>
-    <Action name="new_link_check"/>
-    <Action name="open_link"/>
-    <Action name="close_tab"/>
-    <Separator/>
-  </Menu>
-  
-  <Menu name="settings"><text>&amp;Settings</text>
-    <Separator/>
-    <Action name="configure_klinkstatus"/>
-  </Menu>
-  
-  <Menu name="view"><text>&amp;View</text>
-    <Action name="display_all_links"/>
-    <Separator/>
-    <Action name="display_good_links"/>
-    <Action name="display_bad_links"/>
-    <Action name="display_malformed_links"/>
-    <Action name="display_undetermined_links"/>
-  </Menu>
-  
-  <Menu name="help"><text>&amp;Help</text>
-    <Separator/>
-    <Action name="about_klinkstatus"/>
-	<Action name="report_bug"/>
-  </Menu>
-</MenuBar>
-
-<ToolBar name="linksToolBar">
-    <Action name="new_link_check"/>
-    <Action name="open_link"/>
-    <Action name="close_tab"/>
-  	<Separator/>
-</ToolBar>
+    <MenuBar>
+        
+        <Menu name="file"><text>File</text>
+            <Action name="new_link_check"/>
+            <Action name="open_link"/>
+            <Action name="close_tab"/>
+            <Separator/>
+        </Menu>
+        
+        <Menu name="settings"><text>&amp;Settings</text>
+            <Separator/>
+            <Action name="configure_klinkstatus"/>
+        </Menu>
+        
+        <Menu name="view"><text>&amp;View</text>
+            <Action name="hide_search_bar"/>
+            <Action name="show_search_bar"/>
+            <Separator/>
+            <Action name="display_all_links"/>
+            <Action name="display_good_links"/>
+            <Action name="display_bad_links"/>
+            <Action name="display_malformed_links"/>
+            <Action name="display_undetermined_links"/>
+        </Menu>
+        
+        <Menu name="help"><text>&amp;Help</text>
+            <Separator/>
+            <Action name="about_klinkstatus"/>
+            <Action name="report_bug"/>
+        </Menu>
+    </MenuBar>
+    
+    <ToolBar name="linksToolBar">
+        <Action name="new_link_check"/>
+        <Action name="open_link"/>
+        <Action name="close_tab"/>
+        <Separator/>
+        <Action name="hide_search_bar"/>
+        <Action name="show_search_bar"/>
+    </ToolBar>
 </kpartgui>

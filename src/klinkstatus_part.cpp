@@ -35,6 +35,8 @@
 #include <kaccel.h>
 #include <kkeydialog.h>
 
+#include <qbuttongroup.h>
+
 #include "global.h"
 #include "cfg/klsconfig.h"
 #include "klinkstatus_part.h"
@@ -152,6 +154,15 @@ void KLinkStatusPart::initGUI()
 
     (void) new KAction(i18n("&Report Bug..."), 0, 0, this,
                        SLOT(slotReportBug()), actionCollection(), "report_bug");
+
+    //________________________________________
+
+    KAction* action = new KAction(i18n("&Hide Search Panel"), "bottom", "Ctrl+h",
+                                  this, SLOT(slotHideSearchPanel()), actionCollection(), "hide_search_bar");
+
+    action = new KAction(i18n("&Show Search Panel"), "top", "Ctrl+s",
+                         this, SLOT(slotShowSearchPanel()), actionCollection(), "show_search_bar");
+    action->setEnabled(false);
 }
 
 void KLinkStatusPart::setModified(bool modified)
@@ -343,6 +354,23 @@ void KLinkStatusPart::slotReportBug()
     KBugReport bugReportDlg(0, true, &aboutData);
     bugReportDlg.exec();
 }
+
+void KLinkStatusPart::slotHideSearchPanel()
+{
+    tabwidget_->currentSession()->buttongroup_search->hide();
+
+    actionCollection()->action("hide_search_bar")->setEnabled(false);
+    actionCollection()->action("show_search_bar")->setEnabled(true);
+}
+
+void KLinkStatusPart::slotShowSearchPanel()
+{
+    tabwidget_->currentSession()->buttongroup_search->show();
+
+    actionCollection()->action("hide_search_bar")->setEnabled(true);
+    actionCollection()->action("show_search_bar")->setEnabled(false);
+}
+
 /*
 void KLinkStatusPart::slotShowToolbar()
 {

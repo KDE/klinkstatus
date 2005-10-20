@@ -65,6 +65,8 @@ protected slots:
     void slotDisplayUndeterminedLinks();
     void slotAbout();
     void slotReportBug();
+    void slotHideSearchPanel();
+    void slotShowSearchPanel();
     //void slotShowToolbar();
     //void slotConfigureShortcuts();
     //void slotConfigureToolbars();

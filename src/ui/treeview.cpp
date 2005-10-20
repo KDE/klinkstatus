@@ -82,7 +82,7 @@ void TreeView::setColumns(QStringList const& columns)
             addColumn(i18n(columns[i])/*, (int)(0.45 * width() - 79)*/);
         }
 
-        setColumnWidthMode(i, Manual);
+        setColumnWidthMode(i, QListView::Manual);
     }
 
     setColumnAlignment(col_status_ - 1, Qt::AlignCenter);

@@ -517,11 +517,9 @@ void SessionWidget::showBottomStatusLabel(QListViewItem * item)
         textlabel_status->setText(status);
 
         if(textlabel_status->sizeHint().width() > textlabel_status->maximumWidth())
-            QToolTip::add
-                    (textlabel_status, status);
+            QToolTip::add(textlabel_status, status);
         else
-            QToolTip::remove
-                    (textlabel_status);
+            QToolTip::remove(textlabel_status);
 
         bottom_status_timer_.stop();
         bottom_status_timer_.start(5 * 1000, true);
