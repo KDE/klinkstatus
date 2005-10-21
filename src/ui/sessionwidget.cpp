@@ -29,6 +29,7 @@
 #include <kglobal.h>
 #include <kpushbutton.h>
 #include <kfiledialog.h>
+#include <kactionclasses.h>
 
 #include <qevent.h>
 #include <qlineedit.h>
@@ -53,13 +54,15 @@
 #include "../engine/linkstatus.h"
 #include "../engine/linkchecker.h"
 #include "../engine/searchmanager.h"
+#include "../actionmanager.h"
 
 
 SessionWidget::SessionWidget(int max_simultaneous_connections, int time_out,
                              QWidget* parent, const char* name, WFlags f)
         : SessionWidgetBase(parent, name, f), search_manager_(0),
         ready_(true), bottom_status_timer_(this, "bottom_status_timer"),
-        max_simultaneous_connections_(max_simultaneous_connections), time_out_(time_out)
+        max_simultaneous_connections_(max_simultaneous_connections), 
+        time_out_(time_out), follow_last_link_checked_(KLSConfig::followLastLinkChecked())
 {
     newSearchManager();
 
@@ -422,17 +425,16 @@ void SessionWidget::slotLinkChecked(LinkStatus const* linkstatus, LinkChecker * 
             TreeViewItem* parent_item = linkstatus->parent()->treeViewItem();
             tree_view_item = new TreeViewItem(parent_item, parent_item->lastChild(), linkstatus, 3);
             parent_item->setLastChild(tree_view_item);
-            if(KLSConfig::followLastLinkChecked())
+            if(follow_last_link_checked_)
                 tree_view->ensureRowVisible(tree_view_item, tree_display_);
-            else
-                tree_view->ensureRowVisible(tree_view->lastItem(), tree_display_);
         }
         else
         {
             //kdDebug(23100) << "FLAT!!!!!" << endl;
             tree_view_item = new TreeViewItem(tree_view, tree_view->lastItem(), linkstatus, 3);
-            tree_view->ensureRowVisible(tree_view_item, tree_display_);
-        }   
+            if(follow_last_link_checked_)
+                tree_view->ensureRowVisible(tree_view_item, tree_display_);
+        }
         LinkStatus* ls = const_cast<LinkStatus*> (linkstatus);
         ls->setTreeViewItem(tree_view_item);
         
@@ -581,6 +583,25 @@ void SessionWidget::slotClearComboUrl()
 void SessionWidget::slotChooseUrlDialog()
 {
 	setUrl(KFileDialog::getOpenURL());
+}
+
+void SessionWidget::slotHideSearchPanel()
+{
+    if(buttongroup_search->isHidden())
+        buttongroup_search->show();
+    else
+        buttongroup_search->hide();
+}
+
+void SessionWidget::setFollowLastLinkChecked(bool follow) 
+{ 
+    kdDebug(23100) << "setFollowLastLinkChecked: " << follow << endl;
+    follow_last_link_checked_ = follow; 
+}
+
+void SessionWidget::slotFollowLastLinkChecked()
+{
+    follow_last_link_checked_ = !follow_last_link_checked_;
 }
 
 

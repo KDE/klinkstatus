@@ -17,53 +17,30 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.             *
  ***************************************************************************/
-#ifndef TABWIDGETSESSION_H
-#define TABWIDGETSESSION_H
+#include "actionmanager.h"
 
-#include <qtabwidget.h>
-#include <qintdict.h>
+ActionManager* ActionManager::m_self = 0;
 
-class SessionWidget;
-class LinkStatus;
-
-class KURL;
-
-
-/**
-This class handles the creation and destruction of sessions, i.e, severals instances of searching tabs.
- 
-@author Paulo Moura Guedes
-*/
-class TabWidgetSession : public QTabWidget
+ActionManager* ActionManager::getInstance()
 {
-    Q_OBJECT
+    Q_ASSERT(m_self);
 
-public:
-    TabWidgetSession(QWidget * parent = 0, const char * name = 0, WFlags f = 0);
-    ~TabWidgetSession();
+    return m_self;
+}
 
-    /** Set the URL in the current session widget */
-    void setUrl(KURL const& url);
-
-    SessionWidget* currentSession() const;
-    bool emptySessionsExist() const;
-    /** Returns the first empty session it finds */
-    SessionWidget* getEmptySession() const;
-    QIntDict<SessionWidget> const& sessions() const;
+void ActionManager::setInstance(ActionManager* manager)
+{
+    Q_ASSERT(manager);
     
+    m_self = manager;
+}
 
-public slots:
-    SessionWidget* newSession();
-    SessionWidget* newSession(KURL const& url);
-    void closeSession();
-    void updateTabLabel(LinkStatus const* linkstatus);
-    void slotLoadSettings();
-    
-private:
-    SessionWidget* newSessionWidget();
+ActionManager::ActionManager(QObject *parent, const char *name)
+    : QObject(parent, name)
+{
+}
 
-private:
-    QIntDict<SessionWidget> tabs_;
-};
+ActionManager::~ActionManager()
+{
+}
 
-#endif

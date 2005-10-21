@@ -18,11 +18,13 @@
             <Action name="hide_search_bar"/>
             <Action name="show_search_bar"/>
             <Separator/>
+            <Action name="follow_last_link_checked"/>
+<!--            <Separator/>
             <Action name="display_all_links"/>
             <Action name="display_good_links"/>
             <Action name="display_bad_links"/>
             <Action name="display_malformed_links"/>
-            <Action name="display_undetermined_links"/>
+            <Action name="display_undetermined_links"/>-->
         </Menu>
         
         <Menu name="help"><text>&amp;Help</text>
@@ -38,6 +40,7 @@
         <Action name="close_tab"/>
         <Separator/>
         <Action name="hide_search_bar"/>
-        <Action name="show_search_bar"/>
+        <Separator/>
+        <Action name="follow_last_link_checked"/>
     </ToolBar>
 </kpartgui>

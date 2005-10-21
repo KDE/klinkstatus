@@ -59,7 +59,8 @@ public:
     void displayMalformedLinks();
     void displayUndeterminedLinks();
 
-
+    bool followLastLinkChecked() const { return follow_last_link_checked_; }
+    void setFollowLastLinkChecked(bool follow);
 
     bool isEmpty() const;
     SearchManager const* getSearchManager() const;
@@ -73,6 +74,10 @@ public slots:
     
     virtual void slotClearComboUrl();    
     void slotLoadSettings(bool modify_current_widget_settings = true);
+    
+    void slotHideSearchPanel();
+    void slotFollowLastLinkChecked();
+
     
 private slots:
 
@@ -114,6 +119,7 @@ private:
     int time_out_;
     //TableLinkstatus* table_linkstatus;
     bool tree_display_; // tree/flat result display
+    bool follow_last_link_checked_;
 };
 
 

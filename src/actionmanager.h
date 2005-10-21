@@ -17,53 +17,34 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.             *
  ***************************************************************************/
-#ifndef TABWIDGETSESSION_H
-#define TABWIDGETSESSION_H
+#ifndef ACTIONMANAGER_H
+#define ACTIONMANAGER_H
 
-#include <qtabwidget.h>
-#include <qintdict.h>
+#include <qobject.h>
 
-class SessionWidget;
-class LinkStatus;
-
-class KURL;
-
+class KAction;
 
 /**
-This class handles the creation and destruction of sessions, i.e, severals instances of searching tabs.
+    @author Paulo Moura Guedes <moura@kdewebdev.org>
  
-@author Paulo Moura Guedes
+    interface for accessing actions, popup menus etc. from widgets.
+    (Extracted from the implementation to avoid dependencies between widgets and  Akregator::Part).   
 */
-class TabWidgetSession : public QTabWidget
+class ActionManager : public QObject
 {
-    Q_OBJECT
-
+    // Q_OBJECT
 public:
-    TabWidgetSession(QWidget * parent = 0, const char * name = 0, WFlags f = 0);
-    ~TabWidgetSession();
+    ActionManager(QObject* parent=0, const char* name=0);
+    virtual ~ActionManager();
 
-    /** Set the URL in the current session widget */
-    void setUrl(KURL const& url);
+    static ActionManager* getInstance();
+    static void setInstance(ActionManager* manager);
 
-    SessionWidget* currentSession() const;
-    bool emptySessionsExist() const;
-    /** Returns the first empty session it finds */
-    SessionWidget* getEmptySession() const;
-    QIntDict<SessionWidget> const& sessions() const;
-    
-
-public slots:
-    SessionWidget* newSession();
-    SessionWidget* newSession(KURL const& url);
-    void closeSession();
-    void updateTabLabel(LinkStatus const* linkstatus);
-    void slotLoadSettings();
-    
-private:
-    SessionWidget* newSessionWidget();
+    virtual KAction* action(const char* name, const char* classname=0) = 0;
+    virtual QWidget* container(const char* name) = 0;
 
 private:
-    QIntDict<SessionWidget> tabs_;
+    static ActionManager* m_self;
 };
 
 #endif

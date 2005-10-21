@@ -17,53 +17,45 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.             *
  ***************************************************************************/
-#ifndef TABWIDGETSESSION_H
-#define TABWIDGETSESSION_H
+#ifndef ACTIONMANAGERIMPL_H
+#define ACTIONMANAGERIMPL_H
 
-#include <qtabwidget.h>
-#include <qintdict.h>
+#include "actionmanager.h"
+
+class KActionCollection;
 
 class SessionWidget;
-class LinkStatus;
-
-class KURL;
-
+class KLinkStatusPart;
 
 /**
-This class handles the creation and destruction of sessions, i.e, severals instances of searching tabs.
- 
-@author Paulo Moura Guedes
+    @author Paulo Moura Guedes <moura@kdewebdev.org>
 */
-class TabWidgetSession : public QTabWidget
+class ActionManagerImpl : public ActionManager
 {
     Q_OBJECT
 
 public:
-    TabWidgetSession(QWidget * parent = 0, const char * name = 0, WFlags f = 0);
-    ~TabWidgetSession();
+    ActionManagerImpl(QObject* parent=0, const char* name=0);
+    virtual ~ActionManagerImpl();
 
-    /** Set the URL in the current session widget */
-    void setUrl(KURL const& url);
+    virtual KAction* action(const char* name, const char* classname=0);
+    virtual QWidget* container(const char* name);
 
-    SessionWidget* currentSession() const;
-    bool emptySessionsExist() const;
-    /** Returns the first empty session it finds */
-    SessionWidget* getEmptySession() const;
-    QIntDict<SessionWidget> const& sessions() const;
-    
+    void initPart(KLinkStatusPart* part);
+    void initSessionWidget(SessionWidget* sessionWidget);
+//     void initTabWidget(TabWidgetSession* tabWidgetSession);
 
-public slots:
-    SessionWidget* newSession();
-    SessionWidget* newSession(KURL const& url);
-    void closeSession();
-    void updateTabLabel(LinkStatus const* linkstatus);
-    void slotLoadSettings();
-    
-private:
-    SessionWidget* newSessionWidget();
+public slots:    
+    void slotUpdateSessionWidgetActions(QWidget*);
+            
+protected:
+
+    KActionCollection* actionCollection();
 
 private:
-    QIntDict<SessionWidget> tabs_;
+
+    class ActionManagerImplPrivate;
+    ActionManagerImplPrivate* d;
 };
 
 #endif

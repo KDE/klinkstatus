@@ -22,6 +22,7 @@
 #include "klsconfig.h"
 #include "treeview.h"
 #include "../engine/searchmanager.h"
+#include "../actionmanager.h"
 
 #include <qtoolbutton.h>
 #include <qcursor.h>
@@ -46,6 +47,9 @@ TabWidgetSession::TabWidgetSession(QWidget* parent, const char* name, WFlags f)
     setMargin( 0 );
 
     tabs_.setAutoDelete(false);
+    
+    connect(this, SIGNAL(currentChanged(QWidget*)), ActionManager::getInstance(), 
+            SLOT(slotUpdateSessionWidgetActions(QWidget*)));
 }
 
 TabWidgetSession::~TabWidgetSession()
@@ -123,7 +127,8 @@ SessionWidget* TabWidgetSession::newSessionWidget()
 {
     KLSConfig* config = KLSConfig::self();
 
-    SessionWidget* session_widget = new SessionWidget(config->maxConnectionsNumber(), config->timeOut(), this, "session_widget");
+    SessionWidget* session_widget = new SessionWidget(config->maxConnectionsNumber(), 
+            config->timeOut(), this, QString("session_widget-" + i));
 
     QStringList columns;
     columns.push_back(i18n("URL"));
@@ -177,5 +182,6 @@ void TabWidgetSession::setUrl(KURL const& url)
 {
     currentSession()->setUrl(url);
 }
+
 
 #include "tabwidgetsession.moc"
