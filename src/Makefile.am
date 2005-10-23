@@ -45,11 +45,10 @@ partdesktop_DATA = klinkstatus_part.desktop
 # this is where the part's XML-GUI resource file goes
 partrcdir = $(kde_datadir)/klinkstatuspart
 partrc_DATA = klinkstatus_part.rc
-noinst_HEADERS = klinkstatus.h klinkstatus_part.h global.h actionmanager.h \
-	actionmanagerimpl.h
+noinst_HEADERS = klinkstatus.h klinkstatus_part.h global.h actionmanager.h
 klinkstatus_SOURCES = klinkstatus.cpp main.cpp 
 libklinkstatuspart_la_SOURCES = klinkstatus_part.cpp global.cpp \
-	actionmanager.cpp actionmanagerimpl.cpp
+	actionmanager.cpp
 SUBDIRS = cfg utils parser engine ui
 
 messages: rc.cpp

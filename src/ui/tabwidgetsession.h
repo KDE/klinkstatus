@@ -20,13 +20,14 @@
 #ifndef TABWIDGETSESSION_H
 #define TABWIDGETSESSION_H
 
-#include <qtabwidget.h>
+#include <ktabwidget.h>
+#include <kurl.h>
+
 #include <qintdict.h>
+class QToolButton;
 
 class SessionWidget;
 class LinkStatus;
-
-class KURL;
 
 
 /**
@@ -34,7 +35,7 @@ This class handles the creation and destruction of sessions, i.e, severals insta
  
 @author Paulo Moura Guedes
 */
-class TabWidgetSession : public QTabWidget
+class TabWidgetSession : public KTabWidget
 {
     Q_OBJECT
 
@@ -53,17 +54,26 @@ public:
     
 
 public slots:
+    void slotNewSession(KURL const& url = KURL());
     SessionWidget* newSession();
     SessionWidget* newSession(KURL const& url);
     void closeSession();
-    void updateTabLabel(LinkStatus const* linkstatus);
+    void updateTabLabel(LinkStatus const* linkstatus, SessionWidget*);
     void slotLoadSettings();
+    
+    void slotHideSearchPanel();
+    void slotResetSearchOptions();
+    void slotFollowLastLinkChecked();
+
+private slots:
+    void slotCurrentChanged(QWidget* page);
     
 private:
     SessionWidget* newSessionWidget();
 
 private:
     QIntDict<SessionWidget> tabs_;
+    QToolButton* tabs_close_;
 };
 
 #endif

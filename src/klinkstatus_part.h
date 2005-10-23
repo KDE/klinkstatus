@@ -24,7 +24,7 @@
 #include <kparts/part.h>
 
 class TabWidgetSession;
-class ActionManagerImpl;
+class ActionManager;
 
 class QWidget;
 class QPainter;
@@ -66,8 +66,6 @@ protected slots:
     void slotDisplayUndeterminedLinks();*/
     void slotAbout();
     void slotReportBug();
-    void slotHideSearchPanel();
-    void slotFollowLastLinkChecked();
     
 // private slots:
 //     void slotEnableDisplayLinksActions();
@@ -80,7 +78,7 @@ private:
     static const char description_[];
     static const char version_[];
 
-    ActionManagerImpl* action_manager_;
+    ActionManager* action_manager_;
 
     TabWidgetSession* tabwidget_;
     KAboutApplication* m_dlgAbout;

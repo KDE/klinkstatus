@@ -16,7 +16,7 @@
         
         <Menu name="view"><text>&amp;View</text>
             <Action name="hide_search_bar"/>
-            <Action name="show_search_bar"/>
+            <Action name="reset_search_bar"/>
             <Separator/>
             <Action name="follow_last_link_checked"/>
 <!--            <Separator/>
@@ -35,11 +35,8 @@
     </MenuBar>
     
     <ToolBar name="linksToolBar">
-        <Action name="new_link_check"/>
-        <Action name="open_link"/>
-        <Action name="close_tab"/>
-        <Separator/>
         <Action name="hide_search_bar"/>
+        <Action name="reset_search_bar"/>
         <Separator/>
         <Action name="follow_last_link_checked"/>
     </ToolBar>

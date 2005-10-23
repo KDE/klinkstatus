@@ -44,7 +44,7 @@
 #include "ui/sessionwidget.h"
 #include "ui/settings/configsearchdialog.h"
 #include "ui/settings/configresultsdialog.h"
-#include "actionmanagerimpl.h"
+#include "actionmanager.h"
 
 
 const char KLinkStatusPart::description_[] = I18N_NOOP( "A Link Checker" );
@@ -61,12 +61,13 @@ KLinkStatusPart::KLinkStatusPart(QWidget *parentWidget, const char *widgetName,
 {
     setInstance(KLinkStatusFactory::instance());
 
-    action_manager_ = new ActionManagerImpl(this);
+    action_manager_ = new ActionManager(this);
     ActionManager::setInstance(action_manager_);
     initGUI();
 
     tabwidget_ = new TabWidgetSession(parentWidget, widgetName);
     setWidget(tabwidget_);
+    action_manager_->initTabWidget(tabwidget_);
 
     // we are not modified since we haven't done anything yet
     setModified(false);
@@ -113,22 +114,7 @@ bool KLinkStatusPart::openURL(KURL const& url)
     else
         url_aux = url;
 
-    if(tabwidget_->count() == 0 || !tabwidget_->emptySessionsExist() )
-    {
-        SessionWidget* sessionwidget = tabwidget_->newSession(url_aux);
-        action_manager_->initSessionWidget(sessionwidget);
-        
-/*        connect(sessionwidget, SIGNAL(signalSearchFinnished()),
-                this, SLOT(slotEnableDisplayLinksActions()));
-        connect(sessionwidget, SIGNAL(signalSearchStarted()),
-                this, SLOT(slotDisableDisplayLinksActions()));*/
-    }
-    else
-    {
-        tabwidget_->getEmptySession()->setUrl(url_aux);
-    }
-
-    action_manager_->action("close_tab")->setEnabled(tabwidget_->count() > 1);
+    tabwidget_->slotNewSession(url_aux);
 
     return true;
 }
@@ -195,16 +181,6 @@ void KLinkStatusPart::slotReportBug()
     bugReportDlg.exec();
 }
 
-void KLinkStatusPart::slotHideSearchPanel()
-{
-    tabwidget_->currentSession()->slotHideSearchPanel();
-}
-
-void KLinkStatusPart::slotFollowLastLinkChecked()
-{
-    tabwidget_->currentSession()->slotFollowLastLinkChecked();
-}
-
 KAboutData* KLinkStatusPart::createAboutData()
 {
     KAboutData * about = new KAboutData("klinkstatuspart", I18N_NOOP("KLinkStatus Part"), version_,
@@ -222,7 +198,7 @@ KAboutData* KLinkStatusPart::createAboutData()
     about->addCredit("Mathieu Kooiman", 0, " quanta@map-is.nl");
     about->addCredit("Jens Herden", 0, "jens@kdewebdev.org");
 
-    KGlobal::dirs()->addResourceType("appicon",KStandardDirs::kde_default("data") + "klinkstatuspart/pics/");
+    KGlobal::dirs()->addResourceType("appicon", KStandardDirs::kde_default("data") + "klinkstatuspart/pics/");
 
     return about;
 }

@@ -391,7 +391,7 @@ bool SessionWidget::validFields()
 void SessionWidget::slotRootChecked(LinkStatus const* linkstatus, LinkChecker * anal)
 {
     slotSetTimeElapsed();
-    emit signalUpdateTabLabel(search_manager_->linkStatusRoot());
+    emit signalUpdateTabLabel(search_manager_->linkStatusRoot(), this);
 
     Q_ASSERT(textlabel_progressbar->text() == i18n("Checking...") || 
                 textlabel_progressbar->text() == i18n("Stopped"));
@@ -602,6 +602,14 @@ void SessionWidget::setFollowLastLinkChecked(bool follow)
 void SessionWidget::slotFollowLastLinkChecked()
 {
     follow_last_link_checked_ = !follow_last_link_checked_;
+}
+
+void SessionWidget::slotResetSearchOptions()
+{
+    slotLoadSettings(true);
+
+    combobox_url->clear();
+    lineedit_reg_exp->clear();
 }
 
 

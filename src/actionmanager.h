@@ -23,16 +23,20 @@
 #include <qobject.h>
 
 class KAction;
+class KActionCollection;
+
+class SessionWidget;
+class KLinkStatusPart;
+class TabWidgetSession;
 
 /**
     @author Paulo Moura Guedes <moura@kdewebdev.org>
  
     interface for accessing actions, popup menus etc. from widgets.
-    (Extracted from the implementation to avoid dependencies between widgets and  Akregator::Part).   
 */
 class ActionManager : public QObject
 {
-    // Q_OBJECT
+    Q_OBJECT
 public:
     ActionManager(QObject* parent=0, const char* name=0);
     virtual ~ActionManager();
@@ -40,11 +44,26 @@ public:
     static ActionManager* getInstance();
     static void setInstance(ActionManager* manager);
 
-    virtual KAction* action(const char* name, const char* classname=0) = 0;
-    virtual QWidget* container(const char* name) = 0;
+    virtual KAction* action(const char* name, const char* classname=0);
+    virtual QWidget* container(const char* name);
+
+    void initPart(KLinkStatusPart* part);
+    void initSessionWidget(SessionWidget* sessionWidget);
+    void initTabWidget(TabWidgetSession* tabWidgetSession);
+
+public slots:
+    void slotUpdateSessionWidgetActions(SessionWidget*);
+
+protected:
+
+    KActionCollection* actionCollection();
 
 private:
+
     static ActionManager* m_self;
+    
+    class ActionManagerPrivate;
+    ActionManagerPrivate* d;
 };
 
 #endif

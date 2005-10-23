@@ -66,7 +66,7 @@ public:
     SearchManager const* getSearchManager() const;
 
 signals:
-    void signalUpdateTabLabel(const LinkStatus *);
+    void signalUpdateTabLabel(const LinkStatus *, SessionWidget*);
     void signalSearchStarted();
     void signalSearchFinnished();
     
@@ -76,6 +76,7 @@ public slots:
     void slotLoadSettings(bool modify_current_widget_settings = true);
     
     void slotHideSearchPanel();
+    void slotResetSearchOptions();
     void slotFollowLastLinkChecked();
 
     

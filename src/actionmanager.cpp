@@ -19,6 +19,20 @@
  ***************************************************************************/
 #include "actionmanager.h"
 
+#include <kactioncollection.h>
+#include <kxmlguifactory.h>
+#include <klocale.h>
+#include <kaction.h>
+#include <kguiitem.h>
+
+#include <qbuttongroup.h>
+
+#include "klinkstatus_part.h"
+#include "ui/sessionwidget.h"
+#include "ui/tabwidgetsession.h"
+#include "cfg/klsconfig.h"
+
+
 ActionManager* ActionManager::m_self = 0;
 
 ActionManager* ActionManager::getInstance()
@@ -31,16 +45,156 @@ ActionManager* ActionManager::getInstance()
 void ActionManager::setInstance(ActionManager* manager)
 {
     Q_ASSERT(manager);
-    
+
     m_self = manager;
 }
 
-ActionManager::ActionManager(QObject *parent, const char *name)
-    : QObject(parent, name)
+class ActionManager::ActionManagerPrivate
 {
-}
+public:
+    ActionManagerPrivate()
+            : part(0), tabWidgetSession(0), sessionWidget(0)
+    {}
+
+    KActionCollection* actionCollection;
+
+    KLinkStatusPart* part;
+    TabWidgetSession* tabWidgetSession;
+    SessionWidget* sessionWidget;
+};
+
+ActionManager::ActionManager(QObject *parent, const char *name)
+        : QObject(parent, name), d(new ActionManagerPrivate)
+{}
 
 ActionManager::~ActionManager()
 {
+    delete d;
+    d = 0;
 }
 
+void ActionManager::initPart(KLinkStatusPart* part)
+{
+    Q_ASSERT(part);
+
+    if(d->part)
+        return;
+
+    d->part = part;
+    d->actionCollection = part->actionCollection();
+
+    KAction* action = 0;
+
+    // *************** File menu *********************
+
+    new KAction(i18n("New Link Check"), "filenew",
+                0,
+                d->part, SLOT(slotNewLinkCheck()),
+                d->actionCollection, "new_link_check");
+
+    new KAction(i18n("Open URL..."), "fileopen",
+                0,
+                d->part, SLOT(slotOpenLink()),
+                d->actionCollection, "open_link");
+
+    action = new KAction(i18n("Close Tab"), "fileclose",
+                         0,
+                         d->part, SLOT(slotClose()),
+                         d->actionCollection, "close_tab");
+    action->setEnabled(false);
+
+    // *************** Settings menu *********************
+
+    (void) new KAction(i18n("Configure KLinkStatus..."), "configure",
+                       0, d->part, SLOT(slotConfigureKLinkStatus()),
+                       d->actionCollection, "configure_klinkstatus");
+
+    // *************** Help menu *********************
+
+    (void) new KAction(i18n("About KLinkStatus"), "klinkstatus",
+                       0, d->part, SLOT(slotAbout()),
+                       d->actionCollection, "about_klinkstatus");
+
+    (void) new KAction(i18n("&Report Bug..."), 0, 0, d->part,
+                       SLOT(slotReportBug()), d->actionCollection, "report_bug");
+
+    // *************** View menu *********************
+}
+
+void ActionManager::initTabWidget(TabWidgetSession* tabWidgetSession)
+{
+    Q_ASSERT(tabWidgetSession);
+
+    if (d->tabWidgetSession)
+        return;
+
+    d->tabWidgetSession = tabWidgetSession;
+    
+    // *************** View menu *********************
+
+    //     this action must be in the tabwidget because the slot can't be connected to a particular sessionWidget
+    KToggleAction* toggle_action = new KToggleAction(i18n("&Follow last Link checked"),
+                                   "svn_switch", "Ctrl+f",
+                                   d->tabWidgetSession, SLOT(slotFollowLastLinkChecked()),
+                                   d->actionCollection, "follow_last_link_checked");
+    toggle_action->setChecked(KLSConfig::followLastLinkChecked());
+
+    //     this action must be in the tabwidget because the slot can't be connected to a particular sessionWidget
+    toggle_action = new KToggleAction(i18n("&Hide Search Panel"), "bottom", "Ctrl+h",
+                                      d->tabWidgetSession, SLOT(slotHideSearchPanel()),
+                                      d->actionCollection, "hide_search_bar");
+    KGuiItem item(i18n("&Show Search Panel"), "top", "Show Search Panel");
+    toggle_action->setCheckedState(item);
+    
+    new KAction(i18n("&Reset Search Options"), "reload", "Ctrl+r",
+                d->tabWidgetSession, SLOT(slotResetSearchOptions()),
+                d->actionCollection, "reset_search_bar");
+}
+
+void ActionManager::initSessionWidget(SessionWidget* sessionWidget)
+{
+    Q_ASSERT(sessionWidget);
+
+    if (d->sessionWidget)
+        return;
+
+    d->sessionWidget = sessionWidget;
+
+}
+
+QWidget* ActionManager::container(const char* name)
+{
+    return d->part->factory()->container(name, d->part);
+}
+
+KActionCollection* ActionManager::actionCollection()
+{
+    return d->actionCollection;
+}
+
+KAction* ActionManager::action(const char* name, const char* classname)
+{
+    return d->actionCollection != 0 ? d->actionCollection->action(name, classname) : 0;
+}
+
+void ActionManager::slotUpdateSessionWidgetActions(SessionWidget* page)
+{
+    SessionWidget* sessionWidget = static_cast<SessionWidget*> (page);
+
+    KToggleAction* toggleAction = static_cast<KToggleAction*> (action("follow_last_link_checked"));
+
+    if(!toggleAction) // the first sessionWidget is created before initSessionWidget is called
+    {
+        initSessionWidget(sessionWidget);
+        toggleAction = static_cast<KToggleAction*> (action("follow_last_link_checked"));
+    }
+    Q_ASSERT(toggleAction);
+    toggleAction->setChecked(sessionWidget->followLastLinkChecked());
+
+    toggleAction = static_cast<KToggleAction*> (action("hide_search_bar"));
+    Q_ASSERT(toggleAction);
+    toggleAction->setChecked(sessionWidget->buttongroup_search->isHidden());
+}
+
+
+#include "actionmanager.moc"
