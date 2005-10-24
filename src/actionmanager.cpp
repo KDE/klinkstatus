@@ -146,9 +146,29 @@ void ActionManager::initTabWidget(TabWidgetSession* tabWidgetSession)
     KGuiItem item(i18n("&Show Search Panel"), "top", "Show Search Panel");
     toggle_action->setCheckedState(item);
     
-    new KAction(i18n("&Reset Search Options"), "reload", "Ctrl+r",
+    new KAction(i18n("&Reset Search Options"), "reload", "F5",
                 d->tabWidgetSession, SLOT(slotResetSearchOptions()),
                 d->actionCollection, "reset_search_bar");
+
+    // *************** Search menu *********************
+    
+    toggle_action = new KToggleAction(i18n("&Start Search"),
+                                      "player_play", "Ctrl+s",
+                                      d->tabWidgetSession, SLOT(slotStartSearch()),
+                                      d->actionCollection, "start_search");
+    toggle_action->setEnabled(false);
+    
+    toggle_action = new KToggleAction(i18n("&Pause Search"),
+                                      "player_pause", "Ctrl+p",
+                                      d->tabWidgetSession, SLOT(slotPauseSearch()),
+                                      d->actionCollection, "pause_search");    
+    toggle_action->setEnabled(false);
+    
+    KAction* action = new KAction(i18n("St&op Search"),
+                                  "player_stop", "Ctrl+c",
+                                  d->tabWidgetSession, SLOT(slotStopSearch()),
+                                  d->actionCollection, "stop_search");
+    action->setEnabled(false);
 }
 
 void ActionManager::initSessionWidget(SessionWidget* sessionWidget)
@@ -179,6 +199,50 @@ KAction* ActionManager::action(const char* name, const char* classname)
 
 void ActionManager::slotUpdateSessionWidgetActions(SessionWidget* page)
 {
+    KToggleAction* start_search_action_ = static_cast<KToggleAction*> (action("start_search"));
+    KToggleAction* pause_search_action_ = static_cast<KToggleAction*> (action("pause_search"));
+    KAction* stop_search_action_ = action("stop_search");
+    
+    if(page->inProgress())
+    {
+        Q_ASSERT(!page->stopped());
+        
+        start_search_action_->setEnabled(true);
+        start_search_action_->setChecked(true);
+        
+        pause_search_action_->setEnabled(true);
+    
+        stop_search_action_->setEnabled(true);
+    }
+    if(page->paused())
+    {
+        Q_ASSERT(page->inProgress());
+        Q_ASSERT(!page->stopped());
+        
+        start_search_action_->setEnabled(true);
+        start_search_action_->setChecked(true);
+        
+        pause_search_action_->setEnabled(true);
+        pause_search_action_->setChecked(true);
+
+        stop_search_action_->setEnabled(true);
+    }
+    if(page->stopped())
+    {
+        Q_ASSERT(!page->inProgress());
+        Q_ASSERT(!page->paused());
+        
+        start_search_action_->setEnabled(true);
+        start_search_action_->setChecked(false);
+        
+        pause_search_action_->setEnabled(false);
+        pause_search_action_->setChecked(false);
+
+        stop_search_action_->setEnabled(false);
+    }
+    
+//     ____________________________________________________________________
+    
     SessionWidget* sessionWidget = static_cast<SessionWidget*> (page);
 
     KToggleAction* toggleAction = static_cast<KToggleAction*> (action("follow_last_link_checked"));

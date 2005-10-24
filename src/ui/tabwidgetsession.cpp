@@ -209,7 +209,7 @@ void TabWidgetSession::slotCurrentChanged(QWidget* /*page*/)
 {
     tabs_close_->setEnabled(count() > 1);
 
-    SessionWidget* session_widget = currentSession();    
+    SessionWidget* session_widget = currentSession();
     ActionManager::getInstance()->slotUpdateSessionWidgetActions(session_widget);
 }
 
@@ -243,6 +243,21 @@ void TabWidgetSession::slotNewSession(KURL const& url)
     }
 
     ActionManager::getInstance()->action("close_tab")->setEnabled(count() > 1);
+}
+
+void TabWidgetSession::slotStartSearch()
+{
+    currentSession()->slotStartSearch();
+}
+
+void TabWidgetSession::slotPauseSearch()
+{
+    currentSession()->slotPauseSearch();
+}
+
+void TabWidgetSession::slotStopSearch()
+{
+    currentSession()->slotStopSearch();
 }
 
 

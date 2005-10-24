@@ -1,4 +1,4 @@
-<!DOCTYPE UI><UI version="3.2" stdsetdef="1">
+<!DOCTYPE UI><UI version="3.3" stdsetdef="1">
 <class>SessionWidgetBase</class>
 <widget class="QWidget">
     <property name="name">
@@ -23,6 +23,9 @@
             <width>1000</width>
             <height>500</height>
         </size>
+    </property>
+    <property name="caption">
+        <string>SessionWidgetBase</string>
     </property>
     <vbox>
         <property name="name">
@@ -325,44 +328,6 @@
                                         </widget>
                                     </vbox>
                                 </widget>
-                                <widget class="QLayoutWidget">
-                                    <property name="name">
-                                        <cstring>layout25</cstring>
-                                    </property>
-                                    <vbox>
-                                        <property name="name">
-                                            <cstring>unnamed</cstring>
-                                        </property>
-                                        <widget class="QPushButton">
-                                            <property name="name">
-                                                <cstring>pushbutton_check</cstring>
-                                            </property>
-                                            <property name="enabled">
-                                                <bool>false</bool>
-                                            </property>
-                                            <property name="text">
-                                                <string>&amp;Check</string>
-                                            </property>
-                                            <property name="toolTip" stdset="0">
-                                                <string>Click here to begin searching</string>
-                                            </property>
-                                        </widget>
-                                        <widget class="QPushButton">
-                                            <property name="name">
-                                                <cstring>pushbutton_cancel</cstring>
-                                            </property>
-                                            <property name="enabled">
-                                                <bool>false</bool>
-                                            </property>
-                                            <property name="text">
-                                                <string>&amp;Pause</string>
-                                            </property>
-                                            <property name="toolTip" stdset="0">
-                                                <string></string>
-                                            </property>
-                                        </widget>
-                                    </vbox>
-                                </widget>
                             </hbox>
                         </widget>
                     </vbox>
@@ -588,18 +553,6 @@
         <slot>setEnabled(bool)</slot>
     </connection>
     <connection>
-        <sender>pushbutton_check</sender>
-        <signal>clicked()</signal>
-        <receiver>SessionWidgetBase</receiver>
-        <slot>slotCheck()</slot>
-    </connection>
-    <connection>
-        <sender>pushbutton_cancel</sender>
-        <signal>clicked()</signal>
-        <receiver>SessionWidgetBase</receiver>
-        <slot>slotCancel()</slot>
-    </connection>
-    <connection>
         <sender>toolButton_clear_combo</sender>
         <signal>clicked()</signal>
         <receiver>SessionWidgetBase</receiver>
@@ -612,8 +565,6 @@
     <tabstop>spinbox_depth</tabstop>
     <tabstop>checkbox_subdirs_only</tabstop>
     <tabstop>checkbox_external_links</tabstop>
-    <tabstop>pushbutton_check</tabstop>
-    <tabstop>pushbutton_cancel</tabstop>
 </tabstops>
 <slots>
     <slot specifier="pure virtual">slotCheck()</slot>

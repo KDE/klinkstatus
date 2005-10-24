@@ -59,10 +59,14 @@
 
 SessionWidget::SessionWidget(int max_simultaneous_connections, int time_out,
                              QWidget* parent, const char* name, WFlags f)
-        : SessionWidgetBase(parent, name, f), search_manager_(0),
-        ready_(true), bottom_status_timer_(this, "bottom_status_timer"),
-        max_simultaneous_connections_(max_simultaneous_connections), 
-        time_out_(time_out), follow_last_link_checked_(KLSConfig::followLastLinkChecked())
+        : SessionWidgetBase(parent, name, f), search_manager_(0), 
+        action_manager_(ActionManager::getInstance()), 
+        ready_(true), to_start_(false), to_pause_(false), to_stop_(false),
+        in_progress_(false), paused_(false), stopped_(true),
+        bottom_status_timer_(this, "bottom_status_timer"),
+        max_simultaneous_connections_(max_simultaneous_connections),
+        time_out_(time_out), follow_last_link_checked_(KLSConfig::followLastLinkChecked()), 
+        start_search_action_(0)
 {
     newSearchManager();
 
@@ -71,10 +75,10 @@ SessionWidget::SessionWidget(int max_simultaneous_connections, int time_out,
 
     connect(combobox_url, SIGNAL( textChanged ( const QString & ) ),
             this, SLOT( slotEnableCheckButton( const QString & ) ) );
-    
+
     connect(tree_view, SIGNAL( clicked ( QListViewItem * ) ),
             this, SLOT( showBottomStatusLabel( QListViewItem * ) ) );
-    
+
     connect(&bottom_status_timer_, SIGNAL(timeout()), this, SLOT(clearBottomStatusLabel()) );
 }
 
@@ -99,7 +103,7 @@ void SessionWidget::slotLoadSettings(bool modify_current_widget_settings)
     }
 
     search_manager_->setTimeOut(KLSConfig::timeOut());
-    
+
     //kdDebug(23100) << "tree_display_: " << tree_display_ << endl;
 }
 
@@ -141,7 +145,6 @@ void SessionWidget::newSearchManager()
 
 void SessionWidget::setColumns(QStringList const& colunas)
 {
-    //table_linkstatus->setColumns(colunas);
     tree_view->setColumns(colunas);
 }
 
@@ -183,8 +186,6 @@ void SessionWidget::displayUndeterminedLinks()
 
 bool SessionWidget::isEmpty() const
 {
-    //Q_ASSERT(table_linkstatus);
-    //return table_linkstatus->isEmpty();
     Q_ASSERT(tree_view);
     return tree_view->isEmpty();
 }
@@ -196,10 +197,17 @@ SearchManager const* SessionWidget::getSearchManager() const
 
 void SessionWidget::slotEnableCheckButton(const QString & s)
 {
+    if(!(stopped_ && !pendingActions()))
+        return;
+
     if(!s.isEmpty() && !search_manager_->searching())
-        pushbutton_check->setEnabled(true);
+    {
+        start_search_action_->setEnabled(true);
+    }
     else
-        pushbutton_check->setEnabled(false);
+    {
+        start_search_action_->setEnabled(false);
+    }
 }
 /*
 void SessionWidget::slotSuggestDomain(bool toogle)
@@ -214,21 +222,25 @@ void SessionWidget::slotSuggestDomain(bool toogle)
 */
 void SessionWidget::slotCheck()
 {
-    if(!ready_)
-    {
-        KApplication::beep ();
-        return;
-    }
+    Q_ASSERT(to_start_);
+    Q_ASSERT(!in_progress_);
+    Q_ASSERT(!paused_);
+    Q_ASSERT(stopped_);
 
     ready_ = false;
     if(!validFields())
     {
         ready_ = true;
-        KApplication::beep ();
+        KApplication::beep();
         return;
     }
-    
+
     emit signalSearchStarted();
+    
+    in_progress_ = true;
+    paused_ = false;
+    stopped_ = false;
+    
     slotLoadSettings(false); // it seems that KConfigDialogManager is not trigering this slot
 
     newSearchManager();
@@ -241,24 +253,13 @@ void SessionWidget::slotCheck()
     progressbar_checker->setProgress(0);
     textlabel_progressbar->setText(i18n( "Checking..." ));
 
-    //table_linkstatus->verticalHeader()->show();
-    //table_linkstatus->verticalHeader()->adjustHeaderSize();
-    //table_linkstatus->setLeftMargin(table_linkstatus->verticalHeader()->width());
-
-    //buttongroup_search->setEnabled(false);
-    pushbutton_check->setEnabled(false);
-    pushbutton_cancel->setEnabled(true);
-    pushbutton_cancel->setText(i18n( "&Pause" ));
-    pushbutton_cancel->setIconSet(SmallIconSet("player_pause"));
     textlabel_elapsed_time->setEnabled(true);
     //textlabel_elapsed_time_value->setText("");
     textlabel_elapsed_time_value->setEnabled(true);
 
-    Q_ASSERT(!pushbutton_check->isEnabled()); // FIXME pushbutton_check sometimes doesn't show disable. Qt bug?
-
     //table_linkstatus->clear();
     tree_view->clear();
-    
+
     KURL url = Url::normalizeUrl(combobox_url->currentText());
     if(KLSConfig::useQuantaUrlPreviewPrefix() && Global::isKLinkStatusEmbeddedInQuanta())
     {
@@ -266,7 +267,7 @@ void SessionWidget::slotCheck()
         if(url_aux.isValid() && !url_aux.isEmpty())
             url = url_aux;
     }
-    
+
     if(!checkbox_recursively->isChecked())
     {
         search_manager_->setSearchMode(SearchManager::depth);
@@ -312,39 +313,14 @@ void SessionWidget::slotCheck()
     }
     if(!lineedit_reg_exp->text().isEmpty())
     {
-    	search_manager_->setCheckRegularExpressions(true);
-	search_manager_->setRegularExpression(lineedit_reg_exp->text(), false);
+        search_manager_->setCheckRegularExpressions(true);
+        search_manager_->setRegularExpression(lineedit_reg_exp->text(), false);
     }
 
     kdDebug(23100) <<  "URI: " << url.prettyURL() << endl;
     combobox_url->setCurrentText(url.prettyURL());
     search_manager_->startSearch(url);
     slotSetTimeElapsed();
-}
-
-void SessionWidget::slotCancel()
-{
-    if(search_manager_->searching())
-    {
-        Q_ASSERT(!ready_);
-        pushbutton_cancel->setEnabled(false);
-        search_manager_->cancelSearch();
-    }
-    else
-    {
-        Q_ASSERT(ready_);
-        Q_ASSERT(pushbutton_cancel->text() == i18n( "&Resume" ));
-        pushbutton_check->setEnabled(false);
-        pushbutton_cancel->setText(i18n( "&Pause" ));
-        pushbutton_cancel->setIconSet(SmallIconSet("player_pause"));
-        textlabel_progressbar->setText(i18n( "Checking..." ));
-        ready_ = false;
-        search_manager_->resume();
-        
-        displayAllLinks();
-        emit signalSearchStarted();
-        slotLoadSettings(isEmpty()); // it seems that KConfigDialogManager is not trigering this slot
-    }
 }
 
 void SessionWidget::keyPressEvent ( QKeyEvent* e )
@@ -362,9 +338,7 @@ void SessionWidget::keyPressEvent ( QKeyEvent* e )
     {
         if(validFields())
         {
-            pushbutton_check->toggle();
-            //pushbutton_check->setEnabled(false);
-            slotCheck();
+            slotStartSearch();
         }
     }
 
@@ -393,8 +367,8 @@ void SessionWidget::slotRootChecked(LinkStatus const* linkstatus, LinkChecker * 
     slotSetTimeElapsed();
     emit signalUpdateTabLabel(search_manager_->linkStatusRoot(), this);
 
-    Q_ASSERT(textlabel_progressbar->text() == i18n("Checking...") || 
-                textlabel_progressbar->text() == i18n("Stopped"));
+    Q_ASSERT(textlabel_progressbar->text() == i18n("Checking...") ||
+             textlabel_progressbar->text() == i18n("Stopped"));
     progressbar_checker->setProgress(1);
 
     //table_linkstatus->insertResult(linkstatus);
@@ -411,14 +385,14 @@ void SessionWidget::slotLinkChecked(LinkStatus const* linkstatus, LinkChecker * 
     slotSetTimeElapsed();
 
     kdDebug(23100) << textlabel_progressbar->text() << endl;
-    Q_ASSERT(textlabel_progressbar->text() == i18n("Checking...") || 
-                textlabel_progressbar->text() == i18n("Stopped"));
+    Q_ASSERT(textlabel_progressbar->text() == i18n("Checking...") ||
+             textlabel_progressbar->text() == i18n("Stopped"));
     progressbar_checker->setProgress(progressbar_checker->progress() + 1);
 
     if(linkstatus->checked())
     {
         TreeViewItem* tree_view_item = 0;
-        
+
         if(tree_display_)
         {
             //kdDebug(23100) << "TREE!!!!!" << endl;
@@ -437,35 +411,18 @@ void SessionWidget::slotLinkChecked(LinkStatus const* linkstatus, LinkChecker * 
         }
         LinkStatus* ls = const_cast<LinkStatus*> (linkstatus);
         ls->setTreeViewItem(tree_view_item);
-        
+
         if(linkstatus->isRedirection() && linkstatus->redirection())
             slotLinkChecked(linkstatus->redirection(), anal);
     }
 }
-/*
-vector<TableItem*> SessionWidget::generateRowOfTableItems(LinkStatus const* linkstatus) const
-{
-    vector<TableItem*> items;
-    int column = 1;
 
-    TableItem* item1 = new TableItemStatus(table_linkstatus, QTableItem::Never,
-                                           linkstatus, column++);
-    TableItem* item2 = new TableItemNome(table_linkstatus, QTableItem::Never,
-                                         linkstatus, column++);
-    TableItem* item3 = new TableItemURL(table_linkstatus, QTableItem::Never,
-                                        linkstatus, column++);
-    items.push_back(item1);
-    items.push_back(item2);
-    items.push_back(item3);
-
-    // If more columns are choosed in the settings, create and add the items here
-    // ...
-
-    return items;
-}
-*/
 void SessionWidget::slotSearchFinished()
 {
+    Q_ASSERT(in_progress_);
+    Q_ASSERT(!paused_);
+    Q_ASSERT(!stopped_);
+    
     KApplication::beep ();
 
     textlabel_progressbar->setText(i18n( "Ready" ));
@@ -475,32 +432,53 @@ void SessionWidget::slotSearchFinished()
     progressbar_checker->setProgress(0);
 
     ready_ = true;
-    pushbutton_check->setEnabled(true);
-    pushbutton_cancel->setEnabled(false);
-    //buttongroup_search->setEnabled(true);
+    
     textlabel_elapsed_time->setEnabled(true);
     textlabel_elapsed_time_value->setEnabled(true);
     textlabel_elapsed_time_value->setText(search_manager_->timeElapsed().toString("hh:mm:ss"));
 
+    in_progress_ = false;
+    paused_ = false;
+    stopped_ = true;
+    resetPendingActions();
+    action_manager_->slotUpdateSessionWidgetActions(this);
+    
     emit signalSearchFinnished();
 }
 
 void SessionWidget::slotSearchPaused()
 {
-    KApplication::beep ();
+    Q_ASSERT(pendingActions());
+    Q_ASSERT(in_progress_);
+    
+    KApplication::beep();
 
-    textlabel_progressbar->setText(i18n( "Stopped" ));
+    textlabel_progressbar->setText(i18n("Stopped"));
 
     ready_ = true;
-    pushbutton_check->setEnabled(true);
-    pushbutton_cancel->setEnabled(true);
-    pushbutton_cancel->setText(i18n( "&Resume" ));
-    pushbutton_cancel->setIconSet(SmallIconSet("player_play"));
+
+   if(to_stop_)
+    {
+        in_progress_ = false;
+        paused_ = false;
+        stopped_ = true;
+    }
+    else
+    {
+        Q_ASSERT(to_pause_);
+        Q_ASSERT(!stopped_);
+        
+        paused_ = true;
+    }
+    
     textlabel_elapsed_time->setEnabled(true);
     textlabel_elapsed_time_value->setEnabled(true);
     textlabel_elapsed_time_value->setText(search_manager_->timeElapsed().toString("hh:mm:ss"));
 
-    emit signalSearchFinnished();
+    resetPendingActions();
+    action_manager_->slotUpdateSessionWidgetActions(this);
+
+    emit signalSearchPaused();
 }
 
 void SessionWidget::insertUrlAtCombobox(QString const& url)
@@ -511,7 +489,7 @@ void SessionWidget::insertUrlAtCombobox(QString const& url)
 void SessionWidget::showBottomStatusLabel(QListViewItem * item)
 {
     kdDebug(23100) << "SessionWidget::showBottomStatusLabel" << endl;
-    
+
     TreeViewItem* _item = tree_view->myItem(item);
     if(_item)
     {
@@ -564,15 +542,14 @@ void SessionWidget::init()
 {
     combobox_url->init();
 
-    pushbutton_check->setIconSet(SmallIconSet("viewmag"));
-    pushbutton_cancel->setIconSet(SmallIconSet("player_pause"));
     toolButton_clear_combo->setIconSet(SmallIconSet("locationbar_erase"));
-	
-	pushbutton_url->setIconSet(KGlobal::iconLoader()->loadIconSet("fileopen", KIcon::Small));
-	QPixmap pixMap = KGlobal::iconLoader()->loadIcon("fileopen", KIcon::Small);
-	pushbutton_url->setFixedSize(pixMap.width() + 8, pixMap.height() + 8);
-	connect(pushbutton_url, SIGNAL(clicked()), this, SLOT(slotChooseUrlDialog()));
 
+    pushbutton_url->setIconSet(KGlobal::iconLoader()->loadIconSet("fileopen", KIcon::Small));
+    QPixmap pixMap = KGlobal::iconLoader()->loadIcon("fileopen", KIcon::Small);
+    pushbutton_url->setFixedSize(pixMap.width() + 8, pixMap.height() + 8);
+    connect(pushbutton_url, SIGNAL(clicked()), this, SLOT(slotChooseUrlDialog()));
+
+    start_search_action_ = static_cast<KToggleAction*> (action_manager_->action("start_search"));
 }
 
 void SessionWidget::slotClearComboUrl()
@@ -582,7 +559,7 @@ void SessionWidget::slotClearComboUrl()
 
 void SessionWidget::slotChooseUrlDialog()
 {
-	setUrl(KFileDialog::getOpenURL());
+    setUrl(KFileDialog::getOpenURL());
 }
 
 void SessionWidget::slotHideSearchPanel()
@@ -593,10 +570,10 @@ void SessionWidget::slotHideSearchPanel()
         buttongroup_search->hide();
 }
 
-void SessionWidget::setFollowLastLinkChecked(bool follow) 
-{ 
+void SessionWidget::setFollowLastLinkChecked(bool follow)
+{
     kdDebug(23100) << "setFollowLastLinkChecked: " << follow << endl;
-    follow_last_link_checked_ = follow; 
+    follow_last_link_checked_ = follow;
 }
 
 void SessionWidget::slotFollowLastLinkChecked()
@@ -610,6 +587,97 @@ void SessionWidget::slotResetSearchOptions()
 
     combobox_url->clear();
     lineedit_reg_exp->clear();
+}
+
+void SessionWidget::slotStartSearch()
+{
+    if(in_progress_)
+    {
+        start_search_action_->setChecked(true); // do not toggle
+        Q_ASSERT(!stopped_);
+        KApplication::beep();
+        return;
+    }
+    
+    to_start_ = true;
+    slotCheck();
+    resetPendingActions();
+
+    action_manager_->slotUpdateSessionWidgetActions(this);
+}
+
+void SessionWidget::slotPauseSearch()
+{
+    Q_ASSERT(in_progress_);
+    Q_ASSERT(!stopped_);
+    
+    if(pendingActions())
+        return;
+
+    to_pause_ = true;
+    
+    if(!paused_)
+    {
+        Q_ASSERT(!ready_);
+        Q_ASSERT(search_manager_->searching());
+
+        search_manager_->cancelSearch();        
+    }
+    else
+    {
+        Q_ASSERT(ready_);
+        
+        paused_ = false;
+
+        textlabel_progressbar->setText(i18n("Checking..."));
+        ready_ = false;
+        search_manager_->resume();
+
+        displayAllLinks();
+        emit signalSearchStarted();
+        slotLoadSettings(isEmpty()); // it seems that KConfigDialogManager is not trigering this slot
+        
+        resetPendingActions();
+    }
+}
+
+void SessionWidget::slotStopSearch()
+{
+    Q_ASSERT(in_progress_);
+    Q_ASSERT(!stopped_);
+    
+    if(pendingActions())
+        return;
+
+    to_stop_ = true;
+    
+    if(!paused_)
+    {        
+        Q_ASSERT(!ready_);
+        Q_ASSERT(search_manager_->searching());
+
+        search_manager_->cancelSearch();        
+    }
+    else
+    {
+        in_progress_ = false;
+        paused_ = false;
+        stopped_ = true;
+    
+        action_manager_->slotUpdateSessionWidgetActions(this);
+    }
+}
+
+bool SessionWidget::pendingActions() const
+{
+    return (to_start_ || to_pause_ || to_stop_);
+}
+
+void SessionWidget::resetPendingActions()
+{
+    to_start_ = false;
+    to_pause_ = false;
+    to_stop_ = false;
 }
 
 

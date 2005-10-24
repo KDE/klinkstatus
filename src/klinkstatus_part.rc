@@ -27,6 +27,13 @@
             <Action name="display_undetermined_links"/>-->
         </Menu>
         
+        <Menu name="search"><text>S&amp;earch</text>
+            <Action name="start_search"/>
+            <Action name="pause_search"/>
+            <Action name="stop_search"/>
+            <Separator/>
+        </Menu>
+
         <Menu name="help"><text>&amp;Help</text>
             <Separator/>
             <Action name="about_klinkstatus"/>
@@ -35,6 +42,10 @@
     </MenuBar>
     
     <ToolBar name="linksToolBar">
+        <Action name="start_search"/>
+        <Action name="pause_search"/>
+        <Action name="stop_search"/>
+        <Separator/>
         <Action name="hide_search_bar"/>
         <Action name="reset_search_bar"/>
         <Separator/>

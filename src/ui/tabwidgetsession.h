@@ -64,6 +64,10 @@ public slots:
     void slotHideSearchPanel();
     void slotResetSearchOptions();
     void slotFollowLastLinkChecked();
+    
+    void slotStartSearch();
+    void slotPauseSearch();
+    void slotStopSearch();
 
 private slots:
     void slotCurrentChanged(QWidget* page);
