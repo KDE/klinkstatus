@@ -54,6 +54,7 @@
 #include "../engine/linkstatus.h"
 #include "../engine/linkchecker.h"
 #include "../engine/searchmanager.h"
+#include "resultssearchbar.h"
 #include "../actionmanager.h"
 
 
@@ -65,7 +66,7 @@ SessionWidget::SessionWidget(int max_simultaneous_connections, int time_out,
         in_progress_(false), paused_(false), stopped_(true),
         bottom_status_timer_(this, "bottom_status_timer"),
         max_simultaneous_connections_(max_simultaneous_connections),
-        time_out_(time_out), follow_last_link_checked_(KLSConfig::followLastLinkChecked()), 
+        time_out_(time_out), tree_display_(false), follow_last_link_checked_(KLSConfig::followLastLinkChecked()), 
         start_search_action_(0)
 {
     newSearchManager();
@@ -90,6 +91,25 @@ SessionWidget::~SessionWidget()
         saveCurrentCheckSettings();
 }
 
+void SessionWidget::init()
+{
+    combobox_url->init();
+
+    toolButton_clear_combo->setIconSet(SmallIconSet("locationbar_erase"));
+
+    pushbutton_url->setIconSet(KGlobal::iconLoader()->loadIconSet("fileopen", KIcon::Small));
+    QPixmap pixMap = KGlobal::iconLoader()->loadIcon("fileopen", KIcon::Small);
+    pushbutton_url->setFixedSize(pixMap.width() + 8, pixMap.height() + 8);
+    connect(pushbutton_url, SIGNAL(clicked()), this, SLOT(slotChooseUrlDialog()));
+    
+    resultsSearchBar->hide();
+
+    start_search_action_ = static_cast<KToggleAction*> (action_manager_->action("start_search"));
+    
+    connect(resultsSearchBar, SIGNAL(signalSearch(LinkMatcher)), 
+            this, SLOT(slotApplyFilter(LinkMatcher)));
+}
+
 void SessionWidget::slotLoadSettings(bool modify_current_widget_settings)
 {
     if(modify_current_widget_settings)
@@ -98,8 +118,8 @@ void SessionWidget::slotLoadSettings(bool modify_current_widget_settings)
         spinbox_depth->setValue(KLSConfig::depth());
         checkbox_subdirs_only->setChecked(!KLSConfig::checkParentFolders());
         checkbox_external_links->setChecked(KLSConfig::checkExternalLinks());
-        tree_view->setRootIsDecorated(tree_display_);
         tree_display_ = KLSConfig::displayTreeView();
+        tree_view->setTreeDisplay(tree_display_);
     }
 
     search_manager_->setTimeOut(KLSConfig::timeOut());
@@ -154,36 +174,6 @@ void SessionWidget::setUrl(KURL const& url)
     combobox_url->setFocus();
 }
 
-void SessionWidget::displayAllLinks()
-{
-    //table_linkstatus->showAll();
-    tree_view->showAll();
-}
-
-void SessionWidget::displayGoodLinks()
-{
-    //table_linkstatus->show(ResultView::good);
-    tree_view->show(ResultView::good);
-}
-
-void SessionWidget::displayBadLinks()
-{
-    //table_linkstatus->show(ResultView::bad);
-    tree_view->show(ResultView::bad);
-}
-
-void SessionWidget::displayMalformedLinks()
-{
-    //table_linkstatus->show(ResultView::malformed);
-    tree_view->show(ResultView::malformed);
-}
-
-void SessionWidget::displayUndeterminedLinks()
-{
-    //table_linkstatus->show(ResultView::undetermined);
-    tree_view->show(ResultView::undetermined);
-}
-
 bool SessionWidget::isEmpty() const
 {
     Q_ASSERT(tree_view);
@@ -209,17 +199,7 @@ void SessionWidget::slotEnableCheckButton(const QString & s)
         start_search_action_->setEnabled(false);
     }
 }
-/*
-void SessionWidget::slotSuggestDomain(bool toogle)
-{
-    if(toogle && !(combobox_url->currentText().isEmpty()))
-    {
-        KURL url = Url::normalizeUrl(combobox_url->currentText());
-        if(url.isValid())
-            lineedit_domain->setText(url.host() + url.directory(true, false));
-    }
-}
-*/
+
 void SessionWidget::slotCheck()
 {
     Q_ASSERT(to_start_);
@@ -378,6 +358,8 @@ void SessionWidget::slotRootChecked(LinkStatus const* linkstatus, LinkChecker * 
 
     if(linkstatus->isRedirection() && linkstatus->redirection())
         slotLinkChecked(linkstatus->redirection(), anal);
+
+    resultsSearchBar->show();
 }
 
 void SessionWidget::slotLinkChecked(LinkStatus const* linkstatus, LinkChecker * anal)
@@ -392,15 +374,18 @@ void SessionWidget::slotLinkChecked(LinkStatus const* linkstatus, LinkChecker * 
     if(linkstatus->checked())
     {
         TreeViewItem* tree_view_item = 0;
+        TreeViewItem* parent_item = linkstatus->parent()->treeViewItem();
+        bool match = resultsSearchBar->currentLinkMatcher().matches(*linkstatus);
 
         if(tree_display_)
         {
             //kdDebug(23100) << "TREE!!!!!" << endl;
-            TreeViewItem* parent_item = linkstatus->parent()->treeViewItem();
             tree_view_item = new TreeViewItem(parent_item, parent_item->lastChild(), linkstatus, 3);
             parent_item->setLastChild(tree_view_item);
             if(follow_last_link_checked_)
                 tree_view->ensureRowVisible(tree_view_item, tree_display_);
+            
+            tree_view_item->setEnabled(match);
         }
         else
         {
@@ -408,7 +393,10 @@ void SessionWidget::slotLinkChecked(LinkStatus const* linkstatus, LinkChecker * 
             tree_view_item = new TreeViewItem(tree_view, tree_view->lastItem(), linkstatus, 3);
             if(follow_last_link_checked_)
                 tree_view->ensureRowVisible(tree_view_item, tree_display_);
+        
+            tree_view_item->setVisible(match);
         }
+        
         LinkStatus* ls = const_cast<LinkStatus*> (linkstatus);
         ls->setTreeViewItem(tree_view_item);
 
@@ -538,20 +526,6 @@ void SessionWidget::slotLinksToCheckTotalSteps(uint steps)
     progressbar_checker->setProgress(0);
 }
 
-void SessionWidget::init()
-{
-    combobox_url->init();
-
-    toolButton_clear_combo->setIconSet(SmallIconSet("locationbar_erase"));
-
-    pushbutton_url->setIconSet(KGlobal::iconLoader()->loadIconSet("fileopen", KIcon::Small));
-    QPixmap pixMap = KGlobal::iconLoader()->loadIcon("fileopen", KIcon::Small);
-    pushbutton_url->setFixedSize(pixMap.width() + 8, pixMap.height() + 8);
-    connect(pushbutton_url, SIGNAL(clicked()), this, SLOT(slotChooseUrlDialog()));
-
-    start_search_action_ = static_cast<KToggleAction*> (action_manager_->action("start_search"));
-}
-
 void SessionWidget::slotClearComboUrl()
 {
     combobox_url->setCurrentText("");
@@ -633,7 +607,6 @@ void SessionWidget::slotPauseSearch()
         ready_ = false;
         search_manager_->resume();
 
-        displayAllLinks();
         emit signalSearchStarted();
         slotLoadSettings(isEmpty()); // it seems that KConfigDialogManager is not trigering this slot
         
@@ -678,6 +651,11 @@ void SessionWidget::resetPendingActions()
     to_start_ = false;
     to_pause_ = false;
     to_stop_ = false;
+}
+
+void SessionWidget::slotApplyFilter(LinkMatcher link_matcher)
+{
+    tree_view->show(link_matcher);
 }
 
 

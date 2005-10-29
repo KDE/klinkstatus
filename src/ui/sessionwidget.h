@@ -27,6 +27,7 @@
 class SearchManager;
 class TableItem;
 class ActionManager;
+class LinkMatcher;
 
 #include <qtimer.h>
 #include <qstring.h>
@@ -54,18 +55,15 @@ public:
 
     void setColumns(QStringList const& colunas);
     void setUrl(KURL const& url);
-    void displayAllLinks();
-    void displayGoodLinks();
-    void displayBadLinks();
-    void displayMalformedLinks();
-    void displayUndeterminedLinks();
+    
+    bool treeDisplay() const { return tree_display_; }
 
     bool followLastLinkChecked() const { return follow_last_link_checked_; }
     void setFollowLastLinkChecked(bool follow);
 
     bool isEmpty() const;
     SearchManager const* getSearchManager() const;
-    
+
     bool inProgress() const { return in_progress_; }
     bool paused() const { return paused_; }
     bool stopped() const { return stopped_; }
@@ -75,20 +73,20 @@ signals:
     void signalSearchStarted();
     void signalSearchPaused();
     void signalSearchFinnished();
-    
+
 public slots:
-    
-    virtual void slotClearComboUrl();    
+
+    virtual void slotClearComboUrl();
     void slotLoadSettings(bool modify_current_widget_settings = true);
-    
+
     void slotStartSearch();
     void slotPauseSearch();
     void slotStopSearch();
-    
+
     void slotHideSearchPanel();
     void slotResetSearchOptions();
     void slotFollowLastLinkChecked();
-    
+
 private slots:
 
     virtual void slotCheck();
@@ -109,9 +107,11 @@ private slots:
     void slotAddingLevelTotalSteps(uint steps);
     void slotAddingLevelProgress();
     void slotLinksToCheckTotalSteps(uint steps);
-	
-	void slotChooseUrlDialog();
 
+    void slotChooseUrlDialog();
+
+    void slotApplyFilter(LinkMatcher);
+    
 private:
 
     virtual void keyPressEvent ( QKeyEvent* e );
@@ -125,7 +125,7 @@ private:
 private:
     SearchManager* search_manager_;
     ActionManager* action_manager_;
-    
+
     bool ready_;
     bool to_start_;
     bool to_pause_;
@@ -133,7 +133,7 @@ private:
     bool in_progress_;
     bool paused_;
     bool stopped_;
-    
+
     QTimer bottom_status_timer_;
     int max_simultaneous_connections_;
     int time_out_;

@@ -27,6 +27,7 @@
 #include "treeview.h"
 #include "../global.h"
 #include "../engine/linkstatus.h"
+#include "../engine/linkfilter.h"
 #include "../cfg/klsconfig.h"
 
 
@@ -139,6 +140,23 @@ void TreeView::show(ResultView::Status const& status)
             */
         }
 //         
+        ++it;
+    }
+}
+
+void TreeView::show(LinkMatcher link_matcher)
+{
+    QListViewItemIterator it(this);
+    while(it.current())
+    {
+        TreeViewItem* item = myItem(it.current());
+        bool match = link_matcher.matches(*(item->linkStatus()));
+        
+        if(tree_display_)
+            item->setEnabled(match);
+        else
+            item->setVisible(match);
+        
         ++it;
     }
 }
