@@ -23,6 +23,7 @@
 #include "../ui/treeview.h"
 
 #include <klocale.h>
+#include <kcharsets.h>
 
 #include <qdom.h>
 
@@ -185,9 +186,9 @@ void LinkStatus::save(QDomElement& element) const
     tmp_1.appendChild(element.ownerDocument().createTextNode(status()));
     child_element.appendChild(tmp_1);
 
-    // <status>
+    // <label>
     tmp_1 = element.ownerDocument().createElement("label");
-    tmp_1.appendChild(element.ownerDocument().createTextNode(label()));
+    tmp_1.appendChild(element.ownerDocument().createTextNode(KCharsets::resolveEntities(label())));
     child_element.appendChild(tmp_1);
 
     // <referers>

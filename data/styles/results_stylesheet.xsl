@@ -6,6 +6,26 @@
     <xsl:template match="/klinkstatus">
         <html>
             <body>
+                
+                <strong>URL: </strong>
+                <xsl:value-of select="/klinkstatus/url"/>
+                <br/>            
+                <strong>Depth: </strong>
+                <xsl:value-of select="/klinkstatus/depth"/>            
+                <br/>            
+                <strong>Check Parent Folders: </strong>
+                <xsl:value-of select="/klinkstatus/check_parent_folders"/>            
+                <br/>            
+                <strong>Check external links: </strong>
+                <xsl:value-of select="/klinkstatus/check_external_links"/>            
+                <br/>                            
+                <xsl:if test="/klinkstatus/check_regular_expression[@check = 'true']">
+                    <strong>Do not check links matching regular expression: </strong>
+                    <xsl:value-of select="/klinkstatus/check_regular_expression"/>                    
+                    <br/>            
+                </xsl:if>               
+                <br/>            
+
                 <table border="1">
                     <thead>
                         <tr>
