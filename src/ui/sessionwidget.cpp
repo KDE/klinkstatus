@@ -30,6 +30,10 @@
 #include <kpushbutton.h>
 #include <kfiledialog.h>
 #include <kactionclasses.h>
+#include <ktempfile.h>
+#include <ksavefile.h>
+#include <kstandarddirs.h>
+#include <kio/netaccess.h>
 
 #include <qevent.h>
 #include <qlineedit.h>
@@ -56,6 +60,8 @@
 #include "../engine/searchmanager.h"
 #include "resultssearchbar.h"
 #include "../actionmanager.h"
+#include "../utils/utils.h"
+#include "../utils/xsl.h"
 
 
 SessionWidget::SessionWidget(int max_simultaneous_connections, int time_out,
@@ -656,6 +662,43 @@ void SessionWidget::resetPendingActions()
 void SessionWidget::slotApplyFilter(LinkMatcher link_matcher)
 {
     tree_view->show(link_matcher);
+}
+
+void SessionWidget::slotExportAsHTML( )
+{
+    KURL url = KFileDialog::getSaveURL(QString::null,"text/html", 0, i18n("Export Results as HTML"));
+
+    if(url.isEmpty())
+        return;
+
+    QString filename;
+    KTempFile tmp; // ### only used for network export
+
+    if(url.isLocalFile())
+        filename = url.path();
+    else
+        filename = tmp.name();
+
+    KSaveFile *savefile = new KSaveFile(filename);
+    if(savefile->status() == 0) // ok
+    {
+        QTextStream *outputStream = savefile->textStream();
+        outputStream->setEncoding(QTextStream::UnicodeUTF8);
+
+        QString xslt_doc = FileManager::read(locate("appdata", "styles/results_stylesheet.xsl"));
+        XSLT xslt(xslt_doc);
+        QString html_ouptut = xslt.transform(search_manager_->toXML());
+        (*outputStream) << html_ouptut << endl;
+
+        savefile->close();
+    }
+        
+    delete savefile;
+
+    if (url.isLocalFile())
+        return;
+
+    KIO::NetAccess::upload(filename, url, 0);
 }
 
 

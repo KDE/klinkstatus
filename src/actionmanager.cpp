@@ -130,6 +130,12 @@ void ActionManager::initTabWidget(TabWidgetSession* tabWidgetSession)
 
     d->tabWidgetSession = tabWidgetSession;
     
+    // *************** File menu *********************
+
+    (void) new KAction(i18n("E&xport Results as HTML..."), 0, 0,
+                d->tabWidgetSession, SLOT(slotExportAsHTML()),
+                d->actionCollection, "file_export_html");
+
     // *************** View menu *********************
 
     //     this action must be in the tabwidget because the slot can't be connected to a particular sessionWidget

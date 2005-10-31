@@ -86,6 +86,8 @@ public slots:
     void slotHideSearchPanel();
     void slotResetSearchOptions();
     void slotFollowLastLinkChecked();
+    
+    void slotExportAsHTML();
 
 private slots:
 

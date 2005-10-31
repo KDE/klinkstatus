@@ -69,6 +69,8 @@ public slots:
     void slotPauseSearch();
     void slotStopSearch();
 
+    void slotExportAsHTML();
+    
 private slots:
     void slotCurrentChanged(QWidget* page);
     

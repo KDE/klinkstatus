@@ -7,6 +7,8 @@
             <Action name="open_link"/>
             <Action name="close_tab"/>
             <Separator/>
+            <Action name="file_export_html"/>
+            <Separator/>
         </Menu>
         
         <Menu name="settings"><text>&amp;Settings</text>

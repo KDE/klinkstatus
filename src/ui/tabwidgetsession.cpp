@@ -260,5 +260,10 @@ void TabWidgetSession::slotStopSearch()
     currentSession()->slotStopSearch();
 }
 
+void TabWidgetSession::slotExportAsHTML()
+{
+    currentSession()->slotExportAsHTML();
+}
+
 
 #include "tabwidgetsession.moc"

@@ -90,8 +90,7 @@ inline void SearchManager::setCheckRegularExpressions(bool flag)
 
 inline void SearchManager::setRegularExpression(QString const& reg_exp, bool case_sensitive)
 {
-    QRegExp aux(reg_exp, case_sensitive);
-    reg_exp_ = aux;
+    reg_exp_ = QRegExp(reg_exp, case_sensitive);
 }
 
 inline void SearchManager::setTimeOut(int time_out)
