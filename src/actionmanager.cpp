@@ -132,9 +132,10 @@ void ActionManager::initTabWidget(TabWidgetSession* tabWidgetSession)
     
     // *************** File menu *********************
 
-    (void) new KAction(i18n("E&xport Results as HTML..."), 0, 0,
-                d->tabWidgetSession, SLOT(slotExportAsHTML()),
-                d->actionCollection, "file_export_html");
+    KAction* action = new KAction(i18n("E&xport Results as HTML..."), 0, 0,
+                                  d->tabWidgetSession, SLOT(slotExportAsHTML()),
+                                  d->actionCollection, "file_export_html");
+    action->setEnabled(false);
 
     // *************** View menu *********************
 
@@ -170,7 +171,7 @@ void ActionManager::initTabWidget(TabWidgetSession* tabWidgetSession)
                                       d->actionCollection, "pause_search");    
     toggle_action->setEnabled(false);
     
-    KAction* action = new KAction(i18n("St&op Search"),
+    action = new KAction(i18n("St&op Search"),
                                   "player_stop", "Ctrl+c",
                                   d->tabWidgetSession, SLOT(slotStopSearch()),
                                   d->actionCollection, "stop_search");
@@ -249,21 +250,23 @@ void ActionManager::slotUpdateSessionWidgetActions(SessionWidget* page)
     
 //     ____________________________________________________________________
     
-    SessionWidget* sessionWidget = static_cast<SessionWidget*> (page);
-
     KToggleAction* toggleAction = static_cast<KToggleAction*> (action("follow_last_link_checked"));
 
     if(!toggleAction) // the first sessionWidget is created before initSessionWidget is called
     {
-        initSessionWidget(sessionWidget);
+        initSessionWidget(page);
         toggleAction = static_cast<KToggleAction*> (action("follow_last_link_checked"));
     }
     Q_ASSERT(toggleAction);
-    toggleAction->setChecked(sessionWidget->followLastLinkChecked());
+    toggleAction->setChecked(page->followLastLinkChecked());
 
     toggleAction = static_cast<KToggleAction*> (action("hide_search_bar"));
     Q_ASSERT(toggleAction);
-    toggleAction->setChecked(sessionWidget->buttongroup_search->isHidden());
+    toggleAction->setChecked(page->buttongroup_search->isHidden());
+    
+    //     ____________________________________________________________________
+
+    action("file_export_html")->setEnabled(!page->isEmpty());
 }
 
 

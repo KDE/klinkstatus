@@ -366,6 +366,7 @@ void SessionWidget::slotRootChecked(LinkStatus const* linkstatus, LinkChecker * 
         slotLinkChecked(linkstatus->redirection(), anal);
 
     resultsSearchBar->show();
+    ActionManager::getInstance()->action("file_export_html")->setEnabled(!isEmpty());
 }
 
 void SessionWidget::slotLinkChecked(LinkStatus const* linkstatus, LinkChecker * anal)
