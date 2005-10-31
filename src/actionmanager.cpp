@@ -132,7 +132,7 @@ void ActionManager::initTabWidget(TabWidgetSession* tabWidgetSession)
     
     // *************** File menu *********************
 
-    KAction* action = new KAction(i18n("E&xport Results as HTML..."), 0, 0,
+    KAction* action = new KAction(i18n("E&xport Results as HTML..."), "filesave", 0,
                                   d->tabWidgetSession, SLOT(slotExportAsHTML()),
                                   d->actionCollection, "file_export_html");
     action->setEnabled(false);

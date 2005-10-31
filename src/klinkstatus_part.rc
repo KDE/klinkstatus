@@ -48,6 +48,8 @@
         <Action name="pause_search"/>
         <Action name="stop_search"/>
         <Separator/>
+        <Action name="file_export_html"/>
+        <Separator/>
         <Action name="hide_search_bar"/>
         <Action name="reset_search_bar"/>
         <Separator/>
