@@ -182,7 +182,9 @@ void LinkStatus::save(QDomElement& element) const
     
     // <status>
     tmp_1 = element.ownerDocument().createElement("status");
-    tmp_1.setAttribute("broken", errorOccurred() ? "false" : "true"); // FIXME check if this is correct
+    tmp_1.setAttribute("broken", 
+                       ResultView::displayableWithStatus(this, ResultView::bad) ? 
+                               "true" : "false");
     tmp_1.appendChild(element.ownerDocument().createTextNode(status()));
     child_element.appendChild(tmp_1);
 

@@ -25,7 +25,7 @@
                     <br/>            
                 </xsl:if>               
                 <br/>            
-
+                
                 <table border="1">
                     <thead>
                         <tr>
@@ -60,7 +60,19 @@
     
     
     <xsl:template match="url">
-        <xsl:value-of select="."/>
+        <xsl:variable name="isBroken">
+            <xsl:value-of select="../status/@broken"/>
+        </xsl:variable>
+        <xsl:choose>
+            <xsl:when test="$isBroken='true'">
+                <span style="color: red;"> 
+                    <xsl:value-of select="."/>
+                </span> 
+            </xsl:when>
+            <xsl:otherwise>              
+                <xsl:value-of select="."/>
+            </xsl:otherwise>
+        </xsl:choose>      
     </xsl:template>
     
     <xsl:template match="status">

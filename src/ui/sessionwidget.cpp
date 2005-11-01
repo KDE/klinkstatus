@@ -687,7 +687,8 @@ void SessionWidget::slotExportAsHTML( )
         outputStream->setEncoding(QTextStream::UnicodeUTF8);
 
         QString xslt_doc = FileManager::read(locate("appdata", "styles/results_stylesheet.xsl"));
-        XSLT xslt(xslt_doc);
+        XSLT xslt(xslt_doc);        
+//         kdDebug(23100) << search_manager_->toXML() << endl;
         QString html_ouptut = xslt.transform(search_manager_->toXML());
         (*outputStream) << html_ouptut << endl;
 

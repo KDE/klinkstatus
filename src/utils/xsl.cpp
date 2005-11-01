@@ -167,7 +167,7 @@ QString KopeteXSLThread::xsltTransform( const QString &xmlString, xsltStylesheet
         }
         else
         {
-            errorMsg = i18n( "The selected chat style is invalid." );
+            errorMsg = i18n( "The selected stylesheet is invalid." );
         }
 
         xmlFreeDoc( xmlDoc );
