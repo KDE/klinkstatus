@@ -58,7 +58,6 @@
         </html>
     </xsl:template>
     
-    
     <xsl:template match="url">
         <xsl:variable name="isBroken">
             <xsl:value-of select="../status/@broken"/>
