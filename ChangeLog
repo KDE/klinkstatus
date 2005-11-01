@@ -1,3 +1,23 @@
+Changes for 0.3.0
+-----------------------------------------------------
+
+- Results can be exported to HTML (BUG #85592).
+  Users are invited to improve the XSLT stylesheet and propose it to the author.
+
+- Improved interface
+    - ability to show/hide the search options
+    - option to control whether the list view should follow the last link checked
+    - option to reset the search options
+    - standard open/close tab widget tool buttons
+    - Replace the search buttons by toolbar actions
+    - ability to close the tabs on hover
+    - Revamped toolbars and usability in general
+    
+- Search bar where one can filter links by text and status.
+- Fix a bug where the title of a URL was being set in the wrong page, if it wasn't the current.
+- Other bug fixes and improvements
+
+
 Changes for 0.2.3
 -----------------------------------------------------
 
