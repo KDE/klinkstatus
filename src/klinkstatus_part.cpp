@@ -142,8 +142,6 @@ void KLinkStatusPart::slotOpenLink()
 void KLinkStatusPart::slotClose()
 {
     tabwidget_->closeSession();
-
-    action_manager_->action("close_tab")->setEnabled(tabwidget_->count() > 1);
 }
 
 void KLinkStatusPart::slotConfigureKLinkStatus()

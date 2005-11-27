@@ -141,6 +141,9 @@ void TabWidgetSession::closeSession()
 {
     if(count() > 1)
         removePage(currentPage());
+
+    tabs_close_->setEnabled(count() > 1);
+    ActionManager::getInstance()->action("close_tab")->setEnabled(count() > 1);
 }
 
 SessionWidget* TabWidgetSession::newSessionWidget()
