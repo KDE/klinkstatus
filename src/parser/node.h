@@ -38,6 +38,7 @@ public:
 
     enum Element {
         A,
+        AREA,
         LINK,
         META,
         IMG,
@@ -124,6 +125,24 @@ private:
 private:
     QString attribute_name_;
 };
+
+class NodeAREA: public NodeLink
+{
+public:
+    NodeAREA(QString const& content);
+    ~NodeAREA() {};
+    
+    QString const& attributeTITLE() const;
+
+    virtual void parse();
+
+private:
+    void parseAttributeTITLE();
+
+private:
+    QString attribute_title_;
+};
+
 
 class NodeLINK: public NodeLink
 {

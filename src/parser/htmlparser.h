@@ -60,6 +60,7 @@ private:
   vector<QString> const& parseNodesOfType(QString const& tipo);
 
   void parseNodesOfTypeA();
+  void parseNodesOfTypeAREA();
   void parseNodesOfTypeLINK();
   void parseNodesOfTypeMETA();
   void parseNodesOfTypeIMG();
