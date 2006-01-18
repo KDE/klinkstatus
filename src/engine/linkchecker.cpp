@@ -445,7 +445,7 @@ HttpResponseHeader LinkChecker::getHttpHeader(KIO::Job* /*job*/, bool remember_c
 
 void LinkChecker::checkRef()
 {
-    KURL url = linkStatus()->absoluteUrl();
+    KURL url(linkStatus()->absoluteUrl());
     Q_ASSERT(url.hasRef());
     QString url_base;
     LinkStatus const* ls_parent = 0;
@@ -469,7 +469,7 @@ void LinkChecker::checkRef()
         checkRef(ls_parent);
     else
     {
-        KURL url(url.url().left(i_ref));
+        url = url.url().left(i_ref);
         checkRef(url);
     }
 }
