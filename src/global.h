@@ -12,8 +12,6 @@
 #ifndef GLOBAL_H
 #define GLOBAL_H
 
-#include <kapplication.h>
-
 #include <qobject.h>
 class QCString;
 
@@ -31,8 +29,6 @@ public:
     static Global* self();
     ~Global();
 
-    static QFontMetrics fontMetrics() { return kapp->fontMetrics(); }
-    
     static bool isKLinkStatusEmbeddedInQuanta();
     static bool isQuantaRunningAsUnique();
     static bool isQuantaAvailableViaDCOP();

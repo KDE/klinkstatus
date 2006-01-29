@@ -15,10 +15,8 @@
         </Menu>
         
         <Menu name="view"><text>&amp;View</text>
-            <Action name="hide_search_bar"/>
-            <Action name="show_search_bar"/>
-            <Separator/>
             <Action name="display_all_links"/>
+            <Separator/>
             <Action name="display_good_links"/>
             <Action name="display_bad_links"/>
             <Action name="display_malformed_links"/>
@@ -37,7 +35,5 @@
         <Action name="open_link"/>
         <Action name="close_tab"/>
         <Separator/>
-        <Action name="hide_search_bar"/>
-        <Action name="show_search_bar"/>
     </ToolBar>
 </kpartgui>
