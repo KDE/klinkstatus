@@ -103,6 +103,8 @@ private:
     QValueVector<TreeColumnViewItem> column_items_;
     int const number_of_columns_;
     QListViewItem* last_child_;
+    
+    static QListView* list_view_;
 };
 
 

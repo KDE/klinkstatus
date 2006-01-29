@@ -35,8 +35,9 @@ kde_module_LTLIBRARIES = libklinkstatuspart.la
 # the Part's source, library search path, and link libraries
 
 libklinkstatuspart_la_LDFLAGS = -module -no-undefined $(KDE_PLUGIN) $(all_libraries)
-libklinkstatuspart_la_LIBADD = ui/settings/libsettings.la ui/libui.la engine/libengine.la \
-	utils/libutils.la parser/libparser.la $(LIB_KPARTS) $(LIB_KFILE)
+libklinkstatuspart_la_LIBADD = ui/settings/libsettings.la \
+	ui/libui.la engine/libengine.la \
+	parser/libparser.la utils/libutils.la $(LIB_KPARTS) $(LIB_KFILE)
 
 # this is where the desktop file will go 
 partdesktopdir   = $(kde_servicesdir)

@@ -95,6 +95,8 @@ public:
     int maxSimultaneousConnections() const;
     int timeOut() const;
 
+    QString const exportResultsToHTML() const;
+
 private:
 
     void checkRoot();

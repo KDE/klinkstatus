@@ -823,4 +823,10 @@ void SearchManager::removeHtmlParts()
     html_parts_.clear();
 }
 
+QString const SearchManager::exportResultsToHTML() const
+{
+//     return export_manager_.exportToHTML(search_results_);
+}
+
+
 #include "searchmanager.moc"
