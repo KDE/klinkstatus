@@ -17,6 +17,7 @@
 #include "resultview.h"
 class TreeViewItem;
 class TreeColumnViewItem;
+class LinkMatcher;
 
 /**
 @author Paulo Moura Guedes
@@ -39,7 +40,10 @@ public:
     virtual void clear();
     void removeColunas();
     virtual void show(ResultView::Status const& status);
+    void show(LinkMatcher link_matcher);
     virtual void showAll();
+    
+    void setTreeDisplay(bool tree_display);
 
     /**
     If tree_display is false the view scrolls to follow the last link inserted, 
@@ -72,7 +76,13 @@ private:
 
 private:
     int current_column_; // apparently it's impossible to know what is the current column
+    bool tree_display_;
 };
+
+inline void TreeView::setTreeDisplay(bool tree_display) { 
+    tree_display_ = tree_display; 
+    setRootIsDecorated(tree_display_);
+}
 
 
 /* ******************************* TreeViewItem ******************************* */
@@ -89,7 +99,7 @@ public:
 
     void setLastChild(QListViewItem* last_child);
     QListViewItem* lastChild() const;
-
+    
     QString key(int column, bool) const;
     LinkStatus const* const linkStatus() const;
 

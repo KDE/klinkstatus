@@ -29,6 +29,7 @@ class ResultView
 {
 public:
     enum Status {
+        none = 0,
         good,
         bad,
         malformed,
@@ -48,7 +49,7 @@ public:
 
     virtual void setColumns(QStringList const& columns);
     static bool displayableWithStatus(LinkStatus const* ls, Status const& status);
-
+    
 protected:
     //virtual bool textFitsInCell(int row, int col) const = 0;
     virtual bool isEmpty() const = 0;

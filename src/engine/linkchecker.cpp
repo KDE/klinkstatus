@@ -469,7 +469,7 @@ void LinkChecker::checkRef()
         checkRef(ls_parent);
     else
     {
-        url = url.url().left(i_ref);
+        url = KURL::fromPathOrURL(url.url().left(i_ref));
         checkRef(url);
     }
 }

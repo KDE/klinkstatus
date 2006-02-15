@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2004 by Paulo Moura Guedes                              *
- *   moura@kdewebdev.org                                                        *
+ *   moura@kdewebdev.org                                                   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -15,7 +15,7 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
- *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.             *
+ *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
 #include <kapplication.h>
@@ -25,6 +25,7 @@
 
 #include <qstring.h>
 #include <qvaluevector.h>
+#include <qdom.h>
 
 #include <iostream>
 #include <unistd.h>
@@ -821,6 +822,76 @@ void SearchManager::removeHtmlParts()
     }
 
     html_parts_.clear();
+}
+
+void SearchManager::save(QDomElement& element) const
+{
+    // <url>
+    QDomElement child_element = element.ownerDocument().createElement("url");
+    child_element.appendChild(element.ownerDocument().createTextNode(root_.absoluteUrl().prettyURL()));
+    element.appendChild(child_element);
+
+    // <recursively>
+    bool recursively = searchMode() == domain || depth_ > 0;
+    child_element = element.ownerDocument().createElement("recursively");
+    child_element.appendChild(element.ownerDocument().createTextNode(recursively ? "true" : "false"));
+    element.appendChild(child_element);
+
+    // <depth>
+    child_element = element.ownerDocument().createElement("depth");
+    child_element.appendChild(element.ownerDocument().
+            createTextNode(searchMode() == domain ? "Unlimited" : QString::number(depth_)));
+    element.appendChild(child_element);
+
+    // <check_parent_folders>
+    child_element = element.ownerDocument().createElement("check_parent_folders");
+    child_element.appendChild(element.ownerDocument().
+            createTextNode(checkParentDirs() ? "true" : "false"));
+    element.appendChild(child_element);
+
+    // <check_external_links>
+    child_element = element.ownerDocument().createElement("check_external_links");
+    child_element.appendChild(element.ownerDocument().
+            createTextNode(checkExternalLinks() ? "true" : "false"));
+    element.appendChild(child_element);
+
+    // <check_regular_expression>
+    child_element = element.ownerDocument().createElement("check_regular_expression");
+    child_element.setAttribute("check", checkRegularExpressions() ? "true" : "false");
+    if(checkRegularExpressions())
+        child_element.appendChild(element.ownerDocument().
+                createTextNode(reg_exp_.pattern()));
+    element.appendChild(child_element);
+    
+    child_element = element.ownerDocument().createElement("link_list");
+    element.appendChild(child_element);
+    
+    for(uint i = 0; i != search_results_.size(); ++i)
+    {
+        for(uint j = 0; j != search_results_[i].size() ; ++j)
+        {
+            for(uint l = 0; l != (search_results_[i])[j].size(); ++l)
+            {
+                LinkStatus* ls = ((search_results_[i])[j])[l];
+                if(ls->checked())
+                    ls->save(child_element);
+            }
+        }
+    } 
+}
+
+QString SearchManager::toXML() const
+{
+    QDomDocument doc;
+    doc.appendChild(doc.createProcessingInstruction( "xml", 
+                                       "version=\"1.0\" encoding=\"UTF-8\""));
+    
+    QDomElement root = doc.createElement("klinkstatus");
+    doc.appendChild(root);
+
+    save(root);
+    
+    return doc.toString(4);
 }
 
 #include "searchmanager.moc"

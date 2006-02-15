@@ -12,6 +12,10 @@
     <Separator/>
   </Menu>
             
+  <Menu noMerge="1" name="search"><text>S&amp;earch</text>
+      <Separator/>
+  </Menu>
+
   <Menu noMerge="1" name="settings"><text>&amp;Settings</text>
     <Action name="options_configure_keybinding"/>
     <Action name="options_configure_toolbars"/>

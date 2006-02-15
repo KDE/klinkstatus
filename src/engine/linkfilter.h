@@ -17,69 +17,33 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.             *
  ***************************************************************************/
-#ifndef TABWIDGETSESSION_H
-#define TABWIDGETSESSION_H
+#ifndef LINKFILTER_H
+#define LINKFILTER_H
 
-#include <ktabwidget.h>
-#include <kurl.h>
-
-#include <qintdict.h>
-class QToolButton;
-
-class SessionWidget;
-class LinkStatus;
-
+#include "../ui/resultview.h"
 
 /**
-This class handles the creation and destruction of sessions, i.e, severals instances of searching tabs.
- 
-@author Paulo Moura Guedes
+	@author Paulo Moura Guedes <moura@kdewebdev.org>
 */
-class TabWidgetSession : public KTabWidget
+class LinkMatcher
 {
-    Q_OBJECT
-
 public:
-    TabWidgetSession(QWidget * parent = 0, const char * name = 0, WFlags f = 0);
-    ~TabWidgetSession();
+    LinkMatcher(QString const& text, ResultView::Status status);
+    ~LinkMatcher();
 
-    /** Set the URL in the current session widget */
-    void setUrl(KURL const& url);
+    bool matches(LinkStatus const& link) const;
 
-    SessionWidget* currentSession() const;
-    bool emptySessionsExist() const;
-    /** Returns the first empty session it finds */
-    SessionWidget* getEmptySession() const;
-    QIntDict<SessionWidget> const& sessions() const;
-    
+    void setText(const QString& text) { m_text = text; }
+    QString text() const { return m_text; }
 
-public slots:
-    void slotNewSession(KURL const& url = KURL());
-    SessionWidget* newSession();
-    SessionWidget* newSession(KURL const& url);
-    void closeSession();
-    void updateTabLabel(LinkStatus const* linkstatus, SessionWidget*);
-    void slotLoadSettings();
+    void setStatus(ResultView::Status status) { m_status = status; }
+    ResultView::Status status() const { return m_status; }
     
-    void slotHideSearchPanel();
-    void slotResetSearchOptions();
-    void slotFollowLastLinkChecked();
-    
-    void slotStartSearch();
-    void slotPauseSearch();
-    void slotStopSearch();
-
-    void slotExportAsHTML();
-    
-private slots:
-    void slotCurrentChanged(QWidget* page);
-    
+    bool nullFilter() const { return m_text.isEmpty() && m_status == ResultView::none; }
+        
 private:
-    SessionWidget* newSessionWidget();
-
-private:
-    QIntDict<SessionWidget> tabs_;
-    QToolButton* tabs_close_;
+    QString m_text;
+    ResultView::Status m_status;
 };
 
 #endif

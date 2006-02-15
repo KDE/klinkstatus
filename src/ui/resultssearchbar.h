@@ -17,69 +17,57 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.             *
  ***************************************************************************/
-#ifndef TABWIDGETSESSION_H
-#define TABWIDGETSESSION_H
 
-#include <ktabwidget.h>
-#include <kurl.h>
+#ifndef RESULTSSEARCHBAR_H
+#define RESULTSSEARCHBAR_H
 
-#include <qintdict.h>
-class QToolButton;
+#include <qstring.h>
 
-class SessionWidget;
-class LinkStatus;
-
+#include "resultview.h"
+#include "../engine/linkfilter.h"
 
 /**
-This class handles the creation and destruction of sessions, i.e, severals instances of searching tabs.
- 
-@author Paulo Moura Guedes
+    @author Paulo Moura Guedes <moura@kdewebdev.org>
+    Based on Akregator code. Kudos ;)
 */
-class TabWidgetSession : public KTabWidget
+class ResultsSearchBar : public QWidget
 {
     Q_OBJECT
-
 public:
-    TabWidgetSession(QWidget * parent = 0, const char * name = 0, WFlags f = 0);
-    ~TabWidgetSession();
+    ResultsSearchBar(QWidget *parent = 0, const char *name = 0);
+    ~ResultsSearchBar();
 
-    /** Set the URL in the current session widget */
-    void setUrl(KURL const& url);
+    QString const& text() const;
+    int status() const;
 
-    SessionWidget* currentSession() const;
-    bool emptySessionsExist() const;
-    /** Returns the first empty session it finds */
-    SessionWidget* getEmptySession() const;
-    QIntDict<SessionWidget> const& sessions() const;
+    void setDelay(int ms);
+    int delay() const;
     
+    LinkMatcher currentLinkMatcher() const;
+
+signals:
+    /** emitted when the text and status filters were updated. Params are textfilter, statusfilter */
+    void signalSearch(LinkMatcher);
 
 public slots:
-    void slotNewSession(KURL const& url = KURL());
-    SessionWidget* newSession();
-    SessionWidget* newSession(KURL const& url);
-    void closeSession();
-    void updateTabLabel(LinkStatus const* linkstatus, SessionWidget*);
-    void slotLoadSettings();
-    
-    void slotHideSearchPanel();
-    void slotResetSearchOptions();
-    void slotFollowLastLinkChecked();
-    
-    void slotStartSearch();
-    void slotPauseSearch();
-    void slotStopSearch();
+    void slotClearSearch();
+    void slotSetStatus(int status);
+    void slotSetText(const QString& text);
 
-    void slotExportAsHTML();
-    
 private slots:
-    void slotCurrentChanged(QWidget* page);
-    
-private:
-    SessionWidget* newSessionWidget();
+
+    void slotSearchStringChanged(const QString& search);
+    void slotSearchComboChanged(int index);
+    void slotActivateSearch();
 
 private:
-    QIntDict<SessionWidget> tabs_;
-    QToolButton* tabs_close_;
+    
+    ResultView::Status selectedStatus() const;
+    
+private:
+
+    class ResultsSearchBarPrivate;
+    ResultsSearchBarPrivate* d;
 };
 
 #endif

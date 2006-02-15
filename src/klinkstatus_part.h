@@ -24,6 +24,7 @@
 #include <kparts/part.h>
 
 class TabWidgetSession;
+class ActionManager;
 
 class QWidget;
 class QPainter;
@@ -58,21 +59,18 @@ protected slots:
     void slotOpenLink();
     void slotClose();
     void slotConfigureKLinkStatus();
-    void slotDisplayAllLinks();
+/*    void slotDisplayAllLinks();
     void slotDisplayGoodLinks();
     void slotDisplayBadLinks();
     void slotDisplayMalformedLinks();
-    void slotDisplayUndeterminedLinks();
+    void slotDisplayUndeterminedLinks();*/
     void slotAbout();
     void slotReportBug();
-    //void slotShowToolbar();
-    //void slotConfigureShortcuts();
-    //void slotConfigureToolbars();
-    //void applyNewToolbarConfig();
     
-private slots:
-    void slotEnableDisplayLinksActions();
-    void slotDisableDisplayLinksActions();
+// private slots:
+//     void slotEnableDisplayLinksActions();
+//     void slotDisableDisplayLinksActions();
+
 private:
     void initGUI();
 
@@ -80,16 +78,10 @@ private:
     static const char description_[];
     static const char version_[];
 
+    ActionManager* action_manager_;
+
     TabWidgetSession* tabwidget_;
     KAboutApplication* m_dlgAbout;
-    KAction* action_new_link_check_;
-    KAction* action_open_link_;
-    KAction* action_close_tab_;
-    KAction* action_display_all_links_;
-    KAction* action_display_good_links_;
-    KAction* action_display_bad_links_;
-    KAction* action_display_malformed_links_;
-    KAction* action_display_undetermined_links_;
 };
 
 #endif // _KLINKSTATUSPART_H_

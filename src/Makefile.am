@@ -1,5 +1,5 @@
 # set the include path for X, qt and KDE
-INCLUDES = -I$(top_builddir)/klinkstatus/src/ui -I$(top_srcdir)/klinkstatus/cfg $(all_includes)
+INCLUDES = -I$(top_srcdir)/src/cfg -I$(top_srcdir)/src/ui $(all_includes)
 
 # these are the headers for your project
 
@@ -23,7 +23,7 @@ klinkstatus_LDADD   = $(LIB_KPARTS)
 xdg_apps_DATA = klinkstatus.desktop
 
 # this is where the shell's XML-GUI resource file goes
-shellrcdir   = $(kde_datadir)/klinkstatus
+shellrcdir = $(kde_datadir)/klinkstatus
 shellrc_DATA = klinkstatus_shell.rc
 
 
@@ -40,15 +40,16 @@ libklinkstatuspart_la_LIBADD = ui/settings/libsettings.la \
 	parser/libparser.la utils/libutils.la $(LIB_KPARTS) $(LIB_KFILE)
 
 # this is where the desktop file will go 
-partdesktopdir   = $(kde_servicesdir)
+partdesktopdir = $(kde_servicesdir)
 partdesktop_DATA = klinkstatus_part.desktop
 
 # this is where the part's XML-GUI resource file goes
-partrcdir   = $(kde_datadir)/klinkstatuspart
+partrcdir = $(kde_datadir)/klinkstatuspart
 partrc_DATA = klinkstatus_part.rc
-noinst_HEADERS = klinkstatus.h klinkstatus_part.h global.h
+noinst_HEADERS = klinkstatus.h klinkstatus_part.h global.h actionmanager.h
 klinkstatus_SOURCES = klinkstatus.cpp main.cpp 
-libklinkstatuspart_la_SOURCES = klinkstatus_part.cpp global.cpp
+libklinkstatuspart_la_SOURCES = klinkstatus_part.cpp global.cpp \
+	actionmanager.cpp
 SUBDIRS = cfg utils parser engine ui
 
 messages: rc.cpp

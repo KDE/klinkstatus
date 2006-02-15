@@ -7,6 +7,8 @@
             <Action name="open_link"/>
             <Action name="close_tab"/>
             <Separator/>
+            <Action name="file_export_html"/>
+            <Separator/>
         </Menu>
         
         <Menu name="settings"><text>&amp;Settings</text>
@@ -15,14 +17,25 @@
         </Menu>
         
         <Menu name="view"><text>&amp;View</text>
-            <Action name="display_all_links"/>
+            <Action name="hide_search_bar"/>
+            <Action name="reset_search_bar"/>
             <Separator/>
+            <Action name="follow_last_link_checked"/>
+<!--            <Separator/>
+            <Action name="display_all_links"/>
             <Action name="display_good_links"/>
             <Action name="display_bad_links"/>
             <Action name="display_malformed_links"/>
-            <Action name="display_undetermined_links"/>
+            <Action name="display_undetermined_links"/>-->
         </Menu>
         
+        <Menu name="search"><text>S&amp;earch</text>
+            <Action name="start_search"/>
+            <Action name="pause_search"/>
+            <Action name="stop_search"/>
+            <Separator/>
+        </Menu>
+
         <Menu name="help"><text>&amp;Help</text>
             <Separator/>
             <Action name="about_klinkstatus"/>
@@ -31,9 +44,15 @@
     </MenuBar>
     
     <ToolBar name="linksToolBar">
-        <Action name="new_link_check"/>
-        <Action name="open_link"/>
-        <Action name="close_tab"/>
+        <Action name="start_search"/>
+        <Action name="pause_search"/>
+        <Action name="stop_search"/>
         <Separator/>
+        <Action name="file_export_html"/>
+        <Separator/>
+        <Action name="hide_search_bar"/>
+        <Action name="reset_search_bar"/>
+        <Separator/>
+        <Action name="follow_last_link_checked"/>
     </ToolBar>
 </kpartgui>

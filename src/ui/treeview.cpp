@@ -27,6 +27,7 @@
 #include "treeview.h"
 #include "../global.h"
 #include "../engine/linkstatus.h"
+#include "../engine/linkfilter.h"
 #include "../cfg/klsconfig.h"
 
 
@@ -82,7 +83,7 @@ void TreeView::setColumns(QStringList const& columns)
             addColumn(i18n(columns[i])/*, (int)(0.45 * width() - 79)*/);
         }
 
-        setColumnWidthMode(i, Manual);
+        setColumnWidthMode(i, QListView::Manual);
     }
 
     setColumnAlignment(col_status_ - 1, Qt::AlignCenter);
@@ -139,6 +140,23 @@ void TreeView::show(ResultView::Status const& status)
             */
         }
 //         
+        ++it;
+    }
+}
+
+void TreeView::show(LinkMatcher link_matcher)
+{
+    QListViewItemIterator it(this);
+    while(it.current())
+    {
+        TreeViewItem* item = myItem(it.current());
+        bool match = link_matcher.matches(*(item->linkStatus()));
+        
+        if(tree_display_)
+            item->setEnabled(match);
+        else
+            item->setVisible(match);
+        
         ++it;
     }
 }
@@ -327,8 +345,9 @@ void TreeView::loadContextTableMenu(QValueVector<KURL> const& referrers, bool is
         }
         connect(sub_menu_, SIGNAL(activated(int)), this, SLOT(slotEditReferrerWithQuanta(int)));
 
-        context_table_menu_.insertItem(SmallIconSet("fileopen"), i18n("Edit Referrer with Quanta"),
+        context_table_menu_.insertItem(SmallIconSet("edit"), i18n("Edit Referrer with Quanta"),
                                        sub_menu_);
+        context_table_menu_.insertSeparator();
     }
     else
     {
@@ -339,7 +358,7 @@ void TreeView::loadContextTableMenu(QValueVector<KURL> const& referrers, bool is
     context_table_menu_.insertItem(SmallIconSet("fileopen"), i18n("Open URL"),
                                    this, SLOT(slotViewUrlInBrowser()));
 
-    context_table_menu_.insertItem(SmallIconSet("fileopen"), i18n("Open Referrer URL"),
+    context_table_menu_.insertItem(/*SmallIconSet("fileopen"), */i18n("Open Referrer URL"),
                                    this, SLOT(slotViewParentUrlInBrowser()));
 
     context_table_menu_.insertSeparator();
@@ -347,10 +366,10 @@ void TreeView::loadContextTableMenu(QValueVector<KURL> const& referrers, bool is
     context_table_menu_.insertItem(SmallIconSet("editcopy"), i18n("Copy URL"),
                                    this, SLOT(slotCopyUrlToClipboard()));
 
-    context_table_menu_.insertItem(SmallIconSet("editcopy"), i18n("Copy Referrer URL"),
+    context_table_menu_.insertItem(/*SmallIconSet("editcopy"), */i18n("Copy Referrer URL"),
                                    this, SLOT(slotCopyParentUrlToClipboard()));
 
-    context_table_menu_.insertItem(SmallIconSet("editcopy"), i18n("Copy Cell Text"),
+    context_table_menu_.insertItem(/*SmallIconSet("editcopy"), */i18n("Copy Cell Text"),
                                    this, SLOT(slotCopyCellTextToClipboard()));
 }
 

@@ -28,6 +28,7 @@
 #include <qdatetime.h>
 #include <qregexp.h>
 #include <qmap.h>
+class QDomElement;
 
 #include <vector>
 
@@ -55,9 +56,11 @@ public:
     SearchManager(int max_simultaneous_connections = 3, int time_out = 50,
                   QObject *parent = 0, const char *name = 0);
     ~SearchManager();
+    
+    QString toXML() const;
+    void save(QDomElement& element) const;
 
     KHTMLPartMap const& htmlParts() const { return html_parts_; }
-//     KHTMLPartMap& htmlParts() { return html_parts_; }
 
     KHTMLPart* htmlPart(QString const& key_url) const;
     void addHtmlPart(QString const& key_url, KHTMLPart* html_part);
@@ -85,6 +88,7 @@ public:
     bool localDomain(KURL const& url, bool restrict = true) const;
     //bool isLocalRestrict(KURL const& url) const;
     SearchMode const& searchMode() const;
+    bool checkRegularExpressions() const { return check_regular_expressions_; }
     bool existUrl(KURL const& url, KURL const& url_parent) const;
     LinkStatus const* linkStatus(QString const& s_url) const;
     int checkedLinks() const;

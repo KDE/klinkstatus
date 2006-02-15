@@ -35,6 +35,7 @@ HtmlParser::HtmlParser(QString const& documento)
     nodes_.reserve(estimativaLinks(documento.length() * 2)); // à confiança ;)
 
     parseNodesOfTypeA();
+    parseNodesOfTypeAREA();
     parseNodesOfTypeLINK();
     parseNodesOfTypeMETA();
     parseNodesOfTypeIMG();
@@ -169,6 +170,16 @@ void HtmlParser::parseNodesOfTypeA()
     for(vector<QString>::size_type i = 0; i != aux.size(); ++i)
     {
         nodes_.push_back( new NodeA(aux[i]) );
+    }
+}
+
+void HtmlParser::parseNodesOfTypeAREA()
+{
+    vector<QString> const& aux = parseNodesOfType("AREA");
+                
+    for(vector<QString>::size_type i = 0; i != aux.size(); ++i)
+    {
+        nodes_.push_back( new NodeAREA(aux[i]) );
     }
 }
 
