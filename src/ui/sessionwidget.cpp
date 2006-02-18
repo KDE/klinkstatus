@@ -358,7 +358,7 @@ void SessionWidget::slotRootChecked(LinkStatus const* linkstatus, LinkChecker * 
     progressbar_checker->setProgress(1);
 
     //table_linkstatus->insertResult(linkstatus);
-    TreeViewItem* tree_view_item = new TreeViewItem(tree_view, tree_view->lastItem(), linkstatus, 3);
+    TreeViewItem* tree_view_item = new TreeViewItem(tree_view, tree_view->lastItem(), linkstatus);
     LinkStatus* ls = const_cast<LinkStatus*> (linkstatus);
     ls->setTreeViewItem(tree_view_item);
 
@@ -387,7 +387,7 @@ void SessionWidget::slotLinkChecked(LinkStatus const* linkstatus, LinkChecker * 
         if(tree_display_)
         {
             //kdDebug(23100) << "TREE!!!!!" << endl;
-            tree_view_item = new TreeViewItem(parent_item, parent_item->lastChild(), linkstatus, 3);
+            tree_view_item = new TreeViewItem(tree_view, parent_item, parent_item->lastChild(), linkstatus);
             parent_item->setLastChild(tree_view_item);
             if(follow_last_link_checked_)
                 tree_view->ensureRowVisible(tree_view_item, tree_display_);
@@ -397,7 +397,7 @@ void SessionWidget::slotLinkChecked(LinkStatus const* linkstatus, LinkChecker * 
         else
         {
             //kdDebug(23100) << "FLAT!!!!!" << endl;
-            tree_view_item = new TreeViewItem(tree_view, tree_view->lastItem(), linkstatus, 3);
+            tree_view_item = new TreeViewItem(tree_view, tree_view->lastItem(), linkstatus);
             if(follow_last_link_checked_)
                 tree_view->ensureRowVisible(tree_view_item, tree_display_);
         

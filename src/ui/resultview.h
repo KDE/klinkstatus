@@ -28,6 +28,12 @@ class CellToolTip;
 class ResultView
 {
 public:
+    
+    static const QString URL_LABEL;
+    static const QString STATUS_LABEL;
+    static const QString MARKUP_LABEL;
+    static const QString LINK_LABEL_LABEL;
+    
     enum Status {
         none = 0,
         good,
@@ -36,9 +42,7 @@ public:
         undetermined // timeouts and refs
     };
 
-    ResultView(int column_index_status = 2,
-               int column_index_label = 3,
-               int column_index_URL = 1);
+    ResultView();
     virtual ~ResultView();
 
     //virtual void insertResult(LinkStatus const* linkstatus) = 0;
@@ -50,6 +54,13 @@ public:
     virtual void setColumns(QStringList const& columns);
     static bool displayableWithStatus(LinkStatus const* ls, Status const& status);
     
+    int numberOfColumns() const { return number_of_columns_; }
+    
+    int urlColumnIndex() const {return col_url_; }
+    int statusColumnIndex() const {return col_status_; }
+    int markupColumnIndex() const {return col_markup_; }
+    int labelColumnIndex() const {return col_label_; }
+
 protected:
     //virtual bool textFitsInCell(int row, int col) const = 0;
     virtual bool isEmpty() const = 0;
@@ -69,12 +80,16 @@ protected slots:
 
 protected:
     QStringList columns_;
-    uint col_status_;
-    uint col_label_;
-    uint col_url_;
+    int col_status_;
+    int col_label_;
+    int col_url_;
+    int col_markup_; // optional
     QPopupMenu context_table_menu_;
     QPopupMenu* sub_menu_;
     CellToolTip* cell_tip_;
+
+private:
+    int number_of_columns_;
 };
 
 

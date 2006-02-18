@@ -30,10 +30,8 @@ class TreeView : public KListView, public ResultView
 {
     Q_OBJECT
 public:
-    TreeView(QWidget *parent = 0, const char *name = 0,
-             int column_index_status = 2,
-             int column_index_label = 3,
-            int column_index_URL = 1);
+    
+    TreeView(QWidget *parent = 0, const char *name = 0);
     ~TreeView();
 
     virtual void setColumns(QStringList const& columns);
@@ -73,6 +71,7 @@ private slots:
 
 private:
     void resetColumns();
+    double columnsWidth() const;
 
 private:
     int current_column_; // apparently it's impossible to know what is the current column
@@ -91,10 +90,10 @@ class TreeViewItem: public KListViewItem
 {
 public:
 
-    TreeViewItem(QListView* listview, QListViewItem* after,
-                 LinkStatus const* linkstatus, int number_of_columns);
-    TreeViewItem(QListViewItem* listview_item, QListViewItem* after,
-                 LinkStatus const* linkstatus, int number_of_columns);
+    TreeViewItem(TreeView* parent, QListViewItem* after,
+                 LinkStatus const* linkstatus);
+    TreeViewItem(TreeView* root, QListViewItem* parent_item, QListViewItem* after,
+                 LinkStatus const* linkstatus);
     virtual ~TreeViewItem();
 
     void setLastChild(QListViewItem* last_child);
@@ -111,8 +110,8 @@ private:
 
 private:
     QValueVector<TreeColumnViewItem> column_items_;
-    int const number_of_columns_;
     QListViewItem* last_child_;
+    TreeView* root_;
 };
 
 
@@ -124,7 +123,7 @@ public:
     TreeColumnViewItem()
     {}
     ;
-    TreeColumnViewItem(LinkStatus const* linkstatus, int column_index);
+    TreeColumnViewItem(TreeView* root, LinkStatus const* linkstatus, int column_index);
     ~TreeColumnViewItem();
 
     //void setColumnIndex(int i);
@@ -135,6 +134,7 @@ public:
     QPixmap pixmap(int column) const;
 
 private:
+    TreeView* root_;
     LinkStatus const* ls_;
     int column_index_;
 };
