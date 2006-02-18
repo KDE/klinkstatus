@@ -152,16 +152,13 @@ SessionWidget* TabWidgetSession::newSessionWidget()
             KLSConfig::timeOut(), this, QString("session_widget-" + count()));
 
     QStringList columns;
+    
     columns.push_back(TreeView::URL_LABEL);
     columns.push_back(TreeView::STATUS_LABEL);
     if(KLSConfig::showMarkupStatus())
         columns.push_back(TreeView::MARKUP_LABEL);
     columns.push_back(TreeView::LINK_LABEL_LABEL);
-    /*
-    columns.push_back(i18n("URL"));
-    columns.push_back(i18n("Status"));
-    columns.push_back(i18n("Label"));
-    */
+    
     session_widget->setColumns(columns);
 
     session_widget->tree_view->restoreLayout(KLSConfig::self()->config(), "klinkstatus");
