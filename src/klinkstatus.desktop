@@ -8,6 +8,7 @@ Type=Application
 DocPath=klinkstatus/index.html
 Terminal=false
 GenericName=Link Checker
+GenericName[fr]=Vérificateur de liens
 GenericName[x-test]=xxLink Checkerxx
 Categories=Qt;KDE;Development;WebDevelopment;
 
