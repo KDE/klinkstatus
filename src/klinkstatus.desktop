@@ -41,5 +41,6 @@ GenericName[tg]=Тафтиши истинод
 GenericName[tr]=Bağlantı Kontrolcüsü
 GenericName[uk]=Перевірка посилань
 GenericName[zh_CN]=链接检查器
+GenericName[zh_HK]=連結檢查程式
 Categories=Qt;KDE;Development;WebDevelopment;
 
