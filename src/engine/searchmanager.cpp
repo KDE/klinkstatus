@@ -37,7 +37,7 @@
 SearchManager::SearchManager(int max_simultaneous_connections, int time_out,
                              QObject *parent, const char *name)
         : QObject(parent, name),
-        max_simultaneous_connections_(max_simultaneous_connections),
+        max_simultaneous_connections_(max_simultaneous_connections), has_document_root_(false), 
         depth_(-1), current_depth_(0), external_domain_depth_(0),
         current_node_(0), current_index_(0), links_being_checked_(0),
         finished_connections_(max_simultaneous_connections_),
@@ -261,7 +261,7 @@ vector<LinkStatus*> SearchManager::children(LinkStatus* link)
         if(node->url().isEmpty())
             url = "";
         else
-            url = Url::normalizeUrl( node->url(), *link );
+            url = Url::normalizeUrl(node->url(), *link, documentRoot().path());
 
         if( (node->isLink() &&
                 checkable(url, *link) &&

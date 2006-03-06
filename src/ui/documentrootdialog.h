@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2004 by Paulo Moura Guedes                              *
- *   moura@kdewebdev.org                                                        *
+ *   Copyright (C) 2006 by Paulo Moura Guedes                              *
+ *   moura@kdewebdev.org                                                   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -15,43 +15,43 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
- *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.             *
+ *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
+#ifndef DOCUMENTROOTDIALOG_H
+#define DOCUMENTROOTDIALOG_H
 
-#ifndef URL_H
-#define URL_H
+#include <kdialogbase.h>
 
-#include "../engine/linkstatus.h"
-#include "node.h"
+class KURLRequester;
 
-#include <kurl.h>
-#include <qstring.h>
-
-#include <vector>
-
-using namespace std;
-
-
-class LinkStatus;
-
-namespace Url
+/**
+	@author Paulo Moura Guedes <moura@kdewebdev.org>
+*/
+class DocumentRootDialog : public KDialogBase
 {
-Node::LinkType resolveLinkType(QString const& url);
-KURL normalizeUrl(QString const& string_url, LinkStatus const& link_parent, QString const& document_root);
-KURL normalizeUrl(QString const& string_url);
-bool validUrl(KURL const& url);
-bool existUrl(KURL const& url, vector<LinkStatus*> const& v);
-bool equalHost(QString const& host1, QString const& host2, bool restrict = false);
-bool hasProtocol(QString const& url);
-QString convertToLocal(LinkStatus const* ls);
-bool localDomain(KURL const& url1, KURL const& url2, bool restrict = true);
-bool parentDir(KURL const& url1, KURL const& url2);
-bool externalLink(KURL const& url1, KURL const& url2, bool restrict = true);
-}
+Q_OBJECT
+public:
+    DocumentRootDialog(QWidget *parent, QString const& url);
+    ~DocumentRootDialog();
 
-inline bool validUrl(KURL const& url)
-{
-  return (url.isValid() /*&& url.hasHost()*/);
-}
+    void setUrl(const QString& theValue) { m_url = theValue; }
+    QString url() const { return m_url; }
+    
+
+protected:
+    virtual void closeEvent (QCloseEvent*) {}
+    
+protected slots:
+    virtual void reject() {}
+    virtual void slotOk();
+                
+private slots:
+    void slotTextChanged(const QString &);
+    void slotReturnPressed(const QString &);
+
+private:
+    KURLRequester* m_urlRequester;
+    QString m_url;
+};
 
 #endif

@@ -43,7 +43,7 @@ Node::LinkType Url::resolveLinkType(QString const& url)
         return Node::relative;
 }
 
-KURL Url::normalizeUrl(QString const& string_url, LinkStatus const& link_parent)
+KURL Url::normalizeUrl(QString const& string_url, LinkStatus const& link_parent, QString const& document_root)
 {
     QString _string_url = string_url.stripWhiteSpace();
 
@@ -65,10 +65,14 @@ KURL Url::normalizeUrl(QString const& string_url, LinkStatus const& link_parent)
     {
         s_url.prepend(base_url.protocol() + "://" + base_url.host());
 
-        if( !(_string_url[0] == '/' &&
-                (base_url.protocol() == "http" || base_url.protocol() == "https")) )
-            // @todo if _string_url[0] == '/' fix root directory issue for other prtotocols than http
-            s_url.append(base_url.directory(true, false) + "/");
+        if(_string_url[0] == '/') {
+            if(!base_url.protocol().startsWith("http")) {
+                s_url.append(document_root);
+            }
+        }
+        else {
+            s_url.append(base_url.directory(true, false) + "/");                
+        }
 
         if( (_string_url[0] == ';' || // parameters
                 _string_url[0] == '?' || // query

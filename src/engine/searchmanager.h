@@ -71,6 +71,10 @@ public:
     void resume();
     void cancelSearch();
 
+    bool hasDocumentRoot() const;
+    KURL const& documentRoot() const;
+    void setDocumentRoot(KURL const& url);
+
     void setSearchMode(SearchMode modo);
     void setDepth(int depth);
     void setExternalDomainDepth(int depth);
@@ -148,6 +152,8 @@ private:
     int max_simultaneous_connections_;
     SearchMode search_mode_;
     LinkStatus root_;
+    bool has_document_root_;
+    KURL document_root_url_; // in case of non http protocols the document root must be explicitly given
     int depth_;
     int current_depth_;
     int external_domain_depth_;
