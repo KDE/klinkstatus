@@ -33,7 +33,7 @@ using namespace std;
 static const char description[] =
     I18N_NOOP("A Link Checker.\n\nKLinkStatus belongs to the kdewebdev module from KDE.");
 
-static const char version[] = "0.3.0";
+static const char version[] = "0.3.1";
 
 static KCmdLineOptions options[] =
     {

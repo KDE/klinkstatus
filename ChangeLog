@@ -1,6 +1,7 @@
 Changes for 0.3.1
 -----------------------------------------------------
 
+- Don't require unsermake no more, in order to build the application
 - Added the possibility to set the document root for protocols different than HTTP
   (to resolve URLs started with '/')
 - Improved behaviour in the layout of results columns
