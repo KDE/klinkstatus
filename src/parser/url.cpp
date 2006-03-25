@@ -172,7 +172,7 @@ bool Url::equalHost(QString const& host1, QString const& host2, bool restrict)
     if(v2[0] == "www")
         aux2 = 1;
 
-    if((size2 - aux < size1 - aux) && restrict) // e.g. paradigma.co.pt < linkstatus.paradigma.co.pt
+    if((size2 - aux2 < size1 - aux) && restrict) // e.g. paradigma.co.pt < linkstatus.paradigma.co.pt
         return false;
 
     if(restrict && (size2 - aux2 > size1 - aux)) // e.g. linkstatus.paradigma.co.pt > paradigma.co.pt
