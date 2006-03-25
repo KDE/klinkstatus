@@ -191,7 +191,9 @@ void SearchManager::checkRoot()
 
 void SearchManager::slotRootChecked(const LinkStatus * link, LinkChecker * checker)
 {
-    kdDebug(23100) <<  "SearchManager::slotRootChecked" << endl;
+    kdDebug(23100) <<  "SearchManager::slotRootChecked:" << endl;
+    kdDebug(23100) <<  link->absoluteUrl().url() << " -> " << 
+            LinkStatus::lastRedirection(&root_)->absoluteUrl().url() << endl;
 
     Q_ASSERT(checked_links_ == 0);
     Q_ASSERT(search_results_.size() == 0);
@@ -320,16 +322,19 @@ bool SearchManager::existUrl(KURL const& url, KURL const& url_parent) const
             for(uint l = 0; l != (search_results_[i])[j].size(); ++l)
             {
                 LinkStatus* tmp = search_results_[i][j][l];
-                Q_ASSERT(tmp);
+                Q_ASSERT(tmp);                
                 if(tmp->absoluteUrl() == url)
                 { // URL exists
                     QValueVector<KURL> referrers(tmp->referrers());
 
+                    // Add new referrer
                     for(uint i = 0; i != referrers.size(); ++i)
+                    {
                         if(referrers[i] == url_parent)
                             return true;
-
+                    }
                     tmp->addReferrer(url_parent);
+                    
                     return true;
                 }
             }
@@ -520,7 +525,9 @@ void SearchManager::checkLinksSimultaneously(vector<LinkStatus*> const& links)
 
 void SearchManager::slotLinkChecked(const LinkStatus * link, LinkChecker * checker)
 {
-    //kdDebug(23100) <<  "SearchManager::slotLinkChecked -> " << link->absoluteUrl().url() << endl;
+    kdDebug(23100) <<  "SearchManager::slotLinkChecked:" << endl;
+//     kdDebug(23100) <<  link->absoluteUrl().url() << " -> " << 
+//             LinkStatus::lastRedirection((const_cast<LinkStatus*> (link)))->absoluteUrl().url() << endl;
 
     Q_ASSERT(link);
     emit signalLinkChecked(link, checker);
