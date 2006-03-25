@@ -117,7 +117,7 @@ QString const LinkStatus::toString() const
 LinkStatus* LinkStatus::lastRedirection(LinkStatus* ls)
 {
     if(ls->isRedirection())
-        if(ls->redirection() != NULL)
+        if(ls->redirection())
             return lastRedirection(ls->redirection());
         else
             return ls;
