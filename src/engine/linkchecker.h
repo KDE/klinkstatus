@@ -62,8 +62,7 @@ signals:
 protected slots:
 
     void slotData(KIO::Job *, const QByteArray &data);
-    //void slotRedirection (KIO::Job *, const KURL &url);
-    void slotPermanentRedirection(KIO::Job *, const KURL &fromUrl, const KURL &toUrl);
+    void slotRedirection (KIO::Job *, const KURL &url);
     void slotMimetype(KIO::Job *, const QString &type);
     void slotResult(KIO::Job* job);
     void slotTimeOut();
@@ -77,7 +76,12 @@ protected:
 private:
     void checkRef(LinkStatus const* linkstatus_parent);
     void checkRef(KURL const& url);
-    void killJob();
+    void killJob();    
+    /**
+     * @param url 
+     * @return false if the redirection was already checked by the search manager
+     */
+    bool processRedirection(KURL const& url);
 
 private:
 
@@ -86,7 +90,10 @@ private:
     KIO::TransferJob* t_job_;
     int time_out_;
     LinkChecker* checker_;
+/*  A redirection has appened, with the current URL. Several redirections 
+    can happen until the final URL is reached.*/
     bool redirection_;
+    KURL redirection_url_;
     QString doc_html_;
     bool header_checked_;
     bool finnished_;
