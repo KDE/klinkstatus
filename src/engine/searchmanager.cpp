@@ -50,12 +50,6 @@ SearchManager::SearchManager(int max_simultaneous_connections, int time_out,
         number_of_level_links_(0), number_of_links_to_check_(0)
 {
     root_.setIsRoot(true);
-    
-    if(KLSConfig::userAgent().isEmpty())
-    {
-        KLSConfig::setUserAgent(KProtocolManager::defaultUserAgent());
-    }
-    user_agent_ = KLSConfig::userAgent();
 }
 
 void SearchManager::reset()
@@ -79,7 +73,11 @@ void SearchManager::reset()
     current_connections_ = 0;
     canceled_ = false;
     searching_ = false;
-    checked_links_ = 0;
+    checked_links_ = 0;    
+    if(KLSConfig::userAgent().isEmpty()) {
+        KLSConfig::setUserAgent(KProtocolManager::defaultUserAgent());
+    }
+    user_agent_ = KLSConfig::userAgent();
 
     removeHtmlParts();
 }

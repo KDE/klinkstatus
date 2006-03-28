@@ -590,6 +590,7 @@ void SessionWidget::slotStartSearch()
     }
     
     to_start_ = true;
+    slotLoadSettings(true);
     slotCheck();
     resetPendingActions();
 
