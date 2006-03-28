@@ -72,7 +72,7 @@ NodeTITLE const& HtmlParser::title() const
 vector<QString> const& HtmlParser::parseNodesOfType(QString const& tipo)
 {
     QString node;
-    QString doc = document_;
+    QString doc(document_);
     int inicio = 0, fim = 0;
 
     aux_.clear();

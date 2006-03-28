@@ -1,0 +1,131 @@
+<!DOCTYPE UI><UI version="3.3" stdsetdef="1">
+<class>ConfigIdentificationDialogUi</class>
+<widget class="QWidget">
+    <property name="name">
+        <cstring>ConfigIdentificationDialogUi</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>607</width>
+            <height>113</height>
+        </rect>
+    </property>
+    <property name="font">
+        <font>
+            <bold>1</bold>
+        </font>
+    </property>
+    <property name="caption">
+        <string>Form1</string>
+    </property>
+    <vbox>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <widget class="QButtonGroup">
+            <property name="name">
+                <cstring>buttonGroup4</cstring>
+            </property>
+            <property name="font">
+                <font>
+                    <bold>0</bold>
+                </font>
+            </property>
+            <property name="title">
+                <string>Identification</string>
+            </property>
+            <grid>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QLabel" row="1" column="0">
+                    <property name="name">
+                        <cstring>textLabel1</cstring>
+                    </property>
+                    <property name="sizePolicy">
+                        <sizepolicy>
+                            <hsizetype>5</hsizetype>
+                            <vsizetype>0</vsizetype>
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                        </sizepolicy>
+                    </property>
+                    <property name="font">
+                        <font>
+                        </font>
+                    </property>
+                    <property name="text">
+                        <string>User-Agent</string>
+                    </property>
+                </widget>
+                <widget class="KLineEdit" row="1" column="1">
+                    <property name="name">
+                        <cstring>kcfg_UserAgent</cstring>
+                    </property>
+                    <property name="sizePolicy">
+                        <sizepolicy>
+                            <hsizetype>3</hsizetype>
+                            <vsizetype>0</vsizetype>
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                        </sizepolicy>
+                    </property>
+                </widget>
+                <widget class="KPushButton" row="1" column="2">
+                    <property name="name">
+                        <cstring>buttonDefault</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Default</string>
+                    </property>
+                </widget>
+                <widget class="QCheckBox" row="0" column="0" rowspan="1" colspan="3">
+                    <property name="name">
+                        <cstring>kcfg_SendIdentification</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Send Identification</string>
+                    </property>
+                    <property name="checked">
+                        <bool>true</bool>
+                    </property>
+                </widget>
+            </grid>
+        </widget>
+    </vbox>
+</widget>
+<customwidgets>
+</customwidgets>
+<connections>
+    <connection>
+        <sender>kcfg_SendIdentification</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>textLabel1</receiver>
+        <slot>setEnabled(bool)</slot>
+    </connection>
+    <connection>
+        <sender>kcfg_SendIdentification</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>kcfg_UserAgent</receiver>
+        <slot>setEnabled(bool)</slot>
+    </connection>
+    <connection>
+        <sender>kcfg_SendIdentification</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>buttonDefault</receiver>
+        <slot>setEnabled(bool)</slot>
+    </connection>
+</connections>
+<tabstops>
+    <tabstop>kcfg_SendIdentification</tabstop>
+    <tabstop>kcfg_UserAgent</tabstop>
+    <tabstop>buttonDefault</tabstop>
+</tabstops>
+<layoutdefaults spacing="6" margin="11"/>
+<includehints>
+    <includehint>klineedit.h</includehint>
+    <includehint>kpushbutton.h</includehint>
+</includehints>
+</UI>
