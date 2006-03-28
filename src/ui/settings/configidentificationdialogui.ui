@@ -8,7 +8,7 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>607</width>
+            <width>570</width>
             <height>113</height>
         </rect>
     </property>
@@ -71,6 +71,12 @@
                             <horstretch>0</horstretch>
                             <verstretch>0</verstretch>
                         </sizepolicy>
+                    </property>
+                    <property name="minimumSize">
+                        <size>
+                            <width>300</width>
+                            <height>0</height>
+                        </size>
                     </property>
                 </widget>
                 <widget class="KPushButton" row="1" column="2">

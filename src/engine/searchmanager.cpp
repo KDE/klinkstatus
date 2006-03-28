@@ -22,6 +22,7 @@
 #include <kdebug.h>
 #include <klocale.h>
 #include <khtml_part.h>
+#include <kprotocolmanager.h>
 
 #include <qstring.h>
 #include <qvaluevector.h>
@@ -32,6 +33,7 @@
 
 #include "searchmanager.h"
 #include "../parser/mstring.h"
+#include "../cfg/klsconfig.h"
 
 
 SearchManager::SearchManager(int max_simultaneous_connections, int time_out,
@@ -43,11 +45,17 @@ SearchManager::SearchManager(int max_simultaneous_connections, int time_out,
         finished_connections_(max_simultaneous_connections_),
         maximum_current_connections_(-1), general_domain_(false),
         checked_general_domain_(false), time_out_(time_out), current_connections_(0),
-        canceled_(false), searching_(false), checked_links_(0), ignored_links_(0),
+        send_identification_(true), canceled_(false), searching_(false), checked_links_(0), ignored_links_(0),
         check_parent_dirs_(true), check_external_links_(true), check_regular_expressions_(false),
         number_of_level_links_(0), number_of_links_to_check_(0)
 {
     root_.setIsRoot(true);
+    
+    if(KLSConfig::userAgent().isEmpty())
+    {
+        KLSConfig::setUserAgent(KProtocolManager::defaultUserAgent());
+    }
+    user_agent_ = KLSConfig::userAgent();
 }
 
 void SearchManager::reset()

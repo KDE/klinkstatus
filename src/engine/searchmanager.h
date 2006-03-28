@@ -102,6 +102,9 @@ public:
     LinkStatus const* linkStatusRoot() const;
     int maxSimultaneousConnections() const;
     int timeOut() const;
+    
+    bool sendIdentification() const { return send_identification_; }
+    QString const& userAgent() const { return user_agent_; }
 
 private:
 
@@ -168,6 +171,9 @@ private:
     bool checked_general_domain_;
     int time_out_;
     int current_connections_;
+    bool send_identification_; // user-agent
+    QString user_agent_;
+    
     bool canceled_;
     bool searching_;
     int checked_links_;

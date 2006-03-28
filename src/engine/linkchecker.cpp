@@ -77,8 +77,16 @@ void LinkChecker::check()
         t_job_ = KIO::get
                      (url, false, false);
 
-        t_job_->addMetaData("PropagateHttpHeader", "true"); // to see the http header
-
+        t_job_->addMetaData("PropagateHttpHeader", "true"); // to have the http header
+        if(search_manager_->sendIdentification())
+        {
+            t_job_->addMetaData("SendUserAgent", "true");
+            t_job_->addMetaData("UserAgent", search_manager_->userAgent());
+        }
+        else
+            t_job_->addMetaData("SendUserAgent", "false");
+        
+        
         QObject::connect(t_job_, SIGNAL(data(KIO::Job *, const QByteArray &)),
                          this, SLOT(slotData(KIO::Job *, const QByteArray &)));
         QObject::connect(t_job_, SIGNAL(mimetype(KIO::Job *, const QString &)),
