@@ -1,6 +1,8 @@
 Changes for 0.3.1
 -----------------------------------------------------
 
+- Add the possibility to configure the User-Agent sent to the HTTP server.
+- Fix a problem with redirections different than 301 (moved permanently)
 - Don't require unsermake no more, in order to build the application
 - Added the possibility to set the document root for protocols different than HTTP
   (to resolve URLs started with '/')
@@ -10,6 +12,7 @@ Changes for 0.3.1
 - Added support for links in maps (area element)
 - Don't crash when checking anchors (bug #118495)
 - Properly disable close tab button
+- Other bug fixes and improvements
 
 
 Changes for 0.3.0
