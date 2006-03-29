@@ -853,7 +853,7 @@ void SearchManager::save(QDomElement& element) const
     // <depth>
     child_element = element.ownerDocument().createElement("depth");
     child_element.appendChild(element.ownerDocument().
-            createTextNode(searchMode() == domain ? "Unlimited" : QString::number(depth_)));
+            createTextNode(searchMode() == domain ? QString("Unlimited") : QString::number(depth_)));
     element.appendChild(child_element);
 
     // <check_parent_folders>
