@@ -97,14 +97,14 @@ QString const LinkStatus::toString() const
     if(!is_root_)
     {
         Q_ASSERT(parent_);
-        aux += i18n( "Parent: %1" ).arg( parent()->absoluteUrl().prettyURL() ) + "\n";
+        aux += i18n( "Parent: %1", parent()->absoluteUrl().prettyURL() ) + "\n";
     }
     Q_ASSERT(!original_url_.isNull());
 
-    aux += i18n( "URL: %1" ).arg( absoluteUrl().prettyURL() ) + "\n";
-    aux += i18n( "Original URL: %1" ).arg( originalUrl() ) + "\n";
+    aux += i18n( "URL: %1", absoluteUrl().prettyURL() ) + "\n";
+    aux += i18n( "Original URL: %1", originalUrl() ) + "\n";
     if(node())
-        aux += i18n( "Node: %1" ).arg( node()->content() ) + "\n";
+        aux += i18n( "Node: %1", node()->content() ) + "\n";
 
     return aux;
 }

@@ -262,7 +262,7 @@ void TreeView::slotEditReferrerWithQuanta(KURL const& url)
 
         if(!success)
         {
-            QString message = i18n("<qt>File <b>%1</b> cannot be opened. Might be a DCOP problem.</qt>").arg(filePath);
+            QString message = i18n("<qt>File <b>%1</b> cannot be opened. Might be a DCOP problem.</qt>", filePath);
             KMessageBox::error(parentWidget(), message);
         }
     }

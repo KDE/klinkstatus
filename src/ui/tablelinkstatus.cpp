@@ -386,7 +386,7 @@ void TableLinkstatus::slotEditReferrerWithQuanta(KURL const& url)
 
         if(!success)
         {
-            QString message = i18n("<qt>File <b>%1</b> cannot be opened. Might be a DCOP problem.</qt>").arg(filePath);
+            QString message = i18n("<qt>File <b>%1</b> cannot be opened. Might be a DCOP problem.</qt>", filePath);
             KMessageBox::error(parentWidget(), message);
         }
     }
@@ -679,10 +679,10 @@ QString TableItemStatus::toolTip() const
             (linkStatus()->absoluteUrl().protocol() != "http" &&
              linkStatus()->absoluteUrl().protocol() != "https"))
     {
-        return i18n("%1").arg(linkStatus()->status());
+        return i18n("%1", linkStatus()->status());
     }
     else
-        return i18n("%1").arg(linkStatus()->httpHeader().reasonPhrase());
+        return i18n("%1", linkStatus()->httpHeader().reasonPhrase());
 }
 
 void TableItemStatus::paint( QPainter *p, const QColorGroup &cg,
