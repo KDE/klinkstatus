@@ -412,7 +412,8 @@ void TreeViewItem::init(LinkStatus const* linkstatus)
     {
         TreeColumnViewItem item(root_, linkstatus, i + 1);
         column_items_.push_back(item);
-        setText(item.columnIndex() - 1, KCharsets::resolveEntities(item.text(i + 1)));
+        setText(item.columnIndex() - 1, KURL::decode_string(
+                KCharsets::resolveEntities(item.text(i + 1))));
         setPixmap(item.columnIndex() - 1, item.pixmap(i + 1));
     }
 }
