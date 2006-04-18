@@ -413,7 +413,7 @@ void TreeViewItem::init(LinkStatus const* linkstatus)
         TreeColumnViewItem item(root_, linkstatus, i + 1);
         column_items_.push_back(item);
         
-        if(root_->urlColumnIndex()) {
+        if(i + 1 == root_->urlColumnIndex()) {
             setText(item.columnIndex() - 1, KURL::decode_string(
                     KCharsets::resolveEntities(item.text(i + 1))));
         }
