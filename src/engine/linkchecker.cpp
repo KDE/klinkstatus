@@ -67,7 +67,7 @@ void LinkChecker::check()
 {
     Q_ASSERT(!finnished_);
 
-    KURL url = linkStatus()->absoluteUrl();
+    KURL url(linkStatus()->absoluteUrl());
     Q_ASSERT(url.isValid());
 
     if(url.hasRef())

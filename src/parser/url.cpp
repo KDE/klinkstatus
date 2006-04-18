@@ -24,6 +24,8 @@
 #include "mstring.h"
 #include "../utils/utils.h"
 
+#include <kcharsets.h>
+
 
 Node::LinkType Url::resolveLinkType(QString const& url)
 {
@@ -94,13 +96,13 @@ KURL Url::normalizeUrl(QString const& string_url, LinkStatus const& link_parent,
 
 //         kdDebug(23100) <<  url.url() << endl;
 
-        return url;
+        return KURL(KCharsets::resolveEntities(url.url()));
     }
 }
 
 KURL Url::normalizeUrl(QString const& string_url)
 {
-    QString qs_url = string_url.stripWhiteSpace();
+    QString qs_url(KCharsets::resolveEntities(string_url.stripWhiteSpace()));
 
     if(qs_url[0] == '/')
     {
