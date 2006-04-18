@@ -94,9 +94,10 @@ KURL Url::normalizeUrl(QString const& string_url, LinkStatus const& link_parent,
 
         url.cleanPath();
 
-//         kdDebug(23100) <<  url.url() << endl;
+//         kdDebug(23100) << "Normalized URL: " 
+//                 << KCharsets::resolveEntities(KURL::decode_string(url.url())) << endl;
 
-        return KURL(KCharsets::resolveEntities(url.url()));
+        return KURL(KCharsets::resolveEntities(KURL::decode_string(url.url())));
     }
 }
 
