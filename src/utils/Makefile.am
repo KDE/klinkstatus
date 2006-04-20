@@ -1,4 +1,4 @@
-INCLUDES = -I/usr/include/libxml2 $(all_includes)
+INCLUDES = $(LIBXSLT_CFLAGS) $(all_includes)
 METASOURCES = AUTO
 libutils_la_LDFLAGS = $(all_libraries)
 noinst_LTLIBRARIES =  libutils.la
