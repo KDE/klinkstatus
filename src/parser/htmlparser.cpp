@@ -120,8 +120,6 @@ vector<QString> const& HtmlParser::parseNodesOfType(QString const& tipo)
             i = 0;
         }
     }
-
-    return aux_;
 }
 
 int HtmlParser::endOfTag(QString const& s, int index, QChar end_of_tag)

@@ -49,7 +49,7 @@ public:
     void check();
     void setSearchManager(SearchManager* search_manager);
 
-    LinkStatus const* const linkStatus() const;
+    LinkStatus const* linkStatus() const;
 
     static bool hasAnchor(KHTMLPart* html_part, QString const& anchor);
 

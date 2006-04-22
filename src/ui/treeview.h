@@ -101,7 +101,7 @@ public:
     QListViewItem* lastChild() const;
     
     QString key(int column, bool) const;
-    LinkStatus const* const linkStatus() const;
+    LinkStatus const* linkStatus() const;
 
 protected:
     virtual void paintCell(QPainter * p, const QColorGroup & cg, int column, int width, int align);
@@ -129,7 +129,7 @@ public:
 
     //void setColumnIndex(int i);
     int columnIndex() const;
-    LinkStatus const* const linkStatus() const;
+    LinkStatus const* linkStatus() const;
     QColor const& textStatusColor() const;
     QString text(int column) const;
     QPixmap pixmap(int column) const;

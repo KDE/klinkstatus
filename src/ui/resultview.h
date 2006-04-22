@@ -89,7 +89,7 @@ public:
     virtual int columnIndex() const;
 
     virtual QString toolTip() const = 0;
-    LinkStatus const* const linkStatus() const;
+    LinkStatus const* linkStatus() const;
 
 protected:
 
