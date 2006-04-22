@@ -123,7 +123,7 @@ int ResultViewItem::columnIndex() const
     return column_index_;
 }
 
-LinkStatus const* const ResultViewItem::linkStatus() const
+LinkStatus const* ResultViewItem::linkStatus() const
 {
     Q_ASSERT(ls_);
     return ls_;

@@ -442,7 +442,7 @@ QString TreeViewItem::key(int column, bool) const
     return text(column);
 }
 
-LinkStatus const* const TreeViewItem::linkStatus() const
+LinkStatus const* TreeViewItem::linkStatus() const
 {
     return column_items_[0].linkStatus();
 }
@@ -486,7 +486,7 @@ int TreeColumnViewItem::columnIndex() const
     return column_index_;
 }
 
-LinkStatus const* const TreeColumnViewItem::linkStatus() const
+LinkStatus const* TreeColumnViewItem::linkStatus() const
 {
     Q_ASSERT(ls_);
     return ls_;
