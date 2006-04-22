@@ -49,7 +49,7 @@ public:
     void check();
     void setSearchManager(SearchManager* search_manager);
 
-    LinkStatus const* const linkStatus() const;
+    LinkStatus const* linkStatus() const;
 
     static bool hasAnchor(KHTMLPart* html_part, QString const& anchor);
 
@@ -102,7 +102,7 @@ private:
     static int count_; // debug attribute that counts how many links were checked
 };
 
-inline LinkStatus const* const LinkChecker::linkStatus() const
+inline LinkStatus const* LinkChecker::linkStatus() const
 {
     return linkstatus_;
 }
