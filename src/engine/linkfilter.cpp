@@ -17,41 +17,30 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.             *
  ***************************************************************************/
+#include "linkfilter.h"
 
-#ifndef URL_H
-#define URL_H
-
-#include "../engine/linkstatus.h"
-#include "node.h"
-
-#include <kurl.h>
-#include <qstring.h>
-
-#include <vector>
-
-using namespace std;
+#include "linkstatus.h"
 
 
-class LinkStatus;
-
-namespace Url
+LinkMatcher::LinkMatcher(QString const& text, ResultView::Status status)
+    : m_text(text), m_status(status)
 {
-Node::LinkType resolveLinkType(QString const& url);
-KURL normalizeUrl(QString const& string_url, LinkStatus const& link_parent, QString const& document_root);
-KURL normalizeUrl(QString const& string_url);
-bool validUrl(KURL const& url);
-bool existUrl(KURL const& url, vector<LinkStatus*> const& v);
-bool equalHost(QString const& host1, QString const& host2, bool restrict = false);
-bool hasProtocol(QString const& url);
-QString convertToLocal(LinkStatus const* ls);
-bool localDomain(KURL const& url1, KURL const& url2, bool restrict = true);
-bool parentDir(KURL const& url1, KURL const& url2);
-bool externalLink(KURL const& url1, KURL const& url2, bool restrict = true);
 }
 
-inline bool validUrl(KURL const& url)
+LinkMatcher::~LinkMatcher()
 {
-  return (url.isValid() /*&& url.hasHost()*/);
 }
 
-#endif
+bool LinkMatcher::matches(LinkStatus const& link ) const
+{
+/*    kdDebug() << link.absoluteUrl().url() << endl;
+    kdDebug() << link.label() << endl;
+    kdDebug() << link.absoluteUrl().url().contains(m_text) << endl;
+    kdDebug() << link.label().contains(m_text) << endl;
+    */
+    return (link.absoluteUrl().url().contains(m_text, false) || link.label().contains(m_text, false)) &&
+            ResultView::displayableWithStatus(&link, m_status);
+}
+
+
+

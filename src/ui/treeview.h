@@ -17,6 +17,7 @@
 #include "resultview.h"
 class TreeViewItem;
 class TreeColumnViewItem;
+class LinkMatcher;
 
 /**
 @author Paulo Moura Guedes
@@ -29,17 +30,18 @@ class TreeView : public KListView, public ResultView
 {
     Q_OBJECT
 public:
-    TreeView(QWidget *parent = 0, const char *name = 0,
-             int column_index_status = 2,
-             int column_index_label = 3,
-            int column_index_URL = 1);
+    
+    TreeView(QWidget *parent = 0, const char *name = 0);
     ~TreeView();
 
     virtual void setColumns(QStringList const& columns);
     virtual void clear();
     void removeColunas();
     virtual void show(ResultView::Status const& status);
+    void show(LinkMatcher link_matcher);
     virtual void showAll();
+    
+    void setTreeDisplay(bool tree_display);
 
     /**
     If tree_display is false the view scrolls to follow the last link inserted, 
@@ -69,10 +71,17 @@ private slots:
 
 private:
     void resetColumns();
+    double columnsWidth() const;
 
 private:
     int current_column_; // apparently it's impossible to know what is the current column
+    bool tree_display_;
 };
+
+inline void TreeView::setTreeDisplay(bool tree_display) { 
+    tree_display_ = tree_display; 
+    setRootIsDecorated(tree_display_);
+}
 
 
 /* ******************************* TreeViewItem ******************************* */
@@ -81,17 +90,17 @@ class TreeViewItem: public KListViewItem
 {
 public:
 
-    TreeViewItem(QListView* listview, QListViewItem* after,
-                 LinkStatus const* linkstatus, int number_of_columns);
-    TreeViewItem(QListViewItem* listview_item, QListViewItem* after,
-                 LinkStatus const* linkstatus, int number_of_columns);
+    TreeViewItem(TreeView* parent, QListViewItem* after,
+                 LinkStatus const* linkstatus);
+    TreeViewItem(TreeView* root, QListViewItem* parent_item, QListViewItem* after,
+                 LinkStatus const* linkstatus);
     virtual ~TreeViewItem();
 
     void setLastChild(QListViewItem* last_child);
     QListViewItem* lastChild() const;
-
+    
     QString key(int column, bool) const;
-    LinkStatus const* const linkStatus() const;
+    LinkStatus const* linkStatus() const;
 
 protected:
     virtual void paintCell(QPainter * p, const QColorGroup & cg, int column, int width, int align);
@@ -101,8 +110,8 @@ private:
 
 private:
     QValueVector<TreeColumnViewItem> column_items_;
-    int const number_of_columns_;
     QListViewItem* last_child_;
+    TreeView* root_;
 };
 
 
@@ -114,17 +123,18 @@ public:
     TreeColumnViewItem()
     {}
     ;
-    TreeColumnViewItem(LinkStatus const* linkstatus, int column_index);
+    TreeColumnViewItem(TreeView* root, LinkStatus const* linkstatus, int column_index);
     ~TreeColumnViewItem();
 
     //void setColumnIndex(int i);
     int columnIndex() const;
-    LinkStatus const* const linkStatus() const;
+    LinkStatus const* linkStatus() const;
     QColor const& textStatusColor() const;
     QString text(int column) const;
     QPixmap pixmap(int column) const;
 
 private:
+    TreeView* root_;
     LinkStatus const* ls_;
     int column_index_;
 };

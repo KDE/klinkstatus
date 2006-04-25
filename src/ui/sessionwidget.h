@@ -26,19 +26,21 @@
 #include "../engine/linkstatus.h"
 class SearchManager;
 class TableItem;
-//class TableLinkstatus; // TODO remove this when possible
+class ActionManager;
+class LinkMatcher;
 
 #include <qtimer.h>
 #include <qstring.h>
 class QStringList;
 class QListViewItem;
 
+class KURL;
+class KConfig;
+class KToggleAction;
+
 #include <vector>
 
 using namespace std;
-
-class KURL;
-class KConfig;
 
 class SessionWidget: public SessionWidgetBase
 {
@@ -53,31 +55,44 @@ public:
 
     void setColumns(QStringList const& colunas);
     void setUrl(KURL const& url);
-    void displayAllLinks();
-    void displayGoodLinks();
-    void displayBadLinks();
-    void displayMalformedLinks();
-    void displayUndeterminedLinks();
+    
+    bool treeDisplay() const { return tree_display_; }
 
-
+    bool followLastLinkChecked() const { return follow_last_link_checked_; }
+    void setFollowLastLinkChecked(bool follow);
 
     bool isEmpty() const;
     SearchManager const* getSearchManager() const;
 
+    bool inProgress() const { return in_progress_; }
+    bool paused() const { return paused_; }
+    bool stopped() const { return stopped_; }
+
 signals:
-    void signalUpdateTabLabel(const LinkStatus *);
+    void signalUpdateTabLabel(const LinkStatus *, SessionWidget*);
     void signalSearchStarted();
+    void signalSearchPaused();
     void signalSearchFinnished();
-    
+
 public slots:
-    
-    virtual void slotClearComboUrl();    
+
+    virtual void slotClearComboUrl();
     void slotLoadSettings(bool modify_current_widget_settings = true);
+
+    void slotStartSearch();
+    void slotPauseSearch();
+    void slotStopSearch();
+
+    void slotHideSearchPanel();
+    void slotResetSearchOptions();
+    void slotFollowLastLinkChecked();
     
+    void slotExportAsHTML();
+
 private slots:
 
     virtual void slotCheck();
-    virtual void slotCancel();
+    virtual void slotCancel() {} // FIXME hack
     //virtual void slotSuggestDomain(bool toogle);
 
     void slotEnableCheckButton(const QString &);
@@ -94,26 +109,39 @@ private slots:
     void slotAddingLevelTotalSteps(uint steps);
     void slotAddingLevelProgress();
     void slotLinksToCheckTotalSteps(uint steps);
-	
-	void slotChooseUrlDialog();
 
+    void slotChooseUrlDialog();
+
+    void slotApplyFilter(LinkMatcher);
+    
 private:
 
     virtual void keyPressEvent ( QKeyEvent* e );
     bool validFields();
-    //vector<TableItem*> generateRowOfTableItems(LinkStatus const* linkstatus) const;
     void insertUrlAtCombobox(QString const& url);
     void init();
     void saveCurrentCheckSettings();
+    bool pendingActions() const;
+    void resetPendingActions();
 
 private:
     SearchManager* search_manager_;
+    ActionManager* action_manager_;
+
     bool ready_;
+    bool to_start_;
+    bool to_pause_;
+    bool to_stop_;
+    bool in_progress_;
+    bool paused_;
+    bool stopped_;
+
     QTimer bottom_status_timer_;
     int max_simultaneous_connections_;
     int time_out_;
-    //TableLinkstatus* table_linkstatus;
     bool tree_display_; // tree/flat result display
+    bool follow_last_link_checked_;
+    KToggleAction* start_search_action_;
 };
 
 

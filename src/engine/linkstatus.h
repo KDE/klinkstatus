@@ -33,7 +33,7 @@ class TreeViewItem;
 #include <qstring.h>
 #include <qobject.h>
 #include <qvaluevector.h>
-
+class QDomElement;
 
 #include <vector>
 #include <iostream>
@@ -52,6 +52,8 @@ public:
     LinkStatus(Node* node, LinkStatus* parent);
     ~LinkStatus();
 
+    void save(QDomElement& element) const;
+    
     void reset();
     void setRootUrl(KURL const& url);
     void setDepth(uint depth);

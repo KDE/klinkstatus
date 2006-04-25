@@ -90,8 +90,7 @@ inline void SearchManager::setCheckRegularExpressions(bool flag)
 
 inline void SearchManager::setRegularExpression(QString const& reg_exp, bool case_sensitive)
 {
-    QRegExp aux(reg_exp, case_sensitive);
-    reg_exp_ = aux;
+    reg_exp_ = QRegExp(reg_exp, case_sensitive);
 }
 
 inline void SearchManager::setTimeOut(int time_out)
@@ -136,4 +135,24 @@ inline int SearchManager::timeOut() const
 {
     return time_out_;
 }
+
+inline bool SearchManager::hasDocumentRoot() const
+{
+    return has_document_root_;
+}
+
+inline KURL const& SearchManager::documentRoot() const
+{
+    return document_root_url_;
+}
+
+inline void SearchManager::setDocumentRoot(KURL const& url)
+{
+    Q_ASSERT(url.isValid()); // includes empty URLs
+    Q_ASSERT(!url.protocol().startsWith("http"));
+    
+    document_root_url_ = url;
+    has_document_root_ = true;
+}
+
 

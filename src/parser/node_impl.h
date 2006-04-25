@@ -72,8 +72,6 @@ inline bool Node::isRedirection() const
     return is_redirection_;
 }
 
-
-
 // class NodeLink_______________________________________________________
 
 inline NodeLink::NodeLink()
@@ -142,6 +140,31 @@ inline void NodeA::parseAttributeNAME()
 {
     attribute_name_ = getAttribute("NAME=");
     //kdDebug(23100) << "NodeA::parseAttributeNAME: " << attribute_name_ << endl;
+}
+
+// class NodeAREA_______________________________________________________
+        
+inline NodeAREA::NodeAREA(QString const& content)
+    : NodeLink(content)
+{
+    element_ = AREA;
+    parse();
+}
+            
+inline QString const& NodeAREA::attributeTITLE() const
+{
+    return attribute_title_;
+}
+                
+inline void NodeAREA::parse()
+{
+    parseAttributeTITLE();
+}
+                    
+inline void NodeAREA::parseAttributeTITLE()
+{
+    attribute_title_ = getAttribute("TITLE=");
+//kdDebug(23100) << "NodeAREA::parseAttributeTITLE: " << attribute_title_ << endl;
 }
 
 // class NodeLINK________________________________________

@@ -1,61 +1,92 @@
 <!DOCTYPE kcfg SYSTEM "http://www.kde.org/standards/kcfg/1.0/kcfg.dtd">
 <kcfg>
- <kcfgfile name="klinkstatus_shell.rc" />
- <group name="klinkstatus" >
-  <entry key="MaxCountComboUrl" type="Int" >
-   <label>Maximum number of entries in the combo url.</label>
-   <default>50</default>
-  </entry>
-  <entry key="MaxConnectionsNumber" type="Int" >
-   <label>Maximum number of simultaneous connections.</label>
-   <default>5</default>
-  </entry>
-  <entry key="TimeOut" type="Int" >
-   <label>Timeout on getting an URL.</label>
-   <default>35</default>
-  </entry>
-  <entry key="ComboUrlHistory" type="StringList" >
-   <label>History of combo url.</label>
-  </entry>
-  <entry key="RecursiveCheck" type="Bool" >
-   <label>Whether to do a recursive check.</label>
-   <default>true</default>
-  </entry>
-  <entry key="Depth" type="Int" >
-   <label>Maximum depth to check.</label>
-   <default>1</default>
-  </entry>
-  <entry key="CheckParentFolders" type="Bool" >
-   <label>Whether to check parent folders.</label>
-   <default>true</default>
-  </entry>
-  <entry key="CheckExternalLinks" type="Bool" >
-   <label>Whether to check external links.</label>
-   <default>true</default>
-  </entry>
-  <entry key="RememberCheckSettings" type="Bool" >
-   <label>Whether to remeber the check settings like depth, and so on, on exit.</label>
-   <default>false</default>
-  </entry>
-  <entry key="UseQuantaUrlPreviewPrefix" type="Bool" >
-   <label>Whether preview prefix in Quanta project is used to set the URL to check.</label>
-   <default>true</default>
-  </entry>
-  <entry key="DisplayTreeView" type="Bool" >
-   <label>Whether to display a tree view or a flat view in the results view.</label>
-   <default>true</default>
-  </entry>
-  <entry key="DisplayFlatView" type="Bool" >
-   <label>Whether to display a tree view or a flat view in the results view.</label>
-   <default>false</default>
-  </entry>
-  <entry key="AutoAdjustColumnWidth" type="Bool" >
-   <label>Whether to automatically adjust the width of the result columns (Not used).</label>
-   <default>false</default>
-  </entry>
-  <entry key="FollowLastLinkChecked" type="Bool" >
-   <label>Whether the viewport of the result view should follow the last link checked.</label>
-   <default>true</default>
-  </entry>
- </group>
+    <kcfgfile name="klinkstatus_shell.rc" />
+    
+    <group name="klinkstatus" >
+        
+        <entry key="MaxCountComboUrl" type="Int" >
+            <label>Maximum number of entries in the combo url.</label>
+            <default>50</default>
+        </entry>
+        
+        <entry key="MaxConnectionsNumber" type="Int" >
+            <label>Maximum number of simultaneous connections.</label>
+            <default>5</default>
+        </entry>
+        
+        <entry key="TimeOut" type="Int" >
+            <label>Timeout on getting an URL.</label>
+            <default>35</default>
+        </entry>
+        
+        <entry key="ComboUrlHistory" type="StringList" >
+            <label>History of combo url.</label>
+        </entry>
+        
+        <entry key="RecursiveCheck" type="Bool" >
+            <label>Whether to do a recursive check.</label>
+            <default>true</default>
+        </entry>
+        
+        <entry key="Depth" type="Int" >
+            <label>Maximum depth to check.</label>
+            <default>1</default>
+        </entry>
+        
+        <entry key="CheckParentFolders" type="Bool" >
+            <label>Whether to check parent folders.</label>
+            <default>true</default>
+        </entry>
+        
+        <entry key="CheckExternalLinks" type="Bool" >
+            <label>Whether to check external links.</label>
+            <default>true</default>
+        </entry>
+        
+        <entry key="RememberCheckSettings" type="Bool" >
+            <label>Whether to remeber the check settings like depth, and so on, on exit.</label>
+            <default>false</default>
+        </entry>
+        
+        <entry key="UseQuantaUrlPreviewPrefix" type="Bool" >
+            <label>Whether preview prefix in Quanta project is used to set the URL to check.</label>
+            <default>true</default>
+        </entry>
+        
+        <entry key="DisplayTreeView" type="Bool" >
+            <label>Whether to display a tree view or a flat view in the results view.</label>
+            <default>true</default>
+        </entry>
+        
+        <entry key="DisplayFlatView" type="Bool" >
+            <label>Whether to display a tree view or a flat view in the results view.</label>
+            <default>false</default>
+        </entry>
+        
+        <entry key="AutoAdjustColumnWidth" type="Bool" >
+            <label>Whether to automatically adjust the width of the result columns (Not used).</label>
+            <default>false</default>
+        </entry>
+        
+        <entry key="FollowLastLinkChecked" type="Bool" >
+            <label>Whether the viewport of the result view should follow the last link checked.</label>
+            <default>true</default>
+        </entry>
+    
+        <entry key="ShowMarkupStatus" type="Bool" >
+            <label>Whether the user can see if the markup is valid by showing a column with an icon indicator.</label>
+            <default>false</default>
+        </entry>
+        
+        <entry key="SendIdentification" type="Bool" >
+            <label>Whether to send an User-Agent in HTTP requests.</label>
+            <default>true</default>
+        </entry>        
+        
+        <entry name="UserAgent" type="String"> 
+            <label>Defines the HTTP User-Agent to send.</label>
+        </entry>
+
+    </group>
+
 </kcfg>

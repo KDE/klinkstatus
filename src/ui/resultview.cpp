@@ -19,26 +19,22 @@
 #include <kurl.h>
 #include <kiconloader.h>
 
+const QString ResultView::URL_LABEL = "URL";
+const QString ResultView::STATUS_LABEL = "Status";
+const QString ResultView::MARKUP_LABEL = "Markup";
+const QString ResultView::LINK_LABEL_LABEL = "Label";
+
+
 // ******************************* ResultView ********************************
 
-ResultView::ResultView(int column_index_status,
-                       int column_index_label,
-                       int column_index_URL)
-        : col_status_(column_index_status),
-        col_label_(column_index_label),
-        col_url_(column_index_URL),
+ResultView::ResultView()
+        : col_status_(-1),
+        col_label_(-1),
+        col_url_(-1),
+        col_markup_(-1),
         sub_menu_(0),
         cell_tip_(0)
-{
-    kdDebug(23100) << "col_url_: " << col_url_ << endl;
-    kdDebug(23100) << "col_status_: " << col_status_ << endl;
-    kdDebug(23100) << "col_label_: " << col_label_ << endl;
-    
-    kdDebug(23100) << "column_index_URL: " << column_index_URL << endl;
-    kdDebug(23100) << "column_index_status: " << column_index_status << endl;
-    kdDebug(23100) << "column_index_label: " << column_index_label << endl;
-
-}
+{}
 
 
 ResultView::~ResultView()
@@ -51,15 +47,26 @@ void ResultView::setColumns(QStringList const& columns)
     columns_.clear();
     for(uint i = 0; i != columns.size(); ++i)
     {
-        columns_.push_back(columns[i]);
+        if(columns[i] == ResultView::URL_LABEL)
+        {
+            col_url_ = i + 1;
+        }
+        else if(columns[i] == ResultView::STATUS_LABEL)
+        {
+            col_status_ = i + 1;
+        }
+        else if(columns[i] == ResultView::MARKUP_LABEL)
+        {
+            col_markup_ = i + 1;
+        }
+        else if(columns[i] == ResultView::LINK_LABEL_LABEL)
+        {
+            col_label_ = i + 1;
+        }
 
-        if(columns[i] == i18n( "Status" ))
-            Q_ASSERT(i + 1 == col_status_);
-        else if(columns[i] == i18n( "Label" ))
-            Q_ASSERT(i + 1 == col_label_);
-        else if(columns[i] == i18n( "URL" ))
-            Q_ASSERT(i + 1 == col_url_);
+        columns_.push_back(columns[i]);
     }
+    number_of_columns_ = columns.size();
 }
 
 bool ResultView::displayableWithStatus(LinkStatus const* ls, Status const& status)
@@ -123,7 +130,7 @@ int ResultViewItem::columnIndex() const
     return column_index_;
 }
 
-LinkStatus const* const ResultViewItem::linkStatus() const
+LinkStatus const* ResultViewItem::linkStatus() const
 {
     Q_ASSERT(ls_);
     return ls_;

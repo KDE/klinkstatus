@@ -17,69 +17,53 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.             *
  ***************************************************************************/
-#ifndef TABWIDGETSESSION_H
-#define TABWIDGETSESSION_H
+#ifndef ACTIONMANAGER_H
+#define ACTIONMANAGER_H
 
-#include <ktabwidget.h>
-#include <kurl.h>
+#include <qobject.h>
 
-#include <qintdict.h>
-class QToolButton;
+class KAction;
+class KActionCollection;
 
 class SessionWidget;
-class LinkStatus;
-
+class KLinkStatusPart;
+class TabWidgetSession;
 
 /**
-This class handles the creation and destruction of sessions, i.e, severals instances of searching tabs.
+    @author Paulo Moura Guedes <moura@kdewebdev.org>
  
-@author Paulo Moura Guedes
+    interface for accessing actions, popup menus etc. from widgets.
 */
-class TabWidgetSession : public KTabWidget
+class ActionManager : public QObject
 {
     Q_OBJECT
-
 public:
-    TabWidgetSession(QWidget * parent = 0, const char * name = 0, WFlags f = 0);
-    ~TabWidgetSession();
+    ActionManager(QObject* parent=0, const char* name=0);
+    virtual ~ActionManager();
 
-    /** Set the URL in the current session widget */
-    void setUrl(KURL const& url);
+    static ActionManager* getInstance();
+    static void setInstance(ActionManager* manager);
 
-    SessionWidget* currentSession() const;
-    bool emptySessionsExist() const;
-    /** Returns the first empty session it finds */
-    SessionWidget* getEmptySession() const;
-    QIntDict<SessionWidget> const& sessions() const;
-    
+    virtual KAction* action(const char* name, const char* classname=0);
+    virtual QWidget* container(const char* name);
+
+    void initPart(KLinkStatusPart* part);
+    void initSessionWidget(SessionWidget* sessionWidget);
+    void initTabWidget(TabWidgetSession* tabWidgetSession);
 
 public slots:
-    void slotNewSession(KURL const& url = KURL());
-    SessionWidget* newSession();
-    SessionWidget* newSession(KURL const& url);
-    void closeSession();
-    void updateTabLabel(LinkStatus const* linkstatus, SessionWidget*);
-    void slotLoadSettings();
-    
-    void slotHideSearchPanel();
-    void slotResetSearchOptions();
-    void slotFollowLastLinkChecked();
-    
-    void slotStartSearch();
-    void slotPauseSearch();
-    void slotStopSearch();
+    void slotUpdateSessionWidgetActions(SessionWidget*);
 
-    void slotExportAsHTML();
-    
-private slots:
-    void slotCurrentChanged(QWidget* page);
-    
-private:
-    SessionWidget* newSessionWidget();
+protected:
+
+    KActionCollection* actionCollection();
 
 private:
-    QIntDict<SessionWidget> tabs_;
-    QToolButton* tabs_close_;
+
+    static ActionManager* m_self;
+    
+    class ActionManagerPrivate;
+    ActionManagerPrivate* d;
 };
 
 #endif
