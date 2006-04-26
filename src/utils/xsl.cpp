@@ -34,11 +34,12 @@
 #include <stdlib.h>
 
 #include <qregexp.h>
-#include <qsignal.h>
-#include <qstylesheet.h>
+#include <q3signal.h>
 #include <qthread.h>
 #include <qevent.h>
 #include <qmutex.h>
+//Added by qt3to4:
+#include <QByteArray>
 
 #include <kapplication.h>
 #include <kdebug.h>
@@ -51,7 +52,7 @@
  * The thread class that actually performs the XSL processing.
  * Using a thread allows async operation.
  */
-class KopeteXSLThread : public QObject, public QThread
+class KopeteXSLThread : public QThread
 {
 public:
     /**
@@ -116,7 +117,7 @@ bool KopeteXSLThread::event( QEvent *event )
         dataMutex.lock();
         if( m_target && m_slotCompleted )
         {
-            QSignal completeSignal( m_target );
+            Q3Signal completeSignal( m_target );
             completeSignal.connect( m_target, m_slotCompleted );
             completeSignal.setValue( m_resultString );
             completeSignal.activate();
@@ -131,7 +132,7 @@ bool KopeteXSLThread::event( QEvent *event )
 QString KopeteXSLThread::xsltTransform( const QString &xmlString, xsltStylesheetPtr styleSheet )
 {
     // Convert QString into a C string
-    QCString xmlCString = xmlString.utf8();
+    QByteArray xmlCString = xmlString.toUtf8();
 
     QString resultString;
     QString errorMsg;
@@ -141,7 +142,7 @@ QString KopeteXSLThread::xsltTransform( const QString &xmlString, xsltStylesheet
     {
         if ( styleSheet )
         {
-            static QCString appPath( QString::fromLatin1("\"%1\"").arg( KApplication::kApplication()->dirs()->findDirs("appdata", QString::fromLatin1("styles/data") ).front() ).utf8() );
+            static QByteArray appPath( QString::fromLatin1("\"%1\"").arg( KApplication::kApplication()->dirs()->findDirs("appdata", QString::fromLatin1("styles/data") ).front() ).toUtf8() );
 
             static const char* params[3] = {
                 "appdata",
@@ -156,7 +157,7 @@ QString KopeteXSLThread::xsltTransform( const QString &xmlString, xsltStylesheet
                 xmlChar *mem;
                 int size;
                 xmlDocDumpMemory( resultDoc, &mem, &size );
-                resultString = QString::fromUtf8( QCString( ( char * )( mem ), size + 1 ) );
+                resultString = QString::fromUtf8( QByteArray( ( char * )( mem ), size + 1 ) );
                 xmlFree( mem );
                 xmlFreeDoc( resultDoc );
             }
@@ -250,7 +251,7 @@ void XSLT::setXSLT( const QString &_document )
         //          identical!
         QStringList parts = QStringList::split( '%', i18n(
             "Translators: The %FOO% placeholders are variables that are substituted "
-            "in the code, please leave them untranslated", orig.utf8() ), true );
+            "in the code, please leave them untranslated", QString(orig.toUtf8())), true );
 
         // The first part is always text, as our variables are written like %FOO%
         QStringList::Iterator it = parts.begin();
@@ -353,7 +354,7 @@ void XSLT::setXSLT( const QString &_document )
     }
 
     #ifdef RAWXSL
-        kdDebug(14000) << k_funcinfo << document.utf8() << endl;
+        kdDebug(14000) << k_funcinfo << document.toUtf8() << endl;
     #endif
 
     //Freeing the stylesheet also frees the doc pointer;
@@ -362,7 +363,7 @@ void XSLT::setXSLT( const QString &_document )
     d->xslDoc = 0;
     d->flags = 0;
 
-    QCString rawDocument = document.utf8();
+    QByteArray rawDocument = document.toUtf8();
     d->xslDoc = xmlParseMemory( rawDocument, rawDocument.length() );
 
     if( d->xslDoc )
@@ -377,7 +378,7 @@ void XSLT::setXSLT( const QString &_document )
                 if( child->type == XML_PI_NODE )
                 {
                     //We have a flag. Enable it;
-                    QCString flagData( (const char*)child->content );
+                    QByteArray flagData( (const char*)child->content );
 
                     if( flagData.contains( "Flag:" ) )
                     {

@@ -56,7 +56,7 @@ void decode(QString& url);
 int smallerUnsigned(int a, int b);
 
 class QWidget;
-//void viewUrlInBrowser(KURL const& url, QWidget* parent, QString browser = "mozilla");
+//void viewUrlInBrowser(KUrl const& url, QWidget* parent, QString browser = "mozilla");
 
 
 #endif
