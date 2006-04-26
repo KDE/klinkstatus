@@ -133,7 +133,7 @@ void NodeLink::parseAttributeHREF()
 void NodeLink::parseLinkLabel()
 {
     int fim_tag = 0;
-    char proximo_caractere = ' ';
+    QChar proximo_caractere = ' ';
     
     do
     {

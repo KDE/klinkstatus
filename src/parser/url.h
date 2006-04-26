@@ -37,19 +37,19 @@ class LinkStatus;
 namespace Url
 {
 Node::LinkType resolveLinkType(QString const& url);
-KURL normalizeUrl(QString const& string_url, LinkStatus const& link_parent, QString const& document_root);
-KURL normalizeUrl(QString const& string_url);
-bool validUrl(KURL const& url);
-bool existUrl(KURL const& url, vector<LinkStatus*> const& v);
+KUrl normalizeUrl(QString const& string_url, LinkStatus const& link_parent, QString const& document_root);
+KUrl normalizeUrl(QString const& string_url);
+bool validUrl(KUrl const& url);
+bool existUrl(KUrl const& url, vector<LinkStatus*> const& v);
 bool equalHost(QString const& host1, QString const& host2, bool restrict = false);
 bool hasProtocol(QString const& url);
 QString convertToLocal(LinkStatus const* ls);
-bool localDomain(KURL const& url1, KURL const& url2, bool restrict = true);
-bool parentDir(KURL const& url1, KURL const& url2);
-bool externalLink(KURL const& url1, KURL const& url2, bool restrict = true);
+bool localDomain(KUrl const& url1, KUrl const& url2, bool restrict = true);
+bool parentDir(KUrl const& url1, KUrl const& url2);
+bool externalLink(KUrl const& url1, KUrl const& url2, bool restrict = true);
 }
 
-inline bool validUrl(KURL const& url)
+inline bool validUrl(KUrl const& url)
 {
   return (url.isValid() /*&& url.hasHost()*/);
 }

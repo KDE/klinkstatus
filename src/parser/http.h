@@ -21,16 +21,16 @@
 #ifndef HTTP_H
 #define HTTP_H
 
-#include <qhttp.h>
+#include <q3http.h>
 #include <qstring.h>
 
 
-class HttpResponseHeader: public QHttpResponseHeader
+class HttpResponseHeader: public Q3HttpResponseHeader
 {
 public:
 
   HttpResponseHeader();
-  HttpResponseHeader(const QHttpResponseHeader & header);
+  HttpResponseHeader(const Q3HttpResponseHeader & header);
   HttpResponseHeader(QString const& str);
   virtual ~HttpResponseHeader();
 
@@ -44,17 +44,17 @@ private:
 
 
 inline HttpResponseHeader::HttpResponseHeader()
-  : QHttpResponseHeader()
+  : Q3HttpResponseHeader()
 {
 }
 
-inline HttpResponseHeader::HttpResponseHeader(const QHttpResponseHeader & /*header*/)
-  : QHttpResponseHeader()
+inline HttpResponseHeader::HttpResponseHeader(const Q3HttpResponseHeader & /*header*/)
+  : Q3HttpResponseHeader()
 {
 }
 
 inline HttpResponseHeader::HttpResponseHeader(QString const& str)
-  : QHttpResponseHeader()
+  : Q3HttpResponseHeader()
 {
 	parse(str);
 }
