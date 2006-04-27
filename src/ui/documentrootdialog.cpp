@@ -72,7 +72,7 @@ void DocumentRootDialog::slotReturnPressed( const QString & )
 
 void DocumentRootDialog::slotTextChanged( const QString & s)
 {
-    KURL url(s);
+    KUrl url(s);
     enableButtonOK(!s.isEmpty() && url.isValid());
 }
 

@@ -261,13 +261,13 @@ void TableLinkstatus::slotPopupContextMenu(int r, int w, const QPoint& pos)
     TableItem* table_item = myItem(r, w);
     if(table_item)
     {
-        QValueVector<KURL> referrers = table_item->linkStatus()->referrers();
+        QValueVector<KUrl> referrers = table_item->linkStatus()->referrers();
         loadContextTableMenu(referrers, table_item->linkStatus()->isRoot());
         context_table_menu_.popup(pos);
     }
 }
 
-void TableLinkstatus::loadContextTableMenu(QValueVector<KURL> const& referrers, bool is_root)
+void TableLinkstatus::loadContextTableMenu(QValueVector<KUrl> const& referrers, bool is_root)
 {
     context_table_menu_.clear();
     sub_menu_->clear();
@@ -336,7 +336,7 @@ void TableLinkstatus::slotCopyCellTextToClipboard() const
 void TableLinkstatus::slotEditReferrersWithQuanta()
 {
     TableItem* _item = myItem(currentRow(), currentColumn());
-    QValueVector<KURL> referrers = _item->linkStatus()->referrers();
+    QValueVector<KUrl> referrers = _item->linkStatus()->referrers();
 
     if(Global::isQuantaAvailableViaDCOP())
     {
@@ -369,13 +369,13 @@ void TableLinkstatus::slotEditReferrerWithQuanta(int id)
     index -= 2; // The list of referrers starts on index = 2
 
     TableItem* _item = myItem(currentRow(), currentColumn());
-    QValueVector<KURL> referrers = _item->linkStatus()->referrers();
+    QValueVector<KUrl> referrers = _item->linkStatus()->referrers();
     Q_ASSERT(index >= 0 && (uint)index < referrers.size());
 
     slotEditReferrerWithQuanta(referrers[index]);
 }
 
-void TableLinkstatus::slotEditReferrerWithQuanta(KURL const& url)
+void TableLinkstatus::slotEditReferrerWithQuanta(KUrl const& url)
 {
     QString filePath = url.url();
 
@@ -400,7 +400,7 @@ void TableLinkstatus::slotEditReferrerWithQuanta(KURL const& url)
 void TableLinkstatus::slotViewUrlInBrowser()
 {
     TableItem* _item = myItem(currentRow(), currentColumn());
-    KURL url = _item->linkStatus()->absoluteUrl();
+    KUrl url = _item->linkStatus()->absoluteUrl();
 
     if(url.isValid())
     {
@@ -423,7 +423,7 @@ void TableLinkstatus::slotViewParentUrlInBrowser()
         LinkStatus const* ls_parent = _item->linkStatus()->parent();
         Q_ASSERT(ls_parent);
 
-        KURL url = ls_parent->absoluteUrl();
+        KUrl url = ls_parent->absoluteUrl();
 
         if(url.isValid())
             (void) new KRun (url, 0, url.isLocalFile(), true);
@@ -555,7 +555,7 @@ void TableItemURL::setText()
     }
     else
     {
-        KURL url = linkStatus()->absoluteUrl();
+        KUrl url = linkStatus()->absoluteUrl();
         QTableItem::setText(::convertToLocal(linkStatus()));
     }
 }

@@ -16,7 +16,7 @@
 class QCString;
 
 class DCOPClient;
-class KURL;
+class KUrl;
 class KProcess;
 
 /**
@@ -33,7 +33,7 @@ public:
     static bool isQuantaRunningAsUnique();
     static bool isQuantaAvailableViaDCOP();
     static QCString quantaDCOPAppId();
-    static KURL urlWithQuantaPreviewPrefix(KURL const& url);
+    static KUrl urlWithQuantaPreviewPrefix(KUrl const& url);
     
     //static void setLoopStarted(bool flag);
     static void openQuanta(QStringList const& args);

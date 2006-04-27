@@ -89,7 +89,7 @@ KLinkStatus::KLinkStatus()
 KLinkStatus::~KLinkStatus()
 {}
 
-void KLinkStatus::load(const KURL& url)
+void KLinkStatus::load(const KUrl& url)
 {
     m_part->openURL( url );
 }

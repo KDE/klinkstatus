@@ -179,7 +179,7 @@ void TreeView::slotPopupContextMenu(QListViewItem* item, const QPoint& pos, int 
     TreeViewItem* tree_item = myItem(item);
     if(tree_item)
     {
-        QValueVector<KURL> referrers = tree_item->linkStatus()->referrers();
+        QValueVector<KUrl> referrers = tree_item->linkStatus()->referrers();
         loadContextTableMenu(referrers, tree_item->linkStatus()->isRoot());
         context_table_menu_.popup(pos);
     }
@@ -212,7 +212,7 @@ void TreeView::slotCopyCellTextToClipboard() const
 void TreeView::slotEditReferrersWithQuanta()
 {
     TreeViewItem* _item = myItem(currentItem());
-    QValueVector<KURL> referrers = _item->linkStatus()->referrers();
+    QValueVector<KUrl> referrers = _item->linkStatus()->referrers();
 
     if(Global::isQuantaAvailableViaDCOP())
     {
@@ -245,13 +245,13 @@ void TreeView::slotEditReferrerWithQuanta(int id)
     index -= 2; // The list of referrers starts on index = 2
 
     TreeViewItem* _item = myItem(currentItem());
-    QValueVector<KURL> referrers = _item->linkStatus()->referrers();
+    QValueVector<KUrl> referrers = _item->linkStatus()->referrers();
     Q_ASSERT(index >= 0 && (uint)index < referrers.size());
 
     slotEditReferrerWithQuanta(referrers[index]);
 }
 
-void TreeView::slotEditReferrerWithQuanta(KURL const& url)
+void TreeView::slotEditReferrerWithQuanta(KUrl const& url)
 {
     QString filePath = url.url();
 
@@ -276,7 +276,7 @@ void TreeView::slotEditReferrerWithQuanta(KURL const& url)
 void TreeView::slotViewUrlInBrowser()
 {
     TreeViewItem* _item = myItem(currentItem());
-    KURL url = _item->linkStatus()->absoluteUrl();
+    KUrl url = _item->linkStatus()->absoluteUrl();
 
     if(url.isValid())
     {
@@ -299,7 +299,7 @@ void TreeView::slotViewParentUrlInBrowser()
         LinkStatus const* ls_parent = _item->linkStatus()->parent();
         Q_ASSERT(ls_parent);
 
-        KURL url = ls_parent->absoluteUrl();
+        KUrl url = ls_parent->absoluteUrl();
 
         if(url.isValid())
             (void) new KRun (url, 0, url.isLocalFile(), true);
@@ -308,7 +308,7 @@ void TreeView::slotViewParentUrlInBrowser()
     }
 }
 
-void TreeView::loadContextTableMenu(QValueVector<KURL> const& referrers, bool is_root)
+void TreeView::loadContextTableMenu(QValueVector<KUrl> const& referrers, bool is_root)
 {
     context_table_menu_.clear();
     sub_menu_->clear();
@@ -567,7 +567,7 @@ QString TreeColumnViewItem::text(int column) const
         }
         else
         {
-            KURL url = linkStatus()->absoluteUrl();
+            KUrl url = linkStatus()->absoluteUrl();
             return Url::convertToLocal(linkStatus());
         }
         break;

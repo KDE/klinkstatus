@@ -55,7 +55,7 @@ void LinkChecker::check()
 {
     Q_ASSERT(!finnished_);
 
-    KURL url = linkStatus()->absoluteUrl();
+    KUrl url = linkStatus()->absoluteUrl();
     Q_ASSERT(url.isValid());
 
     if(url.hasRef())
@@ -73,8 +73,8 @@ void LinkChecker::check()
                          this, SLOT(slotMimetype(KIO::Job *, const QString &)));
         QObject::connect(t_job_, SIGNAL(result(KIO::Job *)),
                          this, SLOT(slotResult(KIO::Job *)));
-        QObject::connect(t_job_, SIGNAL(permanentRedirection(KIO::Job *, const KURL &, const KURL &)),
-                         this, SLOT(slotPermanentRedirection(KIO::Job *, const KURL &, const KURL &)));
+        QObject::connect(t_job_, SIGNAL(permanentRedirection(KIO::Job *, const KUrl &, const KUrl &)),
+                         this, SLOT(slotPermanentRedirection(KIO::Job *, const KUrl &, const KUrl &)));
 
         QTimer::singleShot( time_out_ * 1000, this, SLOT(slotTimeOut()) );
     }
@@ -116,7 +116,7 @@ void LinkChecker::slotMimetype (KIO::Job* /*job*/, const QString &type)
     Q_ASSERT(ls);
 
     ls->setMimeType(type);
-    KURL url = ls->absoluteUrl();
+    KUrl url = ls->absoluteUrl();
 
     // we doesn't do nothing if file is http or https because we need the header
     // which is only available in the data response
@@ -172,7 +172,7 @@ void LinkChecker::slotData(KIO::Job* /*job*/, const QByteArray& data)
         ls = linkstatus_;
     Q_ASSERT(ls);
 
-    KURL url = ls->absoluteUrl();
+    KUrl url = ls->absoluteUrl();
 
     if(!t_job_->error())
     {
@@ -322,7 +322,7 @@ void LinkChecker::slotResult(KIO::Job* /*job*/)
             HtmlParser parser(doc_html_);
 
             if(parser.hasBaseUrl())
-                ls->setBaseURI(KURL(parser.baseUrl().url()));
+                ls->setBaseURI(KUrl(parser.baseUrl().url()));
             if(parser.hasTitle())
                 ls->setHtmlDocTitle(parser.title().attributeTITLE());
             ls->setChildrenNodes(parser.nodes());
@@ -334,11 +334,11 @@ void LinkChecker::slotResult(KIO::Job* /*job*/)
 }
 
 /*
-void LinkChecker::slotRedirection (KIO::Job* job, const KURL &url)
+void LinkChecker::slotRedirection (KIO::Job* job, const KUrl &url)
 {}
 */
 
-void LinkChecker::slotPermanentRedirection (KIO::Job* /*job*/, const KURL &fromUrl, const KURL &toUrl)
+void LinkChecker::slotPermanentRedirection (KIO::Job* /*job*/, const KUrl &fromUrl, const KUrl &toUrl)
 {
     if(finnished_)
         return;
@@ -432,7 +432,7 @@ HttpResponseHeader LinkChecker::getHttpHeader(KIO::Job* /*job*/, bool remember_c
 }
 void LinkChecker::checkRef()
 {
-    KURL url = linkStatus()->absoluteUrl();
+    KUrl url = linkStatus()->absoluteUrl();
     Q_ASSERT(url.hasRef());
     QString url_base;
     LinkStatus const* ls_parent = 0;

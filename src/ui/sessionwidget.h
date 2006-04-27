@@ -34,7 +34,7 @@ class LinkMatcher;
 class QStringList;
 class QListViewItem;
 
-class KURL;
+class KUrl;
 class KConfig;
 class KToggleAction;
 
@@ -54,7 +54,7 @@ public:
     ~SessionWidget();
 
     void setColumns(QStringList const& colunas);
-    void setUrl(KURL const& url);
+    void setUrl(KUrl const& url);
     
     bool treeDisplay() const { return tree_display_; }
 

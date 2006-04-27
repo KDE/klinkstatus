@@ -108,7 +108,7 @@ void SearchManager::cleanItems()
     kDebug(23100) <<  endl;
 }
 
-void SearchManager::startSearch(KURL const& root, SearchMode const& modo)
+void SearchManager::startSearch(KUrl const& root, SearchMode const& modo)
 {
     canceled_ = false;
 
@@ -260,7 +260,7 @@ vector<LinkStatus*> SearchManager::children(LinkStatus* link)
         ++count;
 
         Node* node = nodes[i];
-        KURL url;
+        KUrl url;
         if(node->url().isEmpty())
             url = "";
         else
@@ -313,7 +313,7 @@ vector<LinkStatus*> SearchManager::children(LinkStatus* link)
     return children;
 }
 
-bool SearchManager::existUrl(KURL const& url, KURL const& url_parent) const
+bool SearchManager::existUrl(KUrl const& url, KUrl const& url_parent) const
 {
     if(url.prettyURL().isEmpty() || root_.originalUrl() == url.prettyURL())
         return true;
@@ -326,7 +326,7 @@ bool SearchManager::existUrl(KURL const& url, KURL const& url_parent) const
                 Q_ASSERT(tmp);                
                 if(tmp->absoluteUrl() == url)
                 { // URL exists
-                    QValueVector<KURL> referrers(tmp->referrers());
+                    QValueVector<KUrl> referrers(tmp->referrers());
 
                     // Add new referrer
                     for(uint i = 0; i != referrers.size(); ++i)
@@ -596,7 +596,7 @@ void SearchManager::addLevel()
         emit signalLinksToCheckTotalSteps(number_of_links_to_check_);
 }
 
-bool SearchManager::checkable(KURL const& url, LinkStatus const& link_parent) const
+bool SearchManager::checkable(KUrl const& url, LinkStatus const& link_parent) const
 {
     if(existUrl(url, link_parent.absoluteUrl()))
         return false;
@@ -626,7 +626,7 @@ bool SearchManager::checkable(KURL const& url, LinkStatus const& link_parent) co
     return true;
 }
 
-bool SearchManager::checkableByDomain(KURL const& url, LinkStatus const& link_parent) const
+bool SearchManager::checkableByDomain(KUrl const& url, LinkStatus const& link_parent) const
 {
     bool result = false;
     if(localDomain(url))
@@ -642,9 +642,9 @@ bool SearchManager::checkableByDomain(KURL const& url, LinkStatus const& link_pa
     return result;
 }
 /*
-bool SearchManager::localDomain(KURL const& url) const
+bool SearchManager::localDomain(KUrl const& url) const
     {
-    KURL url_root = root_.absoluteUrl();
+    KUrl url_root = root_.absoluteUrl();
  
     if(url_root.protocol() != url.protocol())
         return false;
@@ -690,11 +690,11 @@ bool SearchManager::localDomain(KURL const& url) const
 	http://linkstatus.paradigma.co.pt != http://paradigma.co.pt
 */
 /*
-bool SearchManager::isLocalRestrict(KURL const& url) const
+bool SearchManager::isLocalRestrict(KUrl const& url) const
     {
     Q_ASSERT(url.protocol() == "http" || url.protocol() == "https");
  
-    KURL url_root = root_.absoluteUrl();
+    KUrl url_root = root_.absoluteUrl();
  
     if(url_root.protocol() != url.protocol())
         return false;

@@ -124,7 +124,7 @@ QCString Global::quantaDCOPAppId()
     }
 }
 
-KURL Global::urlWithQuantaPreviewPrefix(KURL const& url)
+KUrl Global::urlWithQuantaPreviewPrefix(KUrl const& url)
 {
     Q_ASSERT(isKLinkStatusEmbeddedInQuanta());
 
@@ -132,7 +132,7 @@ KURL Global::urlWithQuantaPreviewPrefix(KURL const& url)
     QString string_url_with_prefix = quanta.call("urlWithPreviewPrefix", url.url());
     //kDebug(23100) << "string_url_with_prefix: " << string_url_with_prefix << endl;
 
-    return KURL(string_url_with_prefix);
+    return KUrl(string_url_with_prefix);
 }
 
 void Global::openQuanta(QStringList const& args)

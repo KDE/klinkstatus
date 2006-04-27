@@ -44,7 +44,7 @@ public:
     ~TabWidgetSession();
 
     /** Set the URL in the current session widget */
-    void setUrl(KURL const& url);
+    void setUrl(KUrl const& url);
 
     SessionWidget* currentSession() const;
     bool emptySessionsExist() const;
@@ -54,9 +54,9 @@ public:
     
 
 public slots:
-    void slotNewSession(KURL const& url = KURL());
+    void slotNewSession(KUrl const& url = KUrl());
     SessionWidget* newSession();
-    SessionWidget* newSession(KURL const& url);
+    SessionWidget* newSession(KUrl const& url);
     void closeSession();
     void updateTabLabel(LinkStatus const* linkstatus, SessionWidget*);
     void slotLoadSettings();

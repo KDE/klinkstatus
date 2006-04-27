@@ -16,7 +16,7 @@
 #include <qpopupmenu.h>
 #include <qstringlist.h>
 
-class KURL;
+class KUrl;
 
 class LinkStatus;
 class CellToolTip;
@@ -64,7 +64,7 @@ public:
 protected:
     //virtual bool textFitsInCell(int row, int col) const = 0;
     virtual bool isEmpty() const = 0;
-    virtual void loadContextTableMenu(QValueVector<KURL> const& referrers, bool is_root = false) = 0;
+    virtual void loadContextTableMenu(QValueVector<KUrl> const& referrers, bool is_root = false) = 0;
 
 protected slots:
 
@@ -74,7 +74,7 @@ protected slots:
     virtual void slotCopyCellTextToClipboard() const = 0;
     virtual void slotEditReferrersWithQuanta() = 0;
     virtual void slotEditReferrerWithQuanta(int id) = 0;
-    virtual void slotEditReferrerWithQuanta(KURL const& url) = 0;
+    virtual void slotEditReferrerWithQuanta(KUrl const& url) = 0;
     virtual void slotViewUrlInBrowser() = 0;
     virtual void slotViewParentUrlInBrowser() = 0;
 

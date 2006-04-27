@@ -48,19 +48,19 @@ class LinkStatus
 public:
 
     LinkStatus();
-    LinkStatus(KURL const& absolute_url);
+    LinkStatus(KUrl const& absolute_url);
     LinkStatus(Node* node, LinkStatus* parent);
     ~LinkStatus();
 
     void save(QDomElement& element) const;
     
     void reset();
-    void setRootUrl(KURL const& url);
+    void setRootUrl(KUrl const& url);
     void setDepth(uint depth);
     void setParent(LinkStatus* parent);
     void setOriginalUrl(QString const& url_original);
     void setLabel(QString const& label);
-    void setAbsoluteUrl(KURL const& url_absoluto);
+    void setAbsoluteUrl(KUrl const& url_absoluto);
     void setDocHtml(QString const& doc_html);
     void setHttpHeader(HttpResponseHeader const& cabecalho_http);
     void setStatus(QString const& status);
@@ -79,23 +79,23 @@ public:
     void setMalformed(bool flag = true);
     void setHasBaseURI(bool flag = true);
     void setHasHtmlDocTitle(bool flag = true);
-    void setBaseURI(KURL const& base_url);
+    void setBaseURI(KUrl const& base_url);
     void setHtmlDocTitle(QString const& title);
     void setIgnored(bool flag = true);
     void setMimeType(QString const& mimetype);
     void setIsErrorPage(bool flag);
     void setIsLocalRestrict(bool flag);
     void setTreeViewItem(TreeViewItem* tree_view_item);
-    void addReferrer(KURL const& url);
+    void addReferrer(KUrl const& url);
 
-    KURL const& rootUrl() const;
+    KUrl const& rootUrl() const;
     uint depth() const;
     bool local() const; 		// linkstatus.paradigma.co.pt == paradigma.co.pt
     bool isLocalRestrict() const; // linkstatus.paradigma.co.pt != paradigma.co.pt
     LinkStatus const* parent() const;
     QString const& originalUrl() const;
     QString const& label() const;
-    KURL const& absoluteUrl() const;
+    KUrl const& absoluteUrl() const;
     QString const& docHtml() const;
     HttpResponseHeader const& httpHeader() const;
     HttpResponseHeader& httpHeader();
@@ -114,14 +114,14 @@ public:
     bool malformed() const;
     bool hasBaseURI() const;
     bool hasHtmlDocTitle() const;
-    KURL const& baseURI() const;
+    KUrl const& baseURI() const;
     QString const& htmlDocTitle() const;
     bool ignored() const;
-    bool redirectionExists(KURL const& url) const; // to avoid cyclic links
+    bool redirectionExists(KUrl const& url) const; // to avoid cyclic links
     QString mimeType() const;
     bool isErrorPage() const;
     TreeViewItem* treeViewItem() const;
-    QValueVector<KURL> const& referrers() const;
+    QValueVector<KUrl> const& referrers() const;
 
     static LinkStatus* lastRedirection(LinkStatus* ls);
 
@@ -134,12 +134,12 @@ private:
 
 private:
 
-    KURL root_url_; // The URL which made the search start
+    KUrl root_url_; // The URL which made the search start
     int depth_;
     int external_domain_depth_; // Para se poder escolher explorar domains diferentes ate n depth
     QString original_url_;
     QString label_;
-    KURL absolute_url_;
+    KUrl absolute_url_;
     QString doc_html_;
     HttpResponseHeader http_header_;
     QString status_;
@@ -156,14 +156,14 @@ private:
     Node* node_;
     bool has_base_URI_;
     bool has_html_doc_title_;
-    KURL base_URI_;
+    KUrl base_URI_;
     QString html_doc_title_;
     bool ignored_;
     QString mimetype_;
     bool is_error_page_;
     bool is_local_restrict_;
     TreeViewItem* tree_view_item_;
-    QValueVector<KURL> referrers_;
+    QValueVector<KUrl> referrers_;
 };
 
 #include "../parser/url.h"

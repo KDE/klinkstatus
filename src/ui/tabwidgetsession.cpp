@@ -102,7 +102,7 @@ SessionWidget* TabWidgetSession::newSession()
     return session_widget;
 }
 
-SessionWidget* TabWidgetSession::newSession(KURL const& url)
+SessionWidget* TabWidgetSession::newSession(KUrl const& url)
 {
     SessionWidget* sessionwidget = newSession();
     currentSession()->setUrl(url);
@@ -146,7 +146,7 @@ void TabWidgetSession::updateTabLabel(LinkStatus const* linkstatus)
     }
     else
     {
-        KURL url = linkstatus->absoluteUrl();
+        KUrl url = linkstatus->absoluteUrl();
         if(url.fileName(false).isEmpty())
             label = url.prettyURL();
         else
@@ -172,7 +172,7 @@ void TabWidgetSession::slotLoadSettings()
     }
 }
 
-void TabWidgetSession::setUrl(KURL const& url)
+void TabWidgetSession::setUrl(KUrl const& url)
 {
     currentSession()->setUrl(url);
 }

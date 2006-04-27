@@ -28,7 +28,7 @@
 #include <qvaluevector.h>
 class QStringList;
 
-class KURL;
+class KUrl;
 
 #include <vector>
 
@@ -82,10 +82,10 @@ private slots:
     virtual void slotCopyCellTextToClipboard() const;
     virtual void slotEditReferrersWithQuanta();
     virtual void slotEditReferrerWithQuanta(int id);
-    virtual void slotEditReferrerWithQuanta(KURL const& url);
+    virtual void slotEditReferrerWithQuanta(KUrl const& url);
     virtual void slotViewUrlInBrowser();
     virtual void slotViewParentUrlInBrowser();
-    virtual void loadContextTableMenu(QValueVector<KURL> const& referrers, bool is_root = false);
+    virtual void loadContextTableMenu(QValueVector<KUrl> const& referrers, bool is_root = false);
 
 private:
 

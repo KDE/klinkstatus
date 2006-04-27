@@ -169,9 +169,9 @@ void KLinkStatusPart::setModified(bool modified)
         save->setEnabled(false);
 }
 
-bool KLinkStatusPart::openURL(KURL const& url)
+bool KLinkStatusPart::openURL(KUrl const& url)
 {
-    KURL url_aux = url;
+    KUrl url_aux = url;
 
     if(KLSConfig::useQuantaUrlPreviewPrefix() && Global::isKLinkStatusEmbeddedInQuanta())
     {

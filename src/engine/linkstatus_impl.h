@@ -26,7 +26,7 @@ inline LinkStatus::LinkStatus()
         mimetype_(""), is_error_page_(false), tree_view_item_(0)
 {}
 
-inline LinkStatus::LinkStatus(KURL const& absolute_url)
+inline LinkStatus::LinkStatus(KUrl const& absolute_url)
         : depth_(-1), external_domain_depth_(-1), is_root_(false),
         error_occurred_(false), is_redirection_(false), parent_(0), redirection_(0), checked_(false),
         only_check_header_(true), malformed_(false),
@@ -50,7 +50,7 @@ inline LinkStatus::LinkStatus(Node* node, LinkStatus* parent)
     setRootUrl(parent->rootUrl());
 }
 
-inline void LinkStatus::setRootUrl(KURL const& url)
+inline void LinkStatus::setRootUrl(KUrl const& url)
 {
     root_url_ = url;
 }
@@ -68,7 +68,7 @@ inline void LinkStatus::setParent(LinkStatus* parent)
     addReferrer(parent->absoluteUrl());
 }
 
-inline void LinkStatus::setAbsoluteUrl(KURL const& url_absoluto)
+inline void LinkStatus::setAbsoluteUrl(KUrl const& url_absoluto)
 {
     absolute_url_ = url_absoluto;
 }
@@ -166,7 +166,7 @@ inline void LinkStatus::setHasHtmlDocTitle(bool flag)
     has_html_doc_title_ = flag;
 }
 
-inline void LinkStatus::setBaseURI(KURL const& base_url)
+inline void LinkStatus::setBaseURI(KUrl const& base_url)
 {
     if(!base_url.isValid())
     {
@@ -221,7 +221,7 @@ inline void LinkStatus::setTreeViewItem(TreeViewItem* tree_view_item)
     tree_view_item_ = tree_view_item;
 }
 
-inline void LinkStatus::addReferrer(KURL const& url)
+inline void LinkStatus::addReferrer(KUrl const& url)
 {
     Q_ASSERT(url.isValid());
 
@@ -231,7 +231,7 @@ inline void LinkStatus::addReferrer(KURL const& url)
 
 
 
-inline KURL const& LinkStatus::rootUrl() const
+inline KUrl const& LinkStatus::rootUrl() const
 {
     return root_url_;
 }
@@ -266,7 +266,7 @@ inline QString const& LinkStatus::label() const
     return label_;
 }
 
-inline KURL const& LinkStatus::absoluteUrl() const
+inline KUrl const& LinkStatus::absoluteUrl() const
 {
     return absolute_url_;
 }
@@ -368,7 +368,7 @@ inline bool LinkStatus::hasHtmlDocTitle() const
     return has_html_doc_title_;
 }
 
-inline KURL const& LinkStatus::baseURI() const
+inline KUrl const& LinkStatus::baseURI() const
 {
     Q_ASSERT(hasBaseURI());
     return base_URI_;
@@ -401,7 +401,7 @@ inline TreeViewItem* LinkStatus::treeViewItem() const
     return tree_view_item_;
 }
 
-inline QValueVector<KURL> const& LinkStatus::referrers() const
+inline QValueVector<KUrl> const& LinkStatus::referrers() const
 {
     return referrers_;
 }

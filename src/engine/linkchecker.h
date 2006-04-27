@@ -58,8 +58,8 @@ signals:
 protected slots:
 
     void slotData(KIO::Job *, const QByteArray &data);
-    //void slotRedirection (KIO::Job *, const KURL &url);
-    void slotPermanentRedirection(KIO::Job *, const KURL &fromUrl, const KURL &toUrl);
+    //void slotRedirection (KIO::Job *, const KUrl &url);
+    void slotPermanentRedirection(KIO::Job *, const KUrl &fromUrl, const KUrl &toUrl);
     void slotMimetype(KIO::Job *, const QString &type);
     void slotResult(KIO::Job* job);
     void slotTimeOut();

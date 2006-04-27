@@ -81,7 +81,7 @@ int main(int argc, char *argv[])
 
         if ( args->count() == 0 )
         {
-            widget->load(KURL());
+            widget->load(KUrl());
         }
         else
         {

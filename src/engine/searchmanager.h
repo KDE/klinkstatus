@@ -54,8 +54,8 @@ public:
                   QObject *parent = 0, const char *name = 0);
     ~SearchManager();
 
-    void startSearch(KURL const& root);
-    void startSearch(KURL const& root, SearchMode const& modo);
+    void startSearch(KUrl const& root);
+    void startSearch(KUrl const& root, SearchMode const& modo);
     void resume();
     void cancelSearch();
 
@@ -73,10 +73,10 @@ public:
     void reset();
 
     bool searching() const;
-    bool localDomain(KURL const& url, bool restrict = true) const;
-    //bool isLocalRestrict(KURL const& url) const;
+    bool localDomain(KUrl const& url, bool restrict = true) const;
+    //bool isLocalRestrict(KUrl const& url) const;
     SearchMode const& searchMode() const;
-    bool existUrl(KURL const& url, KURL const& url_parent) const;
+    bool existUrl(KUrl const& url, KUrl const& url_parent) const;
     LinkStatus const* linkStatus(QString const& s_url) const;
     int checkedLinks() const;
     QTime timeElapsed() const;
@@ -99,8 +99,8 @@ private:
     vector<LinkStatus*> chooseLinks(vector<LinkStatus*> const& links);
     void checkLinksSimultaneously(vector<LinkStatus*> const& links);
     void addLevel();
-    bool checkableByDomain(KURL const& url, LinkStatus const& link_parent) const;
-    bool checkable(KURL const& url, LinkStatus const& link_parent) const;
+    bool checkableByDomain(KUrl const& url, LinkStatus const& link_parent) const;
+    bool checkable(KUrl const& url, LinkStatus const& link_parent) const;
     int maximumCurrentConnections() const;
     bool onlyCheckHeader(LinkStatus* ls) const;
 

@@ -142,7 +142,7 @@ void SessionWidget::setColumns(QStringList const& colunas)
     tree_view->setColumns(colunas);
 }
 
-void SessionWidget::setUrl(KURL const& url)
+void SessionWidget::setUrl(KUrl const& url)
 {
     combobox_url->setCurrentText(url.prettyURL());
     combobox_url->setFocus();
@@ -203,7 +203,7 @@ void SessionWidget::slotSuggestDomain(bool toogle)
 {
     if(toogle && !(combobox_url->currentText().isEmpty()))
     {
-        KURL url = Url::normalizeUrl(combobox_url->currentText());
+        KUrl url = Url::normalizeUrl(combobox_url->currentText());
         if(url.isValid())
             lineedit_domain->setText(url.host() + url.directory(true, false));
     }
@@ -256,10 +256,10 @@ void SessionWidget::slotCheck()
     //table_linkstatus->clear();
     tree_view->clear();
     
-    KURL url = Url::normalizeUrl(combobox_url->currentText());
+    KUrl url = Url::normalizeUrl(combobox_url->currentText());
     if(KLSConfig::useQuantaUrlPreviewPrefix() && Global::isKLinkStatusEmbeddedInQuanta())
     {
-        KURL url_aux = Global::urlWithQuantaPreviewPrefix(url);
+        KUrl url_aux = Global::urlWithQuantaPreviewPrefix(url);
         if(url_aux.isValid() && !url_aux.isEmpty())
             url = url_aux;
     }
@@ -373,7 +373,7 @@ void SessionWidget::keyPressEvent ( QKeyEvent* e )
 
 bool SessionWidget::validFields()
 {
-    KURL url = Url::normalizeUrl(combobox_url->currentText());
+    KUrl url = Url::normalizeUrl(combobox_url->currentText());
 
     if(combobox_url->currentText().isEmpty())
     {

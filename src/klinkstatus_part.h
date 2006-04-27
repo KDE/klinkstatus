@@ -29,7 +29,7 @@ class ActionManager;
 class QWidget;
 class QPainter;
 
-class KURL;
+class KUrl;
 class KAboutData;
 class KAboutApplication;
 class KAction;
@@ -51,7 +51,7 @@ public:
 protected:
     /** This must be implemented by each part */
     virtual bool openFile();
-    virtual bool openURL (const KURL &url);
+    virtual bool openURL (const KUrl &url);
     //	virtual bool saveFile(){};
 
 protected slots:

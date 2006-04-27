@@ -45,7 +45,7 @@ inline QTime SearchManager::timeElapsed() const
     return QTime(0, 0).addMSecs(ms);
 }
 
-inline void SearchManager::startSearch(KURL const& root)
+inline void SearchManager::startSearch(KUrl const& root)
 {
     startSearch(root, search_mode_);
 }
@@ -121,7 +121,7 @@ inline bool SearchManager::searching() const
     return searching_;
 }
 
-inline bool SearchManager::localDomain(KURL const& url, bool restrict) const
+inline bool SearchManager::localDomain(KUrl const& url, bool restrict) const
 {
 	return Url::localDomain(root_.absoluteUrl(), url, restrict);
 }
@@ -141,12 +141,12 @@ inline bool SearchManager::hasDocumentRoot() const
     return has_document_root_;
 }
 
-inline KURL const& SearchManager::documentRoot() const
+inline KUrl const& SearchManager::documentRoot() const
 {
     return document_root_url_;
 }
 
-inline void SearchManager::setDocumentRoot(KURL const& url)
+inline void SearchManager::setDocumentRoot(KUrl const& url)
 {
     Q_ASSERT(url.isValid()); // includes empty URLs
     Q_ASSERT(!url.protocol().startsWith("http"));

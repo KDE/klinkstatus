@@ -28,7 +28,7 @@
 Node::LinkType Url::resolveLinkType(QString const& url)
 {
     QString aux(url);
-    aux = KURL::decode_string(aux);
+    aux = KUrl::decode_string(aux);
 
     if(aux.isNull())
         return Node::relative;
@@ -43,12 +43,12 @@ Node::LinkType Url::resolveLinkType(QString const& url)
         return Node::relative;
 }
 
-KURL Url::normalizeUrl(QString const& string_url, LinkStatus const& link_parent)
+KUrl Url::normalizeUrl(QString const& string_url, LinkStatus const& link_parent)
 {
     QString _string_url = string_url.trimmed();
 
     QString s_url;
-    KURL base_url;
+    KUrl base_url;
 
     // resolve base url
     if(link_parent.hasBaseURI())
@@ -60,7 +60,7 @@ KURL Url::normalizeUrl(QString const& string_url, LinkStatus const& link_parent)
     if(_string_url.isEmpty())
         return base_url;
     else if(Url::hasProtocol(_string_url))
-        return KURL(_string_url);
+        return KUrl(_string_url);
     else
     {
         s_url.prepend(base_url.protocol() + "://" + base_url.host());
@@ -78,7 +78,7 @@ KURL Url::normalizeUrl(QString const& string_url, LinkStatus const& link_parent)
         }
 
         s_url.append(_string_url);
-        KURL url(s_url);
+        KUrl url(s_url);
         if(base_url.hasUser())
             url.setUser(base_url.user());
         if(base_url.hasPass())
@@ -91,13 +91,13 @@ KURL Url::normalizeUrl(QString const& string_url, LinkStatus const& link_parent)
     }
 }
 
-KURL Url::normalizeUrl(QString const& string_url)
+KUrl Url::normalizeUrl(QString const& string_url)
 {
     QString qs_url = string_url.trimmed();
 
     if(qs_url[0] == '/')
     {
-        KURL url;
+        KUrl url;
         url.setPath(qs_url);
         url.cleanPath();
         return url;
@@ -108,13 +108,13 @@ KURL Url::normalizeUrl(QString const& string_url)
         if(!Url::hasProtocol(qs_url))
             qs_url.prepend("http://");
 
-        KURL url(qs_url);
+        KUrl url(qs_url);
         url.cleanPath();
         return url;
     }
 }
 
-bool Url::existUrl(KURL const& url, vector<LinkStatus*> const& v)
+bool Url::existUrl(KUrl const& url, vector<LinkStatus*> const& v)
 {
     if(url.prettyURL().isEmpty())
         return true;
@@ -198,7 +198,7 @@ bool Url::hasProtocol(QString const& url)
 
     else
     {
-        KURL url = KURL::fromPathOrURL(s_url);
+        KUrl url = KUrl::fromPathOrURL(s_url);
         if(!url.protocol().isEmpty())
             return true;
         /*
@@ -240,10 +240,10 @@ bool Url::hasProtocol(QString const& url)
 */
 QString Url::convertToLocal(LinkStatus const* ls)
 {
-    KURL url = ls->absoluteUrl();
-    KURL base_url = ls->rootUrl();
+    KUrl url = ls->absoluteUrl();
+    KUrl base_url = ls->rootUrl();
     
-    return KURL::relativeURL(base_url, url);
+    return KUrl::relativeURL(base_url, url);
 }
 
 /**
@@ -251,7 +251,7 @@ QString Url::convertToLocal(LinkStatus const* ls)
 	If restrict, sourceforge.net != quanta.sourceforge.net.
 	Else is equal.
 */
-bool Url::localDomain(KURL const& url1, KURL const& url2, bool restrict)
+bool Url::localDomain(KUrl const& url1, KUrl const& url2, bool restrict)
 {
     if(url1.protocol() != url2.protocol())
     {
@@ -283,7 +283,7 @@ bool Url::localDomain(KURL const& url1, KURL const& url2, bool restrict)
 /**
 	Returns true if url2 is a parent of url1.
 */
-bool Url::parentDir(KURL const& url1, KURL const& url2)
+bool Url::parentDir(KUrl const& url1, KUrl const& url2)
 {
     if(url1.protocol() != url2.protocol())
         return false;
@@ -320,7 +320,7 @@ bool Url::parentDir(KURL const& url1, KURL const& url2)
     return false;
 }
 
-bool Url::externalLink(KURL const& url1, KURL const& url2, bool restrict)
+bool Url::externalLink(KUrl const& url1, KUrl const& url2, bool restrict)
 {
     if(url1.protocol() != url2.protocol())
     {

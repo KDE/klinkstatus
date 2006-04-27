@@ -196,7 +196,7 @@ void LinkStatus::save(QDomElement& element) const
     // <referers>
     tmp_1 = element.ownerDocument().createElement("referrers");
     
-    for(QValueVector<KURL>::const_iterator it = referrers_.begin(); it != referrers_.end(); ++it)
+    for(QValueVector<KUrl>::const_iterator it = referrers_.begin(); it != referrers_.end(); ++it)
     {
         QDomElement tmp_2 = element.ownerDocument().createElement("url");
         tmp_2.appendChild(element.ownerDocument().createTextNode(it->prettyURL()));
