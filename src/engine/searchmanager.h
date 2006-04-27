@@ -27,6 +27,8 @@
 #include <qstring.h>
 #include <qdatetime.h>
 #include <qregexp.h>
+#include <qmap.h>
+class QDomElement;
 
 #include <vector>
 
@@ -37,6 +39,7 @@
 
 using namespace std;
 
+typedef QMap<QString, KHTMLPart*> KHTMLPartMap;
 
 class SearchManager: public QObject
 {
@@ -53,11 +56,24 @@ public:
     SearchManager(int max_simultaneous_connections = 3, int time_out = 50,
                   QObject *parent = 0, const char *name = 0);
     ~SearchManager();
+    
+    QString toXML() const;
+    void save(QDomElement& element) const;
+
+    KHTMLPartMap const& htmlParts() const { return html_parts_; }
+
+    KHTMLPart* htmlPart(QString const& key_url) const;
+    void addHtmlPart(QString const& key_url, KHTMLPart* html_part);
+    void removeHtmlParts();
 
     void startSearch(KUrl const& root);
-    void startSearch(KUrl const& root, SearchMode const& modo);
+    void startSearch(KUrl const& root, SearchMode const& mode);
     void resume();
     void cancelSearch();
+
+    bool hasDocumentRoot() const;
+    KUrl const& documentRoot() const;
+    void setDocumentRoot(KUrl const& url);
 
     void setSearchMode(SearchMode modo);
     void setDepth(int depth);
@@ -76,6 +92,7 @@ public:
     bool localDomain(KUrl const& url, bool restrict = true) const;
     //bool isLocalRestrict(KUrl const& url) const;
     SearchMode const& searchMode() const;
+    bool checkRegularExpressions() const { return check_regular_expressions_; }
     bool existUrl(KUrl const& url, KUrl const& url_parent) const;
     LinkStatus const* linkStatus(QString const& s_url) const;
     int checkedLinks() const;
@@ -85,6 +102,9 @@ public:
     LinkStatus const* linkStatusRoot() const;
     int maxSimultaneousConnections() const;
     int timeOut() const;
+    
+    bool sendIdentification() const { return send_identification_; }
+    QString const& userAgent() const { return user_agent_; }
 
 private:
 
@@ -135,6 +155,8 @@ private:
     int max_simultaneous_connections_;
     SearchMode search_mode_;
     LinkStatus root_;
+    bool has_document_root_;
+    KUrl document_root_url_; // in case of non http protocols the document root must be explicitly given
     int depth_;
     int current_depth_;
     int external_domain_depth_;
@@ -149,6 +171,9 @@ private:
     bool checked_general_domain_;
     int time_out_;
     int current_connections_;
+    bool send_identification_; // user-agent
+    QString user_agent_;
+    
     bool canceled_;
     bool searching_;
     int checked_links_;
@@ -160,6 +185,7 @@ private:
     uint number_of_level_links_;
     uint number_of_links_to_check_;
     vector< vector< vector <LinkStatus*> > > search_results_;
+    KHTMLPartMap html_parts_;
 };
 
 #include "searchmanager_impl.h"
