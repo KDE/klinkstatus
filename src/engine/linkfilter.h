@@ -20,7 +20,9 @@
 #ifndef LINKFILTER_H
 #define LINKFILTER_H
 
-#include "../ui/resultview.h"
+#include <qstring.h>
+
+#include "linkstatushelper.h"
 
 /**
 	@author Paulo Moura Guedes <moura@kdewebdev.org>
@@ -28,7 +30,7 @@
 class LinkMatcher
 {
 public:
-    LinkMatcher(QString const& text, ResultView::Status status);
+    LinkMatcher(QString const& text, LinkStatusHelper::Status status);
     ~LinkMatcher();
 
     bool matches(LinkStatus const& link) const;
@@ -36,14 +38,14 @@ public:
     void setText(const QString& text) { m_text = text; }
     QString text() const { return m_text; }
 
-    void setStatus(ResultView::Status status) { m_status = status; }
-    ResultView::Status status() const { return m_status; }
+    void setStatus(LinkStatusHelper::Status status) { m_status = status; }
+    LinkStatusHelper::Status status() const { return m_status; }
     
-    bool nullFilter() const { return m_text.isEmpty() && m_status == ResultView::none; }
+    bool nullFilter() const { return m_text.isEmpty() && m_status == LinkStatusHelper::none; }
         
 private:
     QString m_text;
-    ResultView::Status m_status;
+    LinkStatusHelper::Status m_status;
 };
 
 #endif
