@@ -114,7 +114,7 @@ inline void LinkStatus::setErrorOccurred(bool houve_error)
 inline void LinkStatus::setIsRoot(bool flag)
 {
     is_root_ = flag;
-    label_ = i18n("ROOT");
+    label_ = "ROOT";
 }
 
 inline void LinkStatus::setRedirection(LinkStatus* redirection)
@@ -185,8 +185,8 @@ inline void LinkStatus::setHtmlDocTitle(QString const& title)
 {
     if(title.isNull() || title.isEmpty())
     {
-        kError(23100) << "HTML doc title is null or empty!" << endl
-        << toString() << endl;
+        kError(23100) << "HTML doc title is null or empty!" << endl;
+//         << toString() << endl;
     }
     Q_ASSERT(!title.isNull() && !title.isEmpty());
 
