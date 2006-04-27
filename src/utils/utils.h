@@ -55,8 +55,10 @@ void decode(QString& url);
 */
 int smallerUnsigned(int a, int b);
 
-class QWidget;
-//void viewUrlInBrowser(KUrl const& url, QWidget* parent, QString browser = "mozilla");
+namespace FileManager
+{
+QString read(QString const& path);
+}
 
 
 #endif
