@@ -22,7 +22,7 @@
 #include "linkstatus.h"
 
 
-LinkMatcher::LinkMatcher(QString const& text, ResultView::Status status)
+LinkMatcher::LinkMatcher(QString const& text, LinkStatusHelper::Status status)
     : m_text(text), m_status(status)
 {
 }
@@ -39,7 +39,7 @@ bool LinkMatcher::matches(LinkStatus const& link ) const
     kDebug() << link.label().contains(m_text) << endl;
     */
     return (link.absoluteUrl().url().contains(m_text, false) || link.label().contains(m_text, false)) &&
-            ResultView::displayableWithStatus(&link, m_status);
+            LinkStatusHelper(&link).hasStatus(m_status);
 }
 
 
