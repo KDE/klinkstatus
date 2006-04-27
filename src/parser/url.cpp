@@ -24,6 +24,8 @@
 #include "mstring.h"
 #include "../utils/utils.h"
 
+#include <kcharsets.h>
+
 
 Node::LinkType Url::resolveLinkType(QString const& url)
 {
@@ -43,7 +45,7 @@ Node::LinkType Url::resolveLinkType(QString const& url)
         return Node::relative;
 }
 
-KUrl Url::normalizeUrl(QString const& string_url, LinkStatus const& link_parent)
+KUrl Url::normalizeUrl(QString const& string_url, LinkStatus const& link_parent, QString const& document_root)
 {
     QString _string_url = string_url.trimmed();
 
@@ -65,10 +67,14 @@ KUrl Url::normalizeUrl(QString const& string_url, LinkStatus const& link_parent)
     {
         s_url.prepend(base_url.protocol() + "://" + base_url.host());
 
-        if( !(_string_url[0] == '/' &&
-                (base_url.protocol() == "http" || base_url.protocol() == "https")) )
-            // @todo if _string_url[0] == '/' fix root directory issue for other prtotocols than http
-            s_url.append(base_url.directory(true, false) + "/");
+        if(_string_url[0] == '/') {
+            if(!base_url.protocol().startsWith("http")) {
+                s_url.append(document_root);
+            }
+        }
+        else {
+            s_url.append(base_url.directory(true, false) + "/");                
+        }
 
         if( (_string_url[0] == ';' || // parameters
                 _string_url[0] == '?' || // query
@@ -83,17 +89,21 @@ KUrl Url::normalizeUrl(QString const& string_url, LinkStatus const& link_parent)
             url.setUser(base_url.user());
         if(base_url.hasPass())
             url.setPass(base_url.pass());
+
+        url.setPort(base_url.port());
+
         url.cleanPath();
 
-        //kDebug(23100) <<  url.url() << endl;
+//         kdDebug(23100) << "Normalized URL: " 
+//                 << KCharsets::resolveEntities(KUrl::decode_string(url.url())) << endl;
 
-        return url;
+        return KUrl(KCharsets::resolveEntities(KUrl::decode_string(url.url())));
     }
 }
 
 KUrl Url::normalizeUrl(QString const& string_url)
 {
-    QString qs_url = string_url.trimmed();
+    QString qs_url(KCharsets::resolveEntities(string_url.stripWhiteSpace()));
 
     if(qs_url[0] == '/')
     {
@@ -169,7 +179,7 @@ bool Url::equalHost(QString const& host1, QString const& host2, bool restrict)
     if(v2[0] == "www")
         aux2 = 1;
 
-    if((size2 - aux < size1 - aux) && restrict) // e.g. paradigma.co.pt < linkstatus.paradigma.co.pt
+    if((size2 - aux2 < size1 - aux) && restrict) // e.g. paradigma.co.pt < linkstatus.paradigma.co.pt
         return false;
 
     if(restrict && (size2 - aux2 > size1 - aux)) // e.g. linkstatus.paradigma.co.pt > paradigma.co.pt
@@ -242,8 +252,11 @@ QString Url::convertToLocal(LinkStatus const* ls)
 {
     KUrl url = ls->absoluteUrl();
     KUrl base_url = ls->rootUrl();
-    
-    return KUrl::relativeURL(base_url, url);
+
+    if(base_url == url)
+        return "./" + url.fileName();
+    else
+        return KUrl::relativeURL(base_url, url);
 }
 
 /**
