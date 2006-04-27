@@ -25,10 +25,11 @@
 #include <qstring.h>
 
 #include <kio/jobclasses.h>
+class KHTMLPart;
 
 #include "../parser/http.h"
 class LinkStatus;
-
+class SearchManager;
 
 #include <iostream>
 using namespace std;
@@ -46,8 +47,11 @@ public:
 
     //virtual void run();
     void check();
+    void setSearchManager(SearchManager* search_manager);
 
-    LinkStatus const* const linkStatus() const;
+    LinkStatus const* linkStatus() const;
+
+    static bool hasAnchor(KHTMLPart* html_part, QString const& anchor);
 
 signals:
 
@@ -58,8 +62,7 @@ signals:
 protected slots:
 
     void slotData(KIO::Job *, const QByteArray &data);
-    //void slotRedirection (KIO::Job *, const KUrl &url);
-    void slotPermanentRedirection(KIO::Job *, const KUrl &fromUrl, const KUrl &toUrl);
+    void slotRedirection (KIO::Job *, const KUrl &url);
     void slotMimetype(KIO::Job *, const QString &type);
     void slotResult(KIO::Job* job);
     void slotTimeOut();
@@ -72,14 +75,25 @@ protected:
 
 private:
     void checkRef(LinkStatus const* linkstatus_parent);
+    void checkRef(KUrl const& url);
+    void killJob();    
+    /**
+     * @param url 
+     * @return false if the redirection was already checked by the search manager
+     */
+    bool processRedirection(KUrl const& url);
 
 private:
 
+    SearchManager* search_manager_;
     LinkStatus* const linkstatus_;
     KIO::TransferJob* t_job_;
     int time_out_;
     LinkChecker* checker_;
+/*  A redirection has appened, with the current URL. Several redirections 
+    can happen until the final URL is reached.*/
     bool redirection_;
+    KUrl redirection_url_;
     QString doc_html_;
     bool header_checked_;
     bool finnished_;
@@ -88,7 +102,7 @@ private:
     static int count_; // debug attribute that counts how many links were checked
 };
 
-inline LinkStatus const* const LinkChecker::linkStatus() const
+inline LinkStatus const* LinkChecker::linkStatus() const
 {
     return linkstatus_;
 }
