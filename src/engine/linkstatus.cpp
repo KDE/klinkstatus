@@ -22,11 +22,6 @@
 #include "../parser/node.h"
 #include "../ui/treeview.h"
 
-#include <klocale.h>
-#include <kcharsets.h>
-
-#include <qdom.h>
-
 
 LinkStatus::~LinkStatus()
 {
@@ -94,37 +89,6 @@ void LinkStatus::reset()
     base_URI_ = "";
 }
 
-QString const LinkStatus::toString() const
-{
-    QString aux;
-
-    if(!is_root_)
-    {
-        Q_ASSERT(parent_);
-        aux += i18n( "Parent: %1", parent()->absoluteUrl().prettyURL() ) + "\n";
-    }
-    Q_ASSERT(!original_url_.isNull());
-
-    aux += i18n( "URL: %1", absoluteUrl().prettyURL() ) + "\n";
-    aux += i18n( "Original URL: %1", originalUrl() ) + "\n";
-    if(node())
-        aux += i18n( "Node: %1", node()->content() ) + "\n";
-
-    return aux;
-}
-
-
-LinkStatus* LinkStatus::lastRedirection(LinkStatus* ls)
-{
-    if(ls->isRedirection())
-        if(ls->redirection())
-            return lastRedirection(ls->redirection());
-        else
-            return ls;
-    else
-        return ls;
-}
-
 void LinkStatus::loadNode()
 {
     Q_ASSERT(node_);
@@ -135,7 +99,7 @@ void LinkStatus::loadNode()
     if(malformed())
     {
         setErrorOccurred(true);
-        setError(i18n( "Malformed" ));
+        setError("Malformed");
         kDebug(23100) <<  "Malformed:" << endl;
         kDebug(23100) <<  "Node: " << node()->content() << endl;
         //kDebug(23100) <<  toString() << endl; // probable segfault
@@ -159,53 +123,15 @@ void LinkStatus::setMalformed(bool flag)
     if(flag)
     {
         setErrorOccurred(true);
-        setError(i18n( "Malformed" ));
+        setError("Malformed");
         kDebug(23100) <<  "Malformed!" << endl;
         kDebug(23100) <<  node()->content() << endl;
         //kDebug(23100) <<  toString() << endl; // probable segfault
     }
-    else if(error() == i18n( "Malformed" ))
+    else if(error() == "Malformed")
     {
         setErrorOccurred(false);
         setError("");
     }
-}
-
-void LinkStatus::save(QDomElement& element) const
-{
-    QDomElement child_element = element.ownerDocument().createElement("link");
-
-    // <url>
-    QDomElement tmp_1 = element.ownerDocument().createElement("url");
-    tmp_1.appendChild(element.ownerDocument().createTextNode(absoluteUrl().prettyURL()));
-    child_element.appendChild(tmp_1);
-    
-    // <status>
-    tmp_1 = element.ownerDocument().createElement("status");
-    tmp_1.setAttribute("broken", 
-                       ResultView::displayableWithStatus(this, ResultView::bad) ? 
-                               "true" : "false");
-    tmp_1.appendChild(element.ownerDocument().createTextNode(status()));
-    child_element.appendChild(tmp_1);
-
-    // <label>
-    tmp_1 = element.ownerDocument().createElement("label");
-    tmp_1.appendChild(element.ownerDocument().createTextNode(KCharsets::resolveEntities(label())));
-    child_element.appendChild(tmp_1);
-
-    // <referers>
-    tmp_1 = element.ownerDocument().createElement("referrers");
-    
-    for(Q3ValueVector<KUrl>::const_iterator it = referrers_.begin(); it != referrers_.end(); ++it)
-    {
-        QDomElement tmp_2 = element.ownerDocument().createElement("url");
-        tmp_2.appendChild(element.ownerDocument().createTextNode(it->prettyURL()));
-    
-        tmp_1.appendChild(tmp_2);
-    }
-    Q_ASSERT(!referrers_.isEmpty());
-    child_element.appendChild(tmp_1);
-
-    element.appendChild(child_element);
 }
 
