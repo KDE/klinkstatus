@@ -4,7 +4,7 @@ include_directories( ${KDE4_INCLUDE_DIR} ${QT_INCLUDES} ${CMAKE_CURRENT_SOURCE_D
 
 ########### next target ###############
 
-set(klsengine_LIB_SRCS linkchecker.cpp linkfilter.cpp linkstatus.cpp  searchmanager.cpp )
+set(klsengine_LIB_SRCS linkchecker.cpp linkfilter.cpp linkstatus.cpp linkstatushelper.cpp searchmanager.cpp )
 
 kde4_automoc(${klsengine_LIB_SRCS})
 
