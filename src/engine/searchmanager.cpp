@@ -21,6 +21,7 @@
 #include <kapplication.h>
 #include <kdebug.h>
 #include <klocale.h>
+#include <khtml_part.h>
 #include <kprotocolmanager.h>
 
 #include <qstring.h>
@@ -31,6 +32,7 @@
 #include <unistd.h>
 
 #include "searchmanager.h"
+#include "linkstatushelper.h"
 #include "../parser/mstring.h"
 #include "../cfg/klsconfig.h"
 
@@ -77,6 +79,8 @@ void SearchManager::reset()
         KLSConfig::setUserAgent(KProtocolManager::defaultUserAgent());
     }
     user_agent_ = KLSConfig::userAgent();
+
+    removeHtmlParts();
 }
 
 SearchManager::~SearchManager()
@@ -181,6 +185,8 @@ void SearchManager::cancelSearch()
 void SearchManager::checkRoot()
 {
     LinkChecker* checker = new LinkChecker(&root_, time_out_, this, "link_checker");
+    checker->setSearchManager(this);
+
     connect(checker, SIGNAL(transactionFinished(const LinkStatus *, LinkChecker *)),
             this, SLOT(slotRootChecked(const LinkStatus *, LinkChecker *)));
     /*
@@ -194,7 +200,7 @@ void SearchManager::slotRootChecked(const LinkStatus * link, LinkChecker * check
 {
     kDebug(23100) <<  "SearchManager::slotRootChecked:" << endl;
     kDebug(23100) <<  link->absoluteUrl().url() << " -> " << 
-            LinkStatus::lastRedirection(&root_)->absoluteUrl().url() << endl;
+            LinkStatusHelper::lastRedirection(&root_)->absoluteUrl().url() << endl;
 
     Q_ASSERT(checked_links_ == 0);
     Q_ASSERT(search_results_.size() == 0);
@@ -207,7 +213,7 @@ void SearchManager::slotRootChecked(const LinkStatus * link, LinkChecker * check
     {
         current_depth_ = 1;
 
-        vector<LinkStatus*> no = children(LinkStatus::lastRedirection(&root_));
+        vector<LinkStatus*> no = children(LinkStatusHelper::lastRedirection(&root_));
 
         emit signalLinksToCheckTotalSteps(no.size());
 
@@ -296,8 +302,8 @@ vector<LinkStatus*> SearchManager::children(LinkStatus* link)
             {
                 kDebug(23100) <<  "link->externalDomainDepth() > external_domain_depth_: "
                 << link->externalDomainDepth() << endl;
-                kDebug(23100) <<  "link: " << endl << link->toString() << endl;
-                kDebug(23100) <<  "child: " << endl << ls->toString() << endl;
+                kDebug(23100) <<  "link: " << endl << LinkStatusHelper(link).toString() << endl;
+                kDebug(23100) <<  "child: " << endl << LinkStatusHelper(ls).toString() << endl;
             }
             Q_ASSERT(link->externalDomainDepth() <= external_domain_depth_);
 
@@ -493,7 +499,7 @@ void SearchManager::checkLinksSimultaneously(vector<LinkStatus*> const& links)
             ++ignored_links_;
             ls->setIgnored(true);
             ls->setErrorOccurred(true);
-            ls->setError(i18n( "Javascript not supported" ));
+            ls->setError("Javascript not supported");
             ls->setChecked(true);
             slotLinkChecked(ls, 0);
         }
@@ -511,6 +517,7 @@ void SearchManager::checkLinksSimultaneously(vector<LinkStatus*> const& links)
         else
         {
             LinkChecker* checker = new LinkChecker(ls, time_out_, this, "link_checker");
+            checker->setSearchManager(this);
 
             connect(checker, SIGNAL(transactionFinished(const LinkStatus *, LinkChecker *)),
                     this, SLOT(slotLinkChecked(const LinkStatus *, LinkChecker *)));
@@ -536,7 +543,7 @@ void SearchManager::slotLinkChecked(const LinkStatus * link, LinkChecker * check
     --links_being_checked_;
 
     if(links_being_checked_ < 0)
-        kDebug(23100) <<  link->toString() << endl;
+        kDebug(23100) <<  LinkStatusHelper(link).toString() << endl;
     Q_ASSERT(links_being_checked_ >= 0);
 
     if(canceled_ && searching_ && !links_being_checked_)
@@ -579,7 +586,7 @@ void SearchManager::addLevel()
         uint end_sub1 = ultimo_nivel[i].size();
         for(uint j = 0; j != end_sub1; ++j) // links
         {
-            vector <LinkStatus*> f(children( LinkStatus::lastRedirection(((ultimo_nivel[i])[j])) ));
+            vector <LinkStatus*> f(children( LinkStatusHelper::lastRedirection(((ultimo_nivel[i])[j])) ));
             if(f.size() != 0)
             {
                 search_results_[search_results_.size() - 1].push_back(f);
@@ -799,6 +806,38 @@ void SearchManager::slotLinkCheckerFinnished(LinkChecker * checker)
     checker = 0;
 }
 
+KHTMLPart* SearchManager::htmlPart(QString const& key_url) const
+{
+    if(!html_parts_.contains(key_url))
+        return 0;
+
+    return html_parts_[key_url];
+}
+
+void SearchManager::addHtmlPart(QString const& key_url, KHTMLPart* html_part)
+{
+    Q_ASSERT(!key_url.isEmpty());
+    Q_ASSERT(html_part);
+
+    // FIXME configurable
+    if(html_parts_.count() > 150)
+        removeHtmlParts();
+
+    html_parts_.insert(key_url, html_part);
+}
+
+void SearchManager::removeHtmlParts()
+{
+    KHTMLPartMap::Iterator it;
+    for(it = html_parts_.begin(); it != html_parts_.end(); ++it) 
+    {
+        delete it.data();
+        it.data() = 0;
+    }
+
+    html_parts_.clear();
+}
+
 void SearchManager::save(QDomElement& element) const
 {
     // <url>
@@ -849,7 +888,7 @@ void SearchManager::save(QDomElement& element) const
             {
                 LinkStatus* ls = ((search_results_[i])[j])[l];
                 if(ls->checked())
-                    ls->save(child_element);
+                    LinkStatusHelper(ls).save(child_element);
             }
         }
     } 
