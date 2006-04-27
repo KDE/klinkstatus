@@ -97,9 +97,9 @@ ResultsSearchBar::ResultsSearchBar(QWidget* parent, const char* name)
     d->searchCombo->insertItem(iconUndetermined, i18n("Undetermined Links"));
     d->layout->addWidget(d->searchCombo);
 
-    QToolTip::add(clearButton, i18n("Clear filter"));
-    QToolTip::add( d->searchLine, i18n("Enter the terms to filter the result link list"));
-    QToolTip::add( d->searchCombo, i18n("Choose what kind of link status to show in result list"));
+    clearButton->setToolTip( i18n("Clear filter"));
+    d->searchLine->setToolTip( i18n("Enter the terms to filter the result link list"));
+    d->searchCombo->setToolTip( i18n("Choose what kind of link status to show in result list"));
 
     connect(clearButton, SIGNAL( clicked() ),
             this, SLOT(slotClearSearch()) );
