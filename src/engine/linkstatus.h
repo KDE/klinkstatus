@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2004 by Paulo Moura Guedes                              *
- *   moura@kdewebdev.org                                                        *
+ *   moura@kdewebdev.org                                                   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -15,7 +15,7 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
- *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.             *
+ *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
 #ifndef LINKSTATUS_H
@@ -25,13 +25,11 @@
 #include "../utils/mvector.h"
 
 #include <kurl.h>
-#include <klocale.h>
 #include <kdebug.h>
 class TreeView;
 class TreeViewItem;
 
 #include <qstring.h>
-#include <qobject.h>
 #include <q3valuevector.h>
 class QDomElement;
 
@@ -52,8 +50,6 @@ public:
     LinkStatus(Node* node, LinkStatus* parent);
     ~LinkStatus();
 
-    void save(QDomElement& element) const;
-    
     void reset();
     void setRootUrl(KUrl const& url);
     void setDepth(uint depth);
@@ -107,7 +103,6 @@ public:
     LinkStatus* redirection() const;
     Node* node() const;
     vector<Node*> const& childrenNodes() const;
-    QString const toString() const;
     bool checked() const;
     int externalDomainDepth() const;
     bool onlyCheckHeader() const;
@@ -122,8 +117,6 @@ public:
     bool isErrorPage() const;
     TreeViewItem* treeViewItem() const;
     Q3ValueVector<KUrl> const& referrers() const;
-
-    static LinkStatus* lastRedirection(LinkStatus* ls);
 
 private:
 
