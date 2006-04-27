@@ -23,7 +23,7 @@
 #include <ktabwidget.h>
 #include <kurl.h>
 
-#include <qintdict.h>
+#include <q3intdict.h>
 class QToolButton;
 
 class SessionWidget;
@@ -40,7 +40,7 @@ class TabWidgetSession : public KTabWidget
     Q_OBJECT
 
 public:
-    TabWidgetSession(QWidget * parent = 0, const char * name = 0, WFlags f = 0);
+    TabWidgetSession(QWidget * parent = 0, const char * name = 0, Qt::WFlags f = 0);
     ~TabWidgetSession();
 
     /** Set the URL in the current session widget */
@@ -50,7 +50,7 @@ public:
     bool emptySessionsExist() const;
     /** Returns the first empty session it finds */
     SessionWidget* getEmptySession() const;
-    QIntDict<SessionWidget> const& sessions() const;
+    Q3IntDict<SessionWidget> const& sessions() const;
     
 
 public slots:
@@ -78,7 +78,7 @@ private:
     SessionWidget* newSessionWidget();
 
 private:
-    QIntDict<SessionWidget> tabs_;
+    Q3IntDict<SessionWidget> tabs_;
     QToolButton* tabs_close_;
 };
 

@@ -401,7 +401,7 @@ inline TreeViewItem* LinkStatus::treeViewItem() const
     return tree_view_item_;
 }
 
-inline QValueVector<KUrl> const& LinkStatus::referrers() const
+inline Q3ValueVector<KUrl> const& LinkStatus::referrers() const
 {
     return referrers_;
 }

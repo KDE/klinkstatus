@@ -19,6 +19,10 @@
 #include <kstdaccel.h>
 #include <kurldrag.h>
 #include <kglobalsettings.h>
+//Added by qt3to4:
+#include <Q3ValueList>
+#include <QKeyEvent>
+#include <QEvent>
 
 
 bool KLSHistoryCombo::items_saved_ = false;
@@ -130,7 +134,7 @@ void KLSHistoryCombo::selectWord(QKeyEvent *e)
     int count = 0;
 
     // TODO: make these a parameter when in kdelibs/kdeui...
-    QValueList<QChar> chars;
+    Q3ValueList<QChar> chars;
     chars << QChar('/') << QChar('.') << QChar('?') << QChar('#') << QChar(':');
     bool allow_space_break = true;
 

@@ -12,8 +12,8 @@
 #ifndef RESULTVIEW_H
 #define RESULTVIEW_H
 
-#include <qvaluevector.h>
-#include <qpopupmenu.h>
+#include <q3valuevector.h>
+#include <q3popupmenu.h>
 #include <qstringlist.h>
 
 class KUrl;
@@ -64,7 +64,7 @@ public:
 protected:
     //virtual bool textFitsInCell(int row, int col) const = 0;
     virtual bool isEmpty() const = 0;
-    virtual void loadContextTableMenu(QValueVector<KUrl> const& referrers, bool is_root = false) = 0;
+    virtual void loadContextTableMenu(Q3ValueVector<KUrl> const& referrers, bool is_root = false) = 0;
 
 protected slots:
 
@@ -84,8 +84,8 @@ protected:
     int col_label_;
     int col_url_;
     int col_markup_; // optional
-    QPopupMenu context_table_menu_;
-    QPopupMenu* sub_menu_;
+    Q3PopupMenu context_table_menu_;
+    Q3PopupMenu* sub_menu_;
     CellToolTip* cell_tip_;
 
 private:

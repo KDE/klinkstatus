@@ -21,7 +21,7 @@
 #include "celltooltip.h"
 #include "tablelinkstatus.h"
 
-#include <qscrollview.h>
+#include <q3scrollview.h>
 
 #include <iostream>
 using namespace std;

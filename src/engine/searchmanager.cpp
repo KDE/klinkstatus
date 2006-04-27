@@ -24,7 +24,7 @@
 #include <kprotocolmanager.h>
 
 #include <qstring.h>
-#include <qvaluevector.h>
+#include <q3valuevector.h>
 #include <qdom.h>
 
 #include <iostream>
@@ -326,7 +326,7 @@ bool SearchManager::existUrl(KUrl const& url, KUrl const& url_parent) const
                 Q_ASSERT(tmp);                
                 if(tmp->absoluteUrl() == url)
                 { // URL exists
-                    QValueVector<KUrl> referrers(tmp->referrers());
+                    Q3ValueVector<KUrl> referrers(tmp->referrers());
 
                     // Add new referrer
                     for(uint i = 0; i != referrers.size(); ++i)

@@ -19,9 +19,13 @@
 #include <kmessagebox.h>
 #include <dcopclient.h>
 
-#include <qvaluevector.h>
-#include <qheader.h>
+#include <q3valuevector.h>
+#include <q3header.h>
 #include <qclipboard.h>
+//Added by qt3to4:
+#include <QPixmap>
+#include <QResizeEvent>
+#include <Q3PopupMenu>
 
 #include "treeview.h"
 #include "../global.h"
@@ -45,10 +49,10 @@ TreeView::TreeView(QWidget *parent, const char *name,
     setRootIsDecorated(KLSConfig::displayTreeView());
     //setResizeMode(QListView::LastColumn);
     
-    sub_menu_ = new QPopupMenu(this, "sub_menu_referrers");
+    sub_menu_ = new Q3PopupMenu(this, "sub_menu_referrers");
     
-    connect(this, SIGNAL( rightButtonClicked ( QListViewItem *, const QPoint &, int )),
-            this, SLOT( slotPopupContextMenu( QListViewItem *, const QPoint &, int )) );
+    connect(this, SIGNAL( rightButtonClicked ( Q3ListViewItem *, const QPoint &, int )),
+            this, SLOT( slotPopupContextMenu( Q3ListViewItem *, const QPoint &, int )) );
 }
 
 
@@ -103,7 +107,7 @@ void TreeView::removeColunas()
 
 void TreeView::show(ResultView::Status const& status)
 {
-    QListViewItemIterator it(static_cast<K3ListView*> (this));
+    Q3ListViewItemIterator it(static_cast<K3ListView*> (this));
     while(it.current())
     {
         TreeViewItem* item = myItem(it.current());
@@ -142,7 +146,7 @@ void TreeView::show(ResultView::Status const& status)
 
 void TreeView::showAll()
 {
-    QListViewItemIterator it(this);
+    Q3ListViewItemIterator it(this);
     while(it.current())
     {
         it.current()->setVisible(true);
@@ -151,7 +155,7 @@ void TreeView::showAll()
     }
 }
 
-void TreeView::ensureRowVisible(const QListViewItem * i, bool tree_display)
+void TreeView::ensureRowVisible(const Q3ListViewItem * i, bool tree_display)
 {
     QScrollBar* vertical_scroll_bar = verticalScrollBar();
 
@@ -172,14 +176,14 @@ void TreeView::resizeEvent(QResizeEvent *e)
     clipper()->repaint();
 }
 
-void TreeView::slotPopupContextMenu(QListViewItem* item, const QPoint& pos, int col)
+void TreeView::slotPopupContextMenu(Q3ListViewItem* item, const QPoint& pos, int col)
 {
     current_column_ = col;
     
     TreeViewItem* tree_item = myItem(item);
     if(tree_item)
     {
-        QValueVector<KUrl> referrers = tree_item->linkStatus()->referrers();
+        Q3ValueVector<KUrl> referrers = tree_item->linkStatus()->referrers();
         loadContextTableMenu(referrers, tree_item->linkStatus()->isRoot());
         context_table_menu_.popup(pos);
     }
@@ -212,7 +216,7 @@ void TreeView::slotCopyCellTextToClipboard() const
 void TreeView::slotEditReferrersWithQuanta()
 {
     TreeViewItem* _item = myItem(currentItem());
-    QValueVector<KUrl> referrers = _item->linkStatus()->referrers();
+    Q3ValueVector<KUrl> referrers = _item->linkStatus()->referrers();
 
     if(Global::isQuantaAvailableViaDCOP())
     {
@@ -245,7 +249,7 @@ void TreeView::slotEditReferrerWithQuanta(int id)
     index -= 2; // The list of referrers starts on index = 2
 
     TreeViewItem* _item = myItem(currentItem());
-    QValueVector<KUrl> referrers = _item->linkStatus()->referrers();
+    Q3ValueVector<KUrl> referrers = _item->linkStatus()->referrers();
     Q_ASSERT(index >= 0 && (uint)index < referrers.size());
 
     slotEditReferrerWithQuanta(referrers[index]);
@@ -308,7 +312,7 @@ void TreeView::slotViewParentUrlInBrowser()
     }
 }
 
-void TreeView::loadContextTableMenu(QValueVector<KUrl> const& referrers, bool is_root)
+void TreeView::loadContextTableMenu(Q3ValueVector<KUrl> const& referrers, bool is_root)
 {
     context_table_menu_.clear();
     sub_menu_->clear();
@@ -351,7 +355,7 @@ void TreeView::loadContextTableMenu(QValueVector<KUrl> const& referrers, bool is
                                    this, SLOT(slotCopyCellTextToClipboard()));
 }
 
-TreeViewItem* TreeView::myItem(QListViewItem* item) const
+TreeViewItem* TreeView::myItem(Q3ListViewItem* item) const
 {
     TreeViewItem* _item = dynamic_cast<TreeViewItem*> (item);
     Q_ASSERT(_item);
@@ -361,7 +365,7 @@ TreeViewItem* TreeView::myItem(QListViewItem* item) const
 
 /* ******************************* TreeViewItem ******************************* */
 
-TreeViewItem::TreeViewItem(QListView* listview, QListViewItem* after,
+TreeViewItem::TreeViewItem(Q3ListView* listview, Q3ListViewItem* after,
                            LinkStatus const* linkstatus, int number_of_columns)
         : K3ListViewItem(listview, after), number_of_columns_(number_of_columns),
         last_child_(0)
@@ -369,7 +373,7 @@ TreeViewItem::TreeViewItem(QListView* listview, QListViewItem* after,
     init(linkstatus);
 }
 
-TreeViewItem::TreeViewItem(QListViewItem* listview_item, QListViewItem* after,
+TreeViewItem::TreeViewItem(Q3ListViewItem* listview_item, Q3ListViewItem* after,
                            LinkStatus const* linkstatus, int number_of_columns)
         : K3ListViewItem(listview_item, after), number_of_columns_(number_of_columns),
         last_child_(0)
@@ -399,13 +403,13 @@ void TreeViewItem::init(LinkStatus const* linkstatus)
     }
 }
 
-void TreeViewItem::setLastChild(QListViewItem* last_child)
+void TreeViewItem::setLastChild(Q3ListViewItem* last_child)
 {
     Q_ASSERT(last_child);
     last_child_ = last_child;
 }
 
-QListViewItem* TreeViewItem::lastChild() const
+Q3ListViewItem* TreeViewItem::lastChild() const
 {
     return last_child_;
 }

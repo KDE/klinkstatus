@@ -180,7 +180,7 @@ inline NodeLINK::NodeLINK(QString const& content)
 inline NodeMETA::NodeMETA(QString const& content)
         : Node(content)
 {
-    element_ = META;
+    element_ = Qt::META;
     parse();
 }
 

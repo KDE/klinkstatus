@@ -26,6 +26,8 @@
 #include <qstring.h>
 #include <qlayout.h>
 #include <qlabel.h>
+//Added by qt3to4:
+#include <Q3VBoxLayout>
 
 
 DocumentRootDialog::DocumentRootDialog(QWidget *parent, QString const& url)
@@ -35,7 +37,7 @@ DocumentRootDialog::DocumentRootDialog(QWidget *parent, QString const& url)
 {
     QWidget* page = new QWidget(this);
     setMainWidget(page);
-    QVBoxLayout* topLayout = new QVBoxLayout(page, 0, spacingHint());
+    Q3VBoxLayout* topLayout = new Q3VBoxLayout(page, 0, spacingHint());
 
     QLabel* label = new QLabel(i18n("As you are using a protocol different than HTTP, \nthere is no way to guess where the document root is, \nin order to resolve relative URLs like the ones started with \"/\".\n\nPlease specify one:"), page);
     topLayout->addWidget(label);

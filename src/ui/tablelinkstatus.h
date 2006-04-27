@@ -21,11 +21,11 @@
 #ifndef TABLE_LINKSTATUS_H
 #define TABLE_LINKSTATUS_H
 
-#include <qtable.h>
+#include <q3table.h>
 #include <qstring.h>
 #include <qcolor.h>
-#include <qpopupmenu.h>
-#include <qvaluevector.h>
+#include <q3popupmenu.h>
+#include <q3valuevector.h>
 class QStringList;
 
 class KUrl;
@@ -43,7 +43,7 @@ int const STATUS_COLUMN_WIDTH = 50;
 
 class TableItem;
 
-class TableLinkstatus: public QTable, public ResultView
+class TableLinkstatus: public Q3Table, public ResultView
 {
     Q_OBJECT
 public:
@@ -85,7 +85,7 @@ private slots:
     virtual void slotEditReferrerWithQuanta(KUrl const& url);
     virtual void slotViewUrlInBrowser();
     virtual void slotViewParentUrlInBrowser();
-    virtual void loadContextTableMenu(QValueVector<KUrl> const& referrers, bool is_root = false);
+    virtual void loadContextTableMenu(Q3ValueVector<KUrl> const& referrers, bool is_root = false);
 
 private:
 
@@ -104,11 +104,11 @@ private:
 };
 
 
-class TableItem: public QTableItem, public ResultViewItem
+class TableItem: public Q3TableItem, public ResultViewItem
 {
 public:
 
-    TableItem(QTable* table, EditType et,
+    TableItem(Q3Table* table, EditType et,
               LinkStatus const* linkstatus,
               int column_index, int alignment = Qt::AlignLeft);
     virtual ~TableItem();
@@ -142,7 +142,7 @@ class TableItemURL: public TableItem
 {
 public:
 
-    TableItemURL(QTable* table, EditType et,
+    TableItemURL(Q3Table* table, EditType et,
                  LinkStatus const* linkstatus, int column_index = 3);
     //virtual ~TableItemURL(){};
 
@@ -161,7 +161,7 @@ class TableItemStatus: public TableItem
 {
 public:
 
-    TableItemStatus(QTable* table, EditType et,
+    TableItemStatus(Q3Table* table, EditType et,
                     LinkStatus const* linkstatus, int column_index = 1);
     //virtual ~TableItemStatus(){};
 
@@ -179,7 +179,7 @@ class TableItemNome: public TableItem
 {
 public:
 
-    TableItemNome(QTable* table, EditType et,
+    TableItemNome(Q3Table* table, EditType et,
                   LinkStatus const* linkstatus, int column_index = 2);
     //virtual ~TableItemNome(){};
 
@@ -196,7 +196,7 @@ protected:
 inline void TableItem::paint( QPainter *p, const QColorGroup &cg,
                               const QRect &cr, bool selected )
 {
-    QTableItem::paint(p, cg, cr, selected);
+    Q3TableItem::paint(p, cg, cr, selected);
 }
 
 #endif

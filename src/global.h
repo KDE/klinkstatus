@@ -13,7 +13,9 @@
 #define GLOBAL_H
 
 #include <qobject.h>
-class QCString;
+//Added by qt3to4:
+#include <Q3CString>
+class Q3CString;
 
 class DCOPClient;
 class KUrl;
@@ -32,7 +34,7 @@ public:
     static bool isKLinkStatusEmbeddedInQuanta();
     static bool isQuantaRunningAsUnique();
     static bool isQuantaAvailableViaDCOP();
-    static QCString quantaDCOPAppId();
+    static Q3CString quantaDCOPAppId();
     static KUrl urlWithQuantaPreviewPrefix(KUrl const& url);
     
     //static void setLoopStarted(bool flag);

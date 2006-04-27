@@ -13,6 +13,9 @@
 #define KLSHISTORYCOMBO_H
 
 #include <kcombobox.h>
+//Added by qt3to4:
+#include <QKeyEvent>
+#include <QEvent>
 class KConfig;
 
 /**

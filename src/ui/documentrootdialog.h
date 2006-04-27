@@ -21,6 +21,8 @@
 #define DOCUMENTROOTDIALOG_H
 
 #include <kdialogbase.h>
+//Added by qt3to4:
+#include <QCloseEvent>
 
 class KUrlRequester;
 

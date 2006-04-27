@@ -121,7 +121,7 @@
                                                         <string>URL: </string>
                                                     </property>
                                                     <property name="alignment">
-                                                        <set>AlignVCenter|AlignLeft</set>
+                                                        <set>Qt::AlignVCenter|Qt::AlignLeft</set>
                                                     </property>
                                                 </widget>
                                                 <widget class="KLSHistoryCombo">
@@ -129,7 +129,7 @@
                                                         <cstring>combobox_url</cstring>
                                                     </property>
                                                     <property name="focusPolicy">
-                                                        <enum>StrongFocus</enum>
+                                                        <enum>Qt::StrongFocus</enum>
                                                     </property>
                                                     <property name="acceptDrops">
                                                         <bool>false</bool>
@@ -156,7 +156,7 @@
                                                         <cstring>Spacer11</cstring>
                                                     </property>
                                                     <property name="orientation">
-                                                        <enum>Horizontal</enum>
+                                                        <enum>Qt::Horizontal</enum>
                                                     </property>
                                                     <property name="sizeType">
                                                         <enum>Maximum</enum>
@@ -231,7 +231,7 @@
                                                         <cstring>spacer4</cstring>
                                                     </property>
                                                     <property name="orientation">
-                                                        <enum>Horizontal</enum>
+                                                        <enum>Qt::Horizontal</enum>
                                                     </property>
                                                     <property name="sizeType">
                                                         <enum>Expanding</enum>
@@ -272,7 +272,7 @@
                                                         <cstring>spacer5</cstring>
                                                     </property>
                                                     <property name="orientation">
-                                                        <enum>Horizontal</enum>
+                                                        <enum>Qt::Horizontal</enum>
                                                     </property>
                                                     <property name="sizeType">
                                                         <enum>MinimumExpanding</enum>
@@ -312,7 +312,7 @@
                                                         <cstring>spacer5_2</cstring>
                                                     </property>
                                                     <property name="orientation">
-                                                        <enum>Horizontal</enum>
+                                                        <enum>Qt::Horizontal</enum>
                                                     </property>
                                                     <property name="sizeType">
                                                         <enum>Maximum</enum>
@@ -454,7 +454,7 @@
                                 <cstring>spacer5_2_3</cstring>
                             </property>
                             <property name="orientation">
-                                <enum>Horizontal</enum>
+                                <enum>Qt::Horizontal</enum>
                             </property>
                             <property name="sizeType">
                                 <enum>Preferred</enum>

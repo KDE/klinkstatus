@@ -32,6 +32,8 @@
 #include <kstatusbar.h>
 #include <klocale.h>
 #include <kdebug.h>
+//Added by qt3to4:
+#include <Q3PtrList>
 
 
 KLinkStatus::KLinkStatus()
@@ -183,8 +185,8 @@ void KLinkStatus::optionsConfigureKeys()
     //KKeyDialog::configure(actionCollection());
 
     KKeyDialog dlg( false, this );
-    QPtrList<KXMLGUIClient> clients = guiFactory()->clients();
-    for( QPtrListIterator<KXMLGUIClient> it( clients );
+    Q3PtrList<KXMLGUIClient> clients = guiFactory()->clients();
+    for( Q3PtrListIterator<KXMLGUIClient> it( clients );
             it.current(); ++it )
     {
         dlg.insert( (*it)->actionCollection() );

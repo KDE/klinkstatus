@@ -24,6 +24,8 @@
 #include "sessionwidgetbase.h"
 #include "../engine/linkchecker.h"
 #include "../engine/linkstatus.h"
+//Added by qt3to4:
+#include <QKeyEvent>
 class SearchManager;
 class TableItem;
 class ActionManager;
@@ -32,7 +34,7 @@ class LinkMatcher;
 #include <qtimer.h>
 #include <qstring.h>
 class QStringList;
-class QListViewItem;
+class Q3ListViewItem;
 
 class KUrl;
 class KConfig;
@@ -49,7 +51,7 @@ class SessionWidget: public SessionWidgetBase
 public:
 
     SessionWidget(int max_simultaneous_connections = 3, int time_out = 50,
-                  QWidget* parent = 0, const char* name = 0, WFlags f = 0);
+                  QWidget* parent = 0, const char* name = 0, Qt::WFlags f = 0);
 
     ~SessionWidget();
 
@@ -101,7 +103,7 @@ private slots:
     void slotSearchFinished();
     void slotSearchPaused();
     /** Shows the status of the clicked URL (row) for 5 seconds */
-    void showBottomStatusLabel(QListViewItem* item);
+    void showBottomStatusLabel(Q3ListViewItem* item);
     void clearBottomStatusLabel();
     void slotSetTimeElapsed();
     void newSearchManager();

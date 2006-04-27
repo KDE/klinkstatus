@@ -23,12 +23,14 @@
 #include "../parser/url.h"
 #include "../global.h"
 
-#include <qmemarray.h>
+#include <q3memarray.h>
 #include <qtooltip.h>
 #include <qpixmap.h>
 #include <qclipboard.h>
 #include <qpainter.h>
-#include <qprocess.h>
+#include <q3process.h>
+//Added by qt3to4:
+#include <Q3PopupMenu>
 
 #include <kapplication.h>
 #include <kstandarddirs.h>
@@ -50,14 +52,14 @@ TableLinkstatus::TableLinkstatus(QWidget * parent, const char * name,
                                  int column_index_status,
                                  int column_index_label,
                                  int column_index_URL)
-        : QTable(parent, name),
+        : Q3Table(parent, name),
         ResultView(column_index_status, column_index_label, column_index_URL)
         //context_table_menu_(this, "context_table_menu")
 {
     setShowGrid(false);
     setSorting(false);
-    setSelectionMode(QTable::NoSelection);
-    setFocusStyle(QTable::FollowStyle);
+    setSelectionMode(Q3Table::NoSelection);
+    setFocusStyle(Q3Table::FollowStyle);
     setReadOnly(true);
 
     verticalHeader()->hide();
@@ -65,7 +67,7 @@ TableLinkstatus::TableLinkstatus(QWidget * parent, const char * name,
 
     cell_tip_ = new CellToolTip(this);
 
-    sub_menu_ = new QPopupMenu(this, "sub_menu_referrers");
+    sub_menu_ = new Q3PopupMenu(this, "sub_menu_referrers");
 
     connect(this, SIGNAL( contextMenuRequested ( int, int, const QPoint&  )),
             this, SLOT( slotPopupContextMenu( int, int, const QPoint&)) );
@@ -83,7 +85,7 @@ void TableLinkstatus::setColumns(QStringList const& columns)
     removeColunas();
     setNumCols(columns.size());
 
-    QHeader* horizontal_header = horizontalHeader();
+    Q3Header* horizontal_header = horizontalHeader();
     for(uint i = 0; i != columns.size(); ++i)
     {
         if(i == 0)
@@ -116,11 +118,11 @@ vector<TableItem*> TableLinkstatus::generateRowOfTableItems(LinkStatus const* li
     vector<TableItem*> items;
     int column = 1;
 
-    TableItem* item1 = new TableItemStatus(this, QTableItem::Never,
+    TableItem* item1 = new TableItemStatus(this, Q3TableItem::Never,
                                            linkstatus, column++);
-    TableItem* item2 = new TableItemNome(this, QTableItem::Never,
+    TableItem* item2 = new TableItemNome(this, Q3TableItem::Never,
                                          linkstatus, column++);
-    TableItem* item3 = new TableItemURL(this, QTableItem::Never,
+    TableItem* item3 = new TableItemURL(this, Q3TableItem::Never,
                                         linkstatus, column++);
     items.push_back(item1);
     items.push_back(item2);
@@ -158,7 +160,7 @@ void TableLinkstatus::insereLinha(vector<TableItem*> items)
 
 void TableLinkstatus::clear()
 {
-    QMemArray<int> linhas(numRows());
+    Q3MemArray<int> linhas(numRows());
     for(uint i = 0; i != linhas.size(); ++i)
         linhas[i] = i + 1;
 
@@ -169,7 +171,7 @@ void TableLinkstatus::clear()
 
 void TableLinkstatus::removeColunas()
 {
-    QMemArray<int> columns(numCols());
+    Q3MemArray<int> columns(numCols());
     for(uint i = 0; i != columns.size(); ++i)
         columns[i] = i + 1;
 
@@ -222,12 +224,12 @@ void TableLinkstatus::ensureCellVisible(int row, int col)
 {
     // table viewport is at the bottom
     if(rowPos(row - 1) <= (contentsY() + visibleHeight()))
-        QTable::ensureCellVisible(row, col);
+        Q3Table::ensureCellVisible(row, col);
 }
 
 bool TableLinkstatus::textFitsInCell(int row, int col) const
 {
-    QTableItem* itm(myItem(row, col));
+    Q3TableItem* itm(myItem(row, col));
     Q_ASSERT(itm);
 
     QSize size_hint(itm->sizeHint());
@@ -251,7 +253,7 @@ bool TableLinkstatus::isEmpty() const
 
 TableItem* TableLinkstatus::myItem(int row, int col) const
 {
-    TableItem* _item = dynamic_cast<TableItem*> (QTable::item(row, col));
+    TableItem* _item = dynamic_cast<TableItem*> (Q3Table::item(row, col));
     Q_ASSERT(_item);
     return _item;
 }
@@ -261,13 +263,13 @@ void TableLinkstatus::slotPopupContextMenu(int r, int w, const QPoint& pos)
     TableItem* table_item = myItem(r, w);
     if(table_item)
     {
-        QValueVector<KUrl> referrers = table_item->linkStatus()->referrers();
+        Q3ValueVector<KUrl> referrers = table_item->linkStatus()->referrers();
         loadContextTableMenu(referrers, table_item->linkStatus()->isRoot());
         context_table_menu_.popup(pos);
     }
 }
 
-void TableLinkstatus::loadContextTableMenu(QValueVector<KUrl> const& referrers, bool is_root)
+void TableLinkstatus::loadContextTableMenu(Q3ValueVector<KUrl> const& referrers, bool is_root)
 {
     context_table_menu_.clear();
     sub_menu_->clear();
@@ -336,7 +338,7 @@ void TableLinkstatus::slotCopyCellTextToClipboard() const
 void TableLinkstatus::slotEditReferrersWithQuanta()
 {
     TableItem* _item = myItem(currentRow(), currentColumn());
-    QValueVector<KUrl> referrers = _item->linkStatus()->referrers();
+    Q3ValueVector<KUrl> referrers = _item->linkStatus()->referrers();
 
     if(Global::isQuantaAvailableViaDCOP())
     {
@@ -369,7 +371,7 @@ void TableLinkstatus::slotEditReferrerWithQuanta(int id)
     index -= 2; // The list of referrers starts on index = 2
 
     TableItem* _item = myItem(currentRow(), currentColumn());
-    QValueVector<KUrl> referrers = _item->linkStatus()->referrers();
+    Q3ValueVector<KUrl> referrers = _item->linkStatus()->referrers();
     Q_ASSERT(index >= 0 && (uint)index < referrers.size());
 
     slotEditReferrerWithQuanta(referrers[index]);
@@ -438,10 +440,10 @@ void TableLinkstatus::slotViewParentUrlInBrowser()
 
 */
 
-TableItem::TableItem(QTable* table, EditType et,
+TableItem::TableItem(Q3Table* table, EditType et,
                      LinkStatus const* linkstatus,
                      int column_index, int alignment)
-        : QTableItem(table, et, ""), ResultViewItem(linkstatus, column_index),
+        : Q3TableItem(table, et, ""), ResultViewItem(linkstatus, column_index),
         /*ls_((LinkStatus*)linkstatus),
         column_index_(column_index),*/ alignment_(alignment)
 {
@@ -537,7 +539,7 @@ QColor const& TableItem::textStatusColor() const
 
 */
 
-TableItemURL::TableItemURL(QTable* table, EditType et,
+TableItemURL::TableItemURL(Q3Table* table, EditType et,
                            LinkStatus const* linkstatus, int column_index)
         : TableItem(table, et, linkstatus, column_index)
 {
@@ -549,14 +551,14 @@ void TableItemURL::setText()
     if(linkStatus()->node() && linkStatus()->malformed())
     {
         if(linkStatus()->node()->url().isEmpty())
-            QTableItem::setText( linkStatus()->node()->content().simplified() );
+            Q3TableItem::setText( linkStatus()->node()->content().simplified() );
         else
-            QTableItem::setText( linkStatus()->node()->url() );
+            Q3TableItem::setText( linkStatus()->node()->url() );
     }
     else
     {
         KUrl url = linkStatus()->absoluteUrl();
-        QTableItem::setText(::convertToLocal(linkStatus()));
+        Q3TableItem::setText(::convertToLocal(linkStatus()));
     }
 }
 
@@ -576,7 +578,7 @@ void TableItemURL::paint( QPainter *p, const QColorGroup &cg,
     QColor color(textStatusColor());
     m_cg.setColor(QColorGroup::Text, color);
 
-    QTableItem::paint(p, m_cg, cr, selected);
+    Q3TableItem::paint(p, m_cg, cr, selected);
 }
 
 QColor const& TableItemURL::textStatusColor() const
@@ -588,24 +590,24 @@ QColor const& TableItemURL::textStatusColor() const
     if(linkStatus()->errorOccurred())
     {
         if(linkStatus()->error().contains(i18n( "Timeout" )))
-            return darkMagenta;
+            return Qt::darkMagenta;
         else if(linkStatus()->error().contains(i18n( "not supported" )))
-            return lightGray;
+            return Qt::lightGray;
         else
-            return red;
+            return Qt::red;
     }
     else if(linkStatus()->absoluteUrl().protocol() != "http" &&
             linkStatus()->absoluteUrl().protocol() != "https")
-        return black;
+        return Qt::black;
 
     else if(status_code[0] == '5')
-        return darkMagenta;
+        return Qt::darkMagenta;
 
     else if(status_code[0] == '4')
-        return red;
+        return Qt::red;
 
     else
-        return black;
+        return Qt::black;
 }
 
 /*
@@ -614,7 +616,7 @@ QColor const& TableItemURL::textStatusColor() const
 
 */
 
-TableItemStatus::TableItemStatus(QTable* table, EditType et,
+TableItemStatus::TableItemStatus(Q3Table* table, EditType et,
                                  LinkStatus const* linkstatus, int column_index)
         : TableItem(table, et, linkstatus, column_index)
 {
@@ -629,7 +631,7 @@ void TableItemStatus::setText()
             linkStatus()->status() == "OK" ||
             linkStatus()->status() == "304")
     {
-        QTableItem::setText("");
+        Q3TableItem::setText("");
     }
     else
     {
@@ -643,7 +645,7 @@ void TableItemStatus::setText()
         */
         //Q_ASSERT(linkStatus()->httpHeader().statusCode() != 0); //<------------------------------------------------------------
         //QTableItem::setText( QString::number(linkStatus()->httpHeader().statusCode()) );
-        QTableItem::setText( linkStatus()->status() );
+        Q3TableItem::setText( linkStatus()->status() );
     }
 }
 
@@ -654,22 +656,22 @@ void TableItemStatus::setPixmap()
 
         if(linkStatus()->error().contains(i18n( "Timeout" )))
         {
-            QTableItem::setPixmap(SmallIcon("kalarm"));
+            Q3TableItem::setPixmap(SmallIcon("kalarm"));
         }
         else if(linkStatus()->error() == i18n( "Malformed" ))
         {
-            QTableItem::setPixmap(SmallIcon("bug"));
+            Q3TableItem::setPixmap(SmallIcon("bug"));
         }
         else
         {
-            QTableItem::setPixmap(SmallIcon("no"));
+            Q3TableItem::setPixmap(SmallIcon("no"));
         }
     }
     else if(linkStatus()->status() == "304")
-        QTableItem::setPixmap(UserIcon("304"));
+        Q3TableItem::setPixmap(UserIcon("304"));
 
     else if(linkStatus()->status() == "OK")
-        QTableItem::setPixmap(SmallIcon("ok"));
+        Q3TableItem::setPixmap(SmallIcon("ok"));
 }
 
 QString TableItemStatus::toolTip() const
@@ -716,7 +718,7 @@ void TableItemStatus::paint( QPainter *p, const QColorGroup &cg,
     else
         p->setPen( m_cg.text() );
     p->drawText( x + 2, 0, w - x - 4, h,
-                 wordWrap() ? (alignment() | WordBreak) : alignment(), text() );
+                 wordWrap() ? (alignment() | Qt::TextWordWrap) : alignment(), text() );
 }
 
 /*
@@ -725,7 +727,7 @@ void TableItemStatus::paint( QPainter *p, const QColorGroup &cg,
 
 */
 
-TableItemNome::TableItemNome(QTable* table, EditType et,
+TableItemNome::TableItemNome(Q3Table* table, EditType et,
                              LinkStatus const* linkstatus, int column_index)
         : TableItem(table, et, linkstatus, column_index)
 {
@@ -736,7 +738,7 @@ void TableItemNome::setText()
 {
     QString label(linkStatus()->label());
     if(!label.isNull())
-        QTableItem::setText(label.simplified());
+        Q3TableItem::setText(label.simplified());
 }
 
 void TableItemNome::setPixmap()

@@ -26,7 +26,7 @@
 #include <qtooltip.h>
 #include <qpushbutton.h>
 #include <qpixmap.h>
-#include <qiconset.h>
+#include <qicon.h>
 #include <qstringlist.h>
 
 #include <kapplication.h>
@@ -36,7 +36,7 @@
 #include <kstringhandler.h> 
 
 
-TabWidgetSession::TabWidgetSession(QWidget* parent, const char* name, WFlags f)
+TabWidgetSession::TabWidgetSession(QWidget* parent, const char* name, Qt::WFlags f)
         : QTabWidget(parent, name, f) // tabs_ is initialized with size 17
 {
     setFocusPolicy( QTabWidget::NoFocus );
@@ -81,7 +81,7 @@ SessionWidget* TabWidgetSession::getEmptySession() const
 }
 
 // Remember to use count() and not size()
-QIntDict<SessionWidget> const& TabWidgetSession::sessions() const
+Q3IntDict<SessionWidget> const& TabWidgetSession::sessions() const
 {
     return tabs_;
 }

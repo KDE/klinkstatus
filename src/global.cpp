@@ -13,6 +13,8 @@
 
 #include <qstring.h>
 #include <qtimer.h>
+//Added by qt3to4:
+#include <Q3CString>
 
 #include <dcopclient.h>
 #include <dcopref.h>
@@ -55,7 +57,7 @@ Global::~Global()
 
 bool Global::isKLinkStatusEmbeddedInQuanta()
 {
-    QCString app_id = "quanta-" + QCString().setNum(getpid());
+    Q3CString app_id = "quanta-" + Q3CString().setNum(getpid());
     return self()->dcop_client_->isApplicationRegistered(app_id);
 }
 
@@ -87,18 +89,18 @@ bool Global::isQuantaAvailableViaDCOP()
     }
 }
 
-QCString Global::quantaDCOPAppId()
+Q3CString Global::quantaDCOPAppId()
 {
     DCOPClient* client = kapp->dcopClient();
-    QCString app_id;
+    Q3CString app_id;
 
     if(client->isApplicationRegistered("quanta")) // quanta is unnique application
         app_id = "quanta";
 
     else if(self()->isKLinkStatusEmbeddedInQuanta()) // klinkstatus is running as a part inside quanta
     {
-        QCString app = "quanta-";
-        QCString pid = QCString().setNum(getpid());
+        Q3CString app = "quanta-";
+        Q3CString pid = Q3CString().setNum(getpid());
         app_id = app + pid;
     }
 
@@ -175,7 +177,7 @@ void Global::execCommand(QString const& command)
 
 void Global::slotGetScriptOutput(KProcess* /*process*/, char* buf, int buflen)
 {
-    QCString tmp( buf, buflen + 1 );
+    Q3CString tmp( buf, buflen + 1 );
     script_output_ = QString::null;
     script_output_ = QString::fromLocal8Bit(tmp).remove(" ");
 }

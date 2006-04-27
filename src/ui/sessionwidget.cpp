@@ -37,11 +37,14 @@
 #include <qpushbutton.h>
 #include <qlayout.h>
 #include <qlabel.h>
-#include <qlistbox.h>
+#include <q3listbox.h>
 #include <qstringlist.h>
-#include <qbuttongroup.h>
+#include <q3buttongroup.h>
 #include <qtoolbutton.h>
 #include <qregexp.h>
+//Added by qt3to4:
+#include <QPixmap>
+#include <QKeyEvent>
 
 #include "sessionwidget.h"
 #include "tablelinkstatus.h"
@@ -56,7 +59,7 @@
 
 
 SessionWidget::SessionWidget(int max_simultaneous_connections, int time_out,
-                             QWidget* parent, const char* name, WFlags f)
+                             QWidget* parent, const char* name, Qt::WFlags f)
         : SessionWidgetBase(parent, name, f), search_manager_(0),
         ready_(true), bottom_status_timer_(this, "bottom_status_timer"),
         max_simultaneous_connections_(max_simultaneous_connections), time_out_(time_out)
@@ -69,8 +72,8 @@ SessionWidget::SessionWidget(int max_simultaneous_connections, int time_out,
     connect(combobox_url, SIGNAL( textChanged ( const QString & ) ),
             this, SLOT( slotEnableCheckButton( const QString & ) ) );
     
-    connect(tree_view, SIGNAL( clicked ( QListViewItem * ) ),
-            this, SLOT( showBottomStatusLabel( QListViewItem * ) ) );
+    connect(tree_view, SIGNAL( clicked ( Q3ListViewItem * ) ),
+            this, SLOT( showBottomStatusLabel( Q3ListViewItem * ) ) );
     
     connect(&bottom_status_timer_, SIGNAL(timeout()), this, SLOT(clearBottomStatusLabel()) );
 }
@@ -503,7 +506,7 @@ void SessionWidget::insertUrlAtCombobox(QString const& url)
     combobox_url->addToHistory(url);
 }
 
-void SessionWidget::showBottomStatusLabel(QListViewItem * item)
+void SessionWidget::showBottomStatusLabel(Q3ListViewItem * item)
 {
     kDebug(23100) << "SessionWidget::showBottomStatusLabel" << endl;
     

@@ -32,7 +32,7 @@ class TreeViewItem;
 
 #include <qstring.h>
 #include <qobject.h>
-#include <qvaluevector.h>
+#include <q3valuevector.h>
 class QDomElement;
 
 #include <vector>
@@ -121,7 +121,7 @@ public:
     QString mimeType() const;
     bool isErrorPage() const;
     TreeViewItem* treeViewItem() const;
-    QValueVector<KUrl> const& referrers() const;
+    Q3ValueVector<KUrl> const& referrers() const;
 
     static LinkStatus* lastRedirection(LinkStatus* ls);
 
@@ -163,7 +163,7 @@ private:
     bool is_error_page_;
     bool is_local_restrict_;
     TreeViewItem* tree_view_item_;
-    QValueVector<KUrl> referrers_;
+    Q3ValueVector<KUrl> referrers_;
 };
 
 #include "../parser/url.h"

@@ -28,7 +28,7 @@
 #include <kdebug.h>
 
 #include <qapplication.h>
-#include <qhbox.h>
+#include <q3hbox.h>
 #include <qlabel.h>
 #include <qpixmap.h>
 #include <qstring.h>
@@ -36,6 +36,8 @@
 #include <qtoolbutton.h>
 #include <qtooltip.h>
 #include <qlayout.h>
+//Added by qt3to4:
+#include <Q3HBoxLayout>
 
 
 class ResultsSearchBar::ResultsSearchBarPrivate
@@ -47,7 +49,7 @@ public:
 
     QString searchText;
     QTimer timer;
-    QHBoxLayout* layout;
+    Q3HBoxLayout* layout;
     KLineEdit* searchLine;
     KComboBox* searchCombo;
     int delay;
@@ -59,7 +61,7 @@ ResultsSearchBar::ResultsSearchBar(QWidget* parent, const char* name)
 {
     setSizePolicy(QSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed));
     
-    d->layout = new QHBoxLayout(this);    
+    d->layout = new Q3HBoxLayout(this);    
     d->layout->setMargin(2);
     d->layout->setSpacing(5);
     
