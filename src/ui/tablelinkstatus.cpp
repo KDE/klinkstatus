@@ -363,8 +363,8 @@ void TableLinkstatus::slotEditReferrerWithQuanta(int id)
     Q_ASSERT(index != -1);
     Q_ASSERT(index != 1); // separator
 
-    //kdDebug(23100) << "id: " << id << endl;
-    //kdDebug(23100) << "index: " << index << endl;
+    //kDebug(23100) << "id: " << id << endl;
+    //kDebug(23100) << "index: " << index << endl;
 
     index -= 2; // The list of referrers starts on index = 2
 
@@ -487,7 +487,7 @@ QColor const& TableItem::textStatusColor() const
 {
     if(linkStatus()->errorOccurred())
     {
-        //kdDebug(23100) <<  "ERROR: " << linkStatus()->error() << ": " << linkStatus()->absoluteUrl().prettyURL() << endl;
+        //kDebug(23100) <<  "ERROR: " << linkStatus()->error() << ": " << linkStatus()->absoluteUrl().prettyURL() << endl;
         if(linkStatus()->error() == i18n( "Javascript not supported" ))
             return Qt::lightGray;
         else
@@ -507,9 +507,9 @@ QColor const& TableItem::textStatusColor() const
 
         if(status_code[0] == '0')
         {
-            kdWarning(23100) <<  "status code == 0: " << endl;
-            kdWarning(23100) <<  linkStatus()->toString() << endl;
-            kdWarning(23100) <<  linkStatus()->httpHeader().toString() << endl;
+            kWarning(23100) <<  "status code == 0: " << endl;
+            kWarning(23100) <<  linkStatus()->toString() << endl;
+            kWarning(23100) <<  linkStatus()->httpHeader().toString() << endl;
         }
         //Q_ASSERT(status_code[0] != '0');
 
@@ -549,7 +549,7 @@ void TableItemURL::setText()
     if(linkStatus()->node() && linkStatus()->malformed())
     {
         if(linkStatus()->node()->url().isEmpty())
-            QTableItem::setText( linkStatus()->node()->content().simplifyWhiteSpace() );
+            QTableItem::setText( linkStatus()->node()->content().simplified() );
         else
             QTableItem::setText( linkStatus()->node()->url() );
     }
@@ -636,9 +636,9 @@ void TableItemStatus::setText()
         /*
                 if(linkStatus()->httpHeader().statusCode() == 0)
                 {
-                    kdDebug(23100) <<  "TableItemStatus::setText : statusCode() == 0" << endl;
-                    kdDebug(23100) <<  linkStatus()->toString() << endl;
-                    kdDebug(23100) <<  linkStatus()->docHtml() << endl;
+                    kDebug(23100) <<  "TableItemStatus::setText : statusCode() == 0" << endl;
+                    kDebug(23100) <<  linkStatus()->toString() << endl;
+                    kDebug(23100) <<  linkStatus()->docHtml() << endl;
                 }
         */
         //Q_ASSERT(linkStatus()->httpHeader().statusCode() != 0); //<------------------------------------------------------------
@@ -736,7 +736,7 @@ void TableItemNome::setText()
 {
     QString label(linkStatus()->label());
     if(!label.isNull())
-        QTableItem::setText(label.simplifyWhiteSpace());
+        QTableItem::setText(label.simplified());
 }
 
 void TableItemNome::setPixmap()

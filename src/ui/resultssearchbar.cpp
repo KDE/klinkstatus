@@ -84,11 +84,11 @@ ResultsSearchBar::ResultsSearchBar(QWidget* parent, const char* name)
     d->layout->addWidget(statusLabel);
 
     d->searchCombo = new KComboBox(this, "searchcombo");
-    QPixmap iconAll = KGlobal::iconLoader()->loadIcon("exec", KIcon::Small);
-    QPixmap iconGood = KGlobal::iconLoader()->loadIcon("ok", KIcon::Small);
-    QPixmap iconBroken = KGlobal::iconLoader()->loadIcon("no", KIcon::Small);
-    QPixmap iconMalformed = KGlobal::iconLoader()->loadIcon("bug", KIcon::Small);
-    QPixmap iconUndetermined = KGlobal::iconLoader()->loadIcon("help", KIcon::Small);
+    QPixmap iconAll = KGlobal::iconLoader()->loadIcon("exec", K3Icon::Small);
+    QPixmap iconGood = KGlobal::iconLoader()->loadIcon("ok", K3Icon::Small);
+    QPixmap iconBroken = KGlobal::iconLoader()->loadIcon("no", K3Icon::Small);
+    QPixmap iconMalformed = KGlobal::iconLoader()->loadIcon("bug", K3Icon::Small);
+    QPixmap iconUndetermined = KGlobal::iconLoader()->loadIcon("help", K3Icon::Small);
 
     d->searchCombo->insertItem(iconAll, i18n("All Links"));
     d->searchCombo->insertItem(iconGood, i18n("Good Links"));
@@ -185,7 +185,7 @@ void ResultsSearchBar::slotSearchStringChanged(const QString& search)
 
 void ResultsSearchBar::slotActivateSearch()
 {
-    kdDebug(23100) << "ResultsSearchBar::slotActivateSearch" << endl;
+    kDebug(23100) << "ResultsSearchBar::slotActivateSearch" << endl;
     
     ResultView::Status status = selectedStatus();
     

@@ -24,7 +24,7 @@ inline Node::Node()
 
 inline Node::~Node()
 {
-    //kdDebug(23100) <<  "/";
+    //kDebug(23100) <<  "/";
 }
 
 inline Node::Node(QString const& content)
@@ -139,7 +139,7 @@ inline void NodeA::parse()
 inline void NodeA::parseAttributeNAME()
 {
     attribute_name_ = getAttribute("NAME=");
-    //kdDebug(23100) << "NodeA::parseAttributeNAME: " << attribute_name_ << endl;
+    //kDebug(23100) << "NodeA::parseAttributeNAME: " << attribute_name_ << endl;
 }
 
 // class NodeAREA_______________________________________________________
@@ -164,7 +164,7 @@ inline void NodeAREA::parse()
 inline void NodeAREA::parseAttributeTITLE()
 {
     attribute_title_ = getAttribute("TITLE=");
-//kdDebug(23100) << "NodeAREA::parseAttributeTITLE: " << attribute_title_ << endl;
+//kDebug(23100) << "NodeAREA::parseAttributeTITLE: " << attribute_title_ << endl;
 }
 
 // class NodeLINK________________________________________
@@ -397,7 +397,7 @@ inline void NodeTITLE::parseAttributeTITLE()
     attribute_title_ = content_;
     attribute_title_.replace("<TITLE>", "", false);
     attribute_title_.replace("</TITLE>", "", false);
-    attribute_title_.stripWhiteSpace();
+    attribute_title_.trimmed();
     
-    //kdDebug(23100) << "TITLE: " << attribute_title_ << endl;
+    //kDebug(23100) << "TITLE: " << attribute_title_ << endl;
 }

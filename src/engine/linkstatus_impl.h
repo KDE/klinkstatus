@@ -170,7 +170,7 @@ inline void LinkStatus::setBaseURI(KURL const& base_url)
 {
     if(!base_url.isValid())
     {
-        kdWarning(23100) <<  "base url not valid: " << endl
+        kWarning(23100) <<  "base url not valid: " << endl
         << "parent: " << parent()->absoluteUrl().prettyURL() << endl
         << "url: " << absoluteUrl().prettyURL() << endl
         << "base url resolved: " << base_url.prettyURL() << endl;
@@ -185,7 +185,7 @@ inline void LinkStatus::setHtmlDocTitle(QString const& title)
 {
     if(title.isNull() || title.isEmpty())
     {
-        kdError(23100) << "HTML doc title is null or empty!" << endl
+        kError(23100) << "HTML doc title is null or empty!" << endl
         << toString() << endl;
     }
     Q_ASSERT(!title.isNull() && !title.isEmpty());

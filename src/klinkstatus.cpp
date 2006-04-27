@@ -32,7 +32,6 @@
 #include <kstatusbar.h>
 #include <klocale.h>
 #include <kdebug.h>
-#include <kaccel.h>
 
 
 KLinkStatus::KLinkStatus()

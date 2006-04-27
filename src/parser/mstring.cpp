@@ -239,38 +239,38 @@ int main(int argc, char* argv[])
         content += c;
       }
     */
-    //  kdDebug(23100) << simplifyWhiteSpace(content) << endl;
-    kdDebug(23100) << simplifyWhiteSpace(s) << endl;
+    //  kDebug(23100) << simplified(content) << endl;
+    kDebug(23100) << simplified(s) << endl;
 
     /*
       vector<string> v(tokenize(s));
       for(int i = 0; i != v.size(); ++i)
-        kdDebug(23100) << v[i] << endl;
+        kDebug(23100) << v[i] << endl;
     */
 
     /*
       int i = nextSpaceChar(s, 0);
       i = nextNonSpaceChar(s, i);
-      kdDebug(23100) << s.substr(i) << endl;
+      kDebug(23100) << s.substr(i) << endl;
     */
 
 
     vector<string> v(tokenizeWordsSeparatedByDots(s));
     for(int i = 0; i != v.size(); ++i)
-        kdDebug(23100) << v[i] << endl;
+        kDebug(23100) << v[i] << endl;
 
     removeLastCharIfExists(s, '/');
-    kdDebug(23100) << s << endl;
+    kDebug(23100) << s << endl;
 
     /*
-      kdDebug(23100) << findChar(s, 'T') << endl;
-      kdDebug(23100) << findWord(s, "trolltech") << endl;
-      kdDebug(23100) << findWord(s, "TROLLTECH") << endl;
-      kdDebug(23100) << findWord(s, "TROLLTECH", 2) << endl;
+      kDebug(23100) << findChar(s, 'T') << endl;
+      kDebug(23100) << findWord(s, "trolltech") << endl;
+      kDebug(23100) << findWord(s, "TROLLTECH") << endl;
+      kDebug(23100) << findWord(s, "TROLLTECH", 2) << endl;
     */
     /*
-      stripWhiteSpace(s);
-      kdDebug(23100) << s << endl;
+      trimmed(s);
+      kDebug(23100) << s << endl;
     */
 }
 

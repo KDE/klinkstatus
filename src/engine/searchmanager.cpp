@@ -53,7 +53,7 @@ SearchManager::SearchManager(int max_simultaneous_connections, int time_out,
 
 void SearchManager::reset()
 {
-    kdDebug(23100) <<  "SearchManager::reset()" << endl;
+    kDebug(23100) <<  "SearchManager::reset()" << endl;
 
     //Q_ASSERT(not links_being_checked_);
 
@@ -98,14 +98,14 @@ void SearchManager::cleanItems()
                     ((search_results_[i])[j])[l] = 0;
                 }
                 else
-                    kdDebug(23100) <<  "LinkStatus NULL!!" << endl;
+                    kDebug(23100) <<  "LinkStatus NULL!!" << endl;
             }
             search_results_[i][j].clear();
         }
         search_results_[i].clear();
     }
     search_results_.clear();
-    kdDebug(23100) <<  endl;
+    kDebug(23100) <<  endl;
 }
 
 void SearchManager::startSearch(KURL const& root, SearchMode const& modo)
@@ -121,7 +121,7 @@ void SearchManager::startSearch(KURL const& root, SearchMode const& modo)
     if(root.hasHost() && (domain_.isNull() || domain_.isEmpty()))
     {
         setDomain(root.host() + root.directory());
-        kdDebug(23100) << "Domain: " << domain_ << endl;
+        kDebug(23100) << "Domain: " << domain_ << endl;
     }
     root_.setIsRoot(true);
     root_.setDepth(0);
@@ -156,7 +156,7 @@ void SearchManager::finnish()
     searching_ = false;
     while(links_being_checked_)
     {
-        kdDebug(23100) <<  "links_being_checked_: " << links_being_checked_ << endl;
+        kDebug(23100) <<  "links_being_checked_: " << links_being_checked_ << endl;
         sleep(1);
     }
     emit signalSearchFinished();
@@ -167,7 +167,7 @@ void SearchManager::pause()
     searching_ = false;
     while(links_being_checked_)
     {
-        kdDebug(23100) <<  "links_being_checked_: " << links_being_checked_ << endl;
+        kDebug(23100) <<  "links_being_checked_: " << links_being_checked_ << endl;
         sleep(1);
     }
     emit signalSearchPaused();
@@ -192,15 +192,15 @@ void SearchManager::checkRoot()
 
 void SearchManager::slotRootChecked(const LinkStatus * link, LinkChecker * checker)
 {
-    kdDebug(23100) <<  "SearchManager::slotRootChecked:" << endl;
-    kdDebug(23100) <<  link->absoluteUrl().url() << " -> " << 
+    kDebug(23100) <<  "SearchManager::slotRootChecked:" << endl;
+    kDebug(23100) <<  link->absoluteUrl().url() << " -> " << 
             LinkStatus::lastRedirection(&root_)->absoluteUrl().url() << endl;
 
     Q_ASSERT(checked_links_ == 0);
     Q_ASSERT(search_results_.size() == 0);
 
     ++checked_links_;
-    //kdDebug(23100) <<  "++checked_links_: SearchManager::slotRootChecked" << endl;
+    //kDebug(23100) <<  "++checked_links_: SearchManager::slotRootChecked" << endl;
     emit signalRootChecked(link, checker);
 
     if(search_mode_ != depth || depth_ > 0)
@@ -218,8 +218,8 @@ void SearchManager::slotRootChecked(const LinkStatus * link, LinkChecker * check
 
         if(search_results_.size() != 1)
         {
-            kdDebug(23100) <<  "search_results_.size() != 1:" << endl;
-            kdDebug(23100) <<  "size: " << search_results_.size() << endl;
+            kDebug(23100) <<  "search_results_.size() != 1:" << endl;
+            kDebug(23100) <<  "size: " << search_results_.size() << endl;
         }
         Q_ASSERT(search_results_.size() == 1);
 
@@ -229,7 +229,7 @@ void SearchManager::slotRootChecked(const LinkStatus * link, LinkChecker * check
         }
         else
         {
-            kdDebug(23100) <<  "Search Finished! (SearchManager::slotRootChecked)#1" << endl;
+            kDebug(23100) <<  "Search Finished! (SearchManager::slotRootChecked)#1" << endl;
             finnish();
         }
     }
@@ -237,7 +237,7 @@ void SearchManager::slotRootChecked(const LinkStatus * link, LinkChecker * check
     else
     {
         Q_ASSERT(search_results_.size() == 0);
-        kdDebug(23100) <<  "Search Finished! (SearchManager::slotRootChecked)#2" << endl;
+        kDebug(23100) <<  "Search Finished! (SearchManager::slotRootChecked)#2" << endl;
         finnish();
     }
 
@@ -294,10 +294,10 @@ vector<LinkStatus*> SearchManager::children(LinkStatus* link)
 
             if(link->externalDomainDepth() > external_domain_depth_)
             {
-                kdDebug(23100) <<  "link->externalDomainDepth() > external_domain_depth_: "
+                kDebug(23100) <<  "link->externalDomainDepth() > external_domain_depth_: "
                 << link->externalDomainDepth() << endl;
-                kdDebug(23100) <<  "link: " << endl << link->toString() << endl;
-                kdDebug(23100) <<  "child: " << endl << ls->toString() << endl;
+                kDebug(23100) <<  "link: " << endl << link->toString() << endl;
+                kDebug(23100) <<  "child: " << endl << ls->toString() << endl;
             }
             Q_ASSERT(link->externalDomainDepth() <= external_domain_depth_);
 
@@ -384,7 +384,7 @@ void SearchManager::startSearch()
         checkVectorLinks(nodeToAnalize());
     else
     {
-        kdDebug(23100) <<  "Search Finished! (SearchManager::comecaPesquisa)" << endl;
+        kDebug(23100) <<  "Search Finished! (SearchManager::comecaPesquisa)" << endl;
         finnish();
     }
 }
@@ -401,13 +401,13 @@ void SearchManager::continueSearch()
     else
     {
         current_index_ = 0;
-        kdDebug(23100) <<  "Next node_____________________\n\n";
+        kDebug(23100) <<  "Next node_____________________\n\n";
         ++current_node_;
         if( (uint)current_node_ < (search_results_[current_depth_ - 1]).size() )
             checkVectorLinks(nodeToAnalize());
         else
         {
-            kdDebug(23100) <<  "Next Level_____________________________________________________________________________________\n\n\n";
+            kDebug(23100) <<  "Next Level_____________________________________________________________________________________\n\n\n";
             if(search_mode_ == SearchManager::domain ||
                     current_depth_ < depth_)
             {
@@ -420,13 +420,13 @@ void SearchManager::continueSearch()
                     checkVectorLinks(nodeToAnalize());
                 else
                 {
-                    kdDebug(23100) <<  "Search Finished! (SearchManager::continueSearch#1)" << endl;
+                    kDebug(23100) <<  "Search Finished! (SearchManager::continueSearch#1)" << endl;
                     finnish();
                 }
             }
             else
             {
-                kdDebug(23100) <<  "Search Finished! (SearchManager::continueSearch#2)" << endl;
+                kDebug(23100) <<  "Search Finished! (SearchManager::continueSearch#2)" << endl;
                 finnish();
             }
         }
@@ -525,8 +525,8 @@ void SearchManager::checkLinksSimultaneously(vector<LinkStatus*> const& links)
 
 void SearchManager::slotLinkChecked(const LinkStatus * link, LinkChecker * checker)
 {
-    kdDebug(23100) <<  "SearchManager::slotLinkChecked:" << endl;
-//     kdDebug(23100) <<  link->absoluteUrl().url() << " -> " << 
+    kDebug(23100) <<  "SearchManager::slotLinkChecked:" << endl;
+//     kDebug(23100) <<  link->absoluteUrl().url() << " -> " << 
 //             LinkStatus::lastRedirection((const_cast<LinkStatus*> (link)))->absoluteUrl().url() << endl;
 
     Q_ASSERT(link);
@@ -536,7 +536,7 @@ void SearchManager::slotLinkChecked(const LinkStatus * link, LinkChecker * check
     --links_being_checked_;
 
     if(links_being_checked_ < 0)
-        kdDebug(23100) <<  link->toString() << endl;
+        kDebug(23100) <<  link->toString() << endl;
     Q_ASSERT(links_being_checked_ >= 0);
 
     if(canceled_ && searching_ && !links_being_checked_)
@@ -622,7 +622,7 @@ bool SearchManager::checkable(KURL const& url, LinkStatus const& link_parent) co
             return false;
     }
 
-    //kdDebug(23100) <<  "url " << url.url() << " is checkable!" << endl;
+    //kDebug(23100) <<  "url " << url.url() << " is checkable!" << endl;
     return true;
 }
 
@@ -637,7 +637,7 @@ bool SearchManager::checkableByDomain(KURL const& url, LinkStatus const& link_pa
         result = false;
     /*
         if(!result)
-            kdDebug(23100) <<  "\n\nURL " << url.url() << " is not checkable by domain\n\n" << endl;
+            kDebug(23100) <<  "\n\nURL " << url.url() << " is not checkable by domain\n\n" << endl;
     */
     return result;
 }
@@ -740,7 +740,7 @@ bool SearchManager::generalDomain() const
         int barra = domain_.find('/');
         if(barra != -1 && (uint)barra != domain_.length() - 1)
         {
-            kdDebug(23100) <<  "Domain nao vago" << endl;
+            kDebug(23100) <<  "Domain nao vago" << endl;
             return false;
         }
         else
@@ -752,17 +752,17 @@ bool SearchManager::generalDomain() const
             if(primeira_palavra == "www")
             {
                 Q_ASSERT(palavras.size() >= 3);
-                kdDebug(23100) <<  "Domain vago" << endl;
+                kDebug(23100) <<  "Domain vago" << endl;
                 return true;
             }
             else if(palavras.size() == 2)
             {
-                kdDebug(23100) <<  "Domain vago" << endl;
+                kDebug(23100) <<  "Domain vago" << endl;
                 return true;
             }
             else
             {
-                kdDebug(23100) <<  "Domain nao vago" << endl;
+                kDebug(23100) <<  "Domain nao vago" << endl;
                 return false;
             }
         }
@@ -790,7 +790,7 @@ void SearchManager::slotSearchFinished()
 
 void SearchManager::slotLinkCheckerFinnished(LinkChecker * checker)
 {
-    kdDebug(23100) <<  "deleting linkchecker" << endl;
+    kDebug(23100) <<  "deleting linkchecker" << endl;
 
     Q_ASSERT(checker);
     //Q_ASSERT(checker->linkStatus()->checked());

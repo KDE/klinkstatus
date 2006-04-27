@@ -76,10 +76,10 @@ bool Global::isQuantaAvailableViaDCOP()
 
         for(uint i = 0; i != ps_list.size(); ++i)
         {
-            ps_list[i] = ps_list[i].stripWhiteSpace ();
+            ps_list[i] = ps_list[i].trimmed ();
             if(self()->dcop_client_->isApplicationRegistered("quanta-" + ps_list[i].local8Bit()))
             {
-                //kdDebug(23100) << "Application registered!" << endl;
+                //kDebug(23100) << "Application registered!" << endl;
                 return true;
             }
         }
@@ -109,7 +109,7 @@ QCString Global::quantaDCOPAppId()
 
         for(uint i = 0; i != ps_list.size(); ++i)
         {
-            ps_list[i] = ps_list[i].stripWhiteSpace ();
+            ps_list[i] = ps_list[i].trimmed ();
             if(self()->dcop_client_->isApplicationRegistered("quanta-" + ps_list[i].local8Bit()))
                 app_id = "quanta-" + ps_list[i];
         }
@@ -119,7 +119,7 @@ QCString Global::quantaDCOPAppId()
         return app_id;
     else
     {
-        kdError(23100) << "You didn't check if Global::isQuantaAvailableViaDCOP!" << endl;
+        kError(23100) << "You didn't check if Global::isQuantaAvailableViaDCOP!" << endl;
         return "";
     }
 }
@@ -130,7 +130,7 @@ KURL Global::urlWithQuantaPreviewPrefix(KURL const& url)
 
     DCOPRef quanta(Global::quantaDCOPAppId(),"WindowManagerIf");
     QString string_url_with_prefix = quanta.call("urlWithPreviewPrefix", url.url());
-    //kdDebug(23100) << "string_url_with_prefix: " << string_url_with_prefix << endl;
+    //kDebug(23100) << "string_url_with_prefix: " << string_url_with_prefix << endl;
 
     return KURL(string_url_with_prefix);
 }
@@ -158,7 +158,7 @@ void Global::execCommand(QString const& command)
 
     //if KProcess fails I think a message box is needed... I will fix it
     if (!self()->process_PS_->start(KProcess::NotifyOnExit,KProcess::All))
-        kdError() << "Failed to query for running KLinkStatus instances!" << endl;
+        kError() << "Failed to query for running KLinkStatus instances!" << endl;
     //TODO: Replace the above error with a real messagebox after the message freeze is over
     else
     {

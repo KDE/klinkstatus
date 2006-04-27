@@ -81,7 +81,7 @@ std::vector<QString> tokenizeWordsSeparatedBy(QString s, QChar criteria);
    Returns a string that has whitespace removed from the start and the end, 
    and which has each sequence of internal whitespace replaced with a single space. 
 */
-QString simplifyWhiteSpace(QString const& s);
+QString simplified(QString const& s);
 
 /**
    If char 'caractere' is the last in the string 's' it is removed
@@ -94,12 +94,12 @@ QString lowerCase(QString const& s);
 /**
    Remove whitespaces from the end of the string
 */
-void stripWhiteSpaceFromTheEnd(QString& s);
+void trimmedFromTheEnd(QString& s);
 
 /**
    Returns a string that has whitespace removed from the start and the end.
 */
-void stripWhiteSpace(QString& s);
+void trimmed(QString& s);
 
 /**
    Case insensitive comparisons
@@ -151,9 +151,9 @@ inline QString lowerCase(QString const& s)
 	return s.lower();	
 }
 
-inline QString simplifyWhiteSpace(QString const& s)
+inline QString simplified(QString const& s)
 {
-	return s.simplifyWhiteSpace();
+	return s.simplified();
 }
 
 inline void removeLastCharIfExists(QString& s, QChar caractere)
@@ -163,9 +163,9 @@ inline void removeLastCharIfExists(QString& s, QChar caractere)
 		s.remove(index);
 }
 
-inline void stripWhiteSpace(QString& s)
+inline void trimmed(QString& s)
 {
-	s = s.stripWhiteSpace();
+	s = s.trimmed();
 }
 
 

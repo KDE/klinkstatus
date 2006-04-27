@@ -193,7 +193,7 @@ QString read(QString const& path)
 
     if(!file.open(QIODevice::ReadOnly))
     {
-        kdDebug() << "File " << path << " not found." << endl;
+        kDebug() << "File " << path << " not found." << endl;
         return QString();
     }
 

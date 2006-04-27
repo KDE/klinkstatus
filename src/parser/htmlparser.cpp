@@ -148,7 +148,7 @@ int HtmlParser::endOfTag(QString const& s, int index, QChar end_of_tag)
             return endOfTag(s, close_aspas + 1, end_of_tag);
         else
         {
-            kdDebug(23100) <<  "Mismatched quotes (\"): " << s.mid(index, _end_of_tag - index) << endl;
+            kDebug(23100) <<  "Mismatched quotes (\"): " << s.mid(index, _end_of_tag - index) << endl;
             //return -1;
             return _end_of_tag + 1;
         }
@@ -274,7 +274,7 @@ void HtmlParser::stripComments()
             int fim = findWord(document_, end_comment, inicio);
             if(fim == -1)
             {
-                kdDebug(23100) <<  "End of comment is missing!" << endl;
+                kDebug(23100) <<  "End of comment is missing!" << endl;
                 document_.remove(inicio - begin_comment_length, begin_comment_length);
             }
             else
@@ -304,7 +304,7 @@ void HtmlParser::stripScriptContent()
 
             if(fim == -1)
             {
-                kdDebug(23100) <<  "Malformed script tag!" << endl;
+                kDebug(23100) <<  "Malformed script tag!" << endl;
                 document_.remove(inicio - begin_script_length, begin_script_length);
             }
             else
@@ -326,23 +326,23 @@ void HtmlParser::stripScriptContent()
 #include <iostream>
 void HtmlParser::mostra() const
 {
-    kdDebug(23100) << "\nA:\n\n";
+    kDebug(23100) << "\nA:\n\n";
     for(unsigned int i = 0; i != nodes_.size(); ++i)
     {
         if(nodes_[i]->element() == Node::A)
-            kdDebug(23100) << nodes_[i]->url() << "\t" << nodes_[i]->linkLabel() << endl;
+            kDebug(23100) << nodes_[i]->url() << "\t" << nodes_[i]->linkLabel() << endl;
     }
-    kdDebug(23100) << "____________________________________________________________________" << endl;
+    kDebug(23100) << "____________________________________________________________________" << endl;
 
-    kdDebug(23100) << "\nLINK:\n\n";
+    kDebug(23100) << "\nLINK:\n\n";
     for(unsigned int i = 0; i != nodes_.size(); ++i)
     {
         if(nodes_[i]->element() == Node::LINK)
-            kdDebug(23100) << nodes_[i]->url() << "\t" << nodes_[i]->linkLabel() << endl;
+            kDebug(23100) << nodes_[i]->url() << "\t" << nodes_[i]->linkLabel() << endl;
     }
-    kdDebug(23100) << "____________________________________________________________________" << endl;
+    kDebug(23100) << "____________________________________________________________________" << endl;
 
-    kdDebug(23100) << "\nMETA:\n";
+    kDebug(23100) << "\nMETA:\n";
     for(unsigned int i = 0; i != nodes_.size(); ++i)
     {
         if(nodes_[i]->element() == Node::META)
@@ -354,35 +354,35 @@ void HtmlParser::mostra() const
             NodeMETA* nm = dynamic_cast<NodeMETA*>(nodes_[i]);
 #endif
 
-            kdDebug(23100) << nm->url() << endl
+            kDebug(23100) << nm->url() << endl
             << nm->atributoHTTP_EQUIV() << endl
             << nm->atributoNAME() << endl
             << nm->atributoCONTENT() << endl;
         }
     }
-    kdDebug(23100) << "____________________________________________________________________" << endl;
+    kDebug(23100) << "____________________________________________________________________" << endl;
 
-    kdDebug(23100) << "\nIMG:\n\n";
+    kDebug(23100) << "\nIMG:\n\n";
     for(unsigned int i = 0; i != nodes_.size(); ++i)
     {
         if(nodes_[i]->element() == Node::IMG)
-            kdDebug(23100) << nodes_[i]->url() << "\t"
+            kDebug(23100) << nodes_[i]->url() << "\t"
             << nodes_[i]->linkLabel() << endl;
     }
-    kdDebug(23100) << "____________________________________________________________________" << endl;
+    kDebug(23100) << "____________________________________________________________________" << endl;
 
-    kdDebug(23100) << "\nFRAME:\n\n";
+    kDebug(23100) << "\nFRAME:\n\n";
     for(unsigned int i = 0; i != nodes_.size(); ++i)
     {
         if(nodes_[i]->element() == Node::FRAME)
-            kdDebug(23100) << nodes_[i]->url() << endl;
+            kDebug(23100) << nodes_[i]->url() << endl;
     }
-    kdDebug(23100) << "____________________________________________________________________" << endl;
+    kDebug(23100) << "____________________________________________________________________" << endl;
 
-    kdDebug(23100) << "\nBASE:\n\n";
-    kdDebug(23100) << node_BASE_.url() << endl;
+    kDebug(23100) << "\nBASE:\n\n";
+    kDebug(23100) << node_BASE_.url() << endl;
 
-    kdDebug(23100) << "____________________________________________________________________" << endl;
+    kDebug(23100) << "____________________________________________________________________" << endl;
 
 }
 
@@ -404,11 +404,11 @@ int main()
         stream.get(c);
         content += c;
     }
-    //  kdDebug(23100) << content << endl;
-    kdDebug(23100) <<  "__________________________________________________________" << endl;
+    //  kDebug(23100) << content << endl;
+    kDebug(23100) <<  "__________________________________________________________" << endl;
     HtmlParser parser(content);
     parser.mostra();
-    kdDebug(23100) <<  "__________________________________________________________\n\n\n" << endl;
+    kDebug(23100) <<  "__________________________________________________________\n\n\n" << endl;
     vector<Node*> nods = parser.nodes();
     for(int i = 0; i != nods.size(); ++i)
     {
@@ -417,7 +417,7 @@ int main()
             NodeMETA* nod_meta = (NodeMETA*)(nods[i]);
             //Node* nod_meta = nods[i];
 
-            kdDebug(23100) << nod_meta->atributoCONTENT() << endl;
+            kDebug(23100) << nod_meta->atributoCONTENT() << endl;
         }
 
     }

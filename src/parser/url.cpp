@@ -45,7 +45,7 @@ Node::LinkType Url::resolveLinkType(QString const& url)
 
 KURL Url::normalizeUrl(QString const& string_url, LinkStatus const& link_parent)
 {
-    QString _string_url = string_url.stripWhiteSpace();
+    QString _string_url = string_url.trimmed();
 
     QString s_url;
     KURL base_url;
@@ -85,7 +85,7 @@ KURL Url::normalizeUrl(QString const& string_url, LinkStatus const& link_parent)
             url.setPass(base_url.pass());
         url.cleanPath();
 
-        //kdDebug(23100) <<  url.url() << endl;
+        //kDebug(23100) <<  url.url() << endl;
 
         return url;
     }
@@ -93,7 +93,7 @@ KURL Url::normalizeUrl(QString const& string_url, LinkStatus const& link_parent)
 
 KURL Url::normalizeUrl(QString const& string_url)
 {
-    QString qs_url = string_url.stripWhiteSpace();
+    QString qs_url = string_url.trimmed();
 
     if(qs_url[0] == '/')
     {
@@ -158,7 +158,7 @@ bool Url::equalHost(QString const& host1, QString const& host2, bool restrict)
     if( !(size1 >= 1 && size2 >= 1) && // localhost would have size = 1
             !(host1_[0].isNumber() || host2_[0].isNumber()) ) // not (host == IP)
     {
-        kdDebug(23100) <<  "Invalid host: " << host2 << endl;
+        kDebug(23100) <<  "Invalid host: " << host2 << endl;
         return false;
     }
 
@@ -191,7 +191,7 @@ bool Url::equalHost(QString const& host1, QString const& host2, bool restrict)
 bool Url::hasProtocol(QString const& url)
 {
     QString s_url(url);
-    s_url.stripWhiteSpace();
+    s_url.trimmed();
 
     if(s_url[0] == '/')
         return false;
@@ -255,12 +255,12 @@ bool Url::localDomain(KURL const& url1, KURL const& url2, bool restrict)
 {
     if(url1.protocol() != url2.protocol())
     {
-        //kdDebug(23100) <<  "NOT localDomain" << endl;
+        //kDebug(23100) <<  "NOT localDomain" << endl;
         return false;
     }
     else if(!url1.hasHost())
     {
-        //kdDebug(23100) <<  "localDomain" << endl;
+        //kDebug(23100) <<  "localDomain" << endl;
         return true;
     }
     else
@@ -268,12 +268,12 @@ bool Url::localDomain(KURL const& url1, KURL const& url2, bool restrict)
         //return ::equalHost(url1.host(), url2.host(), restrict);
         if(Url::equalHost(url1.host(), url2.host(), restrict))
         {
-            //kdDebug(23100) <<  "localDomain" << endl;
+            //kDebug(23100) <<  "localDomain" << endl;
             return true;
         }
         else
         {
-            //kdDebug(23100) <<  "NOT localDomain" << endl;
+            //kDebug(23100) <<  "NOT localDomain" << endl;
             return false;
         }
 
@@ -324,12 +324,12 @@ bool Url::externalLink(KURL const& url1, KURL const& url2, bool restrict)
 {
     if(url1.protocol() != url2.protocol())
     {
-        kdDebug(23100) <<  "externalLink" << endl;
+        kDebug(23100) <<  "externalLink" << endl;
         return true;
     }
     else if(!url1.hasHost() && !url2.hasHost())
     {
-        kdDebug(23100) <<  "NOT externalLink" << endl;
+        kDebug(23100) <<  "NOT externalLink" << endl;
         return false;
     }
     else

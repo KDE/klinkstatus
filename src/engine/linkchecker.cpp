@@ -45,7 +45,7 @@ LinkChecker::LinkChecker(LinkStatus* linkstatus, int time_out,
     Q_ASSERT(!linkstatus_->checked());
     Q_ASSERT(QString(parent->className()) == QString("SearchManager"));
 
-    kdDebug(23100) << ++count_ << ": " << "Checking " << linkstatus_->absoluteUrl().url() << endl;
+    kDebug(23100) << ++count_ << ": " << "Checking " << linkstatus_->absoluteUrl().url() << endl;
 }
 
 LinkChecker::~LinkChecker()
@@ -89,7 +89,7 @@ void LinkChecker::slotTimeOut()
         {
             linkstatus_->setErrorOccurred(true);
             linkstatus_->setError(i18n( "Timeout" ));
-            //kdDebug(23100) << "timeout: " << linkstatus_->absoluteUrl().url() << endl;
+            //kDebug(23100) << "timeout: " << linkstatus_->absoluteUrl().url() << endl;
 
             t_job_->kill(true); // quietly
             t_job_ = 0;
@@ -104,7 +104,7 @@ void LinkChecker::slotMimetype (KIO::Job* /*job*/, const QString &type)
     if(finnished_)
         return;
 
-    //kdDebug(23100) <<  "LinkChecker::slotMimetype:" << type << "-> " << linkstatus_->absoluteUrl().url() << endl;
+    //kDebug(23100) <<  "LinkChecker::slotMimetype:" << type << "-> " << linkstatus_->absoluteUrl().url() << endl;
 
     Q_ASSERT(t_job_);
 
@@ -124,7 +124,7 @@ void LinkChecker::slotMimetype (KIO::Job* /*job*/, const QString &type)
     {
         if(ls->onlyCheckHeader())
         {
-            //kdDebug(23100) <<  "only check header: " << ls->absoluteUrl().prettyURL() << endl;
+            //kDebug(23100) <<  "only check header: " << ls->absoluteUrl().prettyURL() << endl;
 
             // file is OK (http can have an error page though job->error() is false)
             if(url.protocol() != "http" && url.protocol() != "https")
@@ -137,7 +137,7 @@ void LinkChecker::slotMimetype (KIO::Job* /*job*/, const QString &type)
         }
         else // !ls->onlyCheckHeader()
         {
-            //kdDebug(23100) <<  "NOT only check header: " << ls->absoluteUrl().prettyURL() << endl;
+            //kDebug(23100) <<  "NOT only check header: " << ls->absoluteUrl().prettyURL() << endl;
 
             // file is OK (http can have an error page though job->error() is false)
             if(url.protocol() != "http" && url.protocol() != "https")
@@ -145,7 +145,7 @@ void LinkChecker::slotMimetype (KIO::Job* /*job*/, const QString &type)
                 // it's not an html page, so we don't want the file content
                 if(type != "text/html"/* && type != "text/plain"*/)
                 {
-                    //kdDebug(23100) <<  "mimetype: " << type << endl;
+                    //kDebug(23100) <<  "mimetype: " << type << endl;
                     ls->setStatus("OK");
                     t_job_->kill(true); // quietly
                     t_job_ = 0;
@@ -161,7 +161,7 @@ void LinkChecker::slotData(KIO::Job* /*job*/, const QByteArray& data)
     if(finnished_)
         return;
 
-    //kdDebug(23100) <<  "LinkChecker::slotData -> " << linkstatus_->absoluteUrl().url()  << endl;
+    //kDebug(23100) <<  "LinkChecker::slotData -> " << linkstatus_->absoluteUrl().url()  << endl;
 
     Q_ASSERT(t_job_);
 
@@ -209,14 +209,14 @@ void LinkChecker::slotData(KIO::Job* /*job*/, const QByteArray& data)
                 }
                 if(ls->mimeType() != "text/html" && header_checked_)
                 {
-                    //kdDebug(23100) <<  "mimetype of " << ls->absoluteUrl().prettyURL() << ": " << ls->mimeType() << endl;
+                    //kDebug(23100) <<  "mimetype of " << ls->absoluteUrl().prettyURL() << ": " << ls->mimeType() << endl;
                     t_job_->kill(true); // quietly
                     t_job_ = 0;
                     finnish(); // if finnish is called before kill what you get is a segfault, don't know why
                 }
                 else if(t_job_->isErrorPage() && header_checked_)
                 {
-                    //kdDebug(23100) <<  "ERROR PAGE" << endl;
+                    //kDebug(23100) <<  "ERROR PAGE" << endl;
                     ls->setIsErrorPage(true);
                     t_job_->kill(true); // quietly
                     t_job_ = 0;
@@ -244,14 +244,14 @@ void LinkChecker::slotResult(KIO::Job* /*job*/)
     if(finnished_)
         return;
 
-    //kdDebug(23100) <<  "LinkChecker::slotResult -> " << linkstatus_->absoluteUrl().url()  << endl;
+    //kDebug(23100) <<  "LinkChecker::slotResult -> " << linkstatus_->absoluteUrl().url()  << endl;
 
     Q_ASSERT(t_job_);
 
     if(t_job_->error() == KIO::ERR_USER_CANCELED)
     {
-        kdWarning(23100) << endl << "Job killed quietly, yet signal result was emited..." << endl;
-        kdDebug(23100) << linkstatus_->toString() << endl;
+        kWarning(23100) << endl << "Job killed quietly, yet signal result was emited..." << endl;
+        kDebug(23100) << linkstatus_->toString() << endl;
         t_job_ = 0;
         finnish();
         return;
@@ -267,18 +267,18 @@ void LinkChecker::slotResult(KIO::Job* /*job*/)
     if(!(!ls->onlyCheckHeader() ||
             t_job_->error() ||
 	    !header_checked_))
-        kdWarning(23100) << ls->toString() << endl;
+        kWarning(23100) << ls->toString() << endl;
 
     Q_ASSERT(!ls->onlyCheckHeader() || t_job_->error() || !header_checked_);
 
     if(ls->isErrorPage())
-        kdWarning(23100) << "\n\n" << ls->toString() << endl << endl;
+        kWarning(23100) << "\n\n" << ls->toString() << endl << endl;
 
     Q_ASSERT(!t_job_->isErrorPage());
 
     if(t_job_->error())
     {
-        kdDebug(23100) <<  t_job_->errorString() << endl;
+        kDebug(23100) <<  t_job_->errorString() << endl;
 
         if(t_job_->error() == KIO::ERR_IS_DIRECTORY)
         {
@@ -289,7 +289,7 @@ void LinkChecker::slotResult(KIO::Job* /*job*/)
             ls->setErrorOccurred(true);
 
             if(t_job_->errorString().isEmpty())
-                kdWarning(23100) << "\n\nError string is empty, error = " << t_job_->error() << "\n\n\n";
+                kWarning(23100) << "\n\nError string is empty, error = " << t_job_->error() << "\n\n\n";
             if(t_job_->error() != KIO::ERR_NO_CONTENT)
                 ls->setError(t_job_->errorString());
             else
@@ -306,7 +306,7 @@ void LinkChecker::slotResult(KIO::Job* /*job*/)
         {
             if(!header_checked_)
             {
-                kdDebug(23100) <<  "\n\nheader not received... checking again...\n\n\n";
+                kDebug(23100) <<  "\n\nheader not received... checking again...\n\n\n";
                 //check again
                 check();
                 return;
@@ -343,7 +343,7 @@ void LinkChecker::slotPermanentRedirection (KIO::Job* /*job*/, const KURL &fromU
     if(finnished_)
         return;
 
-    //kdDebug(23100) <<  "LinkChecker::slotPermanentRedirection -> " << linkstatus_->absoluteUrl().url() << endl;
+    //kDebug(23100) <<  "LinkChecker::slotPermanentRedirection -> " << linkstatus_->absoluteUrl().url() << endl;
 
     Q_ASSERT(t_job_);
     Q_ASSERT(linkstatus_->absoluteUrl().protocol() == "http" ||
@@ -396,7 +396,7 @@ void LinkChecker::finnish()
 
     if(!finnished_)
     {
-        //kdDebug(23100) <<  "LinkChecker::finnish -> " << linkstatus_->absoluteUrl().url() << endl;
+        //kDebug(23100) <<  "LinkChecker::finnish -> " << linkstatus_->absoluteUrl().url() << endl;
 
         finnished_ = true;
 
@@ -411,18 +411,18 @@ void LinkChecker::finnish()
 
 HttpResponseHeader LinkChecker::getHttpHeader(KIO::Job* /*job*/, bool remember_check)
 {
-    //kdDebug(23100) <<  "LinkChecker::getHttpHeader -> " << linkstatus_->absoluteUrl().url() << endl;
+    //kDebug(23100) <<  "LinkChecker::getHttpHeader -> " << linkstatus_->absoluteUrl().url() << endl;
 
     Q_ASSERT(!finnished_);
     Q_ASSERT(t_job_);
 
     QString header_string = t_job_->queryMetaData("HTTP-Headers");
     //    Q_ASSERT(!header_string.isNull() && !header_string.isEmpty());
-    //kdDebug(23100) <<  header_string << endl;
+    //kDebug(23100) <<  header_string << endl;
     if(header_string.isNull() || header_string.isEmpty())
     {
         header_checked_ = false;
-        kdDebug(23100) <<  "header_string.isNull() || header_string.isEmpty(): "
+        kDebug(23100) <<  "header_string.isNull() || header_string.isEmpty(): "
         << linkstatus_->toString()  << endl;
     }
     else if(remember_check)
@@ -444,7 +444,7 @@ void LinkChecker::checkRef()
     {
         int i_ref = url.url().find("#");
         url_base = url.url().left(i_ref);
-        //kdDebug(23100) << "url_base: " << url_base << endl;
+        //kDebug(23100) << "url_base: " << url_base << endl;
 
         SearchManager const* gp = dynamic_cast<SearchManager*>(parent());
         Q_ASSERT(gp);
@@ -456,7 +456,7 @@ void LinkChecker::checkRef()
         checkRef(ls_parent);
     else
     {
-        kdDebug(23100) << QString("URL " + url_base + " not checked yet") << endl;
+        kDebug(23100) << QString("URL " + url_base + " not checked yet") << endl;
         linkstatus_->setStatus(QString("URL " + url_base + " not checked yet"));
         finnish();
     }
@@ -464,12 +464,12 @@ void LinkChecker::checkRef()
 
 void LinkChecker::checkRef(LinkStatus const* linkstatus_parent)
 {
-    //kdDebug(23100) << "linkstatus_parent: " << linkstatus_parent->absoluteUrl().url() << endl;
+    //kDebug(23100) << "linkstatus_parent: " << linkstatus_parent->absoluteUrl().url() << endl;
 
     vector<Node*> nodes = linkstatus_parent->childrenNodes();
     QString name_ref = linkStatus()->absoluteUrl().ref();
     Q_ASSERT(!name_ref.isNull());
-    //kdDebug(23100) << "name_ref: " << name_ref << endl;
+    //kDebug(23100) << "name_ref: " << name_ref << endl;
 
     int count = 0;
     for(vector<Node*>::size_type i = 0; i != nodes.size(); ++i)

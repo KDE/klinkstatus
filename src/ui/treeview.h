@@ -12,7 +12,7 @@
 #ifndef TREEVIEW_H
 #define TREEVIEW_H
 
-#include <klistview.h>
+#include <k3listview.h>
 
 #include "resultview.h"
 class TreeViewItem;
@@ -26,7 +26,7 @@ because of ResultView. ResultView class was to be the base interface to
 a QTable and a QListView, but the APIs are a little diferent... then I realize 
 that a QTable view isn't needed at all so some day I will clean this up.
 */
-class TreeView : public KListView, public ResultView
+class TreeView : public K3ListView, public ResultView
 {
     Q_OBJECT
 public:
@@ -86,7 +86,7 @@ inline void TreeView::setTreeDisplay(bool tree_display) {
 
 /* ******************************* TreeViewItem ******************************* */
 
-class TreeViewItem: public KListViewItem
+class TreeViewItem: public K3ListViewItem
 {
 public:
 

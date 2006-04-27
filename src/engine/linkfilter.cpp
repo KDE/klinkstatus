@@ -33,10 +33,10 @@ LinkMatcher::~LinkMatcher()
 
 bool LinkMatcher::matches(LinkStatus const& link ) const
 {
-/*    kdDebug() << link.absoluteUrl().url() << endl;
-    kdDebug() << link.label() << endl;
-    kdDebug() << link.absoluteUrl().url().contains(m_text) << endl;
-    kdDebug() << link.label().contains(m_text) << endl;
+/*    kDebug() << link.absoluteUrl().url() << endl;
+    kDebug() << link.label() << endl;
+    kDebug() << link.absoluteUrl().url().contains(m_text) << endl;
+    kDebug() << link.label().contains(m_text) << endl;
     */
     return (link.absoluteUrl().url().contains(m_text, false) || link.label().contains(m_text, false)) &&
             ResultView::displayableWithStatus(&link, m_status);

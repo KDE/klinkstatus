@@ -22,7 +22,7 @@
 
 #include <kdialogbase.h>
 
-class KURLRequester;
+class KUrlRequester;
 
 /**
 	@author Paulo Moura Guedes <moura@kdewebdev.org>
@@ -50,7 +50,7 @@ private slots:
     void slotReturnPressed(const QString &);
 
 private:
-    KURLRequester* m_urlRequester;
+    KUrlRequester* m_urlRequester;
     QString m_url;
 };
 

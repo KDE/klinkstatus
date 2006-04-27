@@ -86,7 +86,7 @@ QString Node::getAttribute(QString const& atributo)
         }
         else
         {
-            ::stripWhiteSpace(attribute_);
+            ::trimmed(attribute_);
         }
     }
 
@@ -110,7 +110,7 @@ void NodeLink::parseAttributeHREF()
             findWord(content(), "NAME") == -1 &&
             findWord(content(), "TARGET") == -1)
     {
-        kdDebug(23100) <<  "MALFORMED: " << endl
+        kDebug(23100) <<  "MALFORMED: " << endl
         << "NodeLink::parseAttributeHREF: " << content() << endl;
         setMalformed(true);
         return;
@@ -152,7 +152,7 @@ void NodeLink::parseLinkLabel()
         if(fim_label != -1)
         {
             link_label_ =
-                ::simplifyWhiteSpace(content_.mid(fim_tag,
+                ::simplified(content_.mid(fim_tag,
                                                   fim_label - fim_tag));
         }
     }
@@ -190,7 +190,7 @@ void NodeMETA::parseAttributeURL()
         while(aspas != -1);
 
         if(attribute_url_.isEmpty())
-            kdDebug(23100) <<  "void NodeMeta::parseAttributeURL(): Assertion `!attribute_url_.isEmpty()' failed.\n"
+            kDebug(23100) <<  "void NodeMeta::parseAttributeURL(): Assertion `!attribute_url_.isEmpty()' failed.\n"
             << content_ << endl << attribute_http_equiv_ << endl << attribute_url_ << endl;
         Q_ASSERT(!attribute_url_.isEmpty());
 
@@ -206,8 +206,8 @@ void NodeIMG::parseAttributeSRC()
 {
     if(findWord(content(), "SRC") == -1)
     {
-        kdDebug(23100) <<  "MALFORMED_____________________________________________________________" << endl;
-        kdDebug(23100) <<  "Conteudo: " << content() << endl;
+        kDebug(23100) <<  "MALFORMED_____________________________________________________________" << endl;
+        kDebug(23100) <<  "Conteudo: " << content() << endl;
         setMalformed(true);
         return;
     }

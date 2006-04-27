@@ -33,7 +33,7 @@ TreeView::TreeView(QWidget *parent, const char *name,
                    int column_index_status,
                    int column_index_label,
                    int column_index_URL)
-        : KListView(parent, name),
+        : K3ListView(parent, name),
         ResultView(column_index_status, column_index_label, column_index_URL),
         current_column_(0)
 {
@@ -93,7 +93,7 @@ void TreeView::resetColumns()
 
 void TreeView::clear()
 {
-    KListView::clear();
+    K3ListView::clear();
 }
 
 void TreeView::removeColunas()
@@ -103,14 +103,14 @@ void TreeView::removeColunas()
 
 void TreeView::show(ResultView::Status const& status)
 {
-    QListViewItemIterator it(static_cast<KListView*> (this));
+    QListViewItemIterator it(static_cast<K3ListView*> (this));
     while(it.current())
     {
         TreeViewItem* item = myItem(it.current());
         if(!ResultView::displayableWithStatus(item->linkStatus(), status))
         {
             item->setVisible(false);
-            //kdDebug(23100) << "Hide: " << item->linkStatus()->absoluteUrl().url() << endl;
+            //kDebug(23100) << "Hide: " << item->linkStatus()->absoluteUrl().url() << endl;
         }
         else
         {
@@ -122,7 +122,7 @@ void TreeView::show(ResultView::Status const& status)
                 TreeViewItem* parent = myItem(item->parent());
                 while(parent)
                 {
-                    kdDebug(23100) << "Show: " << parent->linkStatus()->absoluteUrl().url() << endl;
+                    kDebug(23100) << "Show: " << parent->linkStatus()->absoluteUrl().url() << endl;
 
                     parent->setVisible(true);
                     //parent->setEnabled(false);
@@ -167,7 +167,7 @@ bool TreeView::isEmpty() const
 
 void TreeView::resizeEvent(QResizeEvent *e)
 {
-    KListView::resizeEvent(e);
+    K3ListView::resizeEvent(e);
     resetColumns();
     clipper()->repaint();
 }
@@ -239,8 +239,8 @@ void TreeView::slotEditReferrerWithQuanta(int id)
     Q_ASSERT(index != -1);
     Q_ASSERT(index != 1); // separator
 
-    //kdDebug(23100) << "id: " << id << endl;
-    //kdDebug(23100) << "index: " << index << endl;
+    //kDebug(23100) << "id: " << id << endl;
+    //kDebug(23100) << "index: " << index << endl;
 
     index -= 2; // The list of referrers starts on index = 2
 
@@ -363,7 +363,7 @@ TreeViewItem* TreeView::myItem(QListViewItem* item) const
 
 TreeViewItem::TreeViewItem(QListView* listview, QListViewItem* after,
                            LinkStatus const* linkstatus, int number_of_columns)
-        : KListViewItem(listview, after), number_of_columns_(number_of_columns),
+        : K3ListViewItem(listview, after), number_of_columns_(number_of_columns),
         last_child_(0)
 {
     init(linkstatus);
@@ -371,7 +371,7 @@ TreeViewItem::TreeViewItem(QListView* listview, QListViewItem* after,
 
 TreeViewItem::TreeViewItem(QListViewItem* listview_item, QListViewItem* after,
                            LinkStatus const* linkstatus, int number_of_columns)
-        : KListViewItem(listview_item, after), number_of_columns_(number_of_columns),
+        : K3ListViewItem(listview_item, after), number_of_columns_(number_of_columns),
         last_child_(0)
 
 {
@@ -436,7 +436,7 @@ void TreeViewItem::paintCell(QPainter * p, const QColorGroup & cg, int column, i
     QColor color(item.textStatusColor());
     m_cg.setColor(QColorGroup::Text, color);
 
-    KListViewItem::paintCell(p, m_cg, column, width, align);
+    K3ListViewItem::paintCell(p, m_cg, column, width, align);
 
     setHeight(22);
 }
@@ -505,7 +505,7 @@ QColor const& TreeColumnViewItem::textStatusColor() const
     {
         if(linkStatus()->errorOccurred())
         {
-            //kdDebug(23100) <<  "ERROR: " << linkStatus()->error() << ": " << linkStatus()->absoluteUrl().prettyURL() << endl;
+            //kDebug(23100) <<  "ERROR: " << linkStatus()->error() << ": " << linkStatus()->absoluteUrl().prettyURL() << endl;
             if(linkStatus()->error() == "Javascript not suported")
                 return Qt::lightGray;
             else
@@ -525,9 +525,9 @@ QColor const& TreeColumnViewItem::textStatusColor() const
 
             if(status_code[0] == '0')
             {
-                kdWarning(23100) <<  "status code == 0: " << endl;
-                kdWarning(23100) <<  linkStatus()->toString() << endl;
-                kdWarning(23100) <<  linkStatus()->httpHeader().toString() << endl;
+                kWarning(23100) <<  "status code == 0: " << endl;
+                kWarning(23100) <<  linkStatus()->toString() << endl;
+                kWarning(23100) <<  linkStatus()->httpHeader().toString() << endl;
             }
             //Q_ASSERT(status_code[0] != '0');
 
@@ -561,7 +561,7 @@ QString TreeColumnViewItem::text(int column) const
         if(linkStatus()->node() && linkStatus()->malformed())
         {
             if(linkStatus()->node()->url().isEmpty())
-                return linkStatus()->node()->content().simplifyWhiteSpace();
+                return linkStatus()->node()->content().simplified();
             else
                 return linkStatus()->node()->url();
         }
@@ -588,11 +588,11 @@ QString TreeColumnViewItem::text(int column) const
     case 3: // Label column
         QString label(linkStatus()->label());
         if(!label.isNull())
-            return label.simplifyWhiteSpace();
+            return label.simplified();
         break;
         /*
         default:
-        kdError() << "TreeColumnViewItem::text: Wrong Column Number - " << column << endl;
+        kError() << "TreeColumnViewItem::text: Wrong Column Number - " << column << endl;
         retureturn QString()rn QString();
         */
     }
@@ -638,7 +638,7 @@ QPixmap TreeColumnViewItem::pixmap(int column) const
         break;
 
     default:
-        kdError() << "TreeColumnViewItem::pixmap: Wrong Column Number - " << column << endl;
+        kError() << "TreeColumnViewItem::pixmap: Wrong Column Number - " << column << endl;
         return QPixmap();
     }
     return QPixmap();

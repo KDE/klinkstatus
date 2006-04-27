@@ -22,7 +22,7 @@
 #include <kurl.h>
 #include <kcombobox.h>
 #include <ksqueezedtextlabel.h>
-#include <kprogress.h>
+#include <kprogressbar.h>
 #include <kmessagebox.h>
 #include <kconfig.h>
 #include <kiconloader.h>
@@ -97,7 +97,7 @@ void SessionWidget::slotLoadSettings(bool modify_current_widget_settings)
 
     search_manager_->setTimeOut(KLSConfig::timeOut());
     
-    //kdDebug(23100) << "tree_display_: " << tree_display_ << endl;
+    //kDebug(23100) << "tree_display_: " << tree_display_ << endl;
 }
 
 void SessionWidget::saveCurrentCheckSettings()
@@ -313,7 +313,7 @@ void SessionWidget::slotCheck()
 	search_manager_->setRegularExpression(lineedit_reg_exp->text(), false);
     }
 
-    kdDebug(23100) <<  "URI: " << url.prettyURL() << endl;
+    kDebug(23100) <<  "URI: " << url.prettyURL() << endl;
     combobox_url->setCurrentText(url.prettyURL());
     search_manager_->startSearch(url);
     slotSetTimeElapsed();
@@ -415,7 +415,7 @@ void SessionWidget::slotLinkChecked(LinkStatus const* linkstatus, LinkChecker * 
         
         if(tree_display_)
         {
-            //kdDebug(23100) << "TREE!!!!!" << endl;
+            //kDebug(23100) << "TREE!!!!!" << endl;
             TreeViewItem* parent_item = linkstatus->parent()->treeViewItem();
             tree_view_item = new TreeViewItem(parent_item, parent_item->lastChild(), linkstatus, 3);
             parent_item->setLastChild(tree_view_item);
@@ -426,7 +426,7 @@ void SessionWidget::slotLinkChecked(LinkStatus const* linkstatus, LinkChecker * 
         }
         else
         {
-            //kdDebug(23100) << "FLAT!!!!!" << endl;
+            //kDebug(23100) << "FLAT!!!!!" << endl;
             tree_view_item = new TreeViewItem(tree_view, tree_view->lastItem(), linkstatus, 3);
             tree_view->ensureRowVisible(tree_view_item, tree_display_);
         }   
@@ -505,7 +505,7 @@ void SessionWidget::insertUrlAtCombobox(QString const& url)
 
 void SessionWidget::showBottomStatusLabel(QListViewItem * item)
 {
-    kdDebug(23100) << "SessionWidget::showBottomStatusLabel" << endl;
+    kDebug(23100) << "SessionWidget::showBottomStatusLabel" << endl;
     
     TreeViewItem* _item = tree_view->myItem(item);
     if(_item)
@@ -565,8 +565,8 @@ void SessionWidget::init()
     pushbutton_cancel->setIconSet(SmallIconSet("player_pause"));
     toolButton_clear_combo->setIconSet(SmallIconSet("locationbar_erase"));
 	
-	pushbutton_url->setIconSet(KGlobal::iconLoader()->loadIconSet("fileopen", KIcon::Small));
-	QPixmap pixMap = KGlobal::iconLoader()->loadIcon("fileopen", KIcon::Small);
+	pushbutton_url->setIconSet(KGlobal::iconLoader()->loadIconSet("fileopen", K3Icon::Small));
+	QPixmap pixMap = KGlobal::iconLoader()->loadIcon("fileopen", K3Icon::Small);
 	pushbutton_url->setFixedSize(pixMap.width() + 8, pixMap.height() + 8);
 	connect(pushbutton_url, SIGNAL(clicked()), this, SLOT(slotChooseUrlDialog()));
 

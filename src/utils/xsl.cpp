@@ -184,7 +184,7 @@ QString KopeteXSLThread::xsltTransform( const QString &xmlString, xsltStylesheet
     }
 
     #ifdef RAWXSL
-        kdDebug(23100) << k_funcinfo << resultString << endl;
+        kDebug(23100) << k_funcinfo << resultString << endl;
     #endif
     return resultString;
 }
@@ -243,7 +243,7 @@ void XSLT::setXSLT( const QString &_document )
     while ( ( pos = elementMatch.search( document ) ) != -1 )
     {
         QString orig = elementMatch.cap( 1 );
-        //kdDebug( 14010 ) << k_funcinfo << "Original text: " << orig << endl;
+        //kDebug( 14010 ) << k_funcinfo << "Original text: " << orig << endl;
 
         // Split on % and go over all parts
         // WARNING: If you change the translator comment, also change it in the
@@ -348,13 +348,13 @@ void XSLT::setXSLT( const QString &_document )
                 prependPercent = true;
             }
         }
-        //kdDebug( 14010 ) << k_funcinfo << "Translated text: " << trans << endl;
+        //kDebug( 14010 ) << k_funcinfo << "Translated text: " << trans << endl;
         // Add "<kopete-i18n>" and "</kopete-i18n>" to length, hence the '+ 27'
         document.replace( uint( pos ), orig.length() + 27, trans );
     }
 
     #ifdef RAWXSL
-        kdDebug(14000) << k_funcinfo << document.toUtf8() << endl;
+        kDebug(14000) << k_funcinfo << document.toUtf8() << endl;
     #endif
 
     //Freeing the stylesheet also frees the doc pointer;
@@ -392,7 +392,7 @@ void XSLT::setXSLT( const QString &_document )
         }
         else
         {
-            kdWarning(14000) << "Invalid stylesheet provided" << endl;
+            kWarning(14000) << "Invalid stylesheet provided" << endl;
 
             //We don't have a stylesheet, so free the doc pointer
             xmlFreeDoc( d->xslDoc );
@@ -402,7 +402,7 @@ void XSLT::setXSLT( const QString &_document )
     }
     else
     {
-        kdWarning(14000) << "Invalid stylesheet provided" << endl;
+        kWarning(14000) << "Invalid stylesheet provided" << endl;
         d->xslDoc = 0;
     }
 }
