@@ -92,8 +92,8 @@ void LinkChecker::check()
                          this, SLOT(slotData(KIO::Job *, const QByteArray &)));
         QObject::connect(t_job_, SIGNAL(mimetype(KIO::Job *, const QString &)),
                          this, SLOT(slotMimetype(KIO::Job *, const QString &)));
-        QObject::connect(t_job_, SIGNAL(result(KIO::Job *)),
-                         this, SLOT(slotResult(KIO::Job *)));
+        QObject::connect(t_job_, SIGNAL(result(KJob *)),
+                         this, SLOT(slotResult(KJob *)));
         QObject::connect(t_job_, SIGNAL(redirection(KIO::Job *, const KUrl &)),
                          this, SLOT(slotRedirection(KIO::Job *, const KUrl &)));
 
@@ -257,7 +257,7 @@ void LinkChecker::slotData(KIO::Job* /*job*/, const QByteArray& data)
 
 // only comes here if an error happened or in case of a clean html page
 // if onlyCheckHeader is false
-void LinkChecker::slotResult(KIO::Job* /*job*/)
+void LinkChecker::slotResult(KJob* /*job*/)
 {
     if(finnished_)
         return;
