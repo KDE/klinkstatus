@@ -18,6 +18,7 @@
 
 class KUrl;
 
+#include "../engine/linkstatushelper.h"
 class LinkStatus;
 class CellToolTip;
 
@@ -34,25 +35,16 @@ public:
     static const QString MARKUP_LABEL;
     static const QString LINK_LABEL_LABEL;
     
-    enum Status {
-        none = 0,
-        good,
-        bad,
-        malformed,
-        undetermined // timeouts and refs
-    };
-
     ResultView();
     virtual ~ResultView();
 
     //virtual void insertResult(LinkStatus const* linkstatus) = 0;
     virtual void clear() = 0;
-    virtual void show(Status const& status) = 0;
+    virtual void show(LinkStatusHelper::Status const& status) = 0;
     virtual void showAll() = 0;
     //virtual void ensureCellVisible(int row, int col) = 0;
 
     virtual void setColumns(QStringList const& columns);
-    static bool displayableWithStatus(LinkStatus const* ls, Status const& status);
     
     int numberOfColumns() const { return number_of_columns_; }
     
