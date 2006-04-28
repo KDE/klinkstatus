@@ -62,7 +62,7 @@ public:
 
     virtual void clear();
     void removeColunas();
-    virtual void show(ResultView::Status const& status);
+    virtual void show(LinkStatusHelper::Status const& status);
     virtual void showAll();
 
 
