@@ -69,43 +69,6 @@ void ResultView::setColumns(QStringList const& columns)
     number_of_columns_ = columns.size();
 }
 
-bool ResultView::displayableWithStatus(LinkStatus const* ls, Status const& status)
-{
-    if(status == ResultView::good)
-    {
-        if(ls->errorOccurred())
-            return false;
-        else
-            if(ls->absoluteUrl().protocol() != "http" &&
-                    ls->absoluteUrl().protocol() != "https")
-                return (ls->status() == "OK" ||
-                        (!ls->absoluteUrl().hasRef()));
-            else
-            {
-                QString status_code(QString::number(ls->httpHeader().statusCode()));
-                return (ls->status() == "OK" ||
-                        (!ls->absoluteUrl().hasRef() &&
-                         status_code[0] != '5' &&
-                         status_code[0] != '4'));
-            }
-    }
-    else if(status == ResultView::bad)
-    {
-        return (!displayableWithStatus(ls, ResultView::good) && !ls->error().contains(i18n("Timeout")));
-    }
-    else if(status == ResultView::malformed)
-    {
-        return (ls->error() == i18n( "Malformed" ));
-    }
-    else if(status == ResultView::undetermined)
-    {
-        return (ls->error().contains(i18n("Timeout")) ||
-                (ls->absoluteUrl().hasRef() && ls->status() != "OK"));
-    }
-    else
-        return true;
-}
-
 
 // ******************************* ResultViewItem *****************************
 
@@ -160,9 +123,9 @@ QColor const& ResultViewItem::textStatusColor() const
 
         if(status_code[0] == '0')
         {
-            kWarning(23100) <<  "status code == 0: " << endl;
-            kWarning(23100) <<  linkStatus()->toString() << endl;
-            kWarning(23100) <<  linkStatus()->httpHeader().toString() << endl;
+            kWarning(23100) << "status code == 0: " << endl;
+            kWarning(23100) << LinkStatusHelper(linkStatus()).toString() << endl;
+            kWarning(23100) << linkStatus()->httpHeader().toString() << endl;
         }
         //Q_ASSERT(status_code[0] != '0');
 
