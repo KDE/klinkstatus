@@ -22,8 +22,9 @@
 #define RESULTSSEARCHBAR_H
 
 #include <qstring.h>
+#include <qwidget.h>
 
-#include "resultview.h"
+#include "../engine/linkstatushelper.h"
 #include "../engine/linkfilter.h"
 
 /**
@@ -62,7 +63,7 @@ private slots:
 
 private:
     
-    ResultView::Status selectedStatus() const;
+    LinkStatusHelper::Status selectedStatus() const;
     
 private:
 
