@@ -18,6 +18,7 @@
 #include <dcopref.h>
 #include <kmessagebox.h>
 #include <dcopclient.h>
+#include <kcharsets.h>
 
 #include <q3valuevector.h>
 #include <q3header.h>
@@ -30,15 +31,13 @@
 #include "treeview.h"
 #include "../global.h"
 #include "../engine/linkstatus.h"
+#include "../engine/linkfilter.h"
 #include "../cfg/klsconfig.h"
 
 
-TreeView::TreeView(QWidget *parent, const char *name,
-                   int column_index_status,
-                   int column_index_label,
-                   int column_index_URL)
+TreeView::TreeView(QWidget *parent, const char *name)
         : K3ListView(parent, name),
-        ResultView(column_index_status, column_index_label, column_index_URL),
+        ResultView(),
         current_column_(0)
 {
     setShowToolTips(true);
@@ -47,8 +46,8 @@ TreeView::TreeView(QWidget *parent, const char *name,
     setShowSortIndicator(true);
     //setFocusPolicy( WheelFocus );
     setRootIsDecorated(KLSConfig::displayTreeView());
-    //setResizeMode(QListView::LastColumn);
-    
+//     setResizeMode(QListView::LastColumn);
+
     sub_menu_ = new Q3PopupMenu(this, "sub_menu_referrers");
     
     connect(this, SIGNAL( rightButtonClicked ( Q3ListViewItem *, const QPoint &, int )),
@@ -57,42 +56,48 @@ TreeView::TreeView(QWidget *parent, const char *name,
 
 
 TreeView::~TreeView()
-{}
+{
+   saveLayout(KLSConfig::self()->config(), "klinkstatus");
+}
 
 void TreeView::setColumns(QStringList const& columns)
 {
     ResultView::setColumns(columns);
     removeColunas();
 
-    // resetColumns is called automatically
+//     resetColumns is called automatically
     for(uint i = 0; i != columns.size(); ++i)
     {
-        setColumnWidthMode(i, Manual);
-
-        if(i == 0)
-        {
-            Q_ASSERT(columns[i] == i18n("URL") && col_url_ == 1);
-            addColumn(i18n(columns[i]));
-        }
-        else if(i == 1)
-        {
-            Q_ASSERT(columns[i] == i18n("Status") && col_status_ == 2);
-            addColumn(i18n(columns[i]), 48);
-        }
-        else if(i == 2)
-        {
-            Q_ASSERT(columns[i] == i18n("Label") && col_label_ == 3);
-            addColumn(i18n(columns[i])/*, (int)(0.45 * width() - 79)*/);
-        }
+        addColumn(i18n(columns[i]));        
+        setColumnWidthMode(i, QListView::Manual);
     }
 
     setColumnAlignment(col_status_ - 1, Qt::AlignCenter);
+    if(KLSConfig::showMarkupStatus())
+        setColumnAlignment(col_markup_ - 1, Qt::AlignCenter);
 }
 
 void TreeView::resetColumns()
 {
-    setColumnWidth(col_url_ - 1, (int)(0.55 * width()));
-    setColumnWidth(col_label_ - 1, (int)(0.45 * width()/* - 79*/));
+    setColumnWidth(col_url_ - 1, (int)(0.45 * width()));
+    
+    setResizeMode(QListView::LastColumn); // fit to the window
+    // resize again
+    setColumnWidthMode(col_label_ - 1, QListView::Manual);
+    setResizeMode(QListView::NoColumn);
+}
+
+double TreeView::columnsWidth() const
+{
+    kdDebug(23100) << "columns: " << columns() << endl;
+    
+    double width = 0.0;
+    for(int i = 0; i != columns(); ++i)
+    {
+        kdDebug(23100) << "column width: " << columnWidth(i) << endl;
+        width += columnWidth(i);
+    }
+    return width;
 }
 
 void TreeView::clear()
@@ -105,13 +110,13 @@ void TreeView::removeColunas()
     clear();
 }
 
-void TreeView::show(ResultView::Status const& status)
+void TreeView::show(LinkStatusHelper::Status const& status)
 {
     Q3ListViewItemIterator it(static_cast<K3ListView*> (this));
     while(it.current())
     {
         TreeViewItem* item = myItem(it.current());
-        if(!ResultView::displayableWithStatus(item->linkStatus(), status))
+        if(!LinkStatusHelper(item->linkStatus()).hasStatus(status))
         {
             item->setVisible(false);
             //kDebug(23100) << "Hide: " << item->linkStatus()->absoluteUrl().url() << endl;
@@ -140,6 +145,23 @@ void TreeView::show(ResultView::Status const& status)
             */
         }
 //         
+        ++it;
+    }
+}
+
+void TreeView::show(LinkMatcher link_matcher)
+{
+    QListViewItemIterator it(this);
+    while(it.current())
+    {
+        TreeViewItem* item = myItem(it.current());
+        bool match = link_matcher.matches(*(item->linkStatus()));
+        
+        if(tree_display_)
+            item->setEnabled(match);
+        else
+            item->setVisible(match);
+        
         ++it;
     }
 }
@@ -266,7 +288,7 @@ void TreeView::slotEditReferrerWithQuanta(KUrl const& url)
 
         if(!success)
         {
-            QString message = i18n("<qt>File <b>%1</b> cannot be opened. Might be a DCOP problem.</qt>", filePath);
+            QString message = i18n("<qt>File <b>%1</b> cannot be opened. Might be a DCOP problem.</qt>").arg(filePath);
             KMessageBox::error(parentWidget(), message);
         }
     }
@@ -328,8 +350,9 @@ void TreeView::loadContextTableMenu(Q3ValueVector<KUrl> const& referrers, bool i
         }
         connect(sub_menu_, SIGNAL(activated(int)), this, SLOT(slotEditReferrerWithQuanta(int)));
 
-        context_table_menu_.insertItem(SmallIconSet("fileopen"), i18n("Edit Referrer with Quanta"),
+        context_table_menu_.insertItem(SmallIconSet("edit"), i18n("Edit Referrer with Quanta"),
                                        sub_menu_);
+        context_table_menu_.insertSeparator();
     }
     else
     {
@@ -340,7 +363,7 @@ void TreeView::loadContextTableMenu(Q3ValueVector<KUrl> const& referrers, bool i
     context_table_menu_.insertItem(SmallIconSet("fileopen"), i18n("Open URL"),
                                    this, SLOT(slotViewUrlInBrowser()));
 
-    context_table_menu_.insertItem(SmallIconSet("fileopen"), i18n("Open Referrer URL"),
+    context_table_menu_.insertItem(/*SmallIconSet("fileopen"), */i18n("Open Referrer URL"),
                                    this, SLOT(slotViewParentUrlInBrowser()));
 
     context_table_menu_.insertSeparator();
@@ -348,10 +371,10 @@ void TreeView::loadContextTableMenu(Q3ValueVector<KUrl> const& referrers, bool i
     context_table_menu_.insertItem(SmallIconSet("editcopy"), i18n("Copy URL"),
                                    this, SLOT(slotCopyUrlToClipboard()));
 
-    context_table_menu_.insertItem(SmallIconSet("editcopy"), i18n("Copy Referrer URL"),
+    context_table_menu_.insertItem(/*SmallIconSet("editcopy"), */i18n("Copy Referrer URL"),
                                    this, SLOT(slotCopyParentUrlToClipboard()));
 
-    context_table_menu_.insertItem(SmallIconSet("editcopy"), i18n("Copy Cell Text"),
+    context_table_menu_.insertItem(/*SmallIconSet("editcopy"), */i18n("Copy Cell Text"),
                                    this, SLOT(slotCopyCellTextToClipboard()));
 }
 
@@ -365,19 +388,18 @@ TreeViewItem* TreeView::myItem(Q3ListViewItem* item) const
 
 /* ******************************* TreeViewItem ******************************* */
 
-TreeViewItem::TreeViewItem(Q3ListView* listview, Q3ListViewItem* after,
-                           LinkStatus const* linkstatus, int number_of_columns)
-        : K3ListViewItem(listview, after), number_of_columns_(number_of_columns),
-        last_child_(0)
+TreeViewItem::TreeViewItem(TreeView* parent, Q3ListViewItem* after,
+                           LinkStatus const* linkstatus)
+        : K3ListViewItem(parent, after),
+        last_child_(0), root_(parent)
 {
     init(linkstatus);
 }
 
-TreeViewItem::TreeViewItem(Q3ListViewItem* listview_item, Q3ListViewItem* after,
-                           LinkStatus const* linkstatus, int number_of_columns)
-        : K3ListViewItem(listview_item, after), number_of_columns_(number_of_columns),
-        last_child_(0)
-
+TreeViewItem::TreeViewItem(TreeView* root, Q3ListViewItem* listview_item, Q3ListViewItem* after,
+                           LinkStatus const* linkstatus)
+        : K3ListViewItem(listview_item, after),
+        last_child_(0), root_(root)
 {
     init(linkstatus);
 }
@@ -389,16 +411,23 @@ void TreeViewItem::init(LinkStatus const* linkstatus)
 {
     setOpen(true);
 
-    for(int i = 0; i != number_of_columns_; ++i)
+    for(int i = 0; i != root_->numberOfColumns(); ++i)
     {
-        TreeColumnViewItem item(linkstatus, i + 1);
+        TreeColumnViewItem item(root_, linkstatus, i + 1);
         column_items_.push_back(item);
-    }
-    for(uint i = 0; i != column_items_.size(); ++i)
-    {
-        TreeColumnViewItem item = column_items_[i];
-
-        setText(item.columnIndex() - 1, item.text(i + 1));
+        
+        QString text(KCharsets::resolveEntities(item.text(i + 1)));
+        
+        if(i + 1 == root_->urlColumnIndex()) {
+            setText(item.columnIndex() - 1, KURL::decode_string(text));
+        }
+        else if(i + 1 == root_->statusColumnIndex()) {
+            setText(item.columnIndex() - 1, i18n(text));
+        }
+        else {
+            setText(item.columnIndex() - 1, text);
+        }
+        
         setPixmap(item.columnIndex() - 1, item.pixmap(i + 1));
     }
 }
@@ -426,7 +455,7 @@ QString TreeViewItem::key(int column, bool) const
     return text(column);
 }
 
-LinkStatus const* const TreeViewItem::linkStatus() const
+LinkStatus const* TreeViewItem::linkStatus() const
 {
     return column_items_[0].linkStatus();
 }
@@ -448,11 +477,11 @@ void TreeViewItem::paintCell(QPainter * p, const QColorGroup & cg, int column, i
 
 /* ******************************* TreeColumnViewItem ******************************* */
 
-TreeColumnViewItem::TreeColumnViewItem(LinkStatus const* linkstatus, int column_index)
-        : ls_(linkstatus), column_index_(column_index)
+TreeColumnViewItem::TreeColumnViewItem(TreeView* root, LinkStatus const* linkstatus, int column_index)
+    : root_(root), ls_(linkstatus), column_index_(column_index)
 {
     Q_ASSERT(ls_);
-    Q_ASSERT(column_index_ > 0);
+//     Q_ASSERT(column_index_ > 0);
 }
 
 TreeColumnViewItem::~TreeColumnViewItem()
@@ -465,12 +494,13 @@ void TreeColumnViewItem::setColumnIndex(int i)
     column_index_ = i;
 }
 */
+
 int TreeColumnViewItem::columnIndex() const
 {
     return column_index_;
 }
 
-LinkStatus const* const TreeColumnViewItem::linkStatus() const
+LinkStatus const* TreeColumnViewItem::linkStatus() const
 {
     Q_ASSERT(ls_);
     return ls_;
@@ -478,7 +508,7 @@ LinkStatus const* const TreeColumnViewItem::linkStatus() const
 
 QColor const& TreeColumnViewItem::textStatusColor() const
 {
-    if(columnIndex() == 1) // URL col
+    if(columnIndex() == root_->urlColumnIndex())
     {
         QString status_code(QString::number(linkStatus()->httpHeader().statusCode()));
 
@@ -505,7 +535,7 @@ QColor const& TreeColumnViewItem::textStatusColor() const
             return Qt::black;
     }
 
-    else if(columnIndex() == 2) // Status col
+    else if(columnIndex() == root_->statusColumnIndex())
     {
         if(linkStatus()->errorOccurred())
         {
@@ -530,7 +560,7 @@ QColor const& TreeColumnViewItem::textStatusColor() const
             if(status_code[0] == '0')
             {
                 kWarning(23100) <<  "status code == 0: " << endl;
-                kWarning(23100) <<  linkStatus()->toString() << endl;
+                kWarning(23100) <<  LinkStatusHelper(linkStatus()).toString() << endl;
                 kWarning(23100) <<  linkStatus()->httpHeader().toString() << endl;
             }
             //Q_ASSERT(status_code[0] != '0');
@@ -559,9 +589,9 @@ QString TreeColumnViewItem::text(int column) const
 {
     Q_ASSERT(column > 0);
 
-    switch(column)
+    
+    if(column == root_->urlColumnIndex())
     {
-    case 1: // URL column
         if(linkStatus()->node() && linkStatus()->malformed())
         {
             if(linkStatus()->node()->url().isEmpty())
@@ -573,13 +603,13 @@ QString TreeColumnViewItem::text(int column) const
         {
             KUrl url = linkStatus()->absoluteUrl();
             return Url::convertToLocal(linkStatus());
-        }
-        break;
-
-    case 2: // Status column
+        }        
+    }
+    else if(column == root_->statusColumnIndex())
+    {
         if(linkStatus()->errorOccurred() ||
-                linkStatus()->status() == "OK" ||
-                linkStatus()->status() == "304")
+           linkStatus()->status() == "OK" ||
+           linkStatus()->status() == "304")
         {
             return QString();
         }
@@ -587,19 +617,14 @@ QString TreeColumnViewItem::text(int column) const
         {
             return linkStatus()->status();
         }
-        break;
-
-    case 3: // Label column
-        QString label(linkStatus()->label());
+    }
+    else if(column == root_->labelColumnIndex())
+    {
+        QString label(i18n(linkStatus()->label()));
         if(!label.isNull())
             return label.simplified();
-        break;
-        /*
-        default:
-        kError() << "TreeColumnViewItem::text: Wrong Column Number - " << column << endl;
-        retureturn QString()rn QString();
-        */
     }
+        
     return QString();
 }
 
@@ -607,13 +632,8 @@ QPixmap TreeColumnViewItem::pixmap(int column) const
 {
     Q_ASSERT(column > 0);
 
-    switch(column)
+    if(column == root_->statusColumnIndex())
     {
-    case 1: // URL column
-        return QPixmap();
-        break;
-
-    case 2: // Status column
         if(linkStatus()->errorOccurred())
         {
 
@@ -635,16 +655,8 @@ QPixmap TreeColumnViewItem::pixmap(int column) const
 
         else if(linkStatus()->status() == "OK")
             return SmallIcon("ok");
-        break;
-
-    case 3: // Label column
-        return QPixmap();
-        break;
-
-    default:
-        kError() << "TreeColumnViewItem::pixmap: Wrong Column Number - " << column << endl;
-        return QPixmap();
     }
+    
     return QPixmap();
 }
 
