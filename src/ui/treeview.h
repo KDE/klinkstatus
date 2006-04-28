@@ -15,6 +15,7 @@
 #include <k3listview.h>
 
 #include "resultview.h"
+#include "../engine/linkstatushelper.h"
 //Added by qt3to4:
 #include <QPixmap>
 #include <QResizeEvent>
@@ -40,7 +41,7 @@ public:
     virtual void setColumns(QStringList const& columns);
     virtual void clear();
     void removeColunas();
-    virtual void show(ResultView::Status const& status);
+    virtual void show(LinkStatusHelper::Status const& status);
     void show(LinkMatcher link_matcher);
     virtual void showAll();
     
