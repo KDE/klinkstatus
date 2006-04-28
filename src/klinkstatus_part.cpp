@@ -35,6 +35,8 @@
 #include <kaccel.h>
 #include <kkeydialog.h>
 
+#include <q3buttongroup.h>
+
 #include "global.h"
 #include "cfg/klsconfig.h"
 #include "klinkstatus_part.h"
@@ -42,10 +44,12 @@
 #include "ui/sessionwidget.h"
 #include "ui/settings/configsearchdialog.h"
 #include "ui/settings/configresultsdialog.h"
+#include "ui/settings/configidentificationdialog.h"
+#include "actionmanager.h"
 
 
 const char KLinkStatusPart::description_[] = I18N_NOOP( "A Link Checker" );
-const char KLinkStatusPart::version_[] = "0.2.2";
+const char KLinkStatusPart::version_[] = "0.3.1";
 
 // Factory code for KDE 3
 typedef KParts::GenericFactory<KLinkStatusPart> KLinkStatusFactory;
@@ -54,16 +58,17 @@ K_EXPORT_COMPONENT_FACTORY( libklinkstatuspart, KLinkStatusFactory )
 KLinkStatusPart::KLinkStatusPart(QWidget *parentWidget, const char *widgetName,
                                  QObject *parent, const char *name,
                                  const QStringList & /*string_list*/)
-        : KParts::ReadOnlyPart(parent, name)
+    : KParts::ReadOnlyPart(parent, name), m_dlgAbout(0)
 {
-    setInstance( KLinkStatusFactory::instance() );
+    setInstance(KLinkStatusFactory::instance());
 
-    m_dlgAbout = 0;
-
-    tabwidget_ = new TabWidgetSession( parentWidget, widgetName );
-    setWidget(tabwidget_);
-
+    action_manager_ = new ActionManager(this);
+    ActionManager::setInstance(action_manager_);
     initGUI();
+
+    tabwidget_ = new TabWidgetSession(parentWidget, widgetName);
+    setWidget(tabwidget_);
+    action_manager_->initTabWidget(tabwidget_);
 
     // we are not modified since we haven't done anything yet
     setModified(false);
@@ -77,81 +82,9 @@ KLinkStatusPart::~KLinkStatusPart()
 void KLinkStatusPart::initGUI()
 {
     setXMLFile("klinkstatus_part.rc", true);
-
-    // *************** File menu *********************
-
-    action_new_link_check_ = new KAction(i18n("New Link Check"), "filenew",
-                                         0,
-                                         this, SLOT(slotNewLinkCheck()),
-                                         actionCollection(), "new_link_check");
-
-    action_open_link_ = new KAction(i18n("Open URL..."), "fileopen",
-                                    0,
-                                    this, SLOT(slotOpenLink()),
-                                    actionCollection(), "open_link");
-
-    action_close_tab_ = new KAction(i18n("Close Tab"), "fileclose",
-                                    0,
-                                    this, SLOT(slotClose()),
-                                    actionCollection(), "close_tab");
-    action_close_tab_->setEnabled(false);
-
-    // *************** Settings menu *********************
-    /*
-    (void) new KToggleAction(i18n("Show &Toolbar"),
-                       0, this, SLOT(slotShowToolbar()),
-                       actionCollection(), "options_show_toolbar");
-    */
-    /*
-    (void) new KAction(i18n("Configure S&hortcuts..."),
-                       0, this, SLOT(slotConfigureShortcuts()),
-                       actionCollection(), "options_configure_keybinding");
-    */
-    /*
-    (void) new KAction(i18n("Configure Tool&bars..."),
-                       0, this, SLOT(slotConfigureToolbars()),
-                       actionCollection(), "options_configure_toolbars");
-    */
-    (void) new KAction(i18n("Configure KLinkStatus..."), "configure",
-                       0, this, SLOT(slotConfigureKLinkStatus()),
-                       actionCollection(), "configure_klinkstatus");
-
-    // *************** View menu *********************
-
-    action_display_all_links_ = new KAction(i18n("All Links"), "",
-                                            0, this, SLOT(slotDisplayAllLinks()),
-                                            actionCollection(), "display_all_links");
-    action_display_all_links_->setEnabled(false);
-
-    action_display_good_links_ = new KAction(i18n("Good Links"), "ok",
-                                 0, this, SLOT(slotDisplayGoodLinks()),
-                                 actionCollection(), "display_good_links");
-    action_display_good_links_->setEnabled(false);
-
-    action_display_bad_links_ = new KAction(i18n("Broken Links"), "no",
-                                            0, this, SLOT(slotDisplayBadLinks()),
-                                            actionCollection(), "display_bad_links");
-    action_display_bad_links_->setEnabled(false);
-
-    action_display_malformed_links_ = new KAction(i18n("Malformed Links"),
-                                      "bug",
-                                      0, this, SLOT(slotDisplayMalformedLinks()),
-                                      actionCollection(), "display_malformed_links");
-    action_display_malformed_links_->setEnabled(false);
-
-    action_display_undetermined_links_ = new KAction(i18n("Undetermined Links"), "help",
-                                         0, this, SLOT(slotDisplayUndeterminedLinks()),
-                                         actionCollection(), "display_undetermined_links");
-    action_display_undetermined_links_->setEnabled(false);
-
-    // *************** Help menu *********************
-
-    (void) new KAction(i18n("About KLinkStatus"), "klinkstatus",
-                       0, this, SLOT(slotAbout()),
-                       actionCollection(), "about_klinkstatus");
-
-    (void) new KAction(i18n("&Report Bug..."), 0, 0, this,
-                       SLOT(slotReportBug()), actionCollection(), "report_bug");
+    
+    // initialize the part actions
+    action_manager_->initPart(this);
 }
 
 void KLinkStatusPart::setModified(bool modified)
@@ -182,20 +115,7 @@ bool KLinkStatusPart::openURL(KUrl const& url)
     else
         url_aux = url;
 
-    if(tabwidget_->count() == 0 || !tabwidget_->emptySessionsExist() )
-    {
-        SessionWidget* sessionwidget = tabwidget_->newSession(url_aux);
-        connect(sessionwidget, SIGNAL(signalSearchFinnished()),
-                this, SLOT(slotEnableDisplayLinksActions()));
-        connect(sessionwidget, SIGNAL(signalSearchStarted()),
-                this, SLOT(slotDisableDisplayLinksActions()));
-    }
-    else
-    {
-        tabwidget_->getEmptySession()->setUrl(url_aux);
-    }
-
-    action_close_tab_->setEnabled(tabwidget_->count() > 1);
+    tabwidget_->slotNewSession(url_aux);
 
     return true;
 }
@@ -223,11 +143,6 @@ void KLinkStatusPart::slotOpenLink()
 void KLinkStatusPart::slotClose()
 {
     tabwidget_->closeSession();
-
-    if(tabwidget_->count() > 1)
-        Q_ASSERT(action_close_tab_->isEnabled());
-    else
-        action_close_tab_->setEnabled(false);
 }
 
 void KLinkStatusPart::slotConfigureKLinkStatus()
@@ -235,87 +150,10 @@ void KLinkStatusPart::slotConfigureKLinkStatus()
     KConfigDialog *dialog = new KConfigDialog(tabwidget_, "klsconfig", KLSConfig::self());
     dialog->addPage(new ConfigSearchDialog(0, "config_search_dialog"), i18n("Check"), "viewmag");
     dialog->addPage(new ConfigResultsDialog(0, "config_results_dialog"), i18n("Results"), "player_playlist");
+    dialog->addPage(new ConfigIdentificationDialog(0), i18n("Identification"), 
+                    "agent", i18n("Configure the way KLinkstatus reports itself"));
     dialog->show();
     connect(dialog, SIGNAL(settingsChanged()), tabwidget_, SLOT(slotLoadSettings()));
-}
-
-void KLinkStatusPart::slotDisplayAllLinks()
-{
-    tabwidget_->currentSession()->displayAllLinks();
-
-    action_display_all_links_->setEnabled(false);
-
-    action_display_good_links_->setEnabled(true);
-    action_display_bad_links_->setEnabled(true);
-    action_display_malformed_links_->setEnabled(true);
-    action_display_undetermined_links_->setEnabled(true);
-}
-
-void KLinkStatusPart::slotDisplayGoodLinks()
-{
-    tabwidget_->currentSession()->displayGoodLinks();
-
-    action_display_good_links_->setEnabled(false);
-
-    action_display_all_links_->setEnabled(true);
-    action_display_bad_links_->setEnabled(true);
-    action_display_malformed_links_->setEnabled(true);
-    action_display_undetermined_links_->setEnabled(true);
-}
-
-void KLinkStatusPart::slotDisplayBadLinks()
-{
-    tabwidget_->currentSession()->displayBadLinks();
-
-    action_display_bad_links_->setEnabled(false);
-
-    action_display_all_links_->setEnabled(true);
-    action_display_good_links_->setEnabled(true);
-    action_display_malformed_links_->setEnabled(true);
-    action_display_undetermined_links_->setEnabled(true);
-}
-
-void KLinkStatusPart::slotDisplayMalformedLinks()
-{
-    tabwidget_->currentSession()->displayMalformedLinks();
-
-    action_display_malformed_links_->setEnabled(false);
-
-    action_display_all_links_->setEnabled(true);
-    action_display_good_links_->setEnabled(true);
-    action_display_bad_links_->setEnabled(true);
-    action_display_undetermined_links_->setEnabled(true);
-}
-
-void KLinkStatusPart::slotDisplayUndeterminedLinks()
-{
-    tabwidget_->currentSession()->displayUndeterminedLinks();
-
-    action_display_undetermined_links_->setEnabled(false);
-
-    action_display_all_links_->setEnabled(true);
-    action_display_good_links_->setEnabled(true);
-    action_display_bad_links_->setEnabled(true);
-    action_display_malformed_links_->setEnabled(true);
-}
-
-void KLinkStatusPart::slotEnableDisplayLinksActions()
-{
-    if(KLSConfig::displayTreeView())
-        return;
-    
-    action_display_good_links_->setEnabled(true);
-    action_display_bad_links_->setEnabled(true);
-    action_display_malformed_links_->setEnabled(true);
-    action_display_undetermined_links_->setEnabled(true);
-}
-
-void KLinkStatusPart::slotDisableDisplayLinksActions()
-{
-    action_display_good_links_->setEnabled(false);
-    action_display_bad_links_->setEnabled(false);
-    action_display_malformed_links_->setEnabled(false);
-    action_display_undetermined_links_->setEnabled(false);
 }
 
 void KLinkStatusPart::slotAbout()
@@ -343,42 +181,7 @@ void KLinkStatusPart::slotReportBug()
     KBugReport bugReportDlg(0, true, &aboutData);
     bugReportDlg.exec();
 }
-/*
-void KLinkStatusPart::slotShowToolbar()
-{
-    KToggleAction* action_show_toolbar =
-            static_cast<KToggleAction*> (actionCollection()->action("options_show_toolbar"));
-    if(action_show_toolbar)
-    {
-        if(action_show_toolbar->isChecked())
-            toolBar()->show();
-        else
-            toolBar()->hide();
-    }
-}
 
-void KLinkStatusPart::slotConfigureShortcuts()
-{
-    KKeyDialog::configure(actionCollection());
-}
-*/
-/*
-void KLinkStatusPart::slotConfigureToolbars()
-{
-    saveMainWindowSettings(KGlobal::config(), autoSaveGroup());
-
-    // use the standard toolbar editor
-    KEditToolbar dlg(factory());
-    connect(&dlg, SIGNAL(newToolbarConfig()),
-             this, SLOT(applyNewToolbarConfig()));
-    dlg.exec();
-}
-
-void KLinkStatusPart::applyNewToolbarConfig()
-{
-    applyMainWindowSettings(KGlobal::config(), autoSaveGroup());
-}
-*/
 KAboutData* KLinkStatusPart::createAboutData()
 {
     KAboutData * about = new KAboutData("klinkstatuspart", I18N_NOOP("KLinkStatus Part"), version_,
@@ -396,7 +199,7 @@ KAboutData* KLinkStatusPart::createAboutData()
     about->addCredit("Mathieu Kooiman", 0, " quanta@map-is.nl");
     about->addCredit("Jens Herden", 0, "jens@kdewebdev.org");
 
-    KGlobal::dirs()->addResourceType("appicon",KStandardDirs::kde_default("data") + "klinkstatuspart/pics/");
+    KGlobal::dirs()->addResourceType("appicon", KStandardDirs::kde_default("data") + "klinkstatuspart/pics/");
 
     return about;
 }

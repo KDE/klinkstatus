@@ -33,7 +33,7 @@ using namespace std;
 static const char description[] =
     I18N_NOOP("A Link Checker.\n\nKLinkStatus belongs to the kdewebdev module from KDE.");
 
-static const char version[] = "0.2.2";
+static const char version[] = "0.3.1";
 
 static KCmdLineOptions options[] =
     {
@@ -43,10 +43,8 @@ static KCmdLineOptions options[] =
 
 int main(int argc, char *argv[])
 {
-    //____________________________________________________
-    
     KAboutData about("klinkstatus", I18N_NOOP("KLinkStatus"), version, description,
-                     KAboutData::License_GPL_V2, "(C) 2004 Paulo Moura Guedes", 0,
+                     KAboutData::License_GPL_V2, "(C) 2004-2006 Paulo Moura Guedes", 0,
                      "http://klinkstatus.kdewebdev.org");
 
     about.addAuthor("Paulo Moura Guedes", 0, "moura@kdewebdev.org");
