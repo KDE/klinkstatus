@@ -32,6 +32,9 @@
 #include <kstatusbar.h>
 #include <klocale.h>
 #include <kdebug.h>
+#include <kxmlguifactory.h>
+#include <kstdaccel.h>
+#include <ktoolbar.h>
 //Added by qt3to4:
 #include <Q3PtrList>
 
@@ -184,13 +187,10 @@ void KLinkStatus::optionsConfigureKeys()
 {
     //KKeyDialog::configure(actionCollection());
 
-    KKeyDialog dlg( false, this );
-    Q3PtrList<KXMLGUIClient> clients = guiFactory()->clients();
-    for( Q3PtrListIterator<KXMLGUIClient> it( clients );
-            it.current(); ++it )
-    {
-        dlg.insert( (*it)->actionCollection() );
-    }
+    KKeyDialog dlg( KKeyChooser::AllActions, KKeyChooser::LetterShortcutsDisallowed, this );
+    QList<KXMLGUIClient*> clients = guiFactory()->clients();
+	foreach(KXMLGUIClient *client, clients)
+		dlg.insert ( client->actionCollection()/*, client->instance()->aboutData()->programName() */);
     dlg.configure();
 }
 

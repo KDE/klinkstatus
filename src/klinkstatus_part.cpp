@@ -32,7 +32,6 @@
 #include <kconfigdialog.h>
 #include <kglobalsettings.h>
 #include <kshortcut.h>
-#include <kaccel.h>
 #include <kkeydialog.h>
 
 #include <q3buttongroup.h>
