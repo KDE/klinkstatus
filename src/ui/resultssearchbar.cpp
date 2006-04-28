@@ -189,7 +189,7 @@ void ResultsSearchBar::slotActivateSearch()
 {
     kDebug(23100) << "ResultsSearchBar::slotActivateSearch" << endl;
     
-    ResultView::Status status = selectedStatus();
+    LinkStatusHelper::Status status = selectedStatus();
     
     emit signalSearch(LinkMatcher(d->searchLine->text(), status));
 }
@@ -199,9 +199,9 @@ LinkMatcher ResultsSearchBar::currentLinkMatcher() const
     return LinkMatcher(d->searchLine->text(), selectedStatus());
 }
 
-ResultView::Status ResultsSearchBar::selectedStatus() const
+LinkStatusHelper::Status ResultsSearchBar::selectedStatus() const
 {
-    ResultView::Status status = ResultView::none;
+    LinkStatusHelper::Status status = LinkStatusHelper::none;
     
     if(d->searchCombo->currentItem())
     {
@@ -209,22 +209,22 @@ ResultView::Status ResultsSearchBar::selectedStatus() const
         {
             case 1: // Good
             {
-                status = ResultView::good;
+                status = LinkStatusHelper::good;
                 break;
             }
             case 2: // Broken
             {
-                status = ResultView::bad;
+                status = LinkStatusHelper::bad;
                 break;
             }
             case 3: // Malformed
             {
-                status = ResultView::malformed;
+                status = LinkStatusHelper::malformed;
                 break;
             }
             case 4: // Undetermined
             {
-                status = ResultView::undetermined;
+                status = LinkStatusHelper::undetermined;
                 break;
             }
             default:
