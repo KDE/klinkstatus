@@ -10,7 +10,7 @@ kde4_automoc(${klsengine_LIB_SRCS})
 
 kde4_add_library(klsengine SHARED ${klsengine_LIB_SRCS})
 
-target_link_libraries(klsengine  ${KDE4_KDECORE_LIBS} )
+target_link_libraries(klsengine  ${KDE4_KDECORE_LIBS} ${KDE4_KHTML_LIBS} klsutils klsparser klsconfig )
 
 set_target_properties(klsengine PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 install_targets(${LIB_INSTALL_DIR} klsengine )

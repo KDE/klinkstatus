@@ -63,8 +63,8 @@ void LinkStatusHelper::save(QDomElement& element) const
     // <referers>
     tmp_1 = element.ownerDocument().createElement("referrers");
     
-    Q3ValueVector<KURL> referrers = linkstatus_->referrers();
-    for(Q3ValueVector<KURL>::const_iterator it = referrers.begin(); it != referrers.end(); ++it)
+    Q3ValueVector<KUrl> referrers = linkstatus_->referrers();
+    for(Q3ValueVector<KUrl>::const_iterator it = referrers.begin(); it != referrers.end(); ++it)
     {
         QDomElement tmp_2 = element.ownerDocument().createElement("url");
         tmp_2.appendChild(element.ownerDocument().createTextNode(it->prettyURL()));
