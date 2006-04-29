@@ -150,14 +150,14 @@ QString const LinkStatusHelper::toString() const
     if(!linkstatus_->isRoot())
     {
         Q_ASSERT(linkstatus_->parent());
-        aux += i18n( "Parent: %1" ).arg( linkstatus_->parent()->absoluteUrl().prettyURL() ) + "\n";
+        aux += i18n( "Parent: %1", linkstatus_->parent()->absoluteUrl().prettyURL() ) + "\n";
     }
     Q_ASSERT(!linkstatus_->originalUrl().isNull());
 
-    aux += i18n("URL: %1" ).arg(linkstatus_->absoluteUrl().prettyURL()) + "\n";
-    aux += i18n("Original URL: %1" ).arg(linkstatus_->originalUrl()) + "\n";
+    aux += i18n("URL: %1", linkstatus_->absoluteUrl().prettyURL()) + "\n";
+    aux += i18n("Original URL: %1", linkstatus_->originalUrl()) + "\n";
     if(linkstatus_->node())
-        aux += i18n("Node: %1" ).arg(linkstatus_->node()->content()) + "\n";
+        aux += i18n("Node: %1", linkstatus_->node()->content()) + "\n";
 
     return aux;
 }

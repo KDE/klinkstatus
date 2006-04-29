@@ -180,7 +180,7 @@ QString KopeteXSLThread::xsltTransform( const QString &xmlString, xsltStylesheet
 
     if ( resultString.isEmpty() )
     {
-        resultString = i18n( "<div><b>KLinkStatus encountered the following error while parsing a message:</b><br />%1</div>" ).arg( errorMsg );
+        resultString = i18n( "<div><b>KLinkStatus encountered the following error while parsing a message:</b><br />%1</div>", errorMsg );
     }
 
     #ifdef RAWXSL
@@ -249,7 +249,7 @@ void XSLT::setXSLT( const QString &_document )
         // WARNING: If you change the translator comment, also change it in the
         //          styles/extracti18n Perl script, because the strings have to be
         //          identical!
-        QStringList parts = QStringList::split( '%', i18n(
+        QStringList parts = QStringList::split( '%', i18nc(
             "Translators: The %FOO% placeholders are variables that are substituted "
             "in the code, please leave them untranslated", QString(orig.toUtf8())), true );
 

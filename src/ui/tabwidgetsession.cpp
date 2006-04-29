@@ -120,7 +120,9 @@ SessionWidget* TabWidgetSession::newSession()
     connect(session_widget, SIGNAL(signalUpdateTabLabel(const LinkStatus *, SessionWidget*)),
             this, SLOT(updateTabLabel(const LinkStatus *, SessionWidget*)));
 
-    insertTab(session_widget, i18n("Session") + i18n(QString::number(count() + 1).ascii()));
+    insertTab(session_widget, i18n("Session%1", count() + 1));
+    #warning The line above was originally like below, perhaps something should be changed in message extraction too?
+    //insertTab(session_widget, i18n("Session") + i18n(QString::number(count() + 1).ascii()));
     
     tabs_.insert(count() - 1, session_widget);
     Q_ASSERT(tabs_[count() - 1]);
