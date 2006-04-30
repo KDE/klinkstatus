@@ -467,7 +467,7 @@ void TreeViewItem::paintCell(QPainter * p, const QColorGroup & cg, int column, i
     // Get a color to draw the text
     QColorGroup m_cg(cg);
     QColor color(item.textStatusColor());
-    m_cg.setColor(QColorGroup::Text, color);
+    m_cg.setColor(QPalette::Text, color);
 
     K3ListViewItem::paintCell(p, m_cg, column, width, align);
 

@@ -576,7 +576,7 @@ void TableItemURL::paint( QPainter *p, const QColorGroup &cg,
     // Get a color to draw the text
     QColorGroup m_cg(cg);
     QColor color(textStatusColor());
-    m_cg.setColor(QColorGroup::Text, color);
+    m_cg.setColor(QPalette::Text, color);
 
     Q3TableItem::paint(p, m_cg, cr, selected);
 }
@@ -691,8 +691,8 @@ void TableItemStatus::paint( QPainter *p, const QColorGroup &cg,
                              const QRect &cr, bool selected )
 {
     p->fillRect( 0, 0, cr.width(), cr.height(),
-                 selected ? cg.brush( QColorGroup::Highlight )
-                 : cg.brush( QColorGroup::Base ) );
+                 selected ? cg.brush( QPalette::Highlight )
+                 : cg.brush( QPalette::Base ) );
 
     int w = cr.width();
     int h = cr.height();
@@ -709,7 +709,7 @@ void TableItemStatus::paint( QPainter *p, const QColorGroup &cg,
     // Get a color to draw the text
     QColorGroup m_cg(cg);
     QColor color(textStatusColor());
-    m_cg.setColor(QColorGroup::Text, color);
+    m_cg.setColor(QPalette::Text, color);
 
     //QTableItem::paint(p, m_cg, cr, selected);
 
