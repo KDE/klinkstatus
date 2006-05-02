@@ -127,7 +127,7 @@ bool KLinkStatusPart::openFile()
 
 void KLinkStatusPart::slotNewLinkCheck()
 {
-    openURL("");
+    openURL(KUrl(""));
 }
 
 void KLinkStatusPart::slotOpenLink()
