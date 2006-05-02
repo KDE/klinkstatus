@@ -1,5 +1,29 @@
 kde4_header()
 
+set(libui_SRCS 
+	${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/sessionwidget.cpp 
+	${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/tabwidgetsession.cpp
+	${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/klshistorycombo.cpp 
+	${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/resultview.cpp 
+	${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/treeview.cpp 
+	${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/resultssearchbar.cpp 
+	${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/documentrootdialog.cpp
+)
+
+set(libparser_SRCS 
+	${CMAKE_SOURCE_DIR}/klinkstatus/src/parser/htmlparser.cpp 
+	${CMAKE_SOURCE_DIR}/klinkstatus/src/parser/http.cpp 
+	${CMAKE_SOURCE_DIR}/klinkstatus/src/parser/mstring.cpp 
+	${CMAKE_SOURCE_DIR}/klinkstatus/src/parser/node.cpp 
+	${CMAKE_SOURCE_DIR}/klinkstatus/src/parser/url.cpp
+)
+
+set(libutils_SRCS 
+	${CMAKE_SOURCE_DIR}/klinkstatus/src/utils/utils.cpp 
+	${CMAKE_SOURCE_DIR}/klinkstatus/src/utils/xsl.cpp
+	)
+		
+
 add_subdirectory( cfg )
 add_subdirectory( utils )
 add_subdirectory( parser )
@@ -24,7 +48,12 @@ install_targets(/bin klinkstatus )
 
 ########### next target ###############
 
-set(klinkstatuspart_PART_SRCS klinkstatus_part.cpp global.cpp actionmanager.cpp )
+set(klinkstatuspart_PART_SRCS klinkstatus_part.cpp global.cpp actionmanager.cpp  ${libui_SRCS} ${libparser_SRCS} ${libutils_SRCS} )
+
+kde4_add_ui3_files(klinkstatuspart_PART_SRCS
+	${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/sessionwidgetbase.ui
+	)
+    
 
 kde4_automoc(${klinkstatuspart_PART_SRCS})
 
@@ -32,7 +61,7 @@ kde4_add_plugin(klinkstatuspart WITH_PREFIX ${klinkstatuspart_PART_SRCS})
 
 kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} klinkstatuspart )
 
-target_link_libraries(klinkstatuspart  ${KDE4_KDECORE_LIBS} settings ui engine parser utils ${KDE4_KPARTS_LIBS} )
+target_link_libraries(klinkstatuspart  ${KDE4_KDECORE_LIBS} settings engine utils ${KDE4_KPARTS_LIBS} )
 
 install_targets(${PLUGIN_INSTALL_DIR} klinkstatuspart )
 
