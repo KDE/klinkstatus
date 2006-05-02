@@ -599,7 +599,7 @@
 	<includehint>kpushbutton.h</includehint>
     <includehint>resultssearchbar.h</includehint>
     <includehint>treeview.h</includehint>
-    <includehint>kprogress.h</includehint>
+    <includehint>kprogressbar.h</includehint>
     <includehint>ksqueezedtextlabel.h</includehint>
 </includehints>
 </UI>
