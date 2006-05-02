@@ -37,13 +37,13 @@
 #include <q3buttongroup.h>
 
 #include "global.h"
-#include "cfg/klsconfig.h"
+#include "klsconfig.h"
 #include "klinkstatus_part.h"
-#include "ui/tabwidgetsession.h"
-#include "ui/sessionwidget.h"
-#include "ui/settings/configsearchdialog.h"
-#include "ui/settings/configresultsdialog.h"
-#include "ui/settings/configidentificationdialog.h"
+#include "tabwidgetsession.h"
+#include "sessionwidget.h"
+#include "configsearchdialog.h"
+#include "configresultsdialog.h"
+#include "configidentificationdialog.h"
 #include "actionmanager.h"
 
 

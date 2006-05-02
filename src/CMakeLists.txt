@@ -34,7 +34,7 @@ add_subdirectory( parser )
 add_subdirectory( engine )
 add_subdirectory( ui )
 
-include_directories( ${CMAKE_SOURCE_DIR}/src/cfg ${CMAKE_SOURCE_DIR}/src/ui ${KDE4_INCLUDE_DIR} ${QT_INCLUDES}  )
+include_directories( ${CMAKE_SOURCE_DIR}/klinkstatus/src/cfg ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui ${KDE4_INCLUDE_DIR} ${QT_INCLUDES}  )
 
 
 ########### next target ###############
@@ -60,8 +60,7 @@ kde4_add_ui3_files(klinkstatuspart_PART_SRCS
     ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/settings/configidentificationdialogui.ui
 	)
 
-
-    
+kde4_add_kcfg_files(klinkstatuspart_PART_SRCS ${CMAKE_SOURCE_DIR}/klinkstatus/src/cfg/klsconfig.kcfgc)
 
 kde4_automoc(${klinkstatuspart_PART_SRCS})
 
@@ -69,7 +68,7 @@ kde4_add_plugin(klinkstatuspart WITH_PREFIX ${klinkstatuspart_PART_SRCS})
 
 kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} klinkstatuspart )
 
-target_link_libraries(klinkstatuspart  ${KDE4_KDECORE_LIBS} settings engine utils ${KDE4_KPARTS_LIBS} )
+target_link_libraries(klinkstatuspart  ${KDE4_KDECORE_LIBS}  engine utils ${KDE4_KPARTS_LIBS} )
 
 install_targets(${PLUGIN_INSTALL_DIR} klinkstatuspart )
 
