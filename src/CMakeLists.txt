@@ -34,7 +34,7 @@ add_subdirectory( parser )
 add_subdirectory( engine )
 add_subdirectory( ui )
 
-include_directories( ${CMAKE_SOURCE_DIR}/klinkstatus/src/cfg ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui ${KDE4_INCLUDE_DIR} ${QT_INCLUDES}  )
+include_directories( ${CMAKE_SOURCE_DIR}/klinkstatus/src/cfg ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/settings/ ${KDE4_INCLUDE_DIR} ${QT_INCLUDES}  )
 
 
 ########### next target ###############

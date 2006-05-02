@@ -57,8 +57,9 @@ K_EXPORT_COMPONENT_FACTORY( libklinkstatuspart, KLinkStatusFactory )
 KLinkStatusPart::KLinkStatusPart(QWidget *parentWidget, const char *widgetName,
                                  QObject *parent, const char *name,
                                  const QStringList & /*string_list*/)
-    : KParts::ReadOnlyPart(parent, name), m_dlgAbout(0)
+    : KParts::ReadOnlyPart(parent), m_dlgAbout(0)
 {
+	setObjectName(name);
     setInstance(KLinkStatusFactory::instance());
 
     action_manager_ = new ActionManager(this);
