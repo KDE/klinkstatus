@@ -336,6 +336,13 @@
         <slot>setEnabled(bool)</slot>
     </connection>
 </connections>
+<customwidgets>
+    <customwidget>
+        <class>KIntSpinBox</class>
+        <header location="global">knuminput.h</header>
+        <container>0</container>
+      </customwidget>
+</customwidgets>
 <tabstops>
     <tabstop>kcfg_MaxConnectionsNumber</tabstop>
     <tabstop>kcfg_TimeOut</tabstop>
@@ -348,9 +355,6 @@
 </tabstops>
 <layoutdefaults spacing="6" margin="11"/>
 <includehints>
-    <includehint>knuminput.h</includehint>
-    <includehint>knuminput.h</includehint>
-    <includehint>knuminput.h</includehint>
     <includehint>knuminput.h</includehint>
 </includehints>
 </UI>

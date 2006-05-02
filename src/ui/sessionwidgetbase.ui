@@ -370,7 +370,7 @@
                         <string>Ready</string>
                     </property>
                 </widget>
-                <widget class="KProgress">
+                <widget class="KProgressBar">
                     <property name="name">
                         <cstring>progressbar_checker</cstring>
                     </property>
@@ -596,7 +596,7 @@
 <layoutdefaults spacing="6" margin="11"/>
 <includehints>
     <includehint>klshistorycombo.h</includehint>
-    <includehint>kpushbutton.h</includehint>
+	<includehint>kpushbutton.h</includehint>
     <includehint>resultssearchbar.h</includehint>
     <includehint>treeview.h</includehint>
     <includehint>kprogress.h</includehint>

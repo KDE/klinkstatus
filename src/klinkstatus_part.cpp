@@ -73,7 +73,7 @@ KLinkStatusPart::KLinkStatusPart(QWidget *parentWidget, const char *widgetName,
     // we are not modified since we haven't done anything yet
     setModified(false);
 
-    openURL("");
+    openURL(KUrl(""));
 }
 
 KLinkStatusPart::~KLinkStatusPart()

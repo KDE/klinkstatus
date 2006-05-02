@@ -71,5 +71,19 @@
         </widget>
     </vbox>
 </widget>
+<customwidgets>
+    <customwidget>
+        <class>KIntNumInput</class>
+        <header location="global">knuminput.h</header>
+        <container>0</container>
+	</customwidget>
+    <customwidget>
+        <class>KIntSpinBox</class>
+        <header location="global">knuminput.h</header>
+        <container>0</container>
+    </customwidget>
+</customwidgets>
+
+
 <layoutdefaults spacing="6" margin="11"/>
 </UI>
