@@ -10,14 +10,13 @@
 //
 //
 #include "klshistorycombo.h"
-#include "klsconfig.h"
+#include "cfg/klsconfig.h"
 
 #include <kapplication.h>
 #include <kconfig.h>
 #include <kcompletionbox.h>
 #include <kdebug.h>
 #include <kstdaccel.h>
-#include <kurldrag.h>
 #include <kglobalsettings.h>
 //Added by qt3to4:
 #include <Q3ValueList>
@@ -28,8 +27,8 @@
 bool KLSHistoryCombo::items_saved_ = false;
 
 
-KLSHistoryCombo::KLSHistoryCombo(QWidget *parent, const char *name)
-        : KHistoryCombo(parent, name)
+KLSHistoryCombo::KLSHistoryCombo(QWidget *parent, const char */*name*/)
+        : KHistoryCombo(parent)
 {
     setMaxCount(KLSConfig::maxCountComboUrl());
     
@@ -83,35 +82,29 @@ bool KLSHistoryCombo::eventFilter( QObject *o, QEvent *ev )
     // Handle Ctrl+Del/Backspace etc better than the Qt widget, which always
     // jumps to the next whitespace.
     QLineEdit *edit = lineEdit();
-    if ( o == edit )
-    {
+    if ( o == edit ) {
         int type = ev->type();
-        if ( type == QEvent::KeyPress )
-        {
+        if ( type == QEvent::KeyPress ) {
             QKeyEvent *e = static_cast<QKeyEvent *>( ev );
 
-            if ( e->key() == Key_Return || e->key() == Key_Enter )
-            {
-                //m_modifier = e->state();
+            if ( e->key() == Qt::Key_Return || e->key() == Qt::Key_Enter ) {
+//                 m_modifier = e->state();
                 return false;
             }
 
-            int delete_word_back = KStdAccel::deleteWordBack().keyCodeQt();
-            int delete_word_forward = KStdAccel::deleteWordForward().keyCodeQt();
+            KShortcut key = e->key() | e->modifiers();
 
-            if ( KKey( e ) == KKey(delete_word_back) ||
-                    KKey( e ) == KKey(delete_word_forward) ||
-                    ((e->state() & ControlButton) &&
-                     (e->key() == Key_Left || e->key() == Key_Right) ) )
-            {
+            if ( key == KStdAccel::deleteWordBack() ||
+                 key == KStdAccel::deleteWordForward() ||
+                 ((e->modifiers() & Qt::ControlModifier) &&
+                   (e->key() == Qt::Key_Left || e->key() == Qt::Key_Right) ) ) {
                 selectWord(e);
                 e->accept();
                 return true;
             }
         }
 
-        else if ( type == QEvent::MouseButtonDblClick )
-        {
+        else if ( type == QEvent::MouseButtonDblClick ) {
             edit->selectAll();
             return true;
         }
@@ -134,27 +127,22 @@ void KLSHistoryCombo::selectWord(QKeyEvent *e)
     int count = 0;
 
     // TODO: make these a parameter when in kdelibs/kdeui...
-    Q3ValueList<QChar> chars;
+    QList<QChar> chars;
     chars << QChar('/') << QChar('.') << QChar('?') << QChar('#') << QChar(':');
     bool allow_space_break = true;
 
-    if( e->key() == Key_Left || e->key() == Key_Backspace )
-    {
-        do
-        {
+    if( e->key() == Qt::Key_Left || e->key() == Qt::Key_Backspace ) {
+        do {
             pos--;
             count++;
             if( allow_space_break && text[pos].isSpace() && count > 1 )
                 break;
-        }
-        while( pos >= 0 && (chars.findIndex(text[pos]) == -1 || count <= 1) );
+        } while( pos >= 0 && (chars.indexOf(text[pos]) == -1 || count <= 1) );
 
-        if( e->state() & ShiftButton )
-        {
-            edit->cursorForward(true, 1-count);
+        if( e->modifiers() & Qt::ShiftModifier ) {
+                  edit->cursorForward(true, 1-count);
         }
-        else if(  e->key() == Key_Backspace )
-        {
+        else if(  e->key() == Qt::Key_Backspace ) {
             edit->cursorForward(false, 1-count);
             QString text = edit->text();
             int pos_to_right = edit->text().length() - pos_old;
@@ -162,38 +150,31 @@ void KLSHistoryCombo::selectWord(QKeyEvent *e)
             edit->setText(cut);
             edit->setCursorPosition(pos_old-count+1);
         }
-        else
-        {
+        else {
             edit->cursorForward(false, 1-count);
         }
-    }
-    else if( e->key() == Key_Right || e->key() == Key_Delete )
-    {
-        do
-        {
+     }
+     else if( e->key() == Qt::Key_Right || e->key() == Qt::Key_Delete ){
+        do {
             pos++;
             count++;
-            if( allow_space_break && text[pos].isSpace() )
-                break;
-        }
-        while( pos < (int) text.length() && chars.findIndex(text[pos]) == -1 );
+                  if( allow_space_break && text[pos].isSpace() )
+                      break;
+        } while( pos < (int) text.length() && chars.indexOf(text[pos]) == -1 );
 
-        if( e->state() & ShiftButton )
-        {
+        if( e->modifiers() & Qt::ShiftModifier ) {
             edit->cursorForward(true, count+1);
         }
-        else if(  e->key() == Key_Delete )
-        {
+        else if(  e->key() == Qt::Key_Delete ) {
             edit->cursorForward(false, -count-1);
             QString text = edit->text();
             int pos_to_right = text.length() - pos - 1;
             QString cut = text.left(pos_old) +
-                          (pos_to_right > 0 ? text.right(pos_to_right) : QString() );
+               (pos_to_right > 0 ? text.right(pos_to_right) : QString() );
             edit->setText(cut);
             edit->setCursorPosition(pos_old);
         }
-        else
-        {
+        else {
             edit->cursorForward(false, count+1);
         }
     }

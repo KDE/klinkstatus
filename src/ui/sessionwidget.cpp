@@ -51,13 +51,14 @@
 //Added by qt3to4:
 #include <QPixmap>
 #include <QKeyEvent>
+//Added by qt3to4:
+#include <QTextStream>
 
 #include "sessionwidget.h"
-#include "tablelinkstatus.h"
 #include "treeview.h"
 #include "documentrootdialog.h"
 #include "klshistorycombo.h"
-#include "klsconfig.h"
+#include "cfg/klsconfig.h"
 #include "resultview.h"
 #include "../global.h"
 #include "../engine/linkstatus.h"
@@ -108,8 +109,8 @@ void SessionWidget::init()
 
     toolButton_clear_combo->setIconSet(SmallIconSet("locationbar_erase"));
 
-    pushbutton_url->setIconSet(KGlobal::iconLoader()->loadIconSet("fileopen", KIcon::Small));
-    QPixmap pixMap = KGlobal::iconLoader()->loadIcon("fileopen", KIcon::Small);
+    pushbutton_url->setIconSet(KGlobal::iconLoader()->loadIconSet(QString("fileopen"), K3Icon::Small));
+    QPixmap pixMap = KGlobal::iconLoader()->loadIcon(QString("fileopen"), K3Icon::Small);
     pushbutton_url->setFixedSize(pixMap.width() + 8, pixMap.height() + 8);
     connect(pushbutton_url, SIGNAL(clicked()), this, SLOT(slotChooseUrlDialog()));
     
@@ -251,13 +252,13 @@ void SessionWidget::slotCheck()
     //table_linkstatus->clear();
     tree_view->clear();
 
-    KURL url = Url::normalizeUrl(combobox_url->currentText());
+    KUrl url = Url::normalizeUrl(combobox_url->currentText());
     
     if(!url.protocol().startsWith("http")) 
     {
         DocumentRootDialog dialog(this, url.directory());
         dialog.exec();
-        search_manager_->setDocumentRoot(KURL::fromPathOrURL(dialog.url()));
+        search_manager_->setDocumentRoot(KUrl::fromPathOrURL(dialog.url()));
     }
     
     if(KLSConfig::useQuantaUrlPreviewPrefix() && Global::isKLinkStatusEmbeddedInQuanta())
@@ -505,9 +506,9 @@ void SessionWidget::showBottomStatusLabel(Q3ListViewItem * item)
         textlabel_status->setText(status);
 
         if(textlabel_status->sizeHint().width() > textlabel_status->maximumWidth())
-            QToolTip::add(textlabel_status, status);
+            textlabel_status->setToolTip(status);
         else
-            QToolTip::remove(textlabel_status);
+            textlabel_status->setToolTip(QString());
 
         bottom_status_timer_.stop();
         bottom_status_timer_.start(5 * 1000, true);
@@ -681,7 +682,7 @@ void SessionWidget::slotApplyFilter(LinkMatcher link_matcher)
 
 void SessionWidget::slotExportAsHTML( )
 {
-    KURL url = KFileDialog::getSaveURL(QString::null,"text/html", 0, i18n("Export Results as HTML"));
+    KUrl url = KFileDialog::getSaveURL(QString::null,"text/html", 0, i18n("Export Results as HTML"));
 
     if(url.isEmpty())
         return;

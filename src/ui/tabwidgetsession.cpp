@@ -19,7 +19,7 @@
  ***************************************************************************/
 #include "tabwidgetsession.h"
 #include "sessionwidget.h"
-#include "klsconfig.h"
+#include "cfg/klsconfig.h"
 #include "treeview.h"
 #include "../engine/searchmanager.h"
 #include "../actionmanager.h"
@@ -43,9 +43,9 @@
 
 
 TabWidgetSession::TabWidgetSession(QWidget* parent, const char* name, Qt::WFlags f)
-        : KTabWidget(parent, name, f) // tabs_ is initialized with size 17
+        : KTabWidget(parent, f) // tabs_ is initialized with size 17
 {
-    setFocusPolicy(QTabWidget::NoFocus);
+    setFocusPolicy(Qt::NoFocus);
     setMargin(0);
     setTabReorderingEnabled(true);
     setHoverCloseButton(true);
@@ -59,7 +59,7 @@ TabWidgetSession::TabWidgetSession(QWidget* parent, const char* name, Qt::WFlags
     tabs_new->setIconSet(SmallIconSet("tab_new_raised"));
     tabs_new->adjustSize();
     QToolTip::add(tabs_new, i18n("Open new tab"));
-    setCornerWidget(tabs_new, TopLeft);
+    setCornerWidget(tabs_new, Qt::TopLeftCorner);
 
     tabs_close_ = new QToolButton(this);
     tabs_close_->setAccel(QKeySequence("Ctrl+W"));
@@ -67,7 +67,7 @@ TabWidgetSession::TabWidgetSession(QWidget* parent, const char* name, Qt::WFlags
     tabs_close_->setIconSet(SmallIconSet("tab_remove"));
     tabs_close_->adjustSize();
     QToolTip::add(tabs_close_, i18n("Close the current tab"));
-    setCornerWidget(tabs_close_, TopRight);
+    setCornerWidget(tabs_close_, Qt::TopRightCorner);
 
     connect(this, SIGNAL(currentChanged(QWidget*)), this, SLOT(slotCurrentChanged(QWidget*)));
 }
@@ -151,7 +151,7 @@ void TabWidgetSession::closeSession()
 SessionWidget* TabWidgetSession::newSessionWidget()
 {
     SessionWidget* session_widget = new SessionWidget(KLSConfig::maxConnectionsNumber(), 
-            KLSConfig::timeOut(), this, QString("session_widget-" + count()));
+            KLSConfig::timeOut(), this);
 
     QStringList columns;
     
@@ -171,7 +171,7 @@ SessionWidget* TabWidgetSession::newSessionWidget()
 void TabWidgetSession::updateTabLabel(LinkStatus const* linkstatus, SessionWidget* page)
 {
     QString label;
-    KURL url = linkstatus->absoluteUrl();
+    KUrl url = linkstatus->absoluteUrl();
     
     if(linkstatus->hasHtmlDocTitle())
     {
@@ -235,7 +235,7 @@ void TabWidgetSession::slotResetSearchOptions()
     currentSession()->slotResetSearchOptions();
 }
 
-void TabWidgetSession::slotNewSession(KURL const& url)
+void TabWidgetSession::slotNewSession(KUrl const& url)
 {
     if(count() == 0 || !emptySessionsExist())
     {

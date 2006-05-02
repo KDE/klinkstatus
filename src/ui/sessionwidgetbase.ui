@@ -370,7 +370,7 @@
                         <string>Ready</string>
                     </property>
                 </widget>
-                <widget class="KProgressBar">
+                <widget class="QProgressBar">
                     <property name="name">
                         <cstring>progressbar_checker</cstring>
                     </property>

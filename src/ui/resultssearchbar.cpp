@@ -74,7 +74,7 @@ ResultsSearchBar::ResultsSearchBar(QWidget* parent, const char* name)
     searchLabel->setText(i18n("S&earch:"));
     d->layout->addWidget(searchLabel);
 
-    d->searchLine = new KLineEdit(this, "searchline");
+    d->searchLine = new KLineEdit(this);
     connect(d->searchLine, SIGNAL(textChanged(const QString &)),
             this, SLOT(slotSearchStringChanged(const QString &)));
 
@@ -85,7 +85,7 @@ ResultsSearchBar::ResultsSearchBar(QWidget* parent, const char* name)
     statusLabel->setText( i18n("Status:") );
     d->layout->addWidget(statusLabel);
 
-    d->searchCombo = new KComboBox(this, "searchcombo");
+    d->searchCombo = new KComboBox(this);
     QPixmap iconAll = KGlobal::iconLoader()->loadIcon("exec", K3Icon::Small);
     QPixmap iconGood = KGlobal::iconLoader()->loadIcon("ok", K3Icon::Small);
     QPixmap iconBroken = KGlobal::iconLoader()->loadIcon("no", K3Icon::Small);

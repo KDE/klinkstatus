@@ -100,7 +100,7 @@ public:
 
 protected:
 
-    QColor const& textStatusColor() const;
+    QColor const textStatusColor() const;
     virtual void paint( QPainter *p, const QColorGroup &cg,
                         const QRect &cr, bool selected ) = 0;
     virtual void setText() = 0;

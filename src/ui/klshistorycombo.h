@@ -27,7 +27,7 @@ class KLSHistoryCombo : public KHistoryCombo
     Q_OBJECT
 
 public:
-    KLSHistoryCombo(QWidget* parent, const char* name);
+    KLSHistoryCombo(QWidget* parent, const char* name = 0);
     ~KLSHistoryCombo();
 
     void init();

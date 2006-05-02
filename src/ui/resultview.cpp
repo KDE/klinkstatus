@@ -99,7 +99,7 @@ LinkStatus const* ResultViewItem::linkStatus() const
     return ls_;
 }
 
-QColor const& ResultViewItem::textStatusColor() const
+QColor const ResultViewItem::textStatusColor() const
 {
     if(linkStatus()->errorOccurred())
     {

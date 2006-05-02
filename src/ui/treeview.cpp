@@ -36,7 +36,7 @@
 
 
 TreeView::TreeView(QWidget *parent, const char *name)
-        : K3ListView(parent, name),
+        : K3ListView(parent),
         ResultView(),
         current_column_(0)
 {
@@ -68,8 +68,8 @@ void TreeView::setColumns(QStringList const& columns)
 //     resetColumns is called automatically
     for(uint i = 0; i != columns.size(); ++i)
     {
-        addColumn(i18n(columns[i]));        
-        setColumnWidthMode(i, QListView::Manual);
+        addColumn(i18n(columns[i].toUtf8()));        
+        setColumnWidthMode(i, Q3ListView::Manual);
     }
 
     setColumnAlignment(col_status_ - 1, Qt::AlignCenter);
@@ -81,10 +81,10 @@ void TreeView::resetColumns()
 {
     setColumnWidth(col_url_ - 1, (int)(0.45 * width()));
     
-    setResizeMode(QListView::LastColumn); // fit to the window
+    setResizeMode(Q3ListView::LastColumn); // fit to the window
     // resize again
-    setColumnWidthMode(col_label_ - 1, QListView::Manual);
-    setResizeMode(QListView::NoColumn);
+    setColumnWidthMode(col_label_ - 1, Q3ListView::Manual);
+    setResizeMode(Q3ListView::NoColumn);
 }
 
 double TreeView::columnsWidth() const
@@ -151,7 +151,7 @@ void TreeView::show(LinkStatusHelper::Status const& status)
 
 void TreeView::show(LinkMatcher link_matcher)
 {
-    QListViewItemIterator it(this);
+    Q3ListViewItemIterator it(this);
     while(it.current())
     {
         TreeViewItem* item = myItem(it.current());
@@ -419,10 +419,10 @@ void TreeViewItem::init(LinkStatus const* linkstatus)
         QString text(KCharsets::resolveEntities(item.text(i + 1)));
         
         if(i + 1 == root_->urlColumnIndex()) {
-            setText(item.columnIndex() - 1, KURL::decode_string(text));
+            setText(item.columnIndex() - 1, KUrl::decode_string(text));
         }
         else if(i + 1 == root_->statusColumnIndex()) {
-            setText(item.columnIndex() - 1, i18n(text));
+            setText(item.columnIndex() - 1, i18n(text.toUtf8()));
         }
         else {
             setText(item.columnIndex() - 1, text);
@@ -506,7 +506,7 @@ LinkStatus const* TreeColumnViewItem::linkStatus() const
     return ls_;
 }
 
-QColor const& TreeColumnViewItem::textStatusColor() const
+QColor const TreeColumnViewItem::textStatusColor() const
 {
     if(columnIndex() == root_->urlColumnIndex())
     {
@@ -620,7 +620,7 @@ QString TreeColumnViewItem::text(int column) const
     }
     else if(column == root_->labelColumnIndex())
     {
-        QString label(i18n(linkStatus()->label()));
+        QString label(i18n((linkStatus()->label()).toUtf8()));
         if(!label.isNull())
             return label.simplified();
     }

@@ -2,10 +2,31 @@ kde4_header()
 
 add_subdirectory( settings )
 
-include_directories( ${CMAKE_SOURCE_DIR}/src ${KDE4_INCLUDE_DIR} ${QT_INCLUDES}  )
+include_directories( ${CMAKE_BINARY_DIR}/klinkstatus/src ${KDE4_INCLUDE_DIR} ${QT_INCLUDES}  )
 
 
 ########### next target ###############
+
+set(klsui_LIB_SRCS 
+documentrootdialog.cpp 
+klshistorycombo.cpp 
+resultssearchbar.cpp 
+resultview.cpp 
+sessionwidget.cpp
+tabwidgetsession.cpp
+treeview.cpp )
+
+kde4_add_ui3_files(klsui_LIB_SRCS  sessionwidgetbase.ui )
+
+kde4_automoc(${klsui_LIB_SRCS})
+
+kde4_add_library(klsui SHARED ${klsui_LIB_SRCS})
+
+target_link_libraries(klsui  ${KDE4_KDECORE_LIBS} ${KDE4_KIO_LIBS} klsconfig klsengine )
+
+set_target_properties(klsui PROPERTIES VERSION 1.0.0 SOVERSION 1 )
+
+install_targets(${LIB_INSTALL_DIR} klsui )
 
 
 ########### install files ###############
