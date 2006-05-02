@@ -22,6 +22,10 @@ set(libutils_SRCS
 	${CMAKE_SOURCE_DIR}/klinkstatus/src/utils/utils.cpp 
 	${CMAKE_SOURCE_DIR}/klinkstatus/src/utils/xsl.cpp
 	)
+
+set(libsettings_SRCS 
+	${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/settings/configidentificationdialog.cpp 
+)
 		
 
 add_subdirectory( cfg )
@@ -48,11 +52,15 @@ install_targets(/bin klinkstatus )
 
 ########### next target ###############
 
-set(klinkstatuspart_PART_SRCS klinkstatus_part.cpp global.cpp actionmanager.cpp  ${libui_SRCS} ${libparser_SRCS} ${libutils_SRCS} )
+set(klinkstatuspart_PART_SRCS klinkstatus_part.cpp global.cpp actionmanager.cpp  ${libui_SRCS} ${libparser_SRCS} ${libutils_SRCS} ${libsettings_SRCS})
 
 kde4_add_ui3_files(klinkstatuspart_PART_SRCS
-	${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/sessionwidgetbase.ui
+    ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/settings/configsearchdialog.ui
+    ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/settings/configresultsdialog.ui
+    ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/settings/configidentificationdialogui.ui
 	)
+
+
     
 
 kde4_automoc(${klinkstatuspart_PART_SRCS})
