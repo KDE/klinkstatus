@@ -251,7 +251,7 @@ void XSLT::setXSLT( const QString &_document )
         //          identical!
         QStringList parts = QStringList::split( '%', i18nc(
             "Translators: The %FOO% placeholders are variables that are substituted "
-            "in the code, please leave them untranslated", QString(orig.toUtf8())), true );
+            "in the code, please leave them untranslated", orig.toUtf8()), true );
 
         // The first part is always text, as our variables are written like %FOO%
         QStringList::Iterator it = parts.begin();

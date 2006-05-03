@@ -64,7 +64,7 @@ protected slots:
     void slotData(KIO::Job *, const QByteArray &data);
     void slotRedirection (KIO::Job *, const KUrl &url);
     void slotMimetype(KIO::Job *, const QString &type);
-    void slotResult(KJob* job);
+    void slotResult(KIO::Job* job);
     void slotTimeOut();
 
 protected:

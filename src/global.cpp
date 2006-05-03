@@ -112,8 +112,8 @@ Q3CString Global::quantaDCOPAppId()
         for(uint i = 0; i != ps_list.size(); ++i)
         {
             ps_list[i] = ps_list[i].trimmed ();
-            if(self()->dcop_client_->isApplicationRegistered("quanta-" + ps_list[i].local8Bit()))
-                app_id = "quanta-" + ps_list[i];
+/*            if(self()->dcop_client_->isApplicationRegistered(QString("quanta-") + ps_list[i].local8Bit()))
+                app_id = QString("quanta-") + ps_list[i];*/
         }
     }
 

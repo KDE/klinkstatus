@@ -168,9 +168,9 @@ void KLinkStatus::optionsShowToolbar()
     // this is all very cut and paste code for showing/hiding the
     // toolbar
     if (m_toolbarAction->isChecked())
-        toolBar()->show();
+        setStandardToolBarMenuEnabled(true);
     else
-        toolBar()->hide();
+        setStandardToolBarMenuEnabled(false);
 }
 
 void KLinkStatus::optionsShowStatusbar()
@@ -191,6 +191,7 @@ void KLinkStatus::optionsConfigureKeys()
     QList<KXMLGUIClient*> clients = guiFactory()->clients();
 	foreach(KXMLGUIClient *client, clients)
 		dlg.insert ( client->actionCollection()/*, client->instance()->aboutData()->programName() */);
+
     dlg.configure();
 }
 

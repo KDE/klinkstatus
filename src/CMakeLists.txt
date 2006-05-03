@@ -36,34 +36,25 @@ set(libuisettings_SRCS
 )
 
 
-include_directories( ${CMAKE_SOURCE_DIR}/klinkstatus/src 
-${KDE4_INCLUDE_DIR} ${QT_INCLUDES}  )
-
-
-########### next target ###############
-
-set(klinkstatus_SRCS klinkstatus.cpp main.cpp )
-
-kde4_automoc(${klinkstatus_SRCS})
-
-kde4_add_executable(klinkstatus ${klinkstatus_SRCS})
-
-target_link_libraries(klinkstatus  ${KDE4_KDECORE_LIBS} ${KDE4_KPARTS_LIBS} )
-
-install_targets(/bin klinkstatus )
+include_directories( 
+    ${CMAKE_SOURCE_DIR}/klinkstatus/src 
+    ${LIBXML2_INCLUDE_DIR}
+    ${KDE4_INCLUDE_DIR} 
+    ${QT_INCLUDES}  )
 
 
 ########### next target ###############
 
 set(klinkstatuspart_PART_SRCS 
-klinkstatus_part.cpp 
-global.cpp 
-actionmanager.cpp  
-${libutils_SRCS} 
-${libparser_SRCS} 
-${libengine_SRCS} 
-${libui_SRCS} 
-${libuisettings_SRCS})
+    ${libutils_SRCS} 
+    ${libparser_SRCS} 
+    ${libengine_SRCS} 
+    ${libuisettings_SRCS}
+    ${libui_SRCS} 
+    global.cpp 
+    actionmanager.cpp  
+    klinkstatus_part.cpp 
+)
 
 kde4_add_ui3_files(klinkstatuspart_PART_SRCS
     ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/sessionwidgetbase.ui
@@ -81,12 +72,25 @@ kde4_add_plugin(klinkstatuspart WITH_PREFIX ${klinkstatuspart_PART_SRCS})
 kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} klinkstatuspart )
 
 target_link_libraries(klinkstatuspart  
-${KDE4_KDECORE_LIBS} 
-${KDE4_KPARTS_LIBS} 
-${KDE4_KIO_LIBS}
+    ${KDE4_KDECORE_LIBS} 
+    ${KDE4_KPARTS_LIBS} 
+    ${KDE4_KIO_LIBS}
 )
 
 install_targets(${PLUGIN_INSTALL_DIR} klinkstatuspart )
+
+
+########### next target ###############
+
+set(klinkstatus_SRCS klinkstatus.cpp main.cpp )
+
+kde4_automoc(${klinkstatus_SRCS})
+
+kde4_add_executable(klinkstatus ${klinkstatus_SRCS})
+
+target_link_libraries(klinkstatus  ${KDE4_KDECORE_LIBS} ${KDE4_KPARTS_LIBS} )
+
+install_targets(/bin klinkstatus )
 
 
 ########### install files ###############
