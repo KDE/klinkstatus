@@ -10,7 +10,6 @@
 //
 //
 #include "klshistorycombo.h"
-#include "cfg/klsconfig.h"
 
 #include <kapplication.h>
 #include <kconfig.h>
@@ -22,6 +21,8 @@
 #include <Q3ValueList>
 #include <QKeyEvent>
 #include <QEvent>
+
+#include "klsconfig.h"
 
 
 bool KLSHistoryCombo::items_saved_ = false;

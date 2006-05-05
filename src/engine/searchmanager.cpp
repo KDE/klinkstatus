@@ -34,7 +34,7 @@
 #include "searchmanager.h"
 #include "linkstatushelper.h"
 #include "parser/mstring.h"
-#include "cfg/klsconfig.h"
+#include "klsconfig.h"
 
 
 SearchManager::SearchManager(int max_simultaneous_connections, int time_out,

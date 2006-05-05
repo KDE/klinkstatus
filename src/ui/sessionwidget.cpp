@@ -58,7 +58,7 @@
 #include "treeview.h"
 #include "documentrootdialog.h"
 #include "klshistorycombo.h"
-#include "cfg/klsconfig.h"
+#include "klsconfig.h"
 #include "resultview.h"
 #include "../global.h"
 #include "../engine/linkstatus.h"

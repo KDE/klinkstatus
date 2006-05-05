@@ -26,7 +26,7 @@
 
 #include <qstring.h>
 
-#include "cfg/klsconfig.h"
+#include "klsconfig.h"
 
 
 ConfigIdentificationDialog::ConfigIdentificationDialog(QWidget *parent, const char *name)
