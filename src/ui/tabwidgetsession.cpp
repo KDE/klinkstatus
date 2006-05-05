@@ -19,7 +19,7 @@
  ***************************************************************************/
 #include "tabwidgetsession.h"
 #include "sessionwidget.h"
-#include "cfg/klsconfig.h"
+#include "klsconfig.h"
 #include "treeview.h"
 #include "../engine/searchmanager.h"
 #include "../actionmanager.h"
@@ -189,7 +189,7 @@ void TabWidgetSession::updateTabLabel(LinkStatus const* linkstatus, SessionWidge
     }
     
     changeTab(page, KCharsets::resolveEntities(label));
-    setTabIconSet(page, QIconSet(KMimeType::pixmapForURL(url)));
+    setTabIconSet(page, QIconSet(KIO::pixmapForURL(url)));
 }
 
 void TabWidgetSession::slotLoadSettings()

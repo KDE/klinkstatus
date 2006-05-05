@@ -30,7 +30,7 @@
 #include "klinkstatus_part.h"
 #include "ui/sessionwidget.h"
 #include "ui/tabwidgetsession.h"
-#include "cfg/klsconfig.h"
+#include "klsconfig.h"
 
 
 ActionManager* ActionManager::m_self = 0;
@@ -139,40 +139,40 @@ void ActionManager::initTabWidget(TabWidgetSession* tabWidgetSession)
 
     // *************** View menu *********************
 
-    //     this action must be in the tabwidget because the slot can't be connected to a particular sessionWidget
+	//     this action must be in the tabwidget because the slot can't be connected to a particular sessionWidget
     KToggleAction* toggle_action = new KToggleAction(i18n("&Follow last Link checked"),
-                                   "svn_switch", "Ctrl+f",
+                                   "svn_switch", KShortcut("Ctrl+f"),
                                    d->tabWidgetSession, SLOT(slotFollowLastLinkChecked()),
                                    d->actionCollection, "follow_last_link_checked");
     toggle_action->setChecked(KLSConfig::followLastLinkChecked());
 
     //     this action must be in the tabwidget because the slot can't be connected to a particular sessionWidget
-    toggle_action = new KToggleAction(i18n("&Hide Search Panel"), "bottom", "Ctrl+h",
+    toggle_action = new KToggleAction(i18n("&Hide Search Panel"), "bottom", KShortcut("Ctrl+h"),
                                       d->tabWidgetSession, SLOT(slotHideSearchPanel()),
                                       d->actionCollection, "hide_search_bar");
     KGuiItem item(i18n("&Show Search Panel"), "top", "Show Search Panel");
     toggle_action->setCheckedState(item);
     
-    new KAction(i18n("&Reset Search Options"), "reload", "F5",
+    new KAction(i18n("&Reset Search Options"), "reload", KShortcut("F5"),
                 d->tabWidgetSession, SLOT(slotResetSearchOptions()),
                 d->actionCollection, "reset_search_bar");
 
     // *************** Search menu *********************
     
     toggle_action = new KToggleAction(i18n("&Start Search"),
-                                      "player_play", "Ctrl+s",
+                                      "player_play", KShortcut("Ctrl+s"),
                                       d->tabWidgetSession, SLOT(slotStartSearch()),
                                       d->actionCollection, "start_search");
     toggle_action->setEnabled(false);
     
     toggle_action = new KToggleAction(i18n("&Pause Search"),
-                                      "player_pause", "Ctrl+p",
+                                      "player_pause", KShortcut("Ctrl+p"),
                                       d->tabWidgetSession, SLOT(slotPauseSearch()),
                                       d->actionCollection, "pause_search");    
     toggle_action->setEnabled(false);
     
     action = new KAction(i18n("St&op Search"),
-                                  "player_stop", "Ctrl+c",
+                                  "player_stop", KShortcut("Ctrl+c"),
                                   d->tabWidgetSession, SLOT(slotStopSearch()),
                                   d->actionCollection, "stop_search");
     action->setEnabled(false);
@@ -199,9 +199,9 @@ KActionCollection* ActionManager::actionCollection()
     return d->actionCollection;
 }
 
-KAction* ActionManager::action(const char* name, const char* classname)
+KAction* ActionManager::action(QString name)
 {
-    return d->actionCollection != 0 ? d->actionCollection->action(name, classname) : 0;
+    return d->actionCollection != 0 ? d->actionCollection->action(name) : 0;
 }
 
 void ActionManager::slotUpdateSessionWidgetActions(SessionWidget* page)

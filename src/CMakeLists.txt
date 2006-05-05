@@ -38,11 +38,13 @@ set(libuisettings_SRCS
 
 include_directories( 
     ${CMAKE_SOURCE_DIR}/klinkstatus/src 
+    ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui 
     ${CMAKE_BINARY_DIR}/klinkstatus/src 
     ${LIBXML2_INCLUDE_DIR}
     ${LIBXSLT_INCLUDE_DIR}
     ${KDE4_INCLUDE_DIR} 
-    ${QT_INCLUDES}  )
+    ${QT_INCLUDES}  
+)
 
 
 ########### next target ###############

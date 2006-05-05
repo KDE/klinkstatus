@@ -32,7 +32,7 @@
 #include "global.h"
 #include "engine/linkstatus.h"
 #include "engine/linkfilter.h"
-#include "cfg/klsconfig.h"
+#include "klsconfig.h"
 
 
 TreeView::TreeView(QWidget *parent, const char *name)

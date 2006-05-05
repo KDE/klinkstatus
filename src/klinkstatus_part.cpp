@@ -41,8 +41,8 @@
 #include "klinkstatus_part.h"
 #include "ui/tabwidgetsession.h"
 #include "ui/sessionwidget.h"
-#include "ui/settings/configsearchdialog.h"
-#include "ui/settings/configresultsdialog.h"
+#include "configsearchdialog.h"
+#include "configresultsdialog.h"
 #include "ui/settings/configidentificationdialog.h"
 #include "actionmanager.h"
 
