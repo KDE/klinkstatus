@@ -22,6 +22,7 @@
 #include <klocale.h>
 #include <kinstance.h>
 #include <kaction.h>
+#include <kactioncollection.h>
 #include <kstdaction.h>
 #include <kfiledialog.h>
 #include <kparts/genericfactory.h>
@@ -54,19 +55,19 @@ const char KLinkStatusPart::version_[] = "0.3.1";
 typedef KParts::GenericFactory<KLinkStatusPart> KLinkStatusFactory;
 K_EXPORT_COMPONENT_FACTORY( libklinkstatuspart, KLinkStatusFactory )
 
-KLinkStatusPart::KLinkStatusPart(QWidget *parentWidget, const char *widgetName,
-                                 QObject *parent, const char *name,
+
+KLinkStatusPart::KLinkStatusPart(QWidget *parentWidget, 
+                                 QObject *parent, 
                                  const QStringList & /*string_list*/)
     : KParts::ReadOnlyPart(parent), m_dlgAbout(0)
 {
-	setObjectName(name);
     setInstance(KLinkStatusFactory::instance());
 
     action_manager_ = new ActionManager(this);
     ActionManager::setInstance(action_manager_);
     initGUI();
 
-    tabwidget_ = new TabWidgetSession(parentWidget, widgetName);
+    tabwidget_ = new TabWidgetSession(parentWidget);
     setWidget(tabwidget_);
     action_manager_->initTabWidget(tabwidget_);
 
@@ -153,6 +154,9 @@ void KLinkStatusPart::slotConfigureKLinkStatus()
     dialog->addPage(new ConfigIdentificationDialog(0), i18n("Identification"), 
                     "agent", i18n("Configure the way KLinkstatus reports itself"));
     dialog->show();
+#ifdef __GNUC__
+#warning "No such signal KConfigDialog::settingsChanged()"
+#endif
     connect(dialog, SIGNAL(settingsChanged()), tabwidget_, SLOT(slotLoadSettings()));
 }
 

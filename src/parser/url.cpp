@@ -73,7 +73,7 @@ KUrl Url::normalizeUrl(QString const& string_url, LinkStatus const& link_parent,
             }
         }
         else {
-            s_url.append(base_url.directory(true, false) + "/");                
+            s_url.append(base_url.directory(KUrl::AppendTrailingSlash | KUrl::ObeyTrailingSlash) + "/");                
         }
 
         if( (_string_url[0] == ';' || // parameters
@@ -309,8 +309,10 @@ bool Url::parentDir(KUrl const& url1, KUrl const& url2)
         if(!equalHost(url1.host(), url2.host()))
             return false;
 		
-        vector<QString> tokens_1 = tokenizeWordsSeparatedBy(url1.directory(true, false), QChar('/'));
-        vector<QString> tokens_2 = tokenizeWordsSeparatedBy(url2.directory(true, false), QChar('/'));
+        vector<QString> tokens_1 = tokenizeWordsSeparatedBy(
+            url1.directory(KUrl::AppendTrailingSlash | KUrl::ObeyTrailingSlash), QChar('/'));
+        vector<QString> tokens_2 = tokenizeWordsSeparatedBy(
+            url2.directory(KUrl::AppendTrailingSlash | KUrl::ObeyTrailingSlash), QChar('/'));
 		
 		if(tokens_1.size() == 0)
 			return false;

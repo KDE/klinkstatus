@@ -291,7 +291,8 @@ void SessionWidget::slotCheck()
             search_manager_->setCheckParentDirs(false);
 
             if(url.hasHost())
-                search_manager_->setDomain(url.host() + url.directory(true, false));
+                search_manager_->setDomain(url.host() 
+                    + url.directory(KUrl::AppendTrailingSlash | KUrl::ObeyTrailingSlash));
         }
         else
         {

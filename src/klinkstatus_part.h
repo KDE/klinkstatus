@@ -38,9 +38,7 @@ class KLinkStatusPart: public KParts::ReadOnlyPart
 {
     Q_OBJECT
 public:
-    KLinkStatusPart(QWidget *parentWidget, const char *widgetName,
-                    QObject *parent, const char *name,
-                    const QStringList& args);
+    KLinkStatusPart(QWidget *parentWidget, QObject *parent, const QStringList& args);
     virtual ~KLinkStatusPart();
 
     /** Reimplemented to disable and enable Save action */
