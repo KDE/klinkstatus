@@ -26,6 +26,8 @@
 #include <kurl.h>
 #include <kedittoolbar.h>
 #include <kaction.h>
+#include <kactioncollection.h>
+#include <ktoggleaction.h>
 #include <kstdaction.h>
 #include <klibloader.h>
 #include <kmessagebox.h>
@@ -59,7 +61,7 @@ KLinkStatus::KLinkStatus()
         // now that the Part is loaded, we cast it to a Part to get
         // our hands on it
         m_part = static_cast<KParts::ReadOnlyPart *>(factory->create(this,
-                 "klinkstatus_part", "KParts::ReadOnlyPart" ));
+                 "KParts::ReadOnlyPart" ));
 
         if (m_part)
         {
