@@ -4,7 +4,7 @@ add_subdirectory( 32x32 )
 add_subdirectory( 22x22 )
 add_subdirectory( 16x16 )
 
-include_directories( ${KDE4_INCLUDE_DIR} ${QT_INCLUDES}  )
+
 
 
 ########### install files ###############
