@@ -21,7 +21,7 @@
 #ifndef HTML_PARSER_H
 #define HTML_PARSER_H
 
-#include <qstring.h>
+#include <QString>
 
 #include <vector>
 

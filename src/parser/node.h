@@ -23,7 +23,7 @@
 
 #include "mstring.h"
 
-#include <qstring.h>
+#include <QString>
 
 #include <kdebug.h>
 

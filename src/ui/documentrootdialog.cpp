@@ -23,9 +23,9 @@
 #include <klocale.h>
 #include <kurl.h>
 
-#include <qstring.h>
-#include <qlayout.h>
-#include <qlabel.h>
+#include <QString>
+#include <QLayout>
+#include <QLabel>
 //Added by qt3to4:
 #include <Q3VBoxLayout>
 

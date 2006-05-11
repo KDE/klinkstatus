@@ -21,7 +21,7 @@
 #ifndef STRING_H
 #define STRING_H
 
-#include <qstring.h>
+#include <QString>
 
 #include <vector>
 #include <cctype>

@@ -25,7 +25,7 @@
 #include "node.h"
 
 #include <kurl.h>
-#include <qstring.h>
+#include <QString>
 
 #include <vector>
 

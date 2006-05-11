@@ -24,10 +24,10 @@
 #include "../global.h"
 
 #include <q3memarray.h>
-#include <qtooltip.h>
-#include <qpixmap.h>
-#include <qclipboard.h>
-#include <qpainter.h>
+#include <QToolTip>
+#include <QPixmap>
+#include <QClipboard>
+#include <QPainter>
 #include <q3process.h>
 //Added by qt3to4:
 #include <Q3PopupMenu>

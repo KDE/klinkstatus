@@ -14,7 +14,7 @@
 
 #include <q3valuevector.h>
 #include <q3popupmenu.h>
-#include <qstringlist.h>
+#include <QStringList>
 
 class KUrl;
 

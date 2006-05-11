@@ -20,7 +20,7 @@
 #ifndef LINKFILTER_H
 #define LINKFILTER_H
 
-#include <qstring.h>
+#include <QString>
 
 #include "linkstatushelper.h"
 

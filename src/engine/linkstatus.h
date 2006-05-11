@@ -29,7 +29,7 @@
 class TreeView;
 class TreeViewItem;
 
-#include <qstring.h>
+#include <QString>
 #include <q3valuevector.h>
 class QDomElement;
 

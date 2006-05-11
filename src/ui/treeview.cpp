@@ -22,7 +22,7 @@
 
 #include <q3valuevector.h>
 #include <q3header.h>
-#include <qclipboard.h>
+#include <QClipboard>
 //Added by qt3to4:
 #include <QPixmap>
 #include <QResizeEvent>

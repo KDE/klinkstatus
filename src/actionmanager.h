@@ -20,7 +20,7 @@
 #ifndef ACTIONMANAGER_H
 #define ACTIONMANAGER_H
 
-#include <qobject.h>
+#include <QObject>
 
 class KAction;
 class KActionCollection;

@@ -21,7 +21,7 @@
 #ifndef RESULTSSEARCHBAR_H
 #define RESULTSSEARCHBAR_H
 
-#include <qstring.h>
+#include <QString>
 #include <qwidget.h>
 
 #include "../engine/linkstatushelper.h"

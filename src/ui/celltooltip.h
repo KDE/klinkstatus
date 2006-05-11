@@ -21,7 +21,7 @@
 #ifndef CELLTOOLTIP_H
 #define CELLTOOLTIP_H
 
-#include <qtooltip.h>
+#include <QToolTip>
 
 
 class TableLinkstatus;

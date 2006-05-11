@@ -24,13 +24,13 @@
 #include "../engine/searchmanager.h"
 #include "../actionmanager.h"
 
-#include <qtoolbutton.h>
-#include <qcursor.h>
-#include <qtooltip.h>
-#include <qpushbutton.h>
-#include <qpixmap.h>
-#include <qicon.h>
-#include <qstringlist.h>
+#include <QToolButton>
+#include <QCursor>
+#include <QToolTip>
+#include <QPushButton>
+#include <QPixmap>
+#include <QIcon>
+#include <QStringList>
 
 #include <kapplication.h>
 #include <kstandarddirs.h>

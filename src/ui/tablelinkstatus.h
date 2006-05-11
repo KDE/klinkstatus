@@ -22,7 +22,7 @@
 #define TABLE_LINKSTATUS_H
 
 #include <q3table.h>
-#include <qstring.h>
+#include <QString>
 #include <qcolor.h>
 #include <q3popupmenu.h>
 #include <q3valuevector.h>

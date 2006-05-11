@@ -31,8 +31,8 @@ class TableItem;
 class ActionManager;
 class LinkMatcher;
 
-#include <qtimer.h>
-#include <qstring.h>
+#include <QTimer>
+#include <QString>
 class QStringList;
 class Q3ListViewItem;
 

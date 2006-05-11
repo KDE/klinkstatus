@@ -21,7 +21,7 @@
 #ifndef LINKSTATUSHELPER_H
 #define LINKSTATUSHELPER_H
 
-#include <qstring.h>
+#include <QString>
 class QDomElement;
 
 class LinkStatus;

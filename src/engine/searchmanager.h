@@ -23,10 +23,10 @@
 
 #include <kurl.h>
 
-#include <qobject.h>
-#include <qstring.h>
-#include <qdatetime.h>
-#include <qregexp.h>
+#include <QObject>
+#include <QString>
+#include <QDateTime>
+#include <QRegExp>
 #include <qmap.h>
 class QDomElement;
 

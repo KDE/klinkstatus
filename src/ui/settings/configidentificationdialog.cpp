@@ -24,7 +24,7 @@
 #include <kpushbutton.h>
 #include <klineedit.h>
 
-#include <qstring.h>
+#include <QString>
 
 #include "klsconfig.h"
 

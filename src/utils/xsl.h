@@ -20,7 +20,7 @@
 #ifndef XSL_H
 #define XSL_H
 
-#include <qobject.h>
+#include <QObject>
 
 class XSLTPrivate;
 

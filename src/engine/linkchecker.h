@@ -20,9 +20,9 @@
 #ifndef LINKCHECKER_H
 #define LINKCHECKER_H
 
-#include <qobject.h>
-#include <qthread.h>
-#include <qstring.h>
+#include <QObject>
+#include <QThread>
+#include <QString>
 
 #include <kio/jobclasses.h>
 class KHTMLPart;

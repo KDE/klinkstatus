@@ -22,7 +22,7 @@
 #define HTTP_H
 
 #include <q3http.h>
-#include <qstring.h>
+#include <QString>
 
 
 class HttpResponseHeader: public Q3HttpResponseHeader

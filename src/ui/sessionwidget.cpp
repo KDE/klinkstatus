@@ -36,18 +36,18 @@
 #include <kstandarddirs.h>
 #include <kio/netaccess.h>
 
-#include <qevent.h>
-#include <qlineedit.h>
+#include <QEvent>
+#include <QLineEdit>
 #include <qspinbox.h>
-#include <qcheckbox.h>
-#include <qpushbutton.h>
-#include <qlayout.h>
-#include <qlabel.h>
+#include <QCheckBox>
+#include <QPushButton>
+#include <QLayout>
+#include <QLabel>
 #include <q3listbox.h>
-#include <qstringlist.h>
+#include <QStringList>
 #include <q3buttongroup.h>
-#include <qtoolbutton.h>
-#include <qregexp.h>
+#include <QToolButton>
+#include <QRegExp>
 //Added by qt3to4:
 #include <QPixmap>
 #include <QKeyEvent>

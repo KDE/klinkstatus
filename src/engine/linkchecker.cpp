@@ -24,8 +24,8 @@
 #include "../utils/utils.h"
 #include "../parser/htmlparser.h"
 
-#include <qstring.h>
-#include <qtimer.h>
+#include <QString>
+#include <QTimer>
 
 #include <kio/netaccess.h>
 #include <kio/global.h>

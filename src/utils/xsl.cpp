@@ -33,11 +33,11 @@
 // stdlib.h is required to build on Solaris
 #include <stdlib.h>
 
-#include <qregexp.h>
+#include <QRegExp>
 #include <q3signal.h>
-#include <qthread.h>
-#include <qevent.h>
-#include <qmutex.h>
+#include <QThread>
+#include <QEvent>
+#include <QMutex>
 //Added by qt3to4:
 #include <QByteArray>
 

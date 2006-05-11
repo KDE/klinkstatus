@@ -12,7 +12,7 @@
 #ifndef GLOBAL_H
 #define GLOBAL_H
 
-#include <qobject.h>
+#include <QObject>
 //Added by qt3to4:
 #include <Q3CString>
 class Q3CString;

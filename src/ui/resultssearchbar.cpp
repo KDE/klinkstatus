@@ -27,15 +27,15 @@
 #include <kstandarddirs.h>
 #include <kdebug.h>
 
-#include <qapplication.h>
+#include <QApplication>
 #include <q3hbox.h>
-#include <qlabel.h>
-#include <qpixmap.h>
-#include <qstring.h>
-#include <qtimer.h>
-#include <qtoolbutton.h>
-#include <qtooltip.h>
-#include <qlayout.h>
+#include <QLabel>
+#include <QPixmap>
+#include <QString>
+#include <QTimer>
+#include <QToolButton>
+#include <QToolTip>
+#include <QLayout>
 //Added by qt3to4:
 #include <Q3HBoxLayout>
 

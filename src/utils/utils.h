@@ -22,7 +22,7 @@
 #define UTILS_H
 
 #include <kurl.h>
-#include <qstring.h>
+#include <QString>
 
 //#include <string>
 

@@ -12,7 +12,7 @@
 #include "resultview.h"
 #include "../engine/linkstatus.h"
 
-#include <qpainter.h>
+#include <QPainter>
 #include <qcolor.h>
 
 #include <klocale.h>

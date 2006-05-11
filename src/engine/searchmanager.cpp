@@ -24,7 +24,7 @@
 #include <khtml_part.h>
 #include <kprotocolmanager.h>
 
-#include <qstring.h>
+#include <QString>
 #include <q3valuevector.h>
 #include <qdom.h>
 
