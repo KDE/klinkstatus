@@ -1,4 +1,3 @@
-kde4_header()
 
 set(libutils_SRCS 
     ${CMAKE_SOURCE_DIR}/klinkstatus/src/utils/utils.cpp 
@@ -108,7 +107,6 @@ install_files( ${SERVICES_INSTALL_DIR} FILES  klinkstatus_part.desktop )
 install_files( ${DATA_INSTALL_DIR}/klinkstatuspart FILES  klinkstatus_part.rc )
 install_files( ${DATA_INSTALL_DIR}/klinkstatus FILES  klinkstatus_shell.rc )
 
-kde4_footer()
 
 
 
