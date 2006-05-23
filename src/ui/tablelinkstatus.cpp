@@ -281,7 +281,7 @@ void TableLinkstatus::loadContextTableMenu(Q3ValueVector<KUrl> const& referrers,
 
         for(uint i = 0; i != referrers.size(); ++i)
         {
-            sub_menu_->insertItem(referrers[i].prettyURL());
+            sub_menu_->insertItem(referrers[i].prettyUrl());
         }
         connect(sub_menu_, SIGNAL(activated(int)), this, SLOT(slotEditReferrerWithQuanta(int)));
 
@@ -315,7 +315,7 @@ void TableLinkstatus::loadContextTableMenu(Q3ValueVector<KUrl> const& referrers,
 void TableLinkstatus::slotCopyUrlToClipboard() const
 {
     TableItem* _item = myItem(currentRow(), currentColumn());
-    QString content(_item->linkStatus()->absoluteUrl().prettyURL());
+    QString content(_item->linkStatus()->absoluteUrl().prettyUrl());
     QClipboard* cb = kapp->clipboard();
     cb->setText(content);
 }
@@ -323,7 +323,7 @@ void TableLinkstatus::slotCopyUrlToClipboard() const
 void TableLinkstatus::slotCopyParentUrlToClipboard() const
 {
     TableItem* _item = myItem(currentRow(), currentColumn());
-    QString content(_item->linkStatus()->parent()->absoluteUrl().prettyURL());
+    QString content(_item->linkStatus()->parent()->absoluteUrl().prettyUrl());
     QClipboard* cb = kapp->clipboard();
     cb->setText(content);
 }
@@ -489,7 +489,7 @@ QColor const& TableItem::textStatusColor() const
 {
     if(linkStatus()->errorOccurred())
     {
-        //kDebug(23100) <<  "ERROR: " << linkStatus()->error() << ": " << linkStatus()->absoluteUrl().prettyURL() << endl;
+        //kDebug(23100) <<  "ERROR: " << linkStatus()->error() << ": " << linkStatus()->absoluteUrl().prettyUrl() << endl;
         if(linkStatus()->error() == i18n( "Javascript not supported" ))
             return Qt::lightGray;
         else

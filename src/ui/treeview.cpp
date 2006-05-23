@@ -214,7 +214,7 @@ void TreeView::slotPopupContextMenu(Q3ListViewItem* item, const QPoint& pos, int
 void TreeView::slotCopyUrlToClipboard() const
 {
     TreeViewItem* _item = myItem(currentItem());
-    QString content(_item->linkStatus()->absoluteUrl().prettyURL());
+    QString content(_item->linkStatus()->absoluteUrl().prettyUrl());
     QClipboard* cb = kapp->clipboard();
     cb->setText(content);
 }
@@ -222,7 +222,7 @@ void TreeView::slotCopyUrlToClipboard() const
 void TreeView::slotCopyParentUrlToClipboard() const
 {
     TreeViewItem* _item = myItem(currentItem());
-    QString content(_item->linkStatus()->parent()->absoluteUrl().prettyURL());
+    QString content(_item->linkStatus()->parent()->absoluteUrl().prettyUrl());
     QClipboard* cb = kapp->clipboard();
     cb->setText(content);
 }
@@ -346,7 +346,7 @@ void TreeView::loadContextTableMenu(Q3ValueVector<KUrl> const& referrers, bool i
 
         for(uint i = 0; i != referrers.size(); ++i)
         {
-            sub_menu_->insertItem(referrers[i].prettyURL());
+            sub_menu_->insertItem(referrers[i].prettyUrl());
         }
         connect(sub_menu_, SIGNAL(activated(int)), this, SLOT(slotEditReferrerWithQuanta(int)));
 
@@ -539,7 +539,7 @@ QColor const TreeColumnViewItem::textStatusColor() const
     {
         if(linkStatus()->errorOccurred())
         {
-            //kDebug(23100) <<  "ERROR: " << linkStatus()->error() << ": " << linkStatus()->absoluteUrl().prettyURL() << endl;
+            //kDebug(23100) <<  "ERROR: " << linkStatus()->error() << ": " << linkStatus()->absoluteUrl().prettyUrl() << endl;
             if(linkStatus()->error() == "Javascript not suported")
                 return Qt::lightGray;
             else

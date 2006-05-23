@@ -171,9 +171,9 @@ inline void LinkStatus::setBaseURI(KUrl const& base_url)
     if(!base_url.isValid())
     {
         kWarning(23100) <<  "base url not valid: " << endl
-        << "parent: " << parent()->absoluteUrl().prettyURL() << endl
-        << "url: " << absoluteUrl().prettyURL() << endl
-        << "base url resolved: " << base_url.prettyURL() << endl;
+        << "parent: " << parent()->absoluteUrl().prettyUrl() << endl
+        << "url: " << absoluteUrl().prettyUrl() << endl
+        << "base url resolved: " << base_url.prettyUrl() << endl;
     }
 
     Q_ASSERT(base_url.isValid());

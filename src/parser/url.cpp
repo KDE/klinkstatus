@@ -126,7 +126,7 @@ KUrl Url::normalizeUrl(QString const& string_url)
 
 bool Url::existUrl(KUrl const& url, vector<LinkStatus*> const& v)
 {
-    if(url.prettyURL().isEmpty())
+    if(url.prettyUrl().isEmpty())
         return true;
 
     for(uint i = 0; i != v.size(); ++i)
@@ -208,7 +208,7 @@ bool Url::hasProtocol(QString const& url)
 
     else
     {
-        KUrl url = KUrl::fromPathOrURL(s_url);
+        KUrl url = KUrl::fromPathOrUrl(s_url);
         if(!url.protocol().isEmpty())
             return true;
         /*
@@ -256,7 +256,7 @@ QString Url::convertToLocal(LinkStatus const* ls)
     if(base_url == url)
         return "./" + url.fileName();
     else
-        return KUrl::relativeURL(base_url, url);
+        return KUrl::relativeUrl(base_url, url);
 }
 
 /**

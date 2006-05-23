@@ -129,7 +129,7 @@ void SearchManager::startSearch(KUrl const& root, SearchMode const& modo)
     }
     root_.setIsRoot(true);
     root_.setDepth(0);
-    root_.setOriginalUrl(root.prettyURL());
+    root_.setOriginalUrl(root.prettyUrl());
     root_.setAbsoluteUrl(root);
     root_.setOnlyCheckHeader(false);
     root_.setRootUrl(root);
@@ -321,7 +321,7 @@ vector<LinkStatus*> SearchManager::children(LinkStatus* link)
 
 bool SearchManager::existUrl(KUrl const& url, KUrl const& url_parent) const
 {
-    if(url.prettyURL().isEmpty() || root_.originalUrl() == url.prettyURL())
+    if(url.prettyUrl().isEmpty() || root_.originalUrl() == url.prettyUrl())
         return true;
 
     for(uint i = 0; i != search_results_.size(); ++i)
@@ -494,7 +494,7 @@ void SearchManager::checkLinksSimultaneously(vector<LinkStatus*> const& links)
             slotLinkChecked(ls, 0);
         }
 
-        else if(ls->absoluteUrl().prettyURL().contains("javascript:", false))
+        else if(ls->absoluteUrl().prettyUrl().contains("javascript:", false))
         {
             ++ignored_links_;
             ls->setIgnored(true);
@@ -842,7 +842,7 @@ void SearchManager::save(QDomElement& element) const
 {
     // <url>
     QDomElement child_element = element.ownerDocument().createElement("url");
-    child_element.appendChild(element.ownerDocument().createTextNode(root_.absoluteUrl().prettyURL()));
+    child_element.appendChild(element.ownerDocument().createTextNode(root_.absoluteUrl().prettyUrl()));
     element.appendChild(child_element);
 
     // <recursively>

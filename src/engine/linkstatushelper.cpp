@@ -46,7 +46,7 @@ void LinkStatusHelper::save(QDomElement& element) const
 
     // <url>
     QDomElement tmp_1 = element.ownerDocument().createElement("url");
-    tmp_1.appendChild(element.ownerDocument().createTextNode(linkstatus_->absoluteUrl().prettyURL()));
+    tmp_1.appendChild(element.ownerDocument().createTextNode(linkstatus_->absoluteUrl().prettyUrl()));
     child_element.appendChild(tmp_1);
     
     // <status>
@@ -67,7 +67,7 @@ void LinkStatusHelper::save(QDomElement& element) const
     for(Q3ValueVector<KUrl>::const_iterator it = referrers.begin(); it != referrers.end(); ++it)
     {
         QDomElement tmp_2 = element.ownerDocument().createElement("url");
-        tmp_2.appendChild(element.ownerDocument().createTextNode(it->prettyURL()));
+        tmp_2.appendChild(element.ownerDocument().createTextNode(it->prettyUrl()));
     
         tmp_1.appendChild(tmp_2);
     }
@@ -150,11 +150,11 @@ QString const LinkStatusHelper::toString() const
     if(!linkstatus_->isRoot())
     {
         Q_ASSERT(linkstatus_->parent());
-        aux += i18n( "Parent: %1", linkstatus_->parent()->absoluteUrl().prettyURL() ) + "\n";
+        aux += i18n( "Parent: %1", linkstatus_->parent()->absoluteUrl().prettyUrl() ) + "\n";
     }
     Q_ASSERT(!linkstatus_->originalUrl().isNull());
 
-    aux += i18n("URL: %1", linkstatus_->absoluteUrl().prettyURL()) + "\n";
+    aux += i18n("URL: %1", linkstatus_->absoluteUrl().prettyUrl()) + "\n";
     aux += i18n("Original URL: %1", linkstatus_->originalUrl()) + "\n";
     if(linkstatus_->node())
         aux += i18n("Node: %1", linkstatus_->node()->content()) + "\n";

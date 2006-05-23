@@ -181,7 +181,7 @@ void TabWidgetSession::updateTabLabel(LinkStatus const* linkstatus, SessionWidge
     else
     {
         if(url.fileName(false).isEmpty())
-            label = url.prettyURL();
+            label = url.prettyUrl();
         else
             label = url.fileName(false);
         

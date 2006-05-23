@@ -146,7 +146,7 @@ void LinkChecker::slotMimetype (KIO::Job* /*job*/, const QString &type)
     {
         if(ls->onlyCheckHeader())
         {
-            //kDebug(23100) <<  "only check header: " << ls->absoluteUrl().prettyURL() << endl;
+            //kDebug(23100) <<  "only check header: " << ls->absoluteUrl().prettyUrl() << endl;
 
             // file is OK (http can have an error page though job->error() is false)
             if(url.protocol() != "http" && url.protocol() != "https")
@@ -159,7 +159,7 @@ void LinkChecker::slotMimetype (KIO::Job* /*job*/, const QString &type)
         }
         else // !ls->onlyCheckHeader()
         {
-            //kDebug(23100) <<  "NOT only check header: " << ls->absoluteUrl().prettyURL() << endl;
+            //kDebug(23100) <<  "NOT only check header: " << ls->absoluteUrl().prettyUrl() << endl;
 
             // file is OK (http can have an error page though job->error() is false)
             if(url.protocol() != "http" && url.protocol() != "https") // if not, it have to go trough slotData to get the http header
@@ -231,7 +231,7 @@ void LinkChecker::slotData(KIO::Job* /*job*/, const QByteArray& data)
                 }
                 if(ls->mimeType() != "text/html" && header_checked_)
                 {
-                    //kDebug(23100) <<  "mimetype of " << ls->absoluteUrl().prettyURL() << ": " << ls->mimeType() << endl;
+                    //kDebug(23100) <<  "mimetype of " << ls->absoluteUrl().prettyUrl() << ": " << ls->mimeType() << endl;
                     killJob();
                     finnish(); // if finnish is called before kill what you get is a segfault, don't know why
                 }
@@ -497,7 +497,7 @@ void LinkChecker::checkRef()
         checkRef(ls_parent);
     else
     {
-        url = KUrl::fromPathOrURL(url.url().left(i_ref));
+        url = KUrl::fromPathOrUrl(url.url().left(i_ref));
         checkRef(url);
     }
 }

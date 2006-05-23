@@ -182,7 +182,7 @@ void SessionWidget::setColumns(QStringList const& colunas)
 
 void SessionWidget::setUrl(KUrl const& url)
 {
-    combobox_url->setCurrentText(url.prettyURL());
+    combobox_url->setCurrentText(url.prettyUrl());
     combobox_url->setFocus();
 }
 
@@ -258,7 +258,7 @@ void SessionWidget::slotCheck()
     {
         DocumentRootDialog dialog(this, url.directory());
         dialog.exec();
-        search_manager_->setDocumentRoot(KUrl::fromPathOrURL(dialog.url()));
+        search_manager_->setDocumentRoot(KUrl::fromPathOrUrl(dialog.url()));
     }
     
     if(KLSConfig::useQuantaUrlPreviewPrefix() && Global::isKLinkStatusEmbeddedInQuanta())
@@ -318,8 +318,8 @@ void SessionWidget::slotCheck()
         search_manager_->setRegularExpression(lineedit_reg_exp->text(), false);
     }
 
-    kDebug(23100) <<  "URI: " << url.prettyURL() << endl;
-    combobox_url->setCurrentText(url.prettyURL());
+    kDebug(23100) <<  "URI: " << url.prettyUrl() << endl;
+    combobox_url->setCurrentText(url.prettyUrl());
     search_manager_->startSearch(url);
     slotSetTimeElapsed();
 }

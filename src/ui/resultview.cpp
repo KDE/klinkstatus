@@ -103,7 +103,7 @@ QColor const ResultViewItem::textStatusColor() const
 {
     if(linkStatus()->errorOccurred())
     {
-        //kDebug(23100) <<  "ERROR: " << linkStatus()->error() << ": " << linkStatus()->absoluteUrl().prettyURL() << endl;
+        //kDebug(23100) <<  "ERROR: " << linkStatus()->error() << ": " << linkStatus()->absoluteUrl().prettyUrl() << endl;
         if(linkStatus()->error() == i18n( "Javascript not supported" ))
             return Qt::lightGray;
         else
