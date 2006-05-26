@@ -121,8 +121,10 @@ SessionWidget* TabWidgetSession::newSession()
             this, SLOT(updateTabLabel(const LinkStatus *, SessionWidget*)));
 
     insertTab(session_widget, i18n("Session%1", count() + 1));
+#ifdef _GNUC
     #warning The line above was originally like below, perhaps something should be changed in message extraction too?
-    //insertTab(session_widget, i18n("Session") + i18n(QString::number(count() + 1).ascii()));
+#endif
+	//insertTab(session_widget, i18n("Session") + i18n(QString::number(count() + 1).ascii()));
     
     tabs_.insert(count() - 1, session_widget);
     Q_ASSERT(tabs_[count() - 1]);
