@@ -15,9 +15,7 @@
 #include <kapplication.h>
 #include <kurl.h>
 #include <krun.h>
-#include <dcopref.h>
 #include <kmessagebox.h>
-#include <dcopclient.h>
 #include <kcharsets.h>
 
 #include <q3valuevector.h>
@@ -49,7 +47,7 @@ TreeView::TreeView(QWidget *parent, const char *name)
 //     setResizeMode(QListView::LastColumn);
 
     sub_menu_ = new Q3PopupMenu(this, "sub_menu_referrers");
-    
+
     connect(this, SIGNAL( rightButtonClicked ( Q3ListViewItem *, const QPoint &, int )),
             this, SLOT( slotPopupContextMenu( Q3ListViewItem *, const QPoint &, int )) );
 }
@@ -68,7 +66,7 @@ void TreeView::setColumns(QStringList const& columns)
 //     resetColumns is called automatically
     for(uint i = 0; i != columns.size(); ++i)
     {
-        addColumn(i18n(columns[i].toUtf8()));        
+        addColumn(i18n(columns[i].toUtf8()));
         setColumnWidthMode(i, Q3ListView::Manual);
     }
 
@@ -80,7 +78,7 @@ void TreeView::setColumns(QStringList const& columns)
 void TreeView::resetColumns()
 {
     setColumnWidth(col_url_ - 1, (int)(0.45 * width()));
-    
+
     setResizeMode(Q3ListView::LastColumn); // fit to the window
     // resize again
     setColumnWidthMode(col_label_ - 1, Q3ListView::Manual);
@@ -90,7 +88,7 @@ void TreeView::resetColumns()
 double TreeView::columnsWidth() const
 {
     kdDebug(23100) << "columns: " << columns() << endl;
-    
+
     double width = 0.0;
     for(int i = 0; i != columns(); ++i)
     {
@@ -135,7 +133,7 @@ void TreeView::show(LinkStatusHelper::Status const& status)
 
                     parent->setVisible(true);
                     //parent->setEnabled(false);
-                    
+
                     if(parent->parent())
                         parent = myItem(parent->parent());
                     else
@@ -144,7 +142,7 @@ void TreeView::show(LinkStatusHelper::Status const& status)
             }
             */
         }
-//         
+//
         ++it;
     }
 }
@@ -156,12 +154,12 @@ void TreeView::show(LinkMatcher link_matcher)
     {
         TreeViewItem* item = myItem(it.current());
         bool match = link_matcher.matches(*(item->linkStatus()));
-        
+
         if(tree_display_)
             item->setEnabled(match);
         else
             item->setVisible(match);
-        
+
         ++it;
     }
 }
@@ -201,7 +199,7 @@ void TreeView::resizeEvent(QResizeEvent *e)
 void TreeView::slotPopupContextMenu(Q3ListViewItem* item, const QPoint& pos, int col)
 {
     current_column_ = col;
-    
+
     TreeViewItem* tree_item = myItem(item);
     if(tree_item)
     {
@@ -283,6 +281,8 @@ void TreeView::slotEditReferrerWithQuanta(KUrl const& url)
 
     if(Global::isQuantaAvailableViaDCOP())
     {
+#warning "kde4: port it"
+#if 0
         DCOPRef quanta(Global::quantaDCOPAppId(),"WindowManagerIf");
         bool success = quanta.send("openFile", filePath, 0, 0);
 
@@ -291,6 +291,7 @@ void TreeView::slotEditReferrerWithQuanta(KUrl const& url)
             QString message = i18n("<qt>File <b>%1</b> cannot be opened. Might be a DCOP problem.</qt>", filePath);
             KMessageBox::error(parentWidget(), message);
         }
+#endif
     }
     else
     {
@@ -315,7 +316,7 @@ void TreeView::slotViewUrlInBrowser()
 void TreeView::slotViewParentUrlInBrowser()
 {
     TreeViewItem* _item = myItem(currentItem());
- 
+
     if(_item->linkStatus()->isRoot())
     {
         KMessageBox::sorry(this, i18n("ROOT URL."));
@@ -415,9 +416,9 @@ void TreeViewItem::init(LinkStatus const* linkstatus)
     {
         TreeColumnViewItem item(root_, linkstatus, i + 1);
         column_items_.push_back(item);
-        
+
         QString text(KCharsets::resolveEntities(item.text(i + 1)));
-        
+
         if(i + 1 == root_->urlColumnIndex()) {
             setText(item.columnIndex() - 1, KUrl::decode_string(text));
         }
@@ -427,7 +428,7 @@ void TreeViewItem::init(LinkStatus const* linkstatus)
         else {
             setText(item.columnIndex() - 1, text);
         }
-        
+
         setPixmap(item.columnIndex() - 1, item.pixmap(i + 1));
     }
 }
@@ -589,7 +590,7 @@ QString TreeColumnViewItem::text(int column) const
 {
     Q_ASSERT(column > 0);
 
-    
+
     if(column == root_->urlColumnIndex())
     {
         if(linkStatus()->node() && linkStatus()->malformed())
@@ -603,7 +604,7 @@ QString TreeColumnViewItem::text(int column) const
         {
             KUrl url = linkStatus()->absoluteUrl();
             return Url::convertToLocal(linkStatus());
-        }        
+        }
     }
     else if(column == root_->statusColumnIndex())
     {
@@ -624,7 +625,7 @@ QString TreeColumnViewItem::text(int column) const
         if(!label.isNull())
             return label.simplified();
     }
-        
+
     return QString();
 }
 
@@ -656,7 +657,7 @@ QPixmap TreeColumnViewItem::pixmap(int column) const
         else if(linkStatus()->status() == "OK")
             return SmallIcon("ok");
     }
-    
+
     return QPixmap();
 }
 

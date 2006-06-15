@@ -20,7 +20,7 @@
 #ifndef DOCUMENTROOTDIALOG_H
 #define DOCUMENTROOTDIALOG_H
 
-#include <kdialogbase.h>
+#include <kdialog.h>
 //Added by qt3to4:
 #include <QCloseEvent>
 
@@ -29,7 +29,7 @@ class KUrlRequester;
 /**
 	@author Paulo Moura Guedes <moura@kdewebdev.org>
 */
-class DocumentRootDialog : public KDialogBase
+class DocumentRootDialog : public KDialog
 {
 Q_OBJECT
 public:

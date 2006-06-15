@@ -31,10 +31,13 @@
 
 
 DocumentRootDialog::DocumentRootDialog(QWidget *parent, QString const& url)
-        : KDialogBase(parent, "DocumentRootDialog", true, "Choose a Document Root",
-                      KDialogBase::Ok, KDialogBase::Ok, true),
+        : KDialog(parent),
         m_url(url)
 {
+    setCaption( i18n( "Choose a Document Root" ) );
+    setButtons( KDialog::Ok );
+    setDefaultButton( KDialog::Ok );
+    enableButtonSeparator( true );
     QWidget* page = new QWidget(this);
     setMainWidget(page);
     Q3VBoxLayout* topLayout = new Q3VBoxLayout(page, 0, spacingHint());
@@ -64,7 +67,8 @@ DocumentRootDialog::DocumentRootDialog(QWidget *parent, QString const& url)
 
 DocumentRootDialog::~DocumentRootDialog()
 {
-    saveDialogSize("klinkstatus", true);
+#warning "kde4: port it"
+    //saveDialogSize("klinkstatus", true);
 }
 
 void DocumentRootDialog::slotReturnPressed( const QString & )
@@ -82,7 +86,7 @@ void DocumentRootDialog::slotOk( )
 {
     m_url = m_urlRequester->url();
 
-    KDialogBase::slotOk();
+    KDialog::accept();
 }
 
 
