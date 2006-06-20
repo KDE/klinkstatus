@@ -55,7 +55,7 @@ DocumentRootDialog::DocumentRootDialog(QWidget *parent, QString const& url)
     //     setInitialSize(configDialogSize("klinkstatus"));
 
     m_urlRequester->setMode(KFile::Directory);
-//     enableButtonOK(false);
+//     enableButtonOk(false);
 
     connect(m_urlRequester, SIGNAL(textChanged (const QString &)),
             this, SLOT(slotTextChanged (const QString &)));
@@ -79,7 +79,7 @@ void DocumentRootDialog::slotReturnPressed( const QString & )
 void DocumentRootDialog::slotTextChanged( const QString & s)
 {
     KUrl url(s);
-    enableButtonOK(!s.isEmpty() && url.isValid());
+    enableButtonOk(!s.isEmpty() && url.isValid());
 }
 
 void DocumentRootDialog::slotOk( )
