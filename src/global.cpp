@@ -10,14 +10,12 @@
 //
 //
 #include "global.h"
-
+#include <dbus/qdbus.h>
 #include <QString>
 #include <QTimer>
 //Added by qt3to4:
 #include <Q3CString>
 
-#include <dcopclient.h>
-#include <dcopref.h>
 #include <kdebug.h>
 #include <kapplication.h>
 #include <kstaticdeleter.h>
@@ -46,7 +44,6 @@ Global::Global(QObject *parent, const char *name)
         : QObject(parent, name), loop_started_(false)
 {
     m_self_ = this;
-    dcop_client_ = kapp->dcopClient();
 }
 
 Global::~Global()
@@ -57,16 +54,16 @@ Global::~Global()
 
 bool Global::isKLinkStatusEmbeddedInQuanta()
 {
-    Q3CString app_id = "quanta-" + Q3CString().setNum(getpid());
-    return self()->dcop_client_->isApplicationRegistered(app_id);
+    QString app_id = "quanta-" + QString().setNum(getpid());
+    return QDBus::sessionBus().busService()->nameHasOwner(app_id);
 }
 
 bool Global::isQuantaRunningAsUnique()
 {
-    return self()->dcop_client_->isApplicationRegistered("quanta");
+    return QDBus::sessionBus().busService()->nameHasOwner("quanta");
 }
 
-bool Global::isQuantaAvailableViaDCOP()
+bool Global::isQuantaAvailableViaDBUS()
 {
     if(isQuantaRunningAsUnique() || isKLinkStatusEmbeddedInQuanta())
         return true;
@@ -79,7 +76,7 @@ bool Global::isQuantaAvailableViaDCOP()
         for(uint i = 0; i != ps_list.size(); ++i)
         {
             ps_list[i] = ps_list[i].trimmed ();
-            if(self()->dcop_client_->isApplicationRegistered("quanta-" + ps_list[i].local8Bit()))
+            if(QDBus::sessionBus().busService()->nameHasOwner("quanta-" + ps_list[i].local8Bit()))
             {
                 //kDebug(23100) << "Application registered!" << endl;
                 return true;
@@ -89,18 +86,17 @@ bool Global::isQuantaAvailableViaDCOP()
     }
 }
 
-Q3CString Global::quantaDCOPAppId()
+QString Global::quantaDBUSAppId()
 {
-    DCOPClient* client = kapp->dcopClient();
-    Q3CString app_id;
+    QString app_id;
 
-    if(client->isApplicationRegistered("quanta")) // quanta is unnique application
+    if(QDBus::sessionBus().busService()->nameHasOwner("quanta")) // quanta is unnique application
         app_id = "quanta";
 
     else if(self()->isKLinkStatusEmbeddedInQuanta()) // klinkstatus is running as a part inside quanta
     {
-        Q3CString app = "quanta-";
-        Q3CString pid = Q3CString().setNum(getpid());
+        QString app = "quanta-";
+        QString pid = QString().setNum(getpid());
         app_id = app + pid;
     }
 
@@ -117,11 +113,11 @@ Q3CString Global::quantaDCOPAppId()
         }
     }
 
-    if(self()->dcop_client_->isApplicationRegistered(app_id))
+    if(QDBus::sessionBus().busService()->nameHasOwner(app_id))
         return app_id;
     else
     {
-        kError(23100) << "You didn't check if Global::isQuantaAvailableViaDCOP!" << endl;
+        kError(23100) << "You didn't check if Global::isQuantaAvailableViaDBUS!" << endl;
         return "";
     }
 }
@@ -129,18 +125,20 @@ Q3CString Global::quantaDCOPAppId()
 KUrl Global::urlWithQuantaPreviewPrefix(KUrl const& url)
 {
     Q_ASSERT(isKLinkStatusEmbeddedInQuanta());
-
-    DCOPRef quanta(Global::quantaDCOPAppId(),"WindowManagerIf");
+#warning "kde4; DBUS port"
+#if 0
+    DCOPRef quanta(Global::quantaDBUSAppId(),"WindowManagerIf");
     QString string_url_with_prefix = quanta.call("urlWithPreviewPrefix", url.url());
     //kDebug(23100) << "string_url_with_prefix: " << string_url_with_prefix << endl;
-
+#endif
+    QString string_url_with_prefix = "";
     return KUrl(string_url_with_prefix);
 }
 
 void Global::openQuanta(QStringList const& args)
 {
     QString command(args.join(" "));
-    Global::execCommand("quanta " + command);    
+    Global::execCommand("quanta " + command);
 }
 
 void Global::execCommand(QString const& command)

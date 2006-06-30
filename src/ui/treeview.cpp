@@ -9,7 +9,7 @@
 // Copyright: See COPYING file that comes with this distribution
 //
 //
-
+#include <dbus/qdbus.h>
 #include <klocale.h>
 #include <kiconloader.h>
 #include <kapplication.h>
@@ -238,7 +238,7 @@ void TreeView::slotEditReferrersWithQuanta()
     TreeViewItem* _item = myItem(currentItem());
     Q3ValueVector<KUrl> referrers = _item->linkStatus()->referrers();
 
-    if(Global::isQuantaAvailableViaDCOP())
+    if(Global::isQuantaAvailableViaDBUS())
     {
         for(uint i = 0; i != referrers.size(); ++i)
             slotEditReferrerWithQuanta(referrers[i]);
@@ -279,7 +279,7 @@ void TreeView::slotEditReferrerWithQuanta(KUrl const& url)
 {
     QString filePath = url.url();
 
-    if(Global::isQuantaAvailableViaDCOP())
+    if(Global::isQuantaAvailableViaDBUS())
     {
 #warning "kde4: port it"
 #if 0

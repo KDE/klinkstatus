@@ -17,7 +17,6 @@
 #include <Q3CString>
 class Q3CString;
 
-class DCOPClient;
 class KUrl;
 class KProcess;
 
@@ -33,8 +32,8 @@ public:
 
     static bool isKLinkStatusEmbeddedInQuanta();
     static bool isQuantaRunningAsUnique();
-    static bool isQuantaAvailableViaDCOP();
-    static Q3CString quantaDCOPAppId();
+    static bool isQuantaAvailableViaDBUS();
+    static QString quantaDBUSAppId();
     static KUrl urlWithQuantaPreviewPrefix(KUrl const& url);
     
     //static void setLoopStarted(bool flag);
@@ -53,7 +52,6 @@ private slots:
 private:
     static Global* m_self_;
 
-    DCOPClient* dcop_client_;
     bool loop_started_;
     QString script_output_;
     KProcess* process_PS_;
