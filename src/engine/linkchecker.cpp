@@ -604,7 +604,7 @@ void LinkChecker::killJob()
     KIO::TransferJob* aux = t_job_;
     t_job_ = 0;
     aux->disconnect(this);
-    aux->kill(true); // quietly   
+    aux->kill(); // quietly   
 }
 
 #include "linkchecker.moc"

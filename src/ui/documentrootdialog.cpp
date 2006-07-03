@@ -37,7 +37,7 @@ DocumentRootDialog::DocumentRootDialog(QWidget *parent, QString const& url)
     setCaption( i18n( "Choose a Document Root" ) );
     setButtons( KDialog::Ok );
     setDefaultButton( KDialog::Ok );
-    enableButtonSeparator( true );
+    showButtonSeparator( true );
     QWidget* page = new QWidget(this);
     setMainWidget(page);
     Q3VBoxLayout* topLayout = new Q3VBoxLayout(page, 0, spacingHint());
