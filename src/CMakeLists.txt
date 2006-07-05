@@ -84,7 +84,7 @@ target_link_libraries(klinkstatuspart
     ${KDE4_KHTML_LIBS}
 )
 
-install_targets(${PLUGIN_INSTALL_DIR} klinkstatuspart )
+install(TARGETS klinkstatuspart  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 
 ########### next target ###############
@@ -97,15 +97,15 @@ kde4_add_executable(klinkstatus ${klinkstatus_SRCS})
 
 target_link_libraries(klinkstatus  ${KDE4_KDECORE_LIBS} ${KDE4_KPARTS_LIBS} )
 
-install_targets(/bin klinkstatus )
+install(TARGETS klinkstatus  DESTINATION ${BIN_INSTALL_DIR} )
 
 
 ########### install files ###############
 
-install_files( ${XDG_APPS_DIR} FILES  klinkstatus.desktop )
-install_files( ${SERVICES_INSTALL_DIR} FILES  klinkstatus_part.desktop )
-install_files( ${DATA_INSTALL_DIR}/klinkstatuspart FILES  klinkstatus_part.rc )
-install_files( ${DATA_INSTALL_DIR}/klinkstatus FILES  klinkstatus_shell.rc )
+install( FILES  klinkstatus.desktop  DESTINATION ${XDG_APPS_DIR})
+install( FILES  klinkstatus_part.desktop  DESTINATION ${SERVICES_INSTALL_DIR})
+install( FILES  klinkstatus_part.rc  DESTINATION ${DATA_INSTALL_DIR}/klinkstatuspart)
+install( FILES  klinkstatus_shell.rc  DESTINATION ${DATA_INSTALL_DIR}/klinkstatus)
 
 
 

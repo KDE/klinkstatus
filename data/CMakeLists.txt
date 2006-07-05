@@ -7,7 +7,7 @@ add_subdirectory( styles )
 
 ########### install files ###############
 
-install_files( ${DATA_INSTALL_DIR}/klinkstatus/icons FILES  )
+install( FILES   DESTINATION ${DATA_INSTALL_DIR}/klinkstatus/icons)
 
 
 

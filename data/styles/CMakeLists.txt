@@ -4,7 +4,7 @@
 
 ########### install files ###############
 
-install_files( ${DATA_INSTALL_DIR}/klinkstatus/styles FILES  results_stylesheet.xsl )
+install( FILES  results_stylesheet.xsl  DESTINATION ${DATA_INSTALL_DIR}/klinkstatus/styles)
 
 
 
