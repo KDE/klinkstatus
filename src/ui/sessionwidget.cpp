@@ -555,7 +555,7 @@ void SessionWidget::slotClearComboUrl()
 
 void SessionWidget::slotChooseUrlDialog()
 {
-    setUrl(KFileDialog::getOpenURL());
+    setUrl(KFileDialog::getOpenUrl());
 }
 
 void SessionWidget::slotHideSearchPanel()
@@ -683,7 +683,7 @@ void SessionWidget::slotApplyFilter(LinkMatcher link_matcher)
 
 void SessionWidget::slotExportAsHTML( )
 {
-    KUrl url = KFileDialog::getSaveURL(QString::null,"text/html", 0, i18n("Export Results as HTML"));
+    KUrl url = KFileDialog::getSaveUrl(KUrl(),"text/html", 0, i18n("Export Results as HTML"));
 
     if(url.isEmpty())
         return;
@@ -702,7 +702,7 @@ void SessionWidget::slotExportAsHTML( )
         QTextStream *outputStream = savefile->textStream();
         outputStream->setEncoding(QTextStream::UnicodeUTF8);
 
-        QString xslt_doc = FileManager::read(locate("appdata", "styles/results_stylesheet.xsl"));
+        QString xslt_doc = FileManager::read(KStandardDirs::locate("appdata", "styles/results_stylesheet.xsl"));
         XSLT xslt(xslt_doc);        
 //         kdDebug(23100) << search_manager_->toXML() << endl;
         QString html_ouptut = xslt.transform(search_manager_->toXML());

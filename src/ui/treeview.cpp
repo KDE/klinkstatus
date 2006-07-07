@@ -9,7 +9,7 @@
 // Copyright: See COPYING file that comes with this distribution
 //
 //
-#include <dbus/qdbus.h>
+#include <QtDBus>
 #include <klocale.h>
 #include <kiconloader.h>
 #include <kapplication.h>

@@ -133,7 +133,7 @@ void KLinkStatusPart::slotNewLinkCheck()
 
 void KLinkStatusPart::slotOpenLink()
 {
-    QString file_name = KFileDialog::getOpenURL().url();
+    QString file_name = KFileDialog::getOpenUrl().url();
 
     if (file_name.isEmpty() == false)
     {

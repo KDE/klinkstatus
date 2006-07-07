@@ -21,7 +21,7 @@
 #include <Q3ValueList>
 #include <QKeyEvent>
 #include <QEvent>
-
+#include <QLineEdit>
 #include "klsconfig.h"
 
 
