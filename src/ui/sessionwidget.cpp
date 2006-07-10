@@ -48,6 +48,7 @@
 #include <q3buttongroup.h>
 #include <QToolButton>
 #include <QRegExp>
+#include <ktoggleaction.h>
 //Added by qt3to4:
 #include <QPixmap>
 #include <QKeyEvent>
