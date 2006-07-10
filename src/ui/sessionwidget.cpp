@@ -30,7 +30,7 @@
 #include <kglobal.h>
 #include <kpushbutton.h>
 #include <kfiledialog.h>
-#include <kactionclasses.h>
+
 #include <ktempfile.h>
 #include <ksavefile.h>
 #include <kstandarddirs.h>
