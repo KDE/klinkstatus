@@ -30,7 +30,7 @@
 #include <kglobal.h>
 #include <kpushbutton.h>
 #include <kfiledialog.h>
-#include <kactionclasses.h>
+
 #include <ktempfile.h>
 #include <ksavefile.h>
 #include <kstandarddirs.h>
@@ -48,6 +48,7 @@
 #include <q3buttongroup.h>
 #include <QToolButton>
 #include <QRegExp>
+#include <ktoggleaction.h>
 //Added by qt3to4:
 #include <QPixmap>
 #include <QKeyEvent>

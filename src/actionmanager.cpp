@@ -23,7 +23,7 @@
 #include <kxmlguifactory.h>
 #include <klocale.h>
 #include <kaction.h>
-#include <kactionclasses.h>
+#include <ktoggleaction.h>
 #include <kguiitem.h>
 
 #include <q3buttongroup.h>
