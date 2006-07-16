@@ -132,16 +132,15 @@ void ActionManager::initTabWidget(TabWidgetSession* tabWidgetSession)
     // *************** View menu *********************
 
 	//     this action must be in the tabwidget because the slot can't be connected to a particular sessionWidget
-    KToggleAction* toggle_action = new KToggleAction(i18n("&Follow last Link checked"),
-                                   "svn_switch", KShortcut("Ctrl+f"),
-                                   d->tabWidgetSession, SLOT(slotFollowLastLinkChecked()),
-                                   d->actionCollection, "follow_last_link_checked");
+    KToggleAction *toggle_action = new KToggleAction(KIcon("svn_switch"), i18n("&Follow last Link checked"), d->actionCollection, "follow_last_link_checked");
+    connect(toggle_action, SIGNAL(triggered(bool)), d->tabWidgetSession, SLOT(slotFollowLastLinkChecked()));
+    toggle_action->setShortcut(KShortcut("Ctrl+f"));
     toggle_action->setChecked(KLSConfig::followLastLinkChecked());
 
     //     this action must be in the tabwidget because the slot can't be connected to a particular sessionWidget
-    toggle_action = new KToggleAction(i18n("&Hide Search Panel"), "bottom", KShortcut("Ctrl+h"),
-                                      d->tabWidgetSession, SLOT(slotHideSearchPanel()),
-                                      d->actionCollection, "hide_search_bar");
+    toggle_action = new KToggleAction(KIcon("bottom"), i18n("&Hide Search Panel"), d->actionCollection, "hide_search_bar");
+    connect(toggle_action, SIGNAL(triggered(bool)), d->tabWidgetSession, SLOT(slotHideSearchPanel()));
+    toggle_action->setShortcut(KShortcut("Ctrl+h"));
     KGuiItem item(i18n("&Show Search Panel"), "top", "Show Search Panel");
     toggle_action->setCheckedState(item);
     
@@ -151,16 +150,13 @@ void ActionManager::initTabWidget(TabWidgetSession* tabWidgetSession)
 
     // *************** Search menu *********************
     
-    toggle_action = new KToggleAction(i18n("&Start Search"),
-                                      "player_play", KShortcut("Ctrl+s"),
-                                      d->tabWidgetSession, SLOT(slotStartSearch()),
-                                      d->actionCollection, "start_search");
+    toggle_action = new KToggleAction(KIcon("player_play"), i18n("&Start Search"), d->actionCollection, "start_search");
+    connect(toggle_action, SIGNAL(triggered(bool)), d->tabWidgetSession, SLOT(slotStartSearch()));
+    toggle_action->setShortcut(KShortcut("Ctrl+s"));
     toggle_action->setEnabled(false);
     
     toggle_action = new KToggleAction(i18n("&Pause Search"),
-                                      "player_pause", KShortcut("Ctrl+p"),
-                                      d->tabWidgetSession, SLOT(slotPauseSearch()),
-                                      d->actionCollection, "pause_search");    
+                                      "player_pause", KShortcut("Ctrl+p"), d->tabWidgetSession, SLOT(slotPauseSearch()), d->actionCollection, "pause_search");    
     toggle_action->setEnabled(false);
     
     action = new KAction(KIcon("player_stop"), i18n("St&op Search"), d->actionCollection, "stop_search");
