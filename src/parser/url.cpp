@@ -103,7 +103,7 @@ KUrl Url::normalizeUrl(QString const& string_url, LinkStatus const& link_parent,
 
 KUrl Url::normalizeUrl(QString const& string_url)
 {
-    QString qs_url(KCharsets::resolveEntities(string_url.stripWhiteSpace()));
+    QString qs_url(KCharsets::resolveEntities(string_url.trimmed()));
 
     if(qs_url[0] == '/')
     {
