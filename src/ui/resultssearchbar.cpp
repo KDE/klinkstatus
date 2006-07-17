@@ -92,11 +92,11 @@ ResultsSearchBar::ResultsSearchBar(QWidget* parent, const char* name)
     QPixmap iconMalformed = KGlobal::iconLoader()->loadIcon("bug", K3Icon::Small);
     QPixmap iconUndetermined = KGlobal::iconLoader()->loadIcon("help", K3Icon::Small);
 
-    d->searchCombo->insertItem(iconAll, i18n("All Links"));
-    d->searchCombo->insertItem(iconGood, i18n("Good Links"));
-    d->searchCombo->insertItem(iconBroken, i18n("Broken Links"));
-    d->searchCombo->insertItem(iconMalformed, i18n("Malformed Links"));
-    d->searchCombo->insertItem(iconUndetermined, i18n("Undetermined Links"));
+    d->searchCombo->addItem(iconAll, i18n("All Links"));
+    d->searchCombo->addItem(iconGood, i18n("Good Links"));
+    d->searchCombo->addItem(iconBroken, i18n("Broken Links"));
+    d->searchCombo->addItem(iconMalformed, i18n("Malformed Links"));
+    d->searchCombo->addItem(iconUndetermined, i18n("Undetermined Links"));
     d->layout->addWidget(d->searchCombo);
 
     clearButton->setToolTip( i18n("Clear filter"));
