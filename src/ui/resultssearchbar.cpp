@@ -125,7 +125,7 @@ QString const& ResultsSearchBar::text() const
 
 int ResultsSearchBar::status() const
 {
-    return d->searchCombo->currentItem();
+    return d->searchCombo->currentIndex();
 }
 
 void ResultsSearchBar::setDelay(int ms)
@@ -143,7 +143,7 @@ void ResultsSearchBar::slotClearSearch()
     if(status() != 0 || !d->searchLine->text().isEmpty())
     {
         d->searchLine->clear();
-        d->searchCombo->setCurrentItem(0);
+        d->searchCombo->setCurrentIndex(0);
         d->timer.stop();
         slotActivateSearch();
     }
@@ -151,7 +151,7 @@ void ResultsSearchBar::slotClearSearch()
 
 void ResultsSearchBar::slotSetStatus(int status)
 {
-    d->searchCombo->setCurrentItem(status);
+    d->searchCombo->setCurrentIndex(status);
 }
 
 void ResultsSearchBar::slotSetText(const QString& text)
@@ -203,9 +203,9 @@ LinkStatusHelper::Status ResultsSearchBar::selectedStatus() const
 {
     LinkStatusHelper::Status status = LinkStatusHelper::none;
     
-    if(d->searchCombo->currentItem())
+    if(d->searchCombo->currentIndex())
     {
-        switch(d->searchCombo->currentItem())
+        switch(d->searchCombo->currentIndex())
         {
             case 1: // Good
             {
