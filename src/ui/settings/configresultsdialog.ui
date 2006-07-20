@@ -19,7 +19,7 @@
         <property name="name">
             <cstring>unnamed</cstring>
         </property>
-        <widget class="QButtonGroup">
+        <widget class="KButtonGroup">
             <property name="name">
                 <cstring>buttonGroup13</cstring>
             </property>
