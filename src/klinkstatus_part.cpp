@@ -154,10 +154,7 @@ void KLinkStatusPart::slotConfigureKLinkStatus()
     dialog->addPage(new ConfigIdentificationDialog(0), i18n("Identification"), 
                     "agent", i18n("Configure the way KLinkstatus reports itself"));
     dialog->show();
-#ifdef __GNUC__
-#warning "No such signal KConfigDialog::settingsChanged()"
-#endif
-    connect(dialog, SIGNAL(settingsChanged()), tabwidget_, SLOT(slotLoadSettings()));
+    connect(dialog, SIGNAL(settingsChanged(const QString&)), tabwidget_, SLOT(slotLoadSettings()));
 }
 
 void KLinkStatusPart::slotAbout()
