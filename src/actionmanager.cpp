@@ -27,6 +27,7 @@
 #include <kguiitem.h>
 
 #include <q3buttongroup.h>
+#include <kicon.h>
 
 #include "klinkstatus_part.h"
 #include "ui/sessionwidget.h"
