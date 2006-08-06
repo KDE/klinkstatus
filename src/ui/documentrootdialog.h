@@ -50,7 +50,7 @@ protected slots:
 private slots:
     void slotTextChanged(const QString &);
     void slotReturnPressed(const QString &);
-
+    void slotUrlChanged( const KUrl &);
 private:
     KUrlRequester* m_urlRequester;
     QString m_url;

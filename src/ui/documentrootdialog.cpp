@@ -61,8 +61,8 @@ DocumentRootDialog::DocumentRootDialog(QWidget *parent, QString const& url)
             this, SLOT(slotTextChanged (const QString &)));
     connect(m_urlRequester, SIGNAL(returnPressed (const QString &)),
             this, SLOT(slotReturnPressed (const QString &)));
-    connect(m_urlRequester, SIGNAL(urlSelected (const QString &)),
-            this, SLOT(slotTextChanged (const QString &)));
+    connect(m_urlRequester, SIGNAL(urlSelected (const KUrl &)),
+            this, SLOT(slotUrlChanged( const KUrl &)));
 }
 
 DocumentRootDialog::~DocumentRootDialog()
@@ -74,6 +74,11 @@ DocumentRootDialog::~DocumentRootDialog()
 void DocumentRootDialog::slotReturnPressed( const QString & )
 {
     slotOk();
+}
+
+void DocumentRootDialog::slotUrlChanged( const KUrl & s)
+{
+    enableButtonOk(s.isValid());
 }
 
 void DocumentRootDialog::slotTextChanged( const QString & s)
