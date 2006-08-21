@@ -55,12 +55,12 @@ Global::~Global()
 bool Global::isKLinkStatusEmbeddedInQuanta()
 {
     QString app_id = "quanta-" + QString().setNum(getpid());
-    return QDBus::sessionBus().interface()->isServiceRegistered(app_id);
+    return QDBusConnection::sessionBus().interface()->isServiceRegistered(app_id);
 }
 
 bool Global::isQuantaRunningAsUnique()
 {
-    return QDBus::sessionBus().interface()->isServiceRegistered("quanta");
+    return QDBusConnection::sessionBus().interface()->isServiceRegistered("quanta");
 }
 
 bool Global::isQuantaAvailableViaDBUS()
@@ -76,7 +76,7 @@ bool Global::isQuantaAvailableViaDBUS()
         for(uint i = 0; i != ps_list.size(); ++i)
         {
             ps_list[i] = ps_list[i].trimmed ();
-            if(QDBus::sessionBus().interface()->isServiceRegistered("quanta-" + ps_list[i].local8Bit()))
+            if(QDBusConnection::sessionBus().interface()->isServiceRegistered("quanta-" + ps_list[i].local8Bit()))
             {
                 //kDebug(23100) << "Application registered!" << endl;
                 return true;
@@ -90,7 +90,7 @@ QString Global::quantaDBUSAppId()
 {
     QString app_id;
 
-    if(QDBus::sessionBus().interface()->isServiceRegistered("quanta")) // quanta is unnique application
+    if(QDBusConnection::sessionBus().interface()->isServiceRegistered("quanta")) // quanta is unnique application
         app_id = "quanta";
 
     else if(self()->isKLinkStatusEmbeddedInQuanta()) // klinkstatus is running as a part inside quanta
@@ -113,7 +113,7 @@ QString Global::quantaDBUSAppId()
         }
     }
 
-    if(QDBus::sessionBus().interface()->isServiceRegistered(app_id))
+    if(QDBusConnection::sessionBus().interface()->isServiceRegistered(app_id))
         return app_id;
     else
     {
