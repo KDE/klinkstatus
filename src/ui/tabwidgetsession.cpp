@@ -191,7 +191,7 @@ void TabWidgetSession::updateTabLabel(LinkStatus const* linkstatus, SessionWidge
     }
     
     changeTab(page, KCharsets::resolveEntities(label));
-    setTabIconSet(page, QIconSet(KIO::pixmapForURL(url)));
+    setTabIconSet(page, QIconSet(KIO::pixmapForUrl(url)));
 }
 
 void TabWidgetSession::slotLoadSettings()
