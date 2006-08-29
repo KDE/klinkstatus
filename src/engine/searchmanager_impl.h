@@ -67,7 +67,7 @@ inline void SearchManager::setExternalDomainDepth(int depth)
 
 inline void SearchManager::setDomain(QString const& domain)
 {
-    Q_ASSERT(domain.find("http://") == -1);
+    Q_ASSERT(domain.indexOf("http://") == -1);
     domain_ = domain;
     general_domain_ = generalDomain();
     checked_general_domain_ = true;

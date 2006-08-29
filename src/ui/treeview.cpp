@@ -87,12 +87,12 @@ void TreeView::resetColumns()
 
 double TreeView::columnsWidth() const
 {
-    kdDebug(23100) << "columns: " << columns() << endl;
+    kDebug(23100) << "columns: " << columns() << endl;
 
     double width = 0.0;
     for(int i = 0; i != columns(); ++i)
     {
-        kdDebug(23100) << "column width: " << columnWidth(i) << endl;
+        kDebug(23100) << "column width: " << columnWidth(i) << endl;
         width += columnWidth(i);
     }
     return width;

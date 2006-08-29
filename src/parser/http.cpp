@@ -33,8 +33,8 @@ void HttpResponseHeader::parseLocation()
   int location = findWord(cabecalho, "Location: ");  
   Q_ASSERT(location != -1);
 
-  int fim_de_linha_1 = cabecalho.find('\n', location);
-  int fim_de_linha_2 = cabecalho.find('\r', location);
+  int fim_de_linha_1 = cabecalho.indexOf('\n', location);
+  int fim_de_linha_2 = cabecalho.indexOf('\r', location);
 
   Q_ASSERT(fim_de_linha_1 != -1 || fim_de_linha_2 != -1);
 

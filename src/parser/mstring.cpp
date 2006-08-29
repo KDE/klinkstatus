@@ -28,7 +28,7 @@ using namespace std;
 
 int findWord(QString const& s, QString const& palavra, uint a_partir_do_indice)
 {
-    int indice = s.find(palavra, a_partir_do_indice, false);
+    int indice = s.indexOf(palavra, a_partir_do_indice, Qt::CaseInsensitive);
 
     if(indice == -1)
         return indice;
@@ -38,7 +38,7 @@ int findWord(QString const& s, QString const& palavra, uint a_partir_do_indice)
 
 int findChar(QString const& s, QChar letra, uint a_partir_do_indice)
 {
-    int index = s.find(letra, a_partir_do_indice, false);
+    int index = s.indexOf(letra, a_partir_do_indice, Qt::CaseInsensitive);
     if(index == -1)
         return index;
     else
@@ -75,7 +75,7 @@ int findSeparableWord(QString const& s_, QString const& palavra, uint a_partir_d
             if(indice == -1)
                 return indice;
 
-            // Nao se incrementa o indice porque isso j��feito com a fun�o nextNonSpaceChar
+            // Nao se incrementa o indice porque isso jÃ¯Â¿Â½Ã¯Â¿Â½feito com a funÃ¯Â¿Â½o nextNonSpaceChar
             encontrou = encontrou && !(notEqual(s[indice], palavra[indice_palavra++]) );
 
         }
@@ -173,7 +173,7 @@ vector<QString> tokenizeWordsSeparatedByDots(QString s)
         if(inicio == -1)
             return v;
 
-        int fim = s.find('.', inicio);
+        int fim = s.indexOf('.', inicio);
         if(fim == -1)
         {
             v.push_back(s.mid(inicio));
@@ -200,7 +200,7 @@ vector<QString> tokenizeWordsSeparatedBy(QString s, QChar criteria)
         if(inicio == -1)
             return v;
 
-        int fim = s.find(criteria, inicio);
+        int fim = s.indexOf(criteria, inicio);
         if(fim == -1)
         {
             v.push_back(s.mid(inicio));

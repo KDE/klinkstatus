@@ -27,17 +27,17 @@ inline Node::~Node()
     //kDebug(23100) <<  "/";
 }
 
-inline Node::Node(QString const& content)
+inline Node::Node(const QString & content)
         : content_(content), is_redirection_(false), malformed_(false)
 {}
 
-inline void Node::setNode(QString const& content)
+inline void Node::setNode(const QString & content)
 {
     content_ = content;
     parse();
 }
 
-inline QString const& Node::content() const
+inline QString Node::content() const
 {
     return content_;
 }
@@ -78,7 +78,7 @@ inline NodeLink::NodeLink()
         : Node()
 {}
 
-inline NodeLink::NodeLink(QString const& content)
+inline NodeLink::NodeLink(const QString & content)
         : Node(content)
 {
     parse();
@@ -89,12 +89,12 @@ inline void NodeLink::parse()
     parseAttributeHREF();
 }
 
-inline QString const& NodeLink::url() const
+inline QString NodeLink::url() const
 {
     return attribute_href_;
 }
 
-inline QString const& NodeLink::linkLabel() const
+inline QString NodeLink::linkLabel() const
 {
     return link_label_;
 }
@@ -119,14 +119,14 @@ inline bool NodeLink::isLink() const
 
 // class NodeA_______________________________________________________
 
-inline NodeA::NodeA(QString const& content)
+inline NodeA::NodeA(const QString & content)
         : NodeLink(content)
 {
     element_ = A;
     parse();
 }
 
-inline QString const& NodeA::attributeNAME() const
+inline QString NodeA::attributeNAME() const
 {
     return attribute_name_;
 }
@@ -144,14 +144,14 @@ inline void NodeA::parseAttributeNAME()
 
 // class NodeAREA_______________________________________________________
         
-inline NodeAREA::NodeAREA(QString const& content)
+inline NodeAREA::NodeAREA(const QString & content)
     : NodeLink(content)
 {
     element_ = AREA;
     parse();
 }
             
-inline QString const& NodeAREA::attributeTITLE() const
+inline QString NodeAREA::attributeTITLE() const
 {
     return attribute_title_;
 }
@@ -169,7 +169,7 @@ inline void NodeAREA::parseAttributeTITLE()
 
 // class NodeLINK________________________________________
 
-inline NodeLINK::NodeLINK(QString const& content)
+inline NodeLINK::NodeLINK(const QString & content)
         : NodeLink(content)
 {
     element_ = LINK;
@@ -177,26 +177,26 @@ inline NodeLINK::NodeLINK(QString const& content)
 
 // class NodeMeta________________________________________
 
-inline NodeMETA::NodeMETA(QString const& content)
+inline NodeMETA::NodeMETA(const QString & content)
         : Node(content)
 {
     element_ = Node::META;
     parse();
 }
 
-inline QString const& NodeMETA::url() const
+inline QString NodeMETA::url() const
 {
     return attribute_url_;
 }
 
-inline const QString& NodeMETA::linkLabel() const
+inline QString NodeMETA::linkLabel() const
 {
     return link_label_;
 }
 
 inline bool NodeMETA::isLink() const
 {
-    if(upperCase(attribute_http_equiv_) == "REFRESH" &&
+  if(attribute_http_equiv_.toUpper() == "REFRESH" &&
             findWord(content(), "URL") != -1)
     {
         // Q_ASSERT(findWord(content(), "URL") != -1); // not necessarily
@@ -206,17 +206,17 @@ inline bool NodeMETA::isLink() const
         return false;
 }
 
-inline QString const& NodeMETA::atributoHTTP_EQUIV() const
+inline QString NodeMETA::atributoHTTP_EQUIV() const
 {
     return attribute_http_equiv_;
 }
 
-inline QString const& NodeMETA::atributoNAME() const
+inline QString NodeMETA::atributoNAME() const
 {
     return attribute_name_;
 }
 
-inline QString const& NodeMETA::atributoCONTENT() const
+inline QString NodeMETA::atributoCONTENT() const
 {
     return attribute_content_;
 }
@@ -224,7 +224,7 @@ inline QString const& NodeMETA::atributoCONTENT() const
 inline bool NodeMETA::isRedirection() const
 {
     return
-        upperCase(attribute_http_equiv_) == "REFRESH";
+        attribute_http_equiv_.toUpper() == "REFRESH";
 }
 
 inline void NodeMETA::parse()
@@ -254,7 +254,7 @@ inline void NodeMETA::parseAttributeCONTENT()
 
 // class NodeIMG________________________________________
 
-inline NodeIMG::NodeIMG(QString const& content)
+inline NodeIMG::NodeIMG(const QString & content)
         : Node(content)
 {
     element_ = IMG;
@@ -268,12 +268,12 @@ inline void NodeIMG::parse()
     parseAttributeALT();
 }
 
-inline QString const& NodeIMG::url() const
+inline QString NodeIMG::url() const
 {
     return attribute_src_;
 }
 
-inline QString const& NodeIMG::linkLabel() const
+inline QString NodeIMG::linkLabel() const
 {
     if(!attribute_title_.isEmpty())
         return attribute_title_;
@@ -302,7 +302,7 @@ inline void NodeIMG::parseAttributeALT()
 
 // class NodeFRAME________________________________________
 
-inline NodeFRAME::NodeFRAME(QString const& content)
+inline NodeFRAME::NodeFRAME(const QString & content)
         : Node(content)
 {
     element_ = FRAME;
@@ -314,12 +314,12 @@ inline void NodeFRAME::parse()
     parseAttributeSRC();
 }
 
-inline QString const& NodeFRAME::url() const
+inline QString NodeFRAME::url() const
 {
     return attribute_src_;
 }
 
-inline QString const& NodeFRAME::linkLabel() const
+inline QString NodeFRAME::linkLabel() const
 {
     return link_label_;
 }
@@ -340,7 +340,7 @@ inline NodeBASE::NodeBASE()
     element_ = BASE;
 }
 
-inline NodeBASE::NodeBASE(QString const& content)
+inline NodeBASE::NodeBASE(const QString & content)
         : NodeLink(content)
 {
     element_ = BASE;
@@ -360,19 +360,19 @@ inline NodeTITLE::NodeTITLE()
     parse();
 }
 
-inline NodeTITLE::NodeTITLE(QString const& content)
+inline NodeTITLE::NodeTITLE(const QString & content)
         : Node(content)
 {
     element_ = TITLE;
     parse();
 }
 
-inline QString const& NodeTITLE::url() const
+inline QString NodeTITLE::url() const
 {
     return QString::null;
 }
 
-inline QString const& NodeTITLE::linkLabel() const
+inline QString NodeTITLE::linkLabel() const
 {
     return QString::null;
 }
@@ -387,7 +387,7 @@ inline bool NodeTITLE::isLink() const
     return false;   
 }
 
-inline QString const& NodeTITLE::attributeTITLE() const
+inline QString NodeTITLE::attributeTITLE() const
 {
     return attribute_title_;   
 }

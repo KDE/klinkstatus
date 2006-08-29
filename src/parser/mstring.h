@@ -78,28 +78,15 @@ std::vector<QString> tokenizeWordsSeparatedByDots(QString s);
 std::vector<QString> tokenizeWordsSeparatedBy(QString s, QChar criteria);
 
 /**
-   Returns a string that has whitespace removed from the start and the end, 
-   and which has each sequence of internal whitespace replaced with a single space. 
-*/
-QString simplified(QString const& s);
-
-/**
    If char 'caractere' is the last in the string 's' it is removed
 */
 void removeLastCharIfExists(QString& s, QChar caractere);
-
-QString upperCase(QString const& s);
-QString lowerCase(QString const& s);
 
 /**
    Remove whitespaces from the end of the string
 */
 void trimmedFromTheEnd(QString& s);
 
-/**
-   Returns a string that has whitespace removed from the start and the end.
-*/
-void trimmed(QString& s);
 
 /**
    Case insensitive comparisons
@@ -123,7 +110,7 @@ inline bool equal(QString const& s1, QString const& s2)
 	if(s1 == s2)
 		return true;
 	else
-		return s1.lower() == s2.lower();
+		return s1.toLower() == s2.toLower();
 }
 
 inline bool notEqual(QString const& s1, QString const& s2)
@@ -133,27 +120,12 @@ inline bool notEqual(QString const& s1, QString const& s2)
 
 inline bool equal(QChar c1, QChar c2)
 {
-    return c1.lower() == c2.lower();
+    return c1.toLower() == c2.toLower();
 }
 
 inline bool notEqual(QChar c1, QChar c2)
 {
     return !(equal(c1, c2));
-}
-
-inline QString upperCase(QString const& s)
-{
-	return s.upper();
-}
-
-inline QString lowerCase(QString const& s)
-{
-	return s.lower();	
-}
-
-inline QString simplified(QString const& s)
-{
-	return s.simplified();
 }
 
 inline void removeLastCharIfExists(QString& s, QChar caractere)
@@ -162,13 +134,6 @@ inline void removeLastCharIfExists(QString& s, QChar caractere)
 	if(s[index] == caractere)
 		s.remove(index);
 }
-
-inline void trimmed(QString& s)
-{
-	s = s.trimmed();
-}
-
-
 
 
 #endif

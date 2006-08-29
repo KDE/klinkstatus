@@ -494,7 +494,7 @@ void SearchManager::checkLinksSimultaneously(vector<LinkStatus*> const& links)
             slotLinkChecked(ls, 0);
         }
 
-        else if(ls->absoluteUrl().prettyUrl().contains("javascript:", false))
+        else if(ls->absoluteUrl().prettyUrl().contains("javascript:", Qt::CaseInsensitive))
         {
             ++ignored_links_;
             ls->setIgnored(true);
@@ -744,7 +744,7 @@ bool SearchManager::generalDomain() const
         if(!check_parent_dirs_)
             return false;
 
-        int barra = domain_.find('/');
+        int barra = domain_.indexOf('/');
         if(barra != -1 && (uint)barra != domain_.length() - 1)
         {
             kDebug(23100) <<  "Domain nao vago" << endl;

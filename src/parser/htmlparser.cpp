@@ -32,7 +32,7 @@ HtmlParser::HtmlParser(QString const& documento)
     stripScriptContent();
     stripComments(); // after removing the script because comments in scripts have diferent sintaxe
 
-    nodes_.reserve(estimativaLinks(documento.length() * 2)); // à confiança ;)
+    nodes_.reserve(estimativaLinks(documento.length() * 2)); // ÃÂ  confianÃÂ§a ;)
 
     parseNodesOfTypeA();
     parseNodesOfTypeAREA();
@@ -76,7 +76,7 @@ vector<QString> const& HtmlParser::parseNodesOfType(QString const& tipo)
     int inicio = 0, fim = 0;
 
     aux_.clear();
-    if(upperCase(tipo) == "A")
+    if(tipo.toUpper() == "A")
         aux_.reserve(estimativaLinks(document_.length() * 2));
 
     int i = 0;
@@ -94,7 +94,7 @@ vector<QString> const& HtmlParser::parseNodesOfType(QString const& tipo)
             continue;
         }
 
-        if(upperCase(tipo) == "A")
+        if(tipo.toUpper() == "A")
             fim = findWord(doc, "</A>", inicio);
         else
         {
@@ -127,11 +127,11 @@ int HtmlParser::endOfTag(QString const& s, int index, QChar end_of_tag)
     if( (uint)index >= s.length() )
         return -1;
 
-    int _end_of_tag = s.find(end_of_tag, index);
+    int _end_of_tag = s.indexOf(end_of_tag, index);
     if(_end_of_tag == -1)
         return _end_of_tag;
 
-    int open_aspas = s.find('"', index);
+    int open_aspas = s.indexOf('"', index);
     if(open_aspas == -1)
         return _end_of_tag + 1;
 
@@ -143,7 +143,7 @@ int HtmlParser::endOfTag(QString const& s, int index, QChar end_of_tag)
 
     else
     {
-        int close_aspas = s.find('"', open_aspas + 1);
+        int close_aspas = s.indexOf('"', open_aspas + 1);
         if(close_aspas != -1)
             return endOfTag(s, close_aspas + 1, end_of_tag);
         else
@@ -231,7 +231,7 @@ void HtmlParser::parseNodesOfTypeBASE()
     if(inicio == -1 || !doc[inicio].isSpace())
         return;
 
-    fim = doc.find(">", inicio);
+    fim = doc.indexOf('>', inicio);
     if(fim == -1)
         return;
 

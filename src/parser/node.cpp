@@ -39,19 +39,19 @@ QString Node::getAttribute(QString const& atributo)
     {
         if(content_[inicio] == '"')
         {
-            fim = content_.find("\"", inicio + 1);
+            fim = content_.indexOf('"', inicio + 1);
             tem_aspas_ou_plicas = true;
         }
         else if(content_[inicio] == '\'')
         {
-            fim = content_.find("'", inicio + 1);
+            fim = content_.indexOf("'", inicio + 1);
             tem_aspas_ou_plicas = true;
         }
         else
         {
             int fim_bloco = nextSpaceChar(content_, inicio + 1);
-            int fim_tag = content_.find(">", inicio + 1);
-            int fim_aspas = content_.find("\"", inicio + 1);
+            int fim_tag = content_.indexOf('>', inicio + 1);
+            int fim_aspas = content_.indexOf('"', inicio + 1);
 
             if(fim_bloco == -1 && fim_tag == -1 && fim_aspas == -1)
             {
@@ -86,7 +86,7 @@ QString Node::getAttribute(QString const& atributo)
         }
         else
         {
-            ::trimmed(attribute_);
+            attribute_.trimmed();
         }
     }
 
@@ -137,7 +137,7 @@ void NodeLink::parseLinkLabel()
     
     do
     {
-        fim_tag = content_.find(">", fim_tag);
+        fim_tag = content_.indexOf('>', fim_tag);
  
         if(fim_tag != -1)
             proximo_caractere = QChar(content_[++fim_tag]);
@@ -147,13 +147,11 @@ void NodeLink::parseLinkLabel()
 
     if(fim_tag != -1)
     {
-        int fim_label = content_.find("<", fim_tag);
+        int fim_label = content_.indexOf('<', fim_tag);
 
         if(fim_label != -1)
         {
-            link_label_ =
-                ::simplified(content_.mid(fim_tag,
-                                                  fim_label - fim_tag));
+            link_label_ = content_.mid(fim_tag, fim_label - fim_tag).simplified();
         }
     }
 }
@@ -168,7 +166,7 @@ void NodeMETA::parseAttributeURL()
     if(attribute_http_equiv_.isEmpty())
         parseAttributeHTTP_EQUIV();
 
-    if(upperCase(attribute_http_equiv_) == "REFRESH")
+    if(attribute_http_equiv_.toUpper() == "REFRESH")
     {
         is_redirection_ = true;
 
@@ -183,7 +181,7 @@ void NodeMETA::parseAttributeURL()
         int aspas = -1;
         do
         {
-            aspas = attribute_url_.find("\"");
+            aspas = attribute_url_.indexOf('"');
             if(aspas != -1)
                 attribute_url_.remove(aspas, 1);
         }

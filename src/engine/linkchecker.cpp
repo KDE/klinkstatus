@@ -105,7 +105,7 @@ void LinkChecker::slotTimeOut()
 {
     if(!finnished_ && !parsing_)
     {
-        kdDebug(23100) << "timeout: " << linkstatus_->absoluteUrl().url() << " - " 
+        kDebug(23100) << "timeout: " << linkstatus_->absoluteUrl().url() << " - " 
                 << t_job_->slave() << "/" <<  t_job_->slave()->slave_pid() << endl;
         
         Q_ASSERT(t_job_);
@@ -368,7 +368,7 @@ void LinkChecker::slotResult(KIO::Job* /*job*/)
 
 void LinkChecker::slotRedirection (KIO::Job* /*job*/, const KUrl &url)
 {
-    kdDebug(23100) <<  "LinkChecker::slotRedirection -> " << 
+    kDebug(23100) <<  "LinkChecker::slotRedirection -> " << 
             linkstatus_->absoluteUrl().url()  << " -> " << url.url() << endl;
 //             << " - " << t_job_->slave() << "/" <<  t_job_->slave()->slave_pid() << endl;
     
@@ -479,12 +479,12 @@ void LinkChecker::checkRef()
     LinkStatus const* ls_parent = 0;
     int i_ref = -1;
 
-    if(linkStatus()->originalUrl().startsWith("#"))
+    if(linkStatus()->originalUrl().startsWith('#'))
         ls_parent = linkStatus()->parent();
 
     else
     {
-        i_ref = url.url().find("#");
+        i_ref = url.url().indexOf('#');
         url_base = url.url().left(i_ref);
         //kDebug(23100) << "url_base: " << url_base << endl;
 
@@ -510,7 +510,7 @@ void LinkChecker::checkRef(KUrl const& url)
     KHTMLPart* html_part = search_manager_->htmlPart(url_string);
     if(!html_part)
     {
-        kdDebug() << "new KHTMLPart: " +  url_string << endl;
+        kDebug() << "new KHTMLPart: " +  url_string << endl;
 
         html_part = new KHTMLPart();
         html_part->setOnlyLocalReferences(true);
@@ -527,7 +527,7 @@ void LinkChecker::checkRef(KUrl const& url)
         } 
         else 
         {
-            kdDebug(23100) <<  KIO::NetAccess::lastErrorString() << endl;
+            kDebug(23100) <<  KIO::NetAccess::lastErrorString() << endl;
         }
 
         search_manager_->addHtmlPart(url_string, html_part);
@@ -554,7 +554,7 @@ void LinkChecker::checkRef(LinkStatus const* linkstatus_parent)
     KHTMLPart* html_part = search_manager_->htmlPart(url_string);
     if(!html_part)
     {
-        kdDebug() << "new KHTMLPart: " +  url_string << endl;
+        kDebug() << "new KHTMLPart: " +  url_string << endl;
 
         html_part = new KHTMLPart();
         html_part->setOnlyLocalReferences(true);

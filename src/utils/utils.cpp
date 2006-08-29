@@ -133,11 +133,11 @@ QString htmlDocCharset[NUMBER_OF_HTML_CODES][2] = {
 
 void decode(QString& url)
 {
-    if( (int)url.find('&') != -1)
+    if( url.indexOf('&') != -1)
     {
         for(int i = 0; i != NUMBER_OF_HTML_CODES; ++i)
         {
-            int index = url.find(htmlDocCharset[i][0]);
+            int index = url.indexOf(htmlDocCharset[i][0]);
             if(index != - 1)
             {
                 url.replace(htmlDocCharset[i][0], htmlDocCharset[i][1]);
@@ -148,11 +148,11 @@ void decode(QString& url)
 /*
 void decode(string& url)
 {
-    if( (int)url.find('&') != -1)
+    if( url.indexOf('&') != -1)
     {
         for(int i = 0; i != NUMBER_OF_HTML_CODES; ++i)
         {
-            int index = url.find(htmlDocCharset[i][0].latin1());
+            int index = url.indexOf(htmlDocCharset[i][0].latin1());
             if(index != - 1)
             {
                 int length = htmlDocCharset[i][0].length();

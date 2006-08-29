@@ -389,7 +389,7 @@ void SessionWidget::slotLinkChecked(LinkStatus const* linkstatus, LinkChecker * 
 {
     slotSetTimeElapsed();
 
-    kdDebug(23100) << textlabel_progressbar->text() << endl;
+    kDebug(23100) << textlabel_progressbar->text() << endl;
     Q_ASSERT(textlabel_progressbar->text() == i18n("Checking...") ||
             textlabel_progressbar->text() == i18n("Stopped"));
     progressbar_checker->setProgress(progressbar_checker->progress() + 1);
@@ -569,7 +569,7 @@ void SessionWidget::slotHideSearchPanel()
 
 void SessionWidget::setFollowLastLinkChecked(bool follow)
 {
-    kdDebug(23100) << "setFollowLastLinkChecked: " << follow << endl;
+    kDebug(23100) << "setFollowLastLinkChecked: " << follow << endl;
     follow_last_link_checked_ = follow;
 }
 
@@ -705,7 +705,7 @@ void SessionWidget::slotExportAsHTML( )
 
         QString xslt_doc = FileManager::read(KStandardDirs::locate("appdata", "styles/results_stylesheet.xsl"));
         XSLT xslt(xslt_doc);        
-//         kdDebug(23100) << search_manager_->toXML() << endl;
+//         kDebug(23100) << search_manager_->toXML() << endl;
         QString html_ouptut = xslt.transform(search_manager_->toXML());
         (*outputStream) << html_ouptut << endl;
 

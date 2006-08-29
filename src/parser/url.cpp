@@ -39,7 +39,7 @@ Node::LinkType Url::resolveLinkType(QString const& url)
         return Node::file_href;
     else if(findWord(url, "MAILTO:") != -1)
         return Node::mailto;
-    else if( (int)url.find(":/") != -1)
+    else if( url.indexOf(":/") != -1)
         return Node::href;
     else
         return Node::relative;
@@ -94,7 +94,7 @@ KUrl Url::normalizeUrl(QString const& string_url, LinkStatus const& link_parent,
 
         url.cleanPath();
 
-//         kdDebug(23100) << "Normalized URL: " 
+//         kDebug(23100) << "Normalized URL: " 
 //                 << KCharsets::resolveEntities(KUrl::decode_string(url.url())) << endl;
 
         return KUrl(KCharsets::resolveEntities(KUrl::decode_string(url.url())));

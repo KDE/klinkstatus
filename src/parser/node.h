@@ -54,18 +54,18 @@ public:
     };
 
     Node();
-    Node(QString const& content);
+    Node(const QString & content);
     virtual ~Node();
 
-    QString getAttribute(QString const& atributo);
-    virtual QString const& url() const = 0;
-    virtual QString const& linkLabel() const = 0; // URL label
-    virtual void setNode(QString const& content);
+    QString getAttribute(const QString & atributo);
+    virtual QString url() const = 0;
+    virtual QString linkLabel() const = 0; // URL label
+    virtual void setNode(const QString & content);
     virtual void parse() = 0;
     void setMalformed(bool flag = true);
     virtual void setLinkType(LinkType const& lt);
 
-    QString const& content() const;
+    QString content() const;
     bool malformed() const;
     LinkType linkType() const;
     Element element() const;
@@ -88,15 +88,15 @@ class NodeLink: public Node
 {
 public:
     NodeLink();
-    NodeLink(QString const& content);
+    NodeLink(const QString & content);
     ~NodeLink()
     {}
     ;
 
     virtual void parse();
 
-    virtual QString const& url() const;
-    virtual QString const& linkLabel() const; // URL label
+    virtual QString url() const;
+    virtual QString linkLabel() const; // URL label
     virtual QString mailto() const;
     virtual bool isLink() const;
 
@@ -111,11 +111,11 @@ private:
 class NodeA: public NodeLink
 {
 public:
-    NodeA(QString const& content);
+    NodeA(const QString & content);
     ~NodeA()
     {}
     ;
-    QString const& attributeNAME() const;
+    QString attributeNAME() const;
 
     virtual void parse();
 
@@ -129,10 +129,10 @@ private:
 class NodeAREA: public NodeLink
 {
 public:
-    NodeAREA(QString const& content);
+    NodeAREA(const QString & content);
     ~NodeAREA() {};
     
-    QString const& attributeTITLE() const;
+    QString attributeTITLE() const;
 
     virtual void parse();
 
@@ -147,7 +147,7 @@ private:
 class NodeLINK: public NodeLink
 {
 public:
-    NodeLINK(QString const& content);
+    NodeLINK(const QString & content);
     ~NodeLINK()
     {}
     ;
@@ -156,17 +156,17 @@ public:
 class NodeMETA: public Node
 {
 public:
-    NodeMETA(QString const& content);
+    NodeMETA(const QString & content);
     ~NodeMETA()
     {}
     ;
 
-    virtual QString const& url() const;
-    virtual const QString& linkLabel() const;
+    virtual QString url() const;
+    virtual QString linkLabel() const;
     virtual bool isLink() const;
-    QString const& atributoHTTP_EQUIV() const;
-    QString const& atributoNAME() const;
-    QString const& atributoCONTENT() const;
+    QString atributoHTTP_EQUIV() const;
+    QString atributoNAME() const;
+    QString atributoCONTENT() const;
     bool isRedirection() const;
 
     virtual void parse();
@@ -193,15 +193,15 @@ private:
 class NodeIMG: public Node
 {
 public:
-    NodeIMG(QString const& content);
+    NodeIMG(const QString & content);
     ~NodeIMG()
     {}
     ;
 
     virtual void parse();
 
-    virtual QString const& url() const;
-    virtual QString const& linkLabel() const; // Image label
+    virtual QString url() const;
+    virtual QString linkLabel() const; // Image label
     virtual bool isLink() const;
 
 private:
@@ -218,14 +218,14 @@ private:
 class NodeFRAME: public Node
 {
 public:
-    NodeFRAME(QString const& content);
+    NodeFRAME(const QString & content);
     ~NodeFRAME()
     {}
     ;
 
     virtual void parse();
-    virtual QString const& url() const;
-    virtual QString const& linkLabel() const;
+    virtual QString url() const;
+    virtual QString linkLabel() const;
     virtual bool isLink() const;
 
 private:
@@ -239,7 +239,7 @@ class NodeBASE: public NodeLink
 {
 public:
     NodeBASE();
-    NodeBASE(QString const& content);
+    NodeBASE(const QString & content);
     ~NodeBASE()
     {}
     ;
@@ -251,17 +251,17 @@ class NodeTITLE: public Node
 {
 public:
     NodeTITLE();
-    NodeTITLE(QString const& content);
+    NodeTITLE(const QString & content);
     ~NodeTITLE()
     {}
     ;
 
-    virtual QString const& url() const;
-    virtual QString const& linkLabel() const;
+    virtual QString url() const;
+    virtual QString linkLabel() const;
     virtual void parse();
     virtual bool isLink() const;
     
-    QString const& attributeTITLE() const;
+    QString attributeTITLE() const;
 
 private:
     void parseAttributeTITLE();
