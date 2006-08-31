@@ -1,14 +1,10 @@
 <?xml version="1.0" ?>
-<!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.1.2-Based Variant V1.1//EN" "dtd/kdex.dtd" [
+<!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.2-Based Variant V1.1//EN" "dtd/kdex.dtd" [
   <!ENTITY klinkstatus "<application>KLinkStatus</application>">
-  <!ENTITY kappname "&klinkstatus;"><!-- Do *not* replace kappname-->
-  <!ENTITY package "kde-module"><!-- kdebase, kdeadmin, etc -->
+  <!ENTITY kappname "&klinkstatus;">
+  <!ENTITY package "kdewebdev">
   <!ENTITY % addindex "IGNORE">
   <!ENTITY % English "INCLUDE"><!-- change language only here -->
-  
-  
-  <!-- Do not define any other entities; instead, use the entities
-       from kde-genent.entities and $LANG/user.entities. -->
 ]>
 <!-- kdoctemplate v0.8 October 1 1999 
      Minor update to "Credits and Licenses" section on August 24, 2000
@@ -48,20 +44,19 @@ as Authors, publish date, the abstract, and Keywords -->
 
 <authorgroup>
 <author>
-<firstname></firstname>
-<othername></othername>
-<surname>Paulo Moura Guedes</surname>
+<firstname>Paulo</firstname>
+<surname>Moura Guedes</surname>
 <affiliation>
 <address><email>moura&#64;kdewebdev&#46;org</email></address>
 </affiliation>
 </author>
-</authorgroup>
 
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 
+</authorgroup>
+
 <copyright>
 <year>2004</year>
-<!--<year>2004</year>-->
 <holder>Paulo Moura Guedes</holder>
 </copyright>
 <!-- Translators: put here the copyright notice of the translation -->
@@ -83,7 +78,7 @@ Do NOT change these in the translation. -->
 
 <abstract>
 <para>
-&klinkstatus; is a link checker for KDE.
+&klinkstatus; is a link checker for &kde;.
 </para>
 </abstract>
 
@@ -92,36 +87,22 @@ Please at least include KDE, the KDE package it is in, the name
  of your application, and a few relevant keywords. -->
 
 <keywordset>
-<keyword>KDE</keyword>
-<keyword>KLinkStatus</keyword>
+<keyword>&kde;</keyword>
+<keyword>&klinkstatus;</keyword>
 <keyword>link checker</keyword>
 <keyword>validation</keyword>
 </keywordset>
 
 </bookinfo>
 
-<!-- The contents of the documentation begin here.  Label
-each chapter so with the id attribute. This is necessary for two reasons: it
-allows you to easily reference the chapter from other chapters of your
-document, and if there is no ID, the name of the generated HTML files will vary
-from time to time making it hard to manage for maintainers and for the CVS
-system. Any chapter labelled (OPTIONAL) may be left out at the author's
-discretion. Other chapters should not be left out in order to maintain a
-consistent documentation style across all KDE apps. -->
 
 <chapter id="introduction">
 <title>Introduction</title>
 
-<!-- The introduction chapter contains a brief introduction for the
-application that explains what it does and where to report
-problems. Basically a long version of the abstract.  Don't include a
-revision history. (see installation appendix comment) -->
-
-<para>
-&klinkstatus; is a link checker for KDE.
+<para>&klinkstatus; is a link checker for &kde;.
 It allows you to search internal and external links in your entire web site, 
 just a single page and choose the depth to search.
-You can also check local files, ftp, fish, etc, as KLinkStatus uses KIO.
+You can also check local files, ftp, fish, &etc;, as &klinkstatus; uses KIO.
 For performance, links can be checked simultaneously.
 
 Please report any problems or feature requests to http://linkstatus.paradigma.co.pt/bugs/.
@@ -130,10 +111,6 @@ Please report any problems or feature requests to http://linkstatus.paradigma.co
 
 <chapter id="using-klinkstatus">
 <title>Using &klinkstatus;</title>
-
-<!-- This chapter should tell the user how to use your app. You should use as
-many sections (Chapter, Sect1, Sect3, etc...) as is necessary to fully document
-your application. -->
 
 <para>
 
@@ -156,24 +133,10 @@ patent issues. -->
 </screenshot>
 </para>
 
-
-<sect1 id="klinkstatus-features">
-<title>More &klinkstatus; features</title>
-
-<para></para>
-<para></para>
-
-</sect1>
 </chapter>
 
 <chapter id="commands">
 <title>Command Reference</title>
-
-<!-- (OPTIONAL, BUT RECOMMENDED) This chapter should list all of the
-application windows and their menubar and toolbar commands for easy reference.
-Also include any keys that have a special function but have no equivalent in the
-menus or toolbars. This may not be necessary for small apps or apps with no tool
-or menu bars. -->
 
 <sect1 id="klinkstatus-mainwindow">
 <title>The main &klinkstatus; window</title>
@@ -200,7 +163,7 @@ or menu bars. -->
 <guimenu>File</guimenu>
 <guimenuitem>Open URL</guimenuitem>
 </menuchoice></term>
-<listitem><para><action>Opens a URL</action></para></listitem>
+<listitem><para><action>Opens a &URL;</action></para></listitem>
 </varlistentry>
 <varlistentry>
 <term><menuchoice>
@@ -221,7 +184,7 @@ or menu bars. -->
 <title>The <guimenu>Help</guimenu> Menu</title>
 
 <!-- Assuming you have a standard help menu (help, what's this, about -->
-<!-- &klinkstatus;, about KDE) then the documentation is already written. -->
+<!-- &klinkstatus;, about &kde;) then the documentation is already written. -->
 <!-- The following entity is valid anywhere that a variablelist is -->
 <!-- valid.  -->
 
@@ -240,8 +203,7 @@ or menu bars. -->
 used for apps that use plugins or that provide their own scripting hooks
 and/or development libraries. -->
 <!--
-<para>
-</para>
+<para>FILL_ME</para>
 -->
 <!-- Use refentries to describe APIs.  Refentries are fairly complicated and you
 should consult the docbook reference for further details. The example below was
@@ -360,7 +322,7 @@ by unmapping it.
 </listitem>
 </varlistentry>
 </variablelist>
-<para>
+<para>FILL_ME
 </para>
 </refsect1>
 
@@ -407,7 +369,7 @@ Section</link> for the answer.</para>
 </qandaentry>
 <qandaentry>
 <question>
-<para>Why can't I twiddle my documents?</para>
+<para>Why am I unable to twiddle my documents?</para>
 </question>
 <answer>
 <para>You can only twiddle your documents if you have the foobar.lib
@@ -433,33 +395,15 @@ distribution. -->
 &klinkstatus;
 </para>
 <para>
-Program copyright 2004 Paulo Moura Guedes <email>pmg&#64;netcabo&#46;pt</email>
+Program Copyright &copy; 2004 Paulo Moura Guedes <email>pmg&#64;netcabo&#46;pt</email>
 </para>
-<!--
 <para>
-Contributors:
-<itemizedlist>
-<listitem><para>Konqui the KDE Dragon <email>konqui@kde.org</email></para>
-</listitem>
-<listitem><para>Tux the Linux Penguin <email>tux@linux.org</email></para>
-</listitem>
-</itemizedlist>
-</para>
--->
-<para>
-Documentation copyright 2004 Paulo Moura Guedes <email>pmg&#64;netcabo&#46;pt</email>
+Documentation Copyright &copy; 2004 Paulo Moura Guedes <email>pmg&#64;netcabo&#46;pt</email>
 </para>
 
 <!-- TRANS:CREDIT_FOR_TRANSLATORS -->
 
 &underFDL;               <!-- FDL: do not remove -->
-
-<!-- Determine which license your application is licensed under, 
-     and delete all the remaining licenses below:
-
-     (NOTE:  All documentation are licensed under the FDL, 
-     regardless of what license the application uses) -->
-
 &underGPL;        	 <!-- GPL License -->
 
 </chapter>
