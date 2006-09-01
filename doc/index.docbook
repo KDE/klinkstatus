@@ -6,7 +6,7 @@
   <!ENTITY % addindex "IGNORE">
   <!ENTITY % English "INCLUDE"><!-- change language only here -->
 ]>
-<!-- kdoctemplate v0.8 October 1 1999 
+<!-- kdoctemplate v0.8 October 1 1999
      Minor update to "Credits and Licenses" section on August 24, 2000
      Removed "Revision history" section on 22 January 2001
      Changed to Installation/Help menu entities 18 October 2001
@@ -87,8 +87,8 @@ Please at least include KDE, the KDE package it is in, the name
  of your application, and a few relevant keywords. -->
 
 <keywordset>
-<keyword>&kde;</keyword>
-<keyword>&klinkstatus;</keyword>
+<keyword>KDE</keyword>
+<keyword>KLinkStatus</keyword>
 <keyword>link checker</keyword>
 <keyword>validation</keyword>
 </keywordset>
@@ -100,7 +100,7 @@ Please at least include KDE, the KDE package it is in, the name
 <title>Introduction</title>
 
 <para>&klinkstatus; is a link checker for &kde;.
-It allows you to search internal and external links in your entire web site, 
+It allows you to search internal and external links in your entire web site,
 just a single page and choose the depth to search.
 You can also check local files, ftp, fish, &etc;, as &klinkstatus; uses KIO.
 For performance, links can be checked simultaneously.
@@ -207,7 +207,7 @@ and/or development libraries. -->
 -->
 <!-- Use refentries to describe APIs.  Refentries are fairly complicated and you
 should consult the docbook reference for further details. The example below was
-taken from that reference and shortened a bit for readability. 
+taken from that reference and shortened a bit for readability.
 
 <refentry id="re-1007-unmanagechildren-1">
 <refmeta>
@@ -220,7 +220,7 @@ taken from that reference and shortened a bit for readability.
 <refpurpose>remove a list of children from a parent widget's managed
 list.
 <indexterm id="ix-1007-unmanagechildren-1"><primary>widgets</primary><secondary>removing</secondary></indexterm>
-<indexterm id="ix-1007-unmanagechildren-2"><primary>XtUnmanageChildren</primary></indexterm> 
+<indexterm id="ix-1007-unmanagechildren-2"><primary>XtUnmanageChildren</primary></indexterm>
 </refpurpose>
 
 </refnamediv>
@@ -416,7 +416,7 @@ Documentation Copyright &copy; 2004 Paulo Moura Guedes <email>pmg&#64;netcabo&#4
 
 <!-- This first entity contains boiler plate for applications that are
 part of KDE CVS.  You should remove it if you are releasing your
-application --> 
+application -->
 
 <!--&install.intro.documentation;-->
 <para>http://kde-apps.org
@@ -493,6 +493,6 @@ sgml-indent-step:0
 sgml-indent-data:nil
 End:
 
-vim:tabstop=2:shiftwidth=2:expandtab 
+vim:tabstop=2:shiftwidth=2:expandtab
 -->
 
