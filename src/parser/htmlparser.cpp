@@ -32,7 +32,7 @@ HtmlParser::HtmlParser(QString const& documento)
     stripScriptContent();
     stripComments(); // after removing the script because comments in scripts have diferent sintaxe
 
-    nodes_.reserve(estimativaLinks(documento.length() * 2)); // ÃÂ  confianÃÂ§a ;)
+    nodes_.reserve(estimativaLinks(documento.length() * 2)); // ÃÂÃÂ  confianÃÂÃÂ§a ;)
 
     parseNodesOfTypeA();
     parseNodesOfTypeAREA();
@@ -83,14 +83,14 @@ vector<QString> const& HtmlParser::parseNodesOfType(QString const& tipo)
     while(true)
     {
         ++i;
-        inicio = findSeparableWord(doc, "<" + tipo);
+        inicio = findSeparableWord(doc, '<' + tipo);
         if(inicio == -1)
             return aux_;
 
         //if( (doc[inicio] != ' ' && doc[inicio] != '\n' && doc[inicio] != '\r') )
         if(!::isSpace(doc[inicio]))
         {
-            doc.remove(0, QString("<" + tipo).length());
+            doc.remove(0, QString('<' + tipo).length());
             continue;
         }
 
@@ -279,7 +279,7 @@ void HtmlParser::stripComments()
             }
             else
             {
-                comments_ += "\n" + document_.mid(inicio - begin_comment_length,
+                comments_ += '\n' + document_.mid(inicio - begin_comment_length,
                                                   fim - inicio + begin_comment_length);
                 document_.remove(inicio - begin_comment_length, fim - inicio + begin_comment_length);
             }
@@ -309,7 +309,7 @@ void HtmlParser::stripScriptContent()
             }
             else
             {
-                script_ += "\n" + document_.mid(inicio - begin_script_length,
+                script_ += '\n' + document_.mid(inicio - begin_script_length,
                                                 fim - inicio + begin_script_length);
 
                 document_.remove(inicio - begin_script_length,

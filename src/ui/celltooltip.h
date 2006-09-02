@@ -30,7 +30,7 @@ class CellToolTip: public QToolTip
 {
 public:
 
-  CellToolTip ( TableLinkstatus * table, QToolTipGroup * group = 0 );
+  explicit CellToolTip ( TableLinkstatus * table, QToolTipGroup * group = 0 );
 
 protected:
 

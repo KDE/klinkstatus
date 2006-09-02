@@ -44,7 +44,7 @@ public:
     static ActionManager* getInstance();
     static void setInstance(ActionManager* manager);
 
-    virtual KAction* action(QString name);
+    virtual KAction* action(const QString & name);
     virtual QWidget* container(const char* name);
 
     void initPart(KLinkStatusPart* part);

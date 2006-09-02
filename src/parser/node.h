@@ -111,7 +111,7 @@ private:
 class NodeA: public NodeLink
 {
 public:
-    NodeA(const QString & content);
+    explicit NodeA(const QString & content);
     ~NodeA()
     {}
     ;
@@ -147,7 +147,7 @@ private:
 class NodeLINK: public NodeLink
 {
 public:
-    NodeLINK(const QString & content);
+    explicit NodeLINK(const QString & content);
     ~NodeLINK()
     {}
     ;
@@ -193,7 +193,7 @@ private:
 class NodeIMG: public Node
 {
 public:
-    NodeIMG(const QString & content);
+    explicit NodeIMG(const QString & content);
     ~NodeIMG()
     {}
     ;

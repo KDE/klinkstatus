@@ -176,7 +176,7 @@ void Global::execCommand(QString const& command)
 void Global::slotGetScriptOutput(KProcess* /*process*/, char* buf, int buflen)
 {
     Q3CString tmp( buf, buflen + 1 );
-    script_output_ = QString::null;
+    script_output_.clear();
     script_output_ = QString::fromLocal8Bit(tmp).remove(" ");
 }
 

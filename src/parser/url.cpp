@@ -73,7 +73,7 @@ KUrl Url::normalizeUrl(QString const& string_url, LinkStatus const& link_parent,
             }
         }
         else {
-            s_url.append(base_url.directory(KUrl::AppendTrailingSlash | KUrl::ObeyTrailingSlash) + "/");                
+            s_url.append(base_url.directory(KUrl::AppendTrailingSlash | KUrl::ObeyTrailingSlash) + '/');
         }
 
         if( (_string_url[0] == ';' || // parameters

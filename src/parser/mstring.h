@@ -75,7 +75,7 @@ int nextCharDifferentThan(QChar c, QString const& s, uint i);
 /** Return a vector with the words */
 std::vector<QString> tokenize(QString s);
 std::vector<QString> tokenizeWordsSeparatedByDots(QString s);
-std::vector<QString> tokenizeWordsSeparatedBy(QString s, QChar criteria);
+std::vector<QString> tokenizeWordsSeparatedBy(QString s, const QChar & criteria);
 
 /**
    If char 'caractere' is the last in the string 's' it is removed

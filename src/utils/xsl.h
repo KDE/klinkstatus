@@ -56,7 +56,7 @@ public:
      *
      * Constructs a new XSLT parser using the provided XSLT document
      */
-    XSLT( const QString &xsltDocument, QObject *parent = 0L );
+    explicit XSLT( const QString &xsltDocument, QObject *parent = 0L );
 
     virtual ~XSLT();
 

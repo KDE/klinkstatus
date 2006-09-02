@@ -31,7 +31,7 @@ public:
 
   HttpResponseHeader();
   HttpResponseHeader(const Q3HttpResponseHeader & header);
-  HttpResponseHeader(QString const& str);
+  explicit HttpResponseHeader(QString const& str);
   virtual ~HttpResponseHeader();
 
   void parseLocation();

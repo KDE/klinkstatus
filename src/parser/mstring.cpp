@@ -75,7 +75,7 @@ int findSeparableWord(QString const& s_, QString const& palavra, uint a_partir_d
             if(indice == -1)
                 return indice;
 
-            // Nao se incrementa o indice porque isso jÃ¯Â¿Â½Ã¯Â¿Â½feito com a funÃ¯Â¿Â½o nextNonSpaceChar
+            // Nao se incrementa o indice porque isso jÃÂ¯ÃÂ¿ÃÂ½ÃÂ¯ÃÂ¿ÃÂ½feito com a funÃÂ¯ÃÂ¿ÃÂ½o nextNonSpaceChar
             encontrou = encontrou && !(notEqual(s[indice], palavra[indice_palavra++]) );
 
         }
@@ -188,7 +188,7 @@ vector<QString> tokenizeWordsSeparatedByDots(QString s)
     }	
 }
 
-vector<QString> tokenizeWordsSeparatedBy(QString s, QChar criteria)
+vector<QString> tokenizeWordsSeparatedBy(QString s, const QChar & criteria)
 {
     vector<QString> v;
 

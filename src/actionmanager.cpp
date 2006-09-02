@@ -187,7 +187,7 @@ KActionCollection* ActionManager::actionCollection()
     return d->actionCollection;
 }
 
-KAction* ActionManager::action(QString name)
+KAction* ActionManager::action(const QString & name)
 {
     return d->actionCollection != 0 ? d->actionCollection->action(name) : 0;
 }

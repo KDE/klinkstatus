@@ -44,7 +44,7 @@ public:
         undetermined // timeouts and refs
     };
 
-    LinkStatusHelper(LinkStatus const* linkstatus);
+    explicit LinkStatusHelper(LinkStatus const* linkstatus);
     ~LinkStatusHelper();
 
     QString const toString() const;

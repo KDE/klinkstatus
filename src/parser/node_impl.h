@@ -369,12 +369,12 @@ inline NodeTITLE::NodeTITLE(const QString & content)
 
 inline QString NodeTITLE::url() const
 {
-    return QString::null;
+    return QString();
 }
 
 inline QString NodeTITLE::linkLabel() const
 {
-    return QString::null;
+    return QString();
 }
 
 inline void NodeTITLE::parse()

@@ -41,7 +41,7 @@ class LinkChecker : public QObject
 {
     Q_OBJECT
 public:
-    LinkChecker(LinkStatus* linkstatus, int time_out = 50,
+    explicit LinkChecker(LinkStatus* linkstatus, int time_out = 50,
                 QObject *parent = 0, const char *name = 0);
     ~LinkChecker();
 
