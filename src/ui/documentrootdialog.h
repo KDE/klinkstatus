@@ -21,8 +21,7 @@
 #define DOCUMENTROOTDIALOG_H
 
 #include <kdialog.h>
-//Added by qt3to4:
-#include <QCloseEvent>
+#include <kurl.h>
 
 class KUrlRequester;
 
@@ -33,27 +32,27 @@ class DocumentRootDialog : public KDialog
 {
 Q_OBJECT
 public:
-    DocumentRootDialog(QWidget *parent, QString const& url);
+    DocumentRootDialog(QWidget *parent, KUrl const& url);
     ~DocumentRootDialog();
 
-    void setUrl(const QString& theValue) { m_url = theValue; }
-    QString url() const { return m_url; }
-    
+    void setUrl(const KUrl& theValue) { m_url = theValue; }
+    KUrl url() const { return m_url; }
+
 
 protected:
     virtual void closeEvent (QCloseEvent*) {}
-    
+
 protected slots:
     virtual void reject() {}
     virtual void slotOk();
-                
+
 private slots:
     void slotTextChanged(const QString &);
     void slotReturnPressed(const QString &);
     void slotUrlChanged( const KUrl &);
 private:
     KUrlRequester* m_urlRequester;
-    QString m_url;
+    KUrl m_url;
 };
 
 #endif

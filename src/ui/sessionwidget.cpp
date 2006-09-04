@@ -73,13 +73,13 @@
 
 SessionWidget::SessionWidget(int max_simultaneous_connections, int time_out,
                              QWidget* parent, const char* name, Qt::WFlags f)
-    : SessionWidgetBase(parent, name, f), search_manager_(0), 
-        action_manager_(ActionManager::getInstance()), 
+    : SessionWidgetBase(parent, name, f), search_manager_(0),
+        action_manager_(ActionManager::getInstance()),
         ready_(true), to_start_(false), to_pause_(false), to_stop_(false),
         in_progress_(false), paused_(false), stopped_(true),
         bottom_status_timer_(this, "bottom_status_timer"),
         max_simultaneous_connections_(max_simultaneous_connections),
-        time_out_(time_out), tree_display_(false), follow_last_link_checked_(KLSConfig::followLastLinkChecked()), 
+        time_out_(time_out), tree_display_(false), follow_last_link_checked_(KLSConfig::followLastLinkChecked()),
         start_search_action_(0)
 {
     newSearchManager();
@@ -114,12 +114,12 @@ void SessionWidget::init()
     QPixmap pixMap = KGlobal::iconLoader()->loadIcon(QString("fileopen"), K3Icon::Small);
     pushbutton_url->setFixedSize(pixMap.width() + 8, pixMap.height() + 8);
     connect(pushbutton_url, SIGNAL(clicked()), this, SLOT(slotChooseUrlDialog()));
-    
+
     resultsSearchBar->hide();
 
     start_search_action_ = static_cast<KToggleAction*> (action_manager_->action("start_search"));
-    
-    connect(resultsSearchBar, SIGNAL(signalSearch(LinkMatcher)), 
+
+    connect(resultsSearchBar, SIGNAL(signalSearch(LinkMatcher)),
             this, SLOT(slotApplyFilter(LinkMatcher)));
 }
 
@@ -229,11 +229,11 @@ void SessionWidget::slotCheck()
     }
 
     emit signalSearchStarted();
-    
+
     in_progress_ = true;
     paused_ = false;
     stopped_ = false;
-    
+
     slotLoadSettings(false); // it seems that KConfigDialogManager is not trigering this slot
 
     newSearchManager();
@@ -254,14 +254,16 @@ void SessionWidget::slotCheck()
     tree_view->clear();
 
     KUrl url = Url::normalizeUrl(combobox_url->currentText());
-    
-    if(!url.protocol().startsWith("http")) 
+
+    if(!url.protocol().startsWith("http"))
     {
-        DocumentRootDialog dialog(this, url.directory());
+        KUrl dir = url;
+        dir.setPath( url.directory() );
+        DocumentRootDialog dialog(this, dir);
         dialog.exec();
-        search_manager_->setDocumentRoot(KUrl::fromPathOrUrl(dialog.url()));
+        search_manager_->setDocumentRoot(dialog.url());
     }
-    
+
     if(KLSConfig::useQuantaUrlPreviewPrefix() && Global::isKLinkStatusEmbeddedInQuanta())
     {
         KUrl url_aux = Global::urlWithQuantaPreviewPrefix(url);
@@ -292,7 +294,7 @@ void SessionWidget::slotCheck()
             search_manager_->setCheckParentDirs(false);
 
             if(url.hasHost())
-                search_manager_->setDomain(url.host() 
+                search_manager_->setDomain(url.host()
                     + url.directory(KUrl::AppendTrailingSlash | KUrl::ObeyTrailingSlash));
         }
         else
@@ -407,7 +409,7 @@ void SessionWidget::slotLinkChecked(LinkStatus const* linkstatus, LinkChecker * 
             parent_item->setLastChild(tree_view_item);
             if(follow_last_link_checked_)
                 tree_view->ensureRowVisible(tree_view_item, tree_display_);
-            
+
             tree_view_item->setEnabled(match);
         }
         else
@@ -416,10 +418,10 @@ void SessionWidget::slotLinkChecked(LinkStatus const* linkstatus, LinkChecker * 
             tree_view_item = new TreeViewItem(tree_view, tree_view->lastItem(), linkstatus);
             if(follow_last_link_checked_)
                 tree_view->ensureRowVisible(tree_view_item, tree_display_);
-        
+
             tree_view_item->setVisible(match);
         }
-        
+
         LinkStatus* ls = const_cast<LinkStatus*> (linkstatus);
         ls->setTreeViewItem(tree_view_item);
 
@@ -433,7 +435,7 @@ void SessionWidget::slotSearchFinished()
     Q_ASSERT(in_progress_);
     Q_ASSERT(!paused_);
     Q_ASSERT(!stopped_);
-    
+
     KApplication::beep ();
 
     textlabel_progressbar->setText(i18n( "Ready" ));
@@ -443,7 +445,7 @@ void SessionWidget::slotSearchFinished()
     progressbar_checker->setProgress(0);
 
     ready_ = true;
-    
+
     textlabel_elapsed_time->setEnabled(true);
     textlabel_elapsed_time_value->setEnabled(true);
     textlabel_elapsed_time_value->setText(search_manager_->timeElapsed().toString("hh:mm:ss"));
@@ -453,7 +455,7 @@ void SessionWidget::slotSearchFinished()
     stopped_ = true;
     resetPendingActions();
     action_manager_->slotUpdateSessionWidgetActions(this);
-    
+
     emit signalSearchFinnished();
 }
 
@@ -461,7 +463,7 @@ void SessionWidget::slotSearchPaused()
 {
     Q_ASSERT(pendingActions());
     Q_ASSERT(in_progress_);
-    
+
     KApplication::beep();
 
     textlabel_progressbar->setText(i18n("Stopped"));
@@ -478,10 +480,10 @@ void SessionWidget::slotSearchPaused()
     {
         Q_ASSERT(to_pause_);
         Q_ASSERT(!stopped_);
-        
+
         paused_ = true;
     }
-    
+
     textlabel_elapsed_time->setEnabled(true);
     textlabel_elapsed_time_value->setEnabled(true);
     textlabel_elapsed_time_value->setText(search_manager_->timeElapsed().toString("hh:mm:ss"));
@@ -595,7 +597,7 @@ void SessionWidget::slotStartSearch()
         KApplication::beep();
         return;
     }
-    
+
     to_start_ = true;
     slotLoadSettings(true);
     slotCheck();
@@ -608,23 +610,23 @@ void SessionWidget::slotPauseSearch()
 {
     Q_ASSERT(in_progress_);
     Q_ASSERT(!stopped_);
-    
+
     if(pendingActions())
         return;
 
     to_pause_ = true;
-    
+
     if(!paused_)
     {
         Q_ASSERT(!ready_);
         Q_ASSERT(search_manager_->searching());
 
-        search_manager_->cancelSearch();        
+        search_manager_->cancelSearch();
     }
     else
     {
         Q_ASSERT(ready_);
-        
+
         paused_ = false;
 
         textlabel_progressbar->setText(i18n("Checking..."));
@@ -633,7 +635,7 @@ void SessionWidget::slotPauseSearch()
 
         emit signalSearchStarted();
         slotLoadSettings(isEmpty()); // it seems that KConfigDialogManager is not trigering this slot
-        
+
         resetPendingActions();
     }
 }
@@ -642,25 +644,25 @@ void SessionWidget::slotStopSearch()
 {
     Q_ASSERT(in_progress_);
     Q_ASSERT(!stopped_);
-    
+
     if(pendingActions())
         return;
 
     to_stop_ = true;
-    
+
     if(!paused_)
-    {        
+    {
         Q_ASSERT(!ready_);
         Q_ASSERT(search_manager_->searching());
 
-        search_manager_->cancelSearch();        
+        search_manager_->cancelSearch();
     }
     else
     {
         in_progress_ = false;
         paused_ = false;
         stopped_ = true;
-    
+
         action_manager_->slotUpdateSessionWidgetActions(this);
     }
 }
@@ -704,14 +706,14 @@ void SessionWidget::slotExportAsHTML( )
         outputStream->setEncoding(QTextStream::UnicodeUTF8);
 
         QString xslt_doc = FileManager::read(KStandardDirs::locate("appdata", "styles/results_stylesheet.xsl"));
-        XSLT xslt(xslt_doc);        
+        XSLT xslt(xslt_doc);
 //         kDebug(23100) << search_manager_->toXML() << endl;
         QString html_ouptut = xslt.transform(search_manager_->toXML());
         (*outputStream) << html_ouptut << endl;
 
         savefile->close();
     }
-        
+
     delete savefile;
 
     if (url.isLocalFile())

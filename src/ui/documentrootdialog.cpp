@@ -30,7 +30,7 @@
 #include <Q3VBoxLayout>
 
 
-DocumentRootDialog::DocumentRootDialog(QWidget *parent, QString const& url)
+DocumentRootDialog::DocumentRootDialog(QWidget *parent, KUrl const& url)
         : KDialog(parent),
         m_url(url)
 {
@@ -81,7 +81,7 @@ void DocumentRootDialog::slotUrlChanged( const KUrl & s)
     enableButtonOk(s.isValid());
 }
 
-void DocumentRootDialog::slotTextChanged( const QString & s)
+void DocumentRootDialog::slotTextChanged( const QString & s )
 {
     KUrl url(s);
     enableButtonOk(!s.isEmpty() && url.isValid());
