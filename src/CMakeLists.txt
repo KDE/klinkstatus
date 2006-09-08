@@ -95,7 +95,7 @@ kde4_automoc(${klinkstatus_SRCS})
 
 kde4_add_executable(klinkstatus ${klinkstatus_SRCS})
 
-target_link_libraries(klinkstatus  ${KDE4_KDECORE_LIBS} ${KDE4_KPARTS_LIBS} )
+target_link_libraries(klinkstatus  ${KDE4_KPARTS_LIBS} )
 
 install(TARGETS klinkstatus  DESTINATION ${BIN_INSTALL_DIR} )
 
