@@ -22,6 +22,7 @@
 #include <kdebug.h>
 #include <klocale.h>
 #include <khtml_part.h>
+#include <kprotocolmanager.h>
 
 #include <qstring.h>
 #include <qvaluevector.h>
@@ -32,18 +33,19 @@
 
 #include "searchmanager.h"
 #include "../parser/mstring.h"
+#include "../cfg/klsconfig.h"
 
 
 SearchManager::SearchManager(int max_simultaneous_connections, int time_out,
                              QObject *parent, const char *name)
         : QObject(parent, name),
-        max_simultaneous_connections_(max_simultaneous_connections),
+        max_simultaneous_connections_(max_simultaneous_connections), has_document_root_(false), 
         depth_(-1), current_depth_(0), external_domain_depth_(0),
         current_node_(0), current_index_(0), links_being_checked_(0),
         finished_connections_(max_simultaneous_connections_),
         maximum_current_connections_(-1), general_domain_(false),
         checked_general_domain_(false), time_out_(time_out), current_connections_(0),
-        canceled_(false), searching_(false), checked_links_(0), ignored_links_(0),
+        send_identification_(true), canceled_(false), searching_(false), checked_links_(0), ignored_links_(0),
         check_parent_dirs_(true), check_external_links_(true), check_regular_expressions_(false),
         number_of_level_links_(0), number_of_links_to_check_(0)
 {
@@ -71,7 +73,11 @@ void SearchManager::reset()
     current_connections_ = 0;
     canceled_ = false;
     searching_ = false;
-    checked_links_ = 0;
+    checked_links_ = 0;    
+    if(KLSConfig::userAgent().isEmpty()) {
+        KLSConfig::setUserAgent(KProtocolManager::defaultUserAgent());
+    }
+    user_agent_ = KLSConfig::userAgent();
 
     removeHtmlParts();
 }
@@ -191,7 +197,9 @@ void SearchManager::checkRoot()
 
 void SearchManager::slotRootChecked(const LinkStatus * link, LinkChecker * checker)
 {
-    kdDebug(23100) <<  "SearchManager::slotRootChecked" << endl;
+    kdDebug(23100) <<  "SearchManager::slotRootChecked:" << endl;
+    kdDebug(23100) <<  link->absoluteUrl().url() << " -> " << 
+            LinkStatus::lastRedirection(&root_)->absoluteUrl().url() << endl;
 
     Q_ASSERT(checked_links_ == 0);
     Q_ASSERT(search_results_.size() == 0);
@@ -261,7 +269,7 @@ vector<LinkStatus*> SearchManager::children(LinkStatus* link)
         if(node->url().isEmpty())
             url = "";
         else
-            url = Url::normalizeUrl( node->url(), *link );
+            url = Url::normalizeUrl(node->url(), *link, documentRoot().path());
 
         if( (node->isLink() &&
                 checkable(url, *link) &&
@@ -320,16 +328,19 @@ bool SearchManager::existUrl(KURL const& url, KURL const& url_parent) const
             for(uint l = 0; l != (search_results_[i])[j].size(); ++l)
             {
                 LinkStatus* tmp = search_results_[i][j][l];
-                Q_ASSERT(tmp);
+                Q_ASSERT(tmp);                
                 if(tmp->absoluteUrl() == url)
                 { // URL exists
                     QValueVector<KURL> referrers(tmp->referrers());
 
+                    // Add new referrer
                     for(uint i = 0; i != referrers.size(); ++i)
+                    {
                         if(referrers[i] == url_parent)
                             return true;
-
+                    }
                     tmp->addReferrer(url_parent);
+                    
                     return true;
                 }
             }
@@ -520,7 +531,9 @@ void SearchManager::checkLinksSimultaneously(vector<LinkStatus*> const& links)
 
 void SearchManager::slotLinkChecked(const LinkStatus * link, LinkChecker * checker)
 {
-    //kdDebug(23100) <<  "SearchManager::slotLinkChecked -> " << link->absoluteUrl().url() << endl;
+    kdDebug(23100) <<  "SearchManager::slotLinkChecked:" << endl;
+//     kdDebug(23100) <<  link->absoluteUrl().url() << " -> " << 
+//             LinkStatus::lastRedirection((const_cast<LinkStatus*> (link)))->absoluteUrl().url() << endl;
 
     Q_ASSERT(link);
     emit signalLinkChecked(link, checker);

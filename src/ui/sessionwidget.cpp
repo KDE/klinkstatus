@@ -15,7 +15,7 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
- *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.             *
+ *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
 #include <kapplication.h>
@@ -51,6 +51,7 @@
 #include "sessionwidget.h"
 #include "tablelinkstatus.h"
 #include "treeview.h"
+#include "documentrootdialog.h"
 #include "klshistorycombo.h"
 #include "klsconfig.h"
 #include "resultview.h"
@@ -66,7 +67,7 @@
 
 SessionWidget::SessionWidget(int max_simultaneous_connections, int time_out,
                              QWidget* parent, const char* name, WFlags f)
-        : SessionWidgetBase(parent, name, f), search_manager_(0), 
+    : SessionWidgetBase(parent, name, f), search_manager_(0), 
         action_manager_(ActionManager::getInstance()), 
         ready_(true), to_start_(false), to_pause_(false), to_stop_(false),
         in_progress_(false), paused_(false), stopped_(true),
@@ -247,6 +248,14 @@ void SessionWidget::slotCheck()
     tree_view->clear();
 
     KURL url = Url::normalizeUrl(combobox_url->currentText());
+    
+    if(!url.protocol().startsWith("http")) 
+    {
+        DocumentRootDialog dialog(this, url.directory());
+        dialog.exec();
+        search_manager_->setDocumentRoot(KURL::fromPathOrURL(dialog.url()));
+    }
+    
     if(KLSConfig::useQuantaUrlPreviewPrefix() && Global::isKLinkStatusEmbeddedInQuanta())
     {
         KURL url_aux = Global::urlWithQuantaPreviewPrefix(url);
@@ -312,15 +321,15 @@ void SessionWidget::slotCheck()
 void SessionWidget::keyPressEvent ( QKeyEvent* e )
 {
     if( e->key() == Qt::Key_Return &&
-            ( combobox_url->hasFocus() ||
+        ( combobox_url->hasFocus() ||
               //lineedit_domain->hasFocus() ||
               //checkbox_depth->hasFocus()  ||
-              spinbox_depth->hasFocus()  ||
+        spinbox_depth->hasFocus()  ||
               //checkbox_domain->hasFocus()  ||
               //spinbox_external_domain->hasFocus()
-              checkbox_recursively->hasFocus() ||
-              checkbox_external_links->hasFocus() ||
-              checkbox_subdirs_only->hasFocus() ) )
+        checkbox_recursively->hasFocus() ||
+        checkbox_external_links->hasFocus() ||
+        checkbox_subdirs_only->hasFocus() ) )
     {
         if(validFields())
         {
@@ -354,11 +363,12 @@ void SessionWidget::slotRootChecked(LinkStatus const* linkstatus, LinkChecker * 
     emit signalUpdateTabLabel(search_manager_->linkStatusRoot(), this);
 
     Q_ASSERT(textlabel_progressbar->text() == i18n("Checking...") ||
-             textlabel_progressbar->text() == i18n("Stopped"));
+            textlabel_progressbar->text() == i18n("Stopped"));
+
     progressbar_checker->setProgress(1);
 
     //table_linkstatus->insertResult(linkstatus);
-    TreeViewItem* tree_view_item = new TreeViewItem(tree_view, tree_view->lastItem(), linkstatus, 3);
+    TreeViewItem* tree_view_item = new TreeViewItem(tree_view, tree_view->lastItem(), linkstatus);
     LinkStatus* ls = const_cast<LinkStatus*> (linkstatus);
     ls->setTreeViewItem(tree_view_item);
 
@@ -374,8 +384,10 @@ void SessionWidget::slotLinkChecked(LinkStatus const* linkstatus, LinkChecker * 
     slotSetTimeElapsed();
 
     kdDebug(23100) << textlabel_progressbar->text() << endl;
+
     Q_ASSERT(textlabel_progressbar->text() == i18n("Checking...") ||
-             textlabel_progressbar->text() == i18n("Stopped"));
+            textlabel_progressbar->text() == i18n("Stopped"));
+
     progressbar_checker->setProgress(progressbar_checker->progress() + 1);
 
     if(linkstatus->checked())
@@ -387,7 +399,8 @@ void SessionWidget::slotLinkChecked(LinkStatus const* linkstatus, LinkChecker * 
         if(tree_display_)
         {
             //kdDebug(23100) << "TREE!!!!!" << endl;
-            tree_view_item = new TreeViewItem(parent_item, parent_item->lastChild(), linkstatus, 3);
+            tree_view_item = new TreeViewItem(tree_view, parent_item, parent_item->lastChild(), linkstatus);
+
             parent_item->setLastChild(tree_view_item);
             if(follow_last_link_checked_)
                 tree_view->ensureRowVisible(tree_view_item, tree_display_);
@@ -397,7 +410,7 @@ void SessionWidget::slotLinkChecked(LinkStatus const* linkstatus, LinkChecker * 
         else
         {
             //kdDebug(23100) << "FLAT!!!!!" << endl;
-            tree_view_item = new TreeViewItem(tree_view, tree_view->lastItem(), linkstatus, 3);
+            tree_view_item = new TreeViewItem(tree_view, tree_view->lastItem(), linkstatus);
             if(follow_last_link_checked_)
                 tree_view->ensureRowVisible(tree_view_item, tree_display_);
         
@@ -452,7 +465,7 @@ void SessionWidget::slotSearchPaused()
 
     ready_ = true;
 
-   if(to_stop_)
+    if(to_stop_)
     {
         in_progress_ = false;
         paused_ = false;

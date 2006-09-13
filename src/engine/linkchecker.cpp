@@ -51,7 +51,7 @@ LinkChecker::LinkChecker(LinkStatus* linkstatus, int time_out,
     Q_ASSERT(linkstatus_);
     Q_ASSERT(!linkstatus_->checked());
 
-    kdDebug(23100) << ++count_ << ": " << "Checking " << linkstatus_->absoluteUrl().url() << endl;
+    kdDebug(23100) << endl << ++count_ << ": " << "Checking " << linkstatus_->absoluteUrl().url() << endl;
 }
 
 LinkChecker::~LinkChecker()
@@ -67,7 +67,7 @@ void LinkChecker::check()
 {
     Q_ASSERT(!finnished_);
 
-    KURL url = linkStatus()->absoluteUrl();
+    KURL url(linkStatus()->absoluteUrl());
     Q_ASSERT(url.isValid());
 
     if(url.hasRef())
@@ -77,16 +77,24 @@ void LinkChecker::check()
         t_job_ = KIO::get
                      (url, false, false);
 
-        t_job_->addMetaData("PropagateHttpHeader", "true"); // to see the http header
-
+        t_job_->addMetaData("PropagateHttpHeader", "true"); // to have the http header
+        if(search_manager_->sendIdentification())
+        {
+            t_job_->addMetaData("SendUserAgent", "true");
+            t_job_->addMetaData("UserAgent", search_manager_->userAgent());
+        }
+        else
+            t_job_->addMetaData("SendUserAgent", "false");
+        
+        
         QObject::connect(t_job_, SIGNAL(data(KIO::Job *, const QByteArray &)),
                          this, SLOT(slotData(KIO::Job *, const QByteArray &)));
         QObject::connect(t_job_, SIGNAL(mimetype(KIO::Job *, const QString &)),
                          this, SLOT(slotMimetype(KIO::Job *, const QString &)));
         QObject::connect(t_job_, SIGNAL(result(KIO::Job *)),
                          this, SLOT(slotResult(KIO::Job *)));
-        QObject::connect(t_job_, SIGNAL(permanentRedirection(KIO::Job *, const KURL &, const KURL &)),
-                         this, SLOT(slotPermanentRedirection(KIO::Job *, const KURL &, const KURL &)));
+        QObject::connect(t_job_, SIGNAL(redirection(KIO::Job *, const KURL &)),
+                         this, SLOT(slotRedirection(KIO::Job *, const KURL &)));
 
         QTimer::singleShot( time_out_ * 1000, this, SLOT(slotTimeOut()) );
     }
@@ -122,9 +130,9 @@ void LinkChecker::slotMimetype (KIO::Job* /*job*/, const QString &type)
     Q_ASSERT(t_job_);
 
     LinkStatus* ls = 0;
-    if(redirection_)
+/*    if(redirection_)
         ls = linkStatus()->redirection();
-    else
+    else*/
         ls = linkstatus_;
     Q_ASSERT(ls);
 
@@ -180,9 +188,9 @@ void LinkChecker::slotData(KIO::Job* /*job*/, const QByteArray& data)
     Q_ASSERT(t_job_);
 
     LinkStatus* ls = 0;
-    if(redirection_)
+/*    if(redirection_)
         ls = linkStatus()->redirection();
-    else
+    else*/
         ls = linkstatus_;
     Q_ASSERT(ls);
 
@@ -256,7 +264,17 @@ void LinkChecker::slotResult(KIO::Job* /*job*/)
     kdDebug(23100) <<  "LinkChecker::slotResult -> " << linkstatus_->absoluteUrl().url()  << endl;
 
     Q_ASSERT(t_job_);
-
+    if(!t_job_)
+        return;
+    
+    if(redirection_) {
+        if(!processRedirection(redirection_url_)) {
+            t_job_ = 0;
+            finnish();
+            return;
+        }
+    }
+            
     KIO::TransferJob* job = t_job_;
     t_job_ = 0;
 
@@ -338,6 +356,7 @@ void LinkChecker::slotResult(KIO::Job* /*job*/)
                 ls->setBaseURI(KURL(parser.baseUrl().url()));
             if(parser.hasTitle())
                 ls->setHtmlDocTitle(parser.title().attributeTITLE());
+            
             ls->setChildrenNodes(parser.nodes());
             parsing_ = false;
         }
@@ -345,39 +364,44 @@ void LinkChecker::slotResult(KIO::Job* /*job*/)
     finnish();
 }
 
-/*
-void LinkChecker::slotRedirection (KIO::Job* job, const KURL &url)
-{}
-*/
 
-void LinkChecker::slotPermanentRedirection (KIO::Job* /*job*/, const KURL &fromUrl, const KURL &toUrl)
+void LinkChecker::slotRedirection (KIO::Job* /*job*/, const KURL &url)
+{
+    kdDebug(23100) <<  "LinkChecker::slotRedirection -> " << 
+            linkstatus_->absoluteUrl().url()  << " -> " << url.url() << endl;
+//             << " - " << t_job_->slave() << "/" <<  t_job_->slave()->slave_pid() << endl;
+    
+    redirection_ = true;
+    redirection_url_ = url;
+}
+
+bool LinkChecker::processRedirection(KURL const& toUrl)
 {
     if(finnished_)
-        return;
+        return true;
 
-    kdDebug(23100) <<  "LinkChecker::slotPermanentRedirection -> " << linkstatus_->absoluteUrl().url() 
-            << " - " << t_job_->slave() << "/" <<  t_job_->slave()->slave_pid() << endl;
+    kdDebug(23100) <<  "LinkChecker::processRedirection -> " << linkstatus_->absoluteUrl().url() << " -> " << toUrl.url() << endl;
 
     Q_ASSERT(t_job_);
     Q_ASSERT(linkstatus_->absoluteUrl().protocol() == "http" ||
-             linkstatus_->absoluteUrl().protocol() == "https");
-
-    redirection_ = true;
+            linkstatus_->absoluteUrl().protocol() == "https");
+    Q_ASSERT(redirection_);
 
     linkstatus_->setHttpHeader(getHttpHeader(t_job_, false));
     linkstatus_->setIsRedirection(true);
     linkstatus_->setStatus("redirection");
     linkstatus_->setChecked(true);
-
-    LinkStatus* ls_red = new LinkStatus(toUrl);
+    
+    LinkStatus* ls_red = new LinkStatus(*linkstatus_);
+    ls_red->setAbsoluteUrl(toUrl);
     ls_red->setRootUrl(linkstatus_->rootUrl());
 
     if(!linkstatus_->onlyCheckHeader())
         ls_red->setOnlyCheckHeader(false);
 
     linkstatus_->setRedirection(ls_red);
-    linkstatus_->redirection()->setParent(linkstatus_);
-    linkstatus_->redirection()->setOriginalUrl(toUrl.url());
+    ls_red->setParent(linkstatus_);
+    ls_red->setOriginalUrl(toUrl.url());
 
     Q_ASSERT(search_manager_);
 
@@ -391,15 +415,16 @@ void LinkChecker::slotPermanentRedirection (KIO::Job* /*job*/, const KURL &fromU
             ls_red->setExternalDomainDepth(linkstatus_->externalDomainDepth());
     }
 
-    if(!toUrl.isValid() || search_manager_->existUrl(toUrl, fromUrl))
+    if(!toUrl.isValid() || search_manager_->existUrl(toUrl, linkstatus_->absoluteUrl()))
     {
-        linkStatus()->redirection()->setChecked(false);
-        //t_job_->kill(true); // causes the terrible segfault bug
-        t_job_ = 0;
-        finnish();
+        ls_red->setChecked(false);
+        return false;
     }
     else
-        linkStatus()->redirection()->setChecked(true);
+    {
+        ls_red->setChecked(true);
+        return true;
+    }
 }
 
 void LinkChecker::finnish()
@@ -424,17 +449,18 @@ void LinkChecker::finnish()
 HttpResponseHeader LinkChecker::getHttpHeader(KIO::Job* /*job*/, bool remember_check)
 {
     //kdDebug(23100) <<  "LinkChecker::getHttpHeader -> " << linkstatus_->absoluteUrl().url() << endl;
-
+    
     Q_ASSERT(!finnished_);
     Q_ASSERT(t_job_);
 
     QString header_string = t_job_->queryMetaData("HTTP-Headers");
     //    Q_ASSERT(!header_string.isNull() && !header_string.isEmpty());
-    //kdDebug(23100) <<  header_string << endl;
+//     kdDebug(23100) << "HTTP header: " << endl << header_string << endl;
+    
     if(header_string.isNull() || header_string.isEmpty())
     {
         header_checked_ = false;
-        kdDebug(23100) <<  "header_string.isNull() || header_string.isEmpty(): "
+        kdWarning(23100) <<  "header_string.isNull() || header_string.isEmpty(): "
         << linkstatus_->toString()  << endl;
     }
     else if(remember_check)

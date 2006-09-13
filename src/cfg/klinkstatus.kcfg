@@ -73,5 +73,19 @@
             <default>true</default>
         </entry>
     
+        <entry key="ShowMarkupStatus" type="Bool" >
+            <label>Whether the user can see if the markup is valid by showing a column with an icon indicator.</label>
+            <default>false</default>
+        </entry>
+        
+        <entry key="SendIdentification" type="Bool" >
+            <label>Whether to send an User-Agent in HTTP requests.</label>
+            <default>true</default>
+        </entry>        
+        
+        <entry name="UserAgent" type="String"> 
+            <label>Defines the HTTP User-Agent to send.</label>
+        </entry>
+
     </group>
 </kcfg>

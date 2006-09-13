@@ -71,6 +71,10 @@ public:
     void resume();
     void cancelSearch();
 
+    bool hasDocumentRoot() const;
+    KURL const& documentRoot() const;
+    void setDocumentRoot(KURL const& url);
+
     void setSearchMode(SearchMode modo);
     void setDepth(int depth);
     void setExternalDomainDepth(int depth);
@@ -98,6 +102,9 @@ public:
     LinkStatus const* linkStatusRoot() const;
     int maxSimultaneousConnections() const;
     int timeOut() const;
+    
+    bool sendIdentification() const { return send_identification_; }
+    QString const& userAgent() const { return user_agent_; }
 
 private:
 
@@ -148,6 +155,8 @@ private:
     int max_simultaneous_connections_;
     SearchMode search_mode_;
     LinkStatus root_;
+    bool has_document_root_;
+    KURL document_root_url_; // in case of non http protocols the document root must be explicitly given
     int depth_;
     int current_depth_;
     int external_domain_depth_;
@@ -162,6 +171,9 @@ private:
     bool checked_general_domain_;
     int time_out_;
     int current_connections_;
+    bool send_identification_; // user-agent
+    QString user_agent_;
+    
     bool canceled_;
     bool searching_;
     int checked_links_;

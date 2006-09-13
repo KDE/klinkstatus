@@ -1,14 +1,22 @@
-//
-// C++ Implementation: treeview
-//
-// Description:
-//
-//
-// Author: Paulo Moura Guedes <moura@kdewebdev.org>, (C) 2004
-//
-// Copyright: See COPYING file that comes with this distribution
-//
-//
+/***************************************************************************
+ *   Copyright (C) 2004 by Paulo Moura Guedes                              *
+ *   moura@kdewebdev.org                                                        *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the                         *
+ *   Free Software Foundation, Inc.,                                       *
+ *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.             *
+ ***************************************************************************/
 
 #include <klocale.h>
 #include <kiconloader.h>
@@ -31,12 +39,9 @@
 #include "../cfg/klsconfig.h"
 
 
-TreeView::TreeView(QWidget *parent, const char *name,
-                   int column_index_status,
-                   int column_index_label,
-                   int column_index_URL)
+TreeView::TreeView(QWidget *parent, const char *name)
         : KListView(parent, name),
-        ResultView(column_index_status, column_index_label, column_index_URL),
+        ResultView(),
         current_column_(0)
 {
     setShowToolTips(true);
@@ -45,7 +50,7 @@ TreeView::TreeView(QWidget *parent, const char *name,
     setShowSortIndicator(true);
     //setFocusPolicy( WheelFocus );
     setRootIsDecorated(KLSConfig::displayTreeView());
-    //setResizeMode(QListView::LastColumn);
+//     setResizeMode(QListView::LastColumn);
 
     sub_menu_ = new QPopupMenu(this, "sub_menu_referrers");
     
@@ -56,7 +61,7 @@ TreeView::TreeView(QWidget *parent, const char *name,
 
 TreeView::~TreeView()
 {
-    saveLayout(KLSConfig::self()->config(), "klinkstatus");
+   saveLayout(KLSConfig::self()->config(), "klinkstatus");
 }
 
 void TreeView::setColumns(QStringList const& columns)
@@ -64,35 +69,39 @@ void TreeView::setColumns(QStringList const& columns)
     ResultView::setColumns(columns);
     removeColunas();
 
-    // resetColumns is called automatically
+//     resetColumns is called automatically
     for(uint i = 0; i != columns.size(); ++i)
     {
-        if(i == 0)
-        {
-            Q_ASSERT(columns[i] == i18n("URL") && col_url_ == 1);
-            addColumn(i18n(columns[i]));
-        }
-        else if(i == 1)
-        {
-            Q_ASSERT(columns[i] == i18n("Status") && col_status_ == 2);
-            addColumn(i18n(columns[i]), 48);
-        }
-        else if(i == 2)
-        {
-            Q_ASSERT(columns[i] == i18n("Label") && col_label_ == 3);
-            addColumn(i18n(columns[i])/*, (int)(0.45 * width() - 79)*/);
-        }
-
+        addColumn(i18n(columns[i]));        
         setColumnWidthMode(i, QListView::Manual);
     }
 
     setColumnAlignment(col_status_ - 1, Qt::AlignCenter);
+    if(KLSConfig::showMarkupStatus())
+        setColumnAlignment(col_markup_ - 1, Qt::AlignCenter);
 }
 
 void TreeView::resetColumns()
 {
-    setColumnWidth(col_url_ - 1, (int)(0.55 * width()));
-    setColumnWidth(col_label_ - 1, (int)(0.45 * width()/* - 79*/));
+    setColumnWidth(col_url_ - 1, (int)(0.45 * width()));
+    
+    setResizeMode(QListView::LastColumn); // fit to the window
+    // resize again
+    setColumnWidthMode(col_label_ - 1, QListView::Manual);
+    setResizeMode(QListView::NoColumn);
+}
+
+double TreeView::columnsWidth() const
+{
+    kdDebug(23100) << "columns: " << columns() << endl;
+    
+    double width = 0.0;
+    for(int i = 0; i != columns(); ++i)
+    {
+        kdDebug(23100) << "column width: " << columnWidth(i) << endl;
+        width += columnWidth(i);
+    }
+    return width;
 }
 
 void TreeView::clear()
@@ -383,18 +392,18 @@ TreeViewItem* TreeView::myItem(QListViewItem* item) const
 
 /* ******************************* TreeViewItem ******************************* */
 
-TreeViewItem::TreeViewItem(QListView* listview, QListViewItem* after,
-                           LinkStatus const* linkstatus, int number_of_columns)
-        : KListViewItem(listview, after), number_of_columns_(number_of_columns),
-        last_child_(0)
+TreeViewItem::TreeViewItem(TreeView* parent, QListViewItem* after,
+                           LinkStatus const* linkstatus)
+        : KListViewItem(parent, after),
+        last_child_(0), root_(parent)
 {
     init(linkstatus);
 }
 
-TreeViewItem::TreeViewItem(QListViewItem* listview_item, QListViewItem* after,
-                           LinkStatus const* linkstatus, int number_of_columns)
-        : KListViewItem(listview_item, after), number_of_columns_(number_of_columns),
-        last_child_(0)
+TreeViewItem::TreeViewItem(TreeView* root, QListViewItem* listview_item, QListViewItem* after,
+                           LinkStatus const* linkstatus)
+        : KListViewItem(listview_item, after),
+        last_child_(0), root_(root)
 
 {
     init(linkstatus);
@@ -407,13 +416,18 @@ void TreeViewItem::init(LinkStatus const* linkstatus)
 {
     setOpen(true);
 
-    for(int i = 0; i != number_of_columns_; ++i)
+    for(int i = 0; i != root_->numberOfColumns(); ++i)
     {
-        TreeColumnViewItem item(linkstatus, i + 1);
+        TreeColumnViewItem item(root_, linkstatus, i + 1);
         column_items_.push_back(item);
         
-        setText(item.columnIndex() - 1, KURL::decode_string(
-                KCharsets::resolveEntities(item.text(i + 1))));
+        if(i + 1 == root_->urlColumnIndex()) {
+            setText(item.columnIndex() - 1, KURL::decode_string(
+                    KCharsets::resolveEntities(item.text(i + 1))));
+        }
+        else {
+            setText(item.columnIndex() - 1, KCharsets::resolveEntities(item.text(i + 1)));
+        }
         
         setPixmap(item.columnIndex() - 1, item.pixmap(i + 1));
     }
@@ -464,11 +478,11 @@ void TreeViewItem::paintCell(QPainter * p, const QColorGroup & cg, int column, i
 
 /* ******************************* TreeColumnViewItem ******************************* */
 
-TreeColumnViewItem::TreeColumnViewItem(LinkStatus const* linkstatus, int column_index)
-        : ls_(linkstatus), column_index_(column_index)
+TreeColumnViewItem::TreeColumnViewItem(TreeView* root, LinkStatus const* linkstatus, int column_index)
+    : root_(root), ls_(linkstatus), column_index_(column_index)
 {
     Q_ASSERT(ls_);
-    Q_ASSERT(column_index_ > 0);
+//     Q_ASSERT(column_index_ > 0);
 }
 
 TreeColumnViewItem::~TreeColumnViewItem()
@@ -481,6 +495,7 @@ void TreeColumnViewItem::setColumnIndex(int i)
     column_index_ = i;
 }
 */
+
 int TreeColumnViewItem::columnIndex() const
 {
     return column_index_;
@@ -494,7 +509,7 @@ LinkStatus const* TreeColumnViewItem::linkStatus() const
 
 QColor const& TreeColumnViewItem::textStatusColor() const
 {
-    if(columnIndex() == 1) // URL col
+    if(columnIndex() == root_->urlColumnIndex())
     {
         QString status_code(QString::number(linkStatus()->httpHeader().statusCode()));
 
@@ -521,7 +536,7 @@ QColor const& TreeColumnViewItem::textStatusColor() const
             return Qt::black;
     }
 
-    else if(columnIndex() == 2) // Status col
+    else if(columnIndex() == root_->statusColumnIndex())
     {
         if(linkStatus()->errorOccurred())
         {
@@ -575,9 +590,9 @@ QString TreeColumnViewItem::text(int column) const
 {
     Q_ASSERT(column > 0);
 
-    switch(column)
+    
+    if(column == root_->urlColumnIndex())
     {
-    case 1: // URL column
         if(linkStatus()->node() && linkStatus()->malformed())
         {
             if(linkStatus()->node()->url().isEmpty())
@@ -589,13 +604,13 @@ QString TreeColumnViewItem::text(int column) const
         {
             KURL url = linkStatus()->absoluteUrl();
             return Url::convertToLocal(linkStatus());
-        }
-        break;
-
-    case 2: // Status column
+        }        
+    }
+    else if(column == root_->statusColumnIndex())
+    {
         if(linkStatus()->errorOccurred() ||
-                linkStatus()->status() == "OK" ||
-                linkStatus()->status() == "304")
+           linkStatus()->status() == "OK" ||
+           linkStatus()->status() == "304")
         {
             return QString();
         }
@@ -603,19 +618,14 @@ QString TreeColumnViewItem::text(int column) const
         {
             return linkStatus()->status();
         }
-        break;
-
-    case 3: // Label column
+    }
+    else if(column == root_->labelColumnIndex())
+    {
         QString label(linkStatus()->label());
         if(!label.isNull())
             return label.simplifyWhiteSpace();
-        break;
-        /*
-        default:
-        kdError() << "TreeColumnViewItem::text: Wrong Column Number - " << column << endl;
-        retureturn QString()rn QString();
-        */
     }
+        
     return QString();
 }
 
@@ -623,13 +633,8 @@ QPixmap TreeColumnViewItem::pixmap(int column) const
 {
     Q_ASSERT(column > 0);
 
-    switch(column)
+    if(column == root_->statusColumnIndex())
     {
-    case 1: // URL column
-        return QPixmap();
-        break;
-
-    case 2: // Status column
         if(linkStatus()->errorOccurred())
         {
 
@@ -651,16 +656,8 @@ QPixmap TreeColumnViewItem::pixmap(int column) const
 
         else if(linkStatus()->status() == "OK")
             return SmallIcon("ok");
-        break;
-
-    case 3: // Label column
-        return QPixmap();
-        break;
-
-    default:
-        kdError() << "TreeColumnViewItem::pixmap: Wrong Column Number - " << column << endl;
-        return QPixmap();
     }
+    
     return QPixmap();
 }
 

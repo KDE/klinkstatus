@@ -44,11 +44,12 @@
 #include "ui/sessionwidget.h"
 #include "ui/settings/configsearchdialog.h"
 #include "ui/settings/configresultsdialog.h"
+#include "ui/settings/configidentificationdialog.h"
 #include "actionmanager.h"
 
 
 const char KLinkStatusPart::description_[] = I18N_NOOP( "A Link Checker" );
-const char KLinkStatusPart::version_[] = "0.3.0";
+const char KLinkStatusPart::version_[] = "0.3.1";
 
 // Factory code for KDE 3
 typedef KParts::GenericFactory<KLinkStatusPart> KLinkStatusFactory;
@@ -149,6 +150,8 @@ void KLinkStatusPart::slotConfigureKLinkStatus()
     KConfigDialog *dialog = new KConfigDialog(tabwidget_, "klsconfig", KLSConfig::self());
     dialog->addPage(new ConfigSearchDialog(0, "config_search_dialog"), i18n("Check"), "viewmag");
     dialog->addPage(new ConfigResultsDialog(0, "config_results_dialog"), i18n("Results"), "player_playlist");
+    dialog->addPage(new ConfigIdentificationDialog(0), i18n("Identification"), 
+                    "agent", i18n("Configure the way KLinkstatus reports itself"));
     dialog->show();
     connect(dialog, SIGNAL(settingsChanged()), tabwidget_, SLOT(slotLoadSettings()));
 }
