@@ -56,8 +56,8 @@ public:
     int m_lastComboIndex;
 };
 
-ResultsSearchBar::ResultsSearchBar(QWidget* parent, const char* name)
-        : QWidget(parent, name), d(new ResultsSearchBar::ResultsSearchBarPrivate)
+ResultsSearchBar::ResultsSearchBar(QWidget* parent)
+        : QWidget(parent), d(new ResultsSearchBar::ResultsSearchBarPrivate)
 {
     setSizePolicy(QSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed));
     

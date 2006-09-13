@@ -35,7 +35,7 @@ class ResultsSearchBar : public QWidget
 {
     Q_OBJECT
 public:
-    ResultsSearchBar(QWidget *parent = 0, const char *name = 0);
+    ResultsSearchBar(QWidget *parent = 0);
     ~ResultsSearchBar();
 
     QString const& text() const;
