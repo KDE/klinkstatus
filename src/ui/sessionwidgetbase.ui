@@ -596,10 +596,9 @@
 <layoutdefaults spacing="6" margin="11"/>
 <includehints>
     <includehint>klshistorycombo.h</includehint>
-	<includehint>kpushbutton.h</includehint>
+    <includehint>kpushbutton.h</includehint>
     <includehint>resultssearchbar.h</includehint>
     <includehint>treeview.h</includehint>
-    <includehint>kprogressbar.h</includehint>
     <includehint>ksqueezedtextlabel.h</includehint>
 </includehints>
 </UI>

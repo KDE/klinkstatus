@@ -23,7 +23,6 @@
 #include <kurl.h>
 #include <kcombobox.h>
 #include <ksqueezedtextlabel.h>
-#include <kprogressbar.h>
 #include <kmessagebox.h>
 #include <kconfig.h>
 #include <kiconloader.h>
