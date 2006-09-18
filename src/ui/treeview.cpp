@@ -114,6 +114,7 @@ void TreeView::show(LinkStatusHelper::Status const& status)
     while(it.current())
     {
         TreeViewItem* item = myItem(it.current());
+	if(!item) return;
         if(!LinkStatusHelper(item->linkStatus()).hasStatus(status))
         {
             item->setVisible(false);
@@ -153,6 +154,7 @@ void TreeView::show(LinkMatcher link_matcher)
     while(it.current())
     {
         TreeViewItem* item = myItem(it.current());
+	if(!item) return;
         bool match = link_matcher.matches(*(item->linkStatus()));
 
         if(tree_display_)
@@ -212,6 +214,8 @@ void TreeView::slotPopupContextMenu(Q3ListViewItem* item, const QPoint& pos, int
 void TreeView::slotCopyUrlToClipboard() const
 {
     TreeViewItem* _item = myItem(currentItem());
+    if(!_item) return;
+
     QString content(_item->linkStatus()->absoluteUrl().prettyUrl());
     QClipboard* cb = kapp->clipboard();
     cb->setText(content);
@@ -220,6 +224,7 @@ void TreeView::slotCopyUrlToClipboard() const
 void TreeView::slotCopyParentUrlToClipboard() const
 {
     TreeViewItem* _item = myItem(currentItem());
+    if(!_item) return;
     QString content(_item->linkStatus()->parent()->absoluteUrl().prettyUrl());
     QClipboard* cb = kapp->clipboard();
     cb->setText(content);
@@ -228,6 +233,7 @@ void TreeView::slotCopyParentUrlToClipboard() const
 void TreeView::slotCopyCellTextToClipboard() const
 {
     TreeViewItem* _item = myItem(currentItem());
+    if(!_item) return;
     QString cell_text(_item->text(current_column_));
     QClipboard* cb = kapp->clipboard();
     cb->setText(cell_text);
@@ -236,6 +242,7 @@ void TreeView::slotCopyCellTextToClipboard() const
 void TreeView::slotEditReferrersWithQuanta()
 {
     TreeViewItem* _item = myItem(currentItem());
+    if(!_item) return;
     Q3ValueVector<KUrl> referrers = _item->linkStatus()->referrers();
 
     if(Global::isQuantaAvailableViaDBUS())
@@ -269,6 +276,7 @@ void TreeView::slotEditReferrerWithQuanta(int id)
     index -= 2; // The list of referrers starts on index = 2
 
     TreeViewItem* _item = myItem(currentItem());
+    if(!_item) return;
     Q3ValueVector<KUrl> referrers = _item->linkStatus()->referrers();
     Q_ASSERT(index >= 0 && (uint)index < referrers.size());
 
@@ -303,6 +311,7 @@ void TreeView::slotEditReferrerWithQuanta(KUrl const& url)
 void TreeView::slotViewUrlInBrowser()
 {
     TreeViewItem* _item = myItem(currentItem());
+    if(!_item) return;
     KUrl url = _item->linkStatus()->absoluteUrl();
 
     if(url.isValid())
@@ -316,7 +325,7 @@ void TreeView::slotViewUrlInBrowser()
 void TreeView::slotViewParentUrlInBrowser()
 {
     TreeViewItem* _item = myItem(currentItem());
-
+    if(!_item) return;
     if(_item->linkStatus()->isRoot())
     {
         KMessageBox::sorry(this, i18n("ROOT URL."));
@@ -382,7 +391,6 @@ void TreeView::loadContextTableMenu(Q3ValueVector<KUrl> const& referrers, bool i
 TreeViewItem* TreeView::myItem(Q3ListViewItem* item) const
 {
     TreeViewItem* _item = dynamic_cast<TreeViewItem*> (item);
-    Q_ASSERT(_item);
     return _item;
 }
 
