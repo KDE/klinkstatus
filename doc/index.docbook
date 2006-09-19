@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.1.2-Based Variant V1.1//EN" "dtd/kdex.dtd" [
+<!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.2-Based Variant V1.1//EN" "dtd/kdex.dtd" [
   <!ENTITY klinkstatus "<application>KLinkStatus</application>">
   <!ENTITY kappname "&klinkstatus;"><!-- Do *not* replace kappname-->
   <!ENTITY package "kde-module"><!-- kdebase, kdeadmin, etc -->
@@ -55,9 +55,9 @@ as Authors, publish date, the abstract, and Keywords -->
 <address><email>moura&#64;kdewebdev&#46;org</email></address>
 </affiliation>
 </author>
-</authorgroup>
 
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
+</authorgroup>
 
 <copyright>
 <year>2004</year>
@@ -83,7 +83,7 @@ Do NOT change these in the translation. -->
 
 <abstract>
 <para>
-&klinkstatus; is a link checker for KDE.
+&klinkstatus; is a link checker for &kde;.
 </para>
 </abstract>
 
@@ -118,7 +118,7 @@ problems. Basically a long version of the abstract.  Don't include a
 revision history. (see installation appendix comment) -->
 
 <para>
-&klinkstatus; is a link checker for KDE.
+&klinkstatus; is a link checker for &kde;.
 It allows you to search internal and external links in your entire web site, 
 just a single page and choose the depth to search.
 You can also check local files, ftp, fish, etc, as KLinkStatus uses KIO.
@@ -200,7 +200,7 @@ or menu bars. -->
 <guimenu>File</guimenu>
 <guimenuitem>Open URL</guimenuitem>
 </menuchoice></term>
-<listitem><para><action>Opens a URL</action></para></listitem>
+<listitem><para><action>Opens a &URL;</action></para></listitem>
 </varlistentry>
 <varlistentry>
 <term><menuchoice>
