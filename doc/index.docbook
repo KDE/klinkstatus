@@ -121,7 +121,7 @@ revision history. (see installation appendix comment) -->
 &klinkstatus; is a link checker for &kde;.
 It allows you to search internal and external links in your entire web site, 
 just a single page and choose the depth to search.
-You can also check local files, ftp, fish, etc, as KLinkStatus uses KIO.
+You can also check local files, ftp, fish, etc, as &klinkstatus; uses KIO.
 For performance, links can be checked simultaneously.
 
 Please report any problems or feature requests to http://linkstatus.paradigma.co.pt/bugs/.
