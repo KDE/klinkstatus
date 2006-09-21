@@ -2,7 +2,7 @@
 Encoding=UTF-8
 Name=KLinkStatus
 Name[x-test]=xxKLinkStatusxx
-Exec=klinkstatus %i %m -caption "%c"
+Exec=klinkstatus %i  -caption "%c"
 Icon=klinkstatus
 Type=Application
 DocPath=klinkstatus/index.html
