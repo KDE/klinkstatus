@@ -25,6 +25,8 @@
 
 #include <qstring.h>
 #include <qtimer.h>
+#include <qtextcodec.h> 
+#include <qcstring.h>
 
 #include <kio/netaccess.h>
 #include <kio/global.h>
@@ -45,8 +47,9 @@ int LinkChecker::count_ = 0;
 LinkChecker::LinkChecker(LinkStatus* linkstatus, int time_out,
                          QObject *parent, const char *name)
         : QObject(parent, name), search_manager_(0), 
-        linkstatus_(linkstatus), t_job_(0), time_out_(time_out), checker_(0),
-        redirection_(false), header_checked_(false), finnished_(false), parsing_(false)
+        linkstatus_(linkstatus), t_job_(0), time_out_(time_out), checker_(0), document_charset_(), 
+        redirection_(false), header_checked_(false), finnished_(false), 
+        parsing_(false), is_charset_checked_(false), has_defined_charset_(false)
 {
     Q_ASSERT(linkstatus_);
     Q_ASSERT(!linkstatus_->checked());
@@ -124,8 +127,8 @@ void LinkChecker::slotMimetype (KIO::Job* /*job*/, const QString &type)
     if(finnished_)
         return;
 
-    kdDebug(23100) <<  "LinkChecker::slotMimetype:" << type << "-> " << linkstatus_->absoluteUrl().url() 
-            << " - " << t_job_->slave() << "/" <<  t_job_->slave()->slave_pid() << endl;
+//     kdDebug(23100) <<  "LinkChecker::slotMimetype:" << type << "-> " << linkstatus_->absoluteUrl().url() 
+//             << " - " << t_job_->slave() << "/" <<  t_job_->slave()->slave_pid() << endl;
 
     Q_ASSERT(t_job_);
 
@@ -178,15 +181,15 @@ void LinkChecker::slotMimetype (KIO::Job* /*job*/, const QString &type)
 }
 
 void LinkChecker::slotData(KIO::Job* /*job*/, const QByteArray& data)
-{
+{   
     if(finnished_)
         return;
 
     kdDebug(23100) <<  "LinkChecker::slotData -> " << linkstatus_->absoluteUrl().url() 
             << " - " << t_job_->slave() << "/" <<  t_job_->slave()->slave_pid()  << endl;
-
+    
     Q_ASSERT(t_job_);
-
+    
     LinkStatus* ls = 0;
 /*    if(redirection_)
         ls = linkStatus()->redirection();
@@ -217,6 +220,7 @@ void LinkChecker::slotData(KIO::Job* /*job*/, const QByteArray& data)
                 {
                     killJob();                    
                     finnish();
+                    return;
                 }
             }
         }
@@ -226,13 +230,14 @@ void LinkChecker::slotData(KIO::Job* /*job*/, const QByteArray& data)
             {
                 if(!header_checked_)
                 {
-                    ls->setHttpHeader(getHttpHeader(t_job_));
+                    ls->setHttpHeader(getHttpHeader(t_job_));                    
                 }
                 if(ls->mimeType() != "text/html" && header_checked_)
                 {
                     //kdDebug(23100) <<  "mimetype of " << ls->absoluteUrl().prettyURL() << ": " << ls->mimeType() << endl;
                     killJob();
                     finnish(); // if finnish is called before kill what you get is a segfault, don't know why
+                    return;
                 }
                 else if(t_job_->isErrorPage() && header_checked_)
                 {
@@ -240,18 +245,42 @@ void LinkChecker::slotData(KIO::Job* /*job*/, const QByteArray& data)
                     ls->setIsErrorPage(true);
                     killJob();
                     finnish();
+                    return;
                 }
-                else
-                    doc_html_ += QString(data);
             }
-
             else
             {
                 Q_ASSERT(ls->mimeType() == "text/html");
-                doc_html_ += QString(data);
             }
+            if(!is_charset_checked_) 
+                findDocumentCharset(data);
+            
+            QTextCodec* codec = 0;
+            if(has_defined_charset_) 
+                codec = QTextCodec::codecForName(document_charset_);
+            else
+                codec = QTextCodec::codecForName("iso8859-1"); // default
+            
+            doc_html_ += codec->toUnicode(data);
         }
     }
+}
+
+void LinkChecker::findDocumentCharset(QString const& doc)
+{
+    Q_ASSERT(!is_charset_checked_);
+    
+    is_charset_checked_ = true; // only check the first stream of data
+                    
+    if(header_checked_)
+        document_charset_ = linkstatus_->httpHeader().charset();
+
+    // try to look in the meta elements                    
+    if(document_charset_.isNull() || document_charset_.isEmpty()) 
+        document_charset_ = HtmlParser::findCharsetInMetaElement(doc);
+    
+    if(!document_charset_.isNull() && !document_charset_.isEmpty())
+        has_defined_charset_ = true;
 }
 
 // only comes here if an error happened or in case of a clean html page
@@ -456,7 +485,10 @@ HttpResponseHeader LinkChecker::getHttpHeader(KIO::Job* /*job*/, bool remember_c
     QString header_string = t_job_->queryMetaData("HTTP-Headers");
     //    Q_ASSERT(!header_string.isNull() && !header_string.isEmpty());
 //     kdDebug(23100) << "HTTP header: " << endl << header_string << endl;
-    
+//     kdDebug(23100) << "Keys: " << HttpResponseHeader(header_string).keys() << endl;
+//     kdDebug(23100) << "Content-type: " << HttpResponseHeader(header_string).contentType() << endl;
+//     kdDebug(23100) << "Content-type: " << HttpResponseHeader(header_string).value("content-type") << endl;
+
     if(header_string.isNull() || header_string.isEmpty())
     {
         header_checked_ = false;

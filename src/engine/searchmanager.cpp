@@ -234,7 +234,7 @@ void SearchManager::slotRootChecked(const LinkStatus * link, LinkChecker * check
         }
         else
         {
-            kdDebug(23100) <<  "Search Finished! (SearchManager::slotRootChecked)#1" << endl;
+            kdDebug(23100) <<  "SearchManager::slotRootChecked#1" << endl;
             finnish();
         }
     }
@@ -242,7 +242,7 @@ void SearchManager::slotRootChecked(const LinkStatus * link, LinkChecker * check
     else
     {
         Q_ASSERT(search_results_.size() == 0);
-        kdDebug(23100) <<  "Search Finished! (SearchManager::slotRootChecked)#2" << endl;
+        kdDebug(23100) <<  "SearchManager::slotRootChecked#2" << endl;
         finnish();
     }
 
@@ -593,7 +593,7 @@ void SearchManager::addLevel()
             }
 
             emit signalAddingLevelProgress();
-            kapp->processEvents();
+//             kapp->processEvents();
         }
     }
     if( (search_results_[search_results_.size() - 1]).size() == 0 )

@@ -48,16 +48,28 @@ public:
   vector<Node*> const& nodes() const;
   bool hasBaseUrl() const;
   bool hasTitle() const;
+  bool hasContentType() const;
   NodeBASE const& baseUrl() const;
   NodeTITLE const& title() const;
+  NodeMETA const& contentTypeMetaNode() const;
+
   static uint estimativaLinks(uint doc_size);
+  /**
+   * Convenience function for performance as it only parse in order 
+   * to get the charset.
+   */
+  static QString findCharsetInMetaElement(QString const& html);
 
   // test:
   void mostra() const;
 
 private:
 
-  vector<QString> const& parseNodesOfType(QString const& tipo);
+  vector<QString> const& parseNodesOfType(QString const& element);
+  /**
+   * Vector nodes passed for performance.
+   */
+  static void parseNodesOfType(QString const& element, QString const& doc, vector<QString>& nodes);
 
   void parseNodesOfTypeA();
   void parseNodesOfTypeAREA();
@@ -81,10 +93,12 @@ private:
 
 private:
 
-  vector<QString> aux_;
+  vector<QString> aux_; // for what the hell is this? looks ugly... maybe I was drunk, can't remember
   vector<Node*> nodes_;
   NodeBASE node_BASE_;
   NodeTITLE node_TITLE_;
+  NodeMETA node_META_content_type_;
+  bool is_content_type_set_;
 
   QString document_;
   QString script_; // Fica aqui guardado (JavaScript, etc)
@@ -100,6 +114,11 @@ inline HtmlParser::~HtmlParser()
 inline uint HtmlParser::estimativaLinks(uint doc_size)
 {
   return doc_size / 100; // valor estimado...
+}
+
+inline bool HtmlParser::hasContentType() const 
+{
+    return is_content_type_set_;
 }
 
 #endif

@@ -36,6 +36,14 @@ public:
 
   void parseLocation();
   QString const& location() const;
+  QString charset() const;
+  
+  /**
+   * Parses the charset from this kind of server response: 
+   * Content-Type: text/html; charset=EUC-JP
+   * Return an empty string in case it doesn't find nothing.
+   */
+  static QString charset(QString const& contentTypeHttpHeaderLine);
 
 private:
 

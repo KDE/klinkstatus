@@ -25,7 +25,7 @@
 
 
 HtmlParser::HtmlParser(QString const& documento)
-        : document_(documento)
+    : is_content_type_set_(false), document_(documento)
 {
     Q_ASSERT(!documento.isEmpty());
 
@@ -57,6 +57,12 @@ NodeBASE const& HtmlParser::baseUrl() const
     return node_BASE_;
 }
 
+NodeMETA const& HtmlParser::contentTypeMetaNode() const
+{
+    Q_ASSERT(hasContentType());
+    return node_META_content_type_;
+}
+
 bool HtmlParser::hasTitle() const
 {
     return (node_TITLE_.element() == Node::TITLE &&
@@ -69,23 +75,27 @@ NodeTITLE const& HtmlParser::title() const
     return node_TITLE_;
 }
 
-vector<QString> const& HtmlParser::parseNodesOfType(QString const& tipo)
+vector<QString> const& HtmlParser::parseNodesOfType(QString const& element)
+{
+    HtmlParser::parseNodesOfType(element, document_, aux_);
+    return aux_;
+}
+
+void HtmlParser::parseNodesOfType(QString const& tipo, QString const& document, vector<QString>& nodes)
 {
     QString node;
-    QString doc(document_);
+    QString doc(document);
     int inicio = 0, fim = 0;
 
-    aux_.clear();
+    nodes.clear();
     if(upperCase(tipo) == "A")
-        aux_.reserve(estimativaLinks(document_.length() * 2));
+        nodes.reserve(estimativaLinks(doc.length() * 2));
 
-    int i = 0;
     while(true)
     {
-        ++i;
         inicio = findSeparableWord(doc, "<" + tipo);
         if(inicio == -1)
-            return aux_;
+            return;
 
         //if( (doc[inicio] != ' ' && doc[inicio] != '\n' && doc[inicio] != '\r') )
         if(!::isSpace(doc[inicio]))
@@ -111,14 +121,8 @@ vector<QString> const& HtmlParser::parseNodesOfType(QString const& tipo)
         int tag_begining_go_back = (tipo.length() + QString("<").length());
         node = doc.mid(inicio - tag_begining_go_back,
                        fim - inicio + tag_begining_go_back);
-        aux_.push_back(node);
+        nodes.push_back(node);
         doc.remove(0, fim);
-
-        if(i == 20)
-        {
-            kapp->processEvents();
-            i = 0;
-        }
     }
 }
 
@@ -194,7 +198,31 @@ void HtmlParser::parseNodesOfTypeMETA()
     vector<QString> const& aux = parseNodesOfType("META");
 
     for(vector<QString>::size_type i = 0; i != aux.size(); ++i)
-        nodes_.push_back( new NodeMETA(aux[i]) );
+    {
+        NodeMETA* node = new NodeMETA(aux[i]);
+        nodes_.push_back(node);
+        
+        if(!is_content_type_set_ && node->atributoHTTP_EQUIV().lower() == QString("Content-Type").lower()) {
+            is_content_type_set_ = true;
+            node_META_content_type_.setNode(aux[i]);
+        }
+    }
+}
+
+QString HtmlParser::findCharsetInMetaElement(QString const& html)
+{
+    vector<QString> metaTags;
+    parseNodesOfType("META", html, metaTags);
+    
+    for(vector<QString>::size_type i = 0; i != metaTags.size(); ++i)
+    {
+        NodeMETA node(metaTags[i]);
+        
+        if(node.atributoHTTP_EQUIV().lower() == QString("Content-Type").lower()) {
+            return node.charset();
+        }
+    }
+    return QString();
 }
 
 void HtmlParser::parseNodesOfTypeIMG()
