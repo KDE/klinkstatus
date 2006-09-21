@@ -258,7 +258,7 @@ void LinkChecker::slotData(KIO::Job* /*job*/, const QByteArray& data)
             QTextCodec* codec = 0;
             if(has_defined_charset_) 
                 codec = QTextCodec::codecForName(document_charset_);
-            else
+            if(!codec)
                 codec = QTextCodec::codecForName("iso8859-1"); // default
             
             doc_html_ += codec->toUnicode(data);
