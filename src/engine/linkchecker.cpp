@@ -505,6 +505,14 @@ void LinkChecker::checkRef()
 {
     KURL url(linkStatus()->absoluteUrl());
     Q_ASSERT(url.hasRef());
+    
+    QString ref = url.ref();
+    if(ref == "" || ref == "top") {
+        linkstatus_->setStatus("OK");
+        finnish();
+        return;
+    }
+
     QString url_base;
     LinkStatus const* ls_parent = 0;
     int i_ref = -1;
@@ -535,7 +543,7 @@ void LinkChecker::checkRef()
 void LinkChecker::checkRef(KURL const& url)
 {
     Q_ASSERT(search_manager_);
-
+    
     QString url_string = url.url();
     KHTMLPart* html_part = search_manager_->htmlPart(url_string);
     if(!html_part)
