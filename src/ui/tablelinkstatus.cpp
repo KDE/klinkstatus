@@ -128,7 +128,7 @@ vector<TableItem*> TableLinkstatus::generateRowOfTableItems(LinkStatus const* li
     items.push_back(item2);
     items.push_back(item3);
 
-    // If more columns are choosed in the settings, create and add the items here
+    // If more columns are chosen in the settings, create and add the items here
     // ...
 
     return items;
