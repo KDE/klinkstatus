@@ -450,7 +450,7 @@ QString TreeViewItem::key(int column, bool) const
     switch(column)
     {
     case 1: // status column
-        return linkStatus()->status();
+        return linkStatus()->statusText();
     }
 
     return text(column);
@@ -509,82 +509,33 @@ LinkStatus const* TreeColumnViewItem::linkStatus() const
 
 QColor const& TreeColumnViewItem::textStatusColor() const
 {
-    if(columnIndex() == root_->urlColumnIndex())
+    if(columnIndex() == root_->urlColumnIndex() || columnIndex() == root_->statusColumnIndex())
     {
-        QString status_code(QString::number(linkStatus()->httpHeader().statusCode()));
-
-        if(linkStatus()->errorOccurred())
-        {
-            if(linkStatus()->error().contains("Timeout"))
-                return Qt::darkMagenta;
-            else if(linkStatus()->error().contains("not suported"))
-                return Qt::lightGray;
-            else
-                return Qt::red;
-        }
-        else if(linkStatus()->absoluteUrl().protocol() != "http" &&
-                linkStatus()->absoluteUrl().protocol() != "https")
-            return Qt::black;
-
-        else if(status_code[0] == '5')
-            return Qt::darkMagenta;
-
-        else if(status_code[0] == '4')
+        if(linkStatus()->status() == LinkStatus::BROKEN)
             return Qt::red;
-
-        else
+        else if(linkStatus()->status() == LinkStatus::HTTP_CLIENT_ERROR)
+            return Qt::red;
+        else if(linkStatus()->status() == LinkStatus::HTTP_REDIRECTION)
             return Qt::black;
-    }
-
-    else if(columnIndex() == root_->statusColumnIndex())
-    {
-        if(linkStatus()->errorOccurred())
-        {
-            //kdDebug(23100) <<  "ERROR: " << linkStatus()->error() << ": " << linkStatus()->absoluteUrl().prettyURL() << endl;
-            if(linkStatus()->error() == "Javascript not suported")
-                return Qt::lightGray;
-            else
-                return Qt::red;
-        }
-
-        else if(linkStatus()->absoluteUrl().hasRef())
+        else if(linkStatus()->status() == LinkStatus::HTTP_SERVER_ERROR)
+            return Qt::darkMagenta;
+        else if(linkStatus()->status() == LinkStatus::MALFORMED)
+            return Qt::red;
+        else if(linkStatus()->status() == LinkStatus::NOT_SUPPORTED)
+            return Qt::lightGray;
+        else if(linkStatus()->status() == LinkStatus::SUCCESSFULL)
+            return Qt::black;
+        else if(linkStatus()->status() == LinkStatus::TIMEOUT)
+            return Qt::darkMagenta;
+        else if(linkStatus()->status() == LinkStatus::UNDETERMINED)
             return Qt::blue;
-
-        else if(linkStatus()->absoluteUrl().protocol() != "http" &&
-                linkStatus()->absoluteUrl().protocol() != "https")
-            return Qt::darkGreen;
-
-        else
-        {
-            QString status_code(QString::number(linkStatus()->httpHeader().statusCode()));
-
-            if(status_code[0] == '0')
-            {
-                kdWarning(23100) <<  "status code == 0: " << endl;
-                kdWarning(23100) <<  linkStatus()->toString() << endl;
-                kdWarning(23100) <<  linkStatus()->httpHeader().toString() << endl;
-            }
-            //Q_ASSERT(status_code[0] != '0');
-
-            if(status_code[0] == '5')
-                return Qt::darkMagenta;
-
-            else if(status_code[0] == '4')
-                return Qt::red;
-
-            else if(status_code[0] == '3')
-                return Qt::blue;
-
-            else if(status_code[0] == '2')
-                return Qt::darkGreen;
-
-            else
-                return Qt::red;
-        }
-    }
+        
+        return Qt::red;
+    }        
     else
         return Qt::black;
 }
+
 
 QString TreeColumnViewItem::text(int column) const
 {
@@ -608,16 +559,7 @@ QString TreeColumnViewItem::text(int column) const
     }
     else if(column == root_->statusColumnIndex())
     {
-        if(linkStatus()->errorOccurred() ||
-           linkStatus()->status() == "OK" ||
-           linkStatus()->status() == "304")
-        {
-            return QString();
-        }
-        else
-        {
-            return linkStatus()->status();
-        }
+        return QString();
     }
     else if(column == root_->labelColumnIndex())
     {
@@ -635,27 +577,29 @@ QPixmap TreeColumnViewItem::pixmap(int column) const
 
     if(column == root_->statusColumnIndex())
     {
-        if(linkStatus()->errorOccurred())
+        if(linkStatus()->status() == LinkStatus::BROKEN)
+            return SmallIcon("no");
+        else if(linkStatus()->status() == LinkStatus::HTTP_CLIENT_ERROR)
+            return SmallIcon("no");
+        else if(linkStatus()->status() == LinkStatus::HTTP_REDIRECTION) 
         {
-
-            if(linkStatus()->error().contains("Timeout"))
-            {
-                return SmallIcon("kalarm");
-            }
-            else if(linkStatus()->error() == "Malformed")
-            {
-                return SmallIcon("bug");
-            }
+            if(linkStatus()->statusText() == "304")
+                return UserIcon("304");
             else
-            {
-                return SmallIcon("no");
-            }
+                return SmallIcon("redo");
         }
-        else if(linkStatus()->status() == "304")
-            return UserIcon("304");
-
-        else if(linkStatus()->status() == "OK")
+        else if(linkStatus()->status() == LinkStatus::HTTP_SERVER_ERROR)
+            return SmallIcon("no");
+        else if(linkStatus()->status() == LinkStatus::MALFORMED)
+            return SmallIcon("editdelete");
+        else if(linkStatus()->status() == LinkStatus::NOT_SUPPORTED)
+            return SmallIcon("help");
+        else if(linkStatus()->status() == LinkStatus::SUCCESSFULL)
             return SmallIcon("ok");
+        else if(linkStatus()->status() == LinkStatus::TIMEOUT)
+            return SmallIcon("kalarm");
+        else if(linkStatus()->status() == LinkStatus::UNDETERMINED)
+            return SmallIcon("help");
     }
     
     return QPixmap();

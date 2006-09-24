@@ -189,7 +189,7 @@ void SearchManager::checkRoot()
     connect(checker, SIGNAL(transactionFinished(const LinkStatus *, LinkChecker *)),
             this, SLOT(slotRootChecked(const LinkStatus *, LinkChecker *)));
     /*
-    	connect(checker, SIGNAL(jobFinnished(LinkChecker *)),
+        connect(checker, SIGNAL(jobFinnished(LinkChecker *)),
                 this, SLOT(slotLinkCheckerFinnished(LinkChecker *)));
     */
     checker->check();
@@ -289,11 +289,10 @@ vector<LinkStatus*> SearchManager::children(LinkStatus* link)
             //ls->setIsLocalRestrict(localDomain(url));
             ls->setIsLocalRestrict(ls->local()); // @todo clean this nonsense
 
-            if(!validUrl(url))
+            if(!validUrl(url)) {
                 ls->setMalformed(true);
-
-            if(ls->malformed())
-                ls->setErrorOccurred(true);
+                ls->setErrorOccurred(true); 
+            }
 
             ls->setOnlyCheckHeader(onlyCheckHeader(ls));
 
@@ -487,7 +486,7 @@ void SearchManager::checkLinksSimultaneously(vector<LinkStatus*> const& links)
         if(ls->malformed())
         {
             Q_ASSERT(ls->errorOccurred());
-            Q_ASSERT(ls->error() == i18n( "Malformed" ));
+            Q_ASSERT(ls->status() == LinkStatus::MALFORMED);
 
             ls->setChecked(true);
             slotLinkChecked(ls, 0);
@@ -499,6 +498,7 @@ void SearchManager::checkLinksSimultaneously(vector<LinkStatus*> const& links)
             ls->setIgnored(true);
             ls->setErrorOccurred(true);
             ls->setError(i18n( "Javascript not supported" ));
+            ls->setStatus(LinkStatus::NOT_SUPPORTED);
             ls->setChecked(true);
             slotLinkChecked(ls, 0);
         }
@@ -509,6 +509,7 @@ void SearchManager::checkLinksSimultaneously(vector<LinkStatus*> const& links)
                     ls->setIgnored(true);
                     ls->setErrorOccurred(true);
                     ls->setError(i18n("Protocol %1 not supported").arg(protocol));
+                    ls->setStatus(LinkStatus::MALFORMED);
                     ls->setChecked(true);
                     slotLinkChecked(ls, 0);
                 }
@@ -521,7 +522,7 @@ void SearchManager::checkLinksSimultaneously(vector<LinkStatus*> const& links)
             connect(checker, SIGNAL(transactionFinished(const LinkStatus *, LinkChecker *)),
                     this, SLOT(slotLinkChecked(const LinkStatus *, LinkChecker *)));
             /*
-            			connect(checker, SIGNAL(jobFinnished(LinkChecker *)),
+                        connect(checker, SIGNAL(jobFinnished(LinkChecker *)),
                                 this, SLOT(slotLinkCheckerFinnished(LinkChecker *)));
             */
             checker->check();
@@ -692,8 +693,8 @@ bool SearchManager::localDomain(KURL const& url) const
 */
 
 /**
-	The same as SearchManager::localDomain(), but only for http or https.
-	http://linkstatus.paradigma.co.pt != http://paradigma.co.pt
+    The same as SearchManager::localDomain(), but only for http or https.
+    http://linkstatus.paradigma.co.pt != http://paradigma.co.pt
 */
 /*
 bool SearchManager::isLocalRestrict(KURL const& url) const

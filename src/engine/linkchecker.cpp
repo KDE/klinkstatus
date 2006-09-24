@@ -18,7 +18,6 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.             *
  ***************************************************************************/
 #include "linkchecker.h"
-#include "linkstatus.h"
 #include "searchmanager.h"
 #include "../utils/utils.h"
 #include "../parser/htmlparser.h"
@@ -114,7 +113,9 @@ void LinkChecker::slotTimeOut()
         if(t_job_->error() != KIO::ERR_USER_CANCELED)
         {
             linkstatus_->setErrorOccurred(true);
-            linkstatus_->setError(i18n( "Timeout" ));
+            linkstatus_->setChecked(true);
+            linkstatus_->setError(i18n("Timeout"));
+            linkstatus_->setStatus(LinkStatus::TIMEOUT);
 
             killJob();
             finnish();
@@ -151,9 +152,10 @@ void LinkChecker::slotMimetype (KIO::Job* /*job*/, const QString &type)
             //kdDebug(23100) <<  "only check header: " << ls->absoluteUrl().prettyURL() << endl;
 
             // file is OK (http can have an error page though job->error() is false)
-            if(url.protocol() != "http" && url.protocol() != "https")
+            if(!url.protocol().startsWith("http"))
             {
-                ls->setStatus("OK");
+                ls->setStatusText("OK");
+                ls->setStatus(LinkStatus::SUCCESSFULL);
                 
                 killJob();                
                 finnish();
@@ -164,13 +166,14 @@ void LinkChecker::slotMimetype (KIO::Job* /*job*/, const QString &type)
             //kdDebug(23100) <<  "NOT only check header: " << ls->absoluteUrl().prettyURL() << endl;
 
             // file is OK (http can have an error page though job->error() is false)
-            if(url.protocol() != "http" && url.protocol() != "https") // if not, it have to go trough slotData to get the http header
+            if(!url.protocol().startsWith("http")) // if not, it have to go trough slotData to get the http header
             {
                 // it's not an html page, so we don't want the file content
                 if(type != "text/html"/* && type != "text/plain"*/)
                 {
                     //kdDebug(23100) <<  "mimetype: " << type << endl;
-                    ls->setStatus("OK");
+                    ls->setStatusText("OK");
+                    ls->setStatus(LinkStatus::SUCCESSFULL);
                     
                     killJob();                    
                     finnish();
@@ -204,11 +207,11 @@ void LinkChecker::slotData(KIO::Job* /*job*/, const QByteArray& data)
         if(ls->onlyCheckHeader())
         {
             Q_ASSERT(header_checked_ == false);
-            // the job should had been killed in slotMimetype
+            // the job should have been killed in slotMimetype
             Q_ASSERT(url.protocol() == "http" || url.protocol() == "https");
 
             // get the header and quit
-            if(url.protocol() == "http" || url.protocol() == "https")
+            if(url.protocol().startsWith("http"))
             {
                 // get the header
                 ls->setHttpHeader(getHttpHeader(t_job_));
@@ -218,7 +221,9 @@ void LinkChecker::slotData(KIO::Job* /*job*/, const QByteArray& data)
 
                 if(header_checked_)
                 {
-                    killJob();                    
+                    killJob();
+                    linkstatus_->setStatus(getHttpStatus());
+                    linkstatus_->setChecked(true);
                     finnish();
                     return;
                 }
@@ -226,7 +231,7 @@ void LinkChecker::slotData(KIO::Job* /*job*/, const QByteArray& data)
         }
         else
         {
-            if(url.protocol() == "http" || url.protocol() == "https")
+            if(url.protocol().startsWith("http"))
             {
                 if(!header_checked_)
                 {
@@ -235,6 +240,7 @@ void LinkChecker::slotData(KIO::Job* /*job*/, const QByteArray& data)
                 if(ls->mimeType() != "text/html" && header_checked_)
                 {
                     //kdDebug(23100) <<  "mimetype of " << ls->absoluteUrl().prettyURL() << ": " << ls->mimeType() << endl;
+                    ls->setStatus(getHttpStatus());
                     killJob();
                     finnish(); // if finnish is called before kill what you get is a segfault, don't know why
                     return;
@@ -243,6 +249,7 @@ void LinkChecker::slotData(KIO::Job* /*job*/, const QByteArray& data)
                 {
                     //kdDebug(23100) <<  "ERROR PAGE" << endl;
                     ls->setIsErrorPage(true);
+                    ls->setStatus(getHttpStatus());
                     killJob();
                     finnish();
                     return;
@@ -299,6 +306,7 @@ void LinkChecker::slotResult(KIO::Job* /*job*/)
     if(redirection_) {
         if(!processRedirection(redirection_url_)) {
             t_job_ = 0;
+            linkstatus_->setChecked(true);
             finnish();
             return;
         }
@@ -342,15 +350,17 @@ void LinkChecker::slotResult(KIO::Job* /*job*/)
 
         if(job->error() == KIO::ERR_IS_DIRECTORY)
         {
-            ls->setStatus("OK");
+            ls->setStatusText("OK");
+            ls->setStatus(LinkStatus::SUCCESSFULL);
         }
         else
         {
             ls->setErrorOccurred(true);
+            ls->setStatus(LinkStatus::BROKEN);
 
             if(job->errorString().isEmpty())
                 kdWarning(23100) << "\n\nError string is empty, error = " << job->error() << "\n\n\n";
-            if(job->error() != KIO::ERR_NO_CONTENT)
+            if(job->error() != KIO::ERR_NO_CONTENT) 
                 ls->setError(job->errorString());
             else
                 ls->setError(i18n( "No Content") );
@@ -359,9 +369,10 @@ void LinkChecker::slotResult(KIO::Job* /*job*/)
 
     else
     {
-        if(ls->absoluteUrl().protocol() != "http" &&
-           ls->absoluteUrl().protocol() != "https")
-            ls->setStatus("OK");
+        if(!ls->absoluteUrl().protocol().startsWith("http")) {
+            ls->setStatusText("OK");
+            ls->setStatus(LinkStatus::SUCCESSFULL);
+           }
         else
         {
             if(!header_checked_)
@@ -372,6 +383,8 @@ void LinkChecker::slotResult(KIO::Job* /*job*/)
                 return;
             }
             Q_ASSERT(header_checked_);
+            
+            ls->setStatus(getHttpStatus());
         }
 
         if(!doc_html_.isNull() && !doc_html_.isEmpty())
@@ -412,13 +425,13 @@ bool LinkChecker::processRedirection(KURL const& toUrl)
     kdDebug(23100) <<  "LinkChecker::processRedirection -> " << linkstatus_->absoluteUrl().url() << " -> " << toUrl.url() << endl;
 
     Q_ASSERT(t_job_);
-    Q_ASSERT(linkstatus_->absoluteUrl().protocol() == "http" ||
-            linkstatus_->absoluteUrl().protocol() == "https");
+    Q_ASSERT(linkstatus_->absoluteUrl().protocol().startsWith("http"));
     Q_ASSERT(redirection_);
 
     linkstatus_->setHttpHeader(getHttpHeader(t_job_, false));
     linkstatus_->setIsRedirection(true);
-    linkstatus_->setStatus("redirection");
+    linkstatus_->setStatusText("redirection");
+    linkstatus_->setStatus(LinkStatus::HTTP_REDIRECTION);
     linkstatus_->setChecked(true);
     
     LinkStatus* ls_red = new LinkStatus(*linkstatus_);
@@ -508,7 +521,8 @@ void LinkChecker::checkRef()
     
     QString ref = url.ref();
     if(ref == "" || ref == "top") {
-        linkstatus_->setStatus("OK");
+        linkstatus_->setStatusText("OK");
+        linkstatus_->setStatus(LinkStatus::SUCCESSFULL);
         finnish();
         return;
     }
@@ -573,12 +587,14 @@ void LinkChecker::checkRef(KURL const& url)
 
     if(hasAnchor(html_part, linkStatus()->absoluteUrl().ref()))
     {
-        linkstatus_->setStatus("OK");
+        linkstatus_->setStatusText("OK");
+        linkstatus_->setStatus(LinkStatus::SUCCESSFULL);
     }
     else
     {
         linkstatus_->setErrorOccurred(true);
         linkstatus_->setError(i18n( "Link destination not found." ));
+        linkstatus_->setStatus(LinkStatus::BROKEN);
     }
 
     finnish();
@@ -606,12 +622,14 @@ void LinkChecker::checkRef(LinkStatus const* linkstatus_parent)
 
     if(hasAnchor(html_part, linkStatus()->absoluteUrl().ref()))
     {
-        linkstatus_->setStatus("OK");
+        linkstatus_->setStatusText("OK");
+        linkstatus_->setStatus(LinkStatus::SUCCESSFULL);
     }
     else
     {
         linkstatus_->setErrorOccurred(true);
         linkstatus_->setError(i18n( "Link destination not found." ));
+        linkstatus_->setStatus(LinkStatus::BROKEN);
     }
 
     finnish();
@@ -643,6 +661,22 @@ void LinkChecker::killJob()
     t_job_ = 0;
     aux->disconnect(this);
     aux->kill(true); // quietly   
+}
+
+LinkStatus::Status LinkChecker::getHttpStatus() const
+{
+    QString status_code = QString::number(linkstatus_->httpHeader().statusCode());
+    
+    if(status_code[0] == '2')
+        return LinkStatus::SUCCESSFULL;
+    else if(status_code[0] == '3')
+        return LinkStatus::HTTP_REDIRECTION;
+    else if(status_code[0] == '4')
+        return LinkStatus::HTTP_CLIENT_ERROR;
+    else if(status_code[0] == '5')
+        return LinkStatus::HTTP_SERVER_ERROR;
+    else
+        return LinkStatus::UNDETERMINED;
 }
 
 #include "linkchecker.moc"

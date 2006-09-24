@@ -136,6 +136,7 @@ void LinkStatus::loadNode()
     {
         setErrorOccurred(true);
         setError(i18n( "Malformed" ));
+        setStatus(LinkStatus::MALFORMED);
         kdDebug(23100) <<  "Malformed:" << endl;
         kdDebug(23100) <<  "Node: " << node()->content() << endl;
         //kdDebug(23100) <<  toString() << endl; // probable segfault
@@ -160,6 +161,7 @@ void LinkStatus::setMalformed(bool flag)
     {
         setErrorOccurred(true);
         setError(i18n( "Malformed" ));
+        setStatus(LinkStatus::MALFORMED);
         kdDebug(23100) <<  "Malformed!" << endl;
         kdDebug(23100) <<  node()->content() << endl;
         //kdDebug(23100) <<  toString() << endl; // probable segfault
@@ -168,6 +170,7 @@ void LinkStatus::setMalformed(bool flag)
     {
         setErrorOccurred(false);
         setError("");
+        setStatus(LinkStatus::UNDETERMINED);
     }
 }
 
@@ -185,7 +188,7 @@ void LinkStatus::save(QDomElement& element) const
     tmp_1.setAttribute("broken", 
                        ResultView::displayableWithStatus(this, ResultView::bad) ? 
                                "true" : "false");
-    tmp_1.appendChild(element.ownerDocument().createTextNode(status()));
+    tmp_1.appendChild(element.ownerDocument().createTextNode(statusText()));
     child_element.appendChild(tmp_1);
 
     // <label>

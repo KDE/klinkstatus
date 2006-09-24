@@ -73,34 +73,27 @@ bool ResultView::displayableWithStatus(LinkStatus const* ls, Status const& statu
 {
     if(status == ResultView::good)
     {
-        if(ls->errorOccurred())
-            return false;
-        else
-            if(ls->absoluteUrl().protocol() != "http" &&
-                    ls->absoluteUrl().protocol() != "https")
-                return (ls->status() == "OK" ||
-                        (!ls->absoluteUrl().hasRef()));
-            else
-            {
-                QString status_code(QString::number(ls->httpHeader().statusCode()));
-                return (ls->status() == "OK" ||
-                        (!ls->absoluteUrl().hasRef() &&
-                         status_code[0] != '5' &&
-                         status_code[0] != '4'));
-            }
+        return 
+                ls->status() == LinkStatus::SUCCESSFULL ||
+                ls->status() == LinkStatus::HTTP_REDIRECTION;
     }
     else if(status == ResultView::bad)
     {
-        return (!displayableWithStatus(ls, ResultView::good) && !ls->error().contains(i18n("Timeout")));
+        return 
+                ls->status() == LinkStatus::BROKEN ||
+                ls->status() == LinkStatus::HTTP_CLIENT_ERROR ||
+                ls->status() == LinkStatus::HTTP_SERVER_ERROR;
     }
     else if(status == ResultView::malformed)
     {
-        return (ls->error() == i18n( "Malformed" ));
+        return ls->status() == LinkStatus::MALFORMED;
     }
     else if(status == ResultView::undetermined)
     {
-        return (ls->error().contains(i18n("Timeout")) ||
-                (ls->absoluteUrl().hasRef() && ls->status() != "OK"));
+        return 
+                ls->status() == LinkStatus::UNDETERMINED ||
+                ls->status() == LinkStatus::TIMEOUT ||
+                ls->status() == LinkStatus::NOT_SUPPORTED;
     }
     else
         return true;
@@ -150,8 +143,7 @@ QColor const& ResultViewItem::textStatusColor() const
     else if(linkStatus()->absoluteUrl().hasRef())
         return Qt::blue;
 
-    else if(linkStatus()->absoluteUrl().protocol() != "http" &&
-            linkStatus()->absoluteUrl().protocol() != "https")
+    else if(!linkStatus()->absoluteUrl().protocol().startsWith("http"))
         return Qt::darkGreen;
 
     else

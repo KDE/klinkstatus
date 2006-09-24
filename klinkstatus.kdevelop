@@ -17,7 +17,7 @@
     <description></description>
     <ignoreparts/>
     <secondaryLanguages/>
-    <versioncontrol></versioncontrol>
+    <versioncontrol/>
   </general>
   <kdevautoproject>
     <general>
@@ -65,19 +65,19 @@
           <envvar value="kfilereplace kommander kimagemapeditor kxsldbg quanta lib" name="DO_NOT_COMPILE" />
         </envvars>
         <configargs>--enable-debug=full</configargs>
-        <builddir/>
+        <builddir></builddir>
         <topsourcedir>..</topsourcedir>
-        <cppflags/>
-        <ldflags/>
+        <cppflags></cppflags>
+        <ldflags></ldflags>
         <ccompiler>kdevgccoptions</ccompiler>
         <cxxcompiler>kdevgppoptions</cxxcompiler>
         <f77compiler>kdevg77options</f77compiler>
-        <ccompilerbinary/>
-        <cxxcompilerbinary/>
-        <f77compilerbinary/>
-        <cflags/>
-        <cxxflags/>
-        <f77flags/>
+        <ccompilerbinary></ccompilerbinary>
+        <cxxcompilerbinary></cxxcompilerbinary>
+        <f77compilerbinary></f77compilerbinary>
+        <cflags></cflags>
+        <cxxflags>-DQT_FATAL_ASSERT</cxxflags>
+        <f77flags></f77flags>
       </default>
     </configurations>
     <make>

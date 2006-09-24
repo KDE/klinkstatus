@@ -28,7 +28,7 @@
 class KHTMLPart;
 
 #include "../parser/http.h"
-class LinkStatus;
+#include "linkstatus.h"
 class SearchManager;
 
 #include <iostream>
@@ -74,6 +74,8 @@ protected:
     void checkRef(); // #...
 
 private:
+    
+    LinkStatus::Status getHttpStatus() const;
     void checkRef(LinkStatus const* linkstatus_parent);
     void checkRef(KURL const& url);
     void killJob();    
