@@ -141,7 +141,7 @@ void ActionManager::initTabWidget(TabWidgetSession* tabWidgetSession)
 
     //     this action must be in the tabwidget because the slot can't be connected to a particular sessionWidget
     KToggleAction* toggle_action = new KToggleAction(i18n("&Follow last Link checked"),
-                                   "svn_switch", "Ctrl+f",
+                                   "make_kdevelop", "Ctrl+f",
                                    d->tabWidgetSession, SLOT(slotFollowLastLinkChecked()),
                                    d->actionCollection, "follow_last_link_checked");
     toggle_action->setChecked(KLSConfig::followLastLinkChecked());
