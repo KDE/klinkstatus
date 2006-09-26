@@ -1,5 +1,5 @@
 # set the include path for X, qt and KDE
-INCLUDES = -I$(top_srcdir)/src/cfg -I./ui $(all_includes)
+INCLUDES = -I$(top_srcdir)/src/cfg -I./ui -I./ui/settings $(all_includes)
 
 # these are the headers for your project
 
