@@ -196,6 +196,26 @@ void NodeMETA::parseAttributeURL()
     }
 }
 
+QString NodeMETA::charset() const
+{
+    QString charset;
+    QString content(atributoCONTENT());
+    
+    if(content.isEmpty())
+        return charset;
+    
+    int index = content.find("charset=");
+    if(index != -1) 
+    {    
+        index += QString("charset=").length();
+        charset = content.mid(index, content.length() - index);
+        charset = charset.stripWhiteSpace();
+    }
+    
+//     kdDebug(23100) << "Charset: |" << charset << "|" << endl;
+    return charset;
+}
+
 /*
   NodeIMG________________________________________________________________________
 */

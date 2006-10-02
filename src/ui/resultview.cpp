@@ -69,6 +69,36 @@ void ResultView::setColumns(QStringList const& columns)
     number_of_columns_ = columns.size();
 }
 
+bool ResultView::displayableWithStatus(LinkStatus const* ls, Status const& status)
+{
+    if(status == ResultView::good)
+    {
+        return 
+                ls->status() == LinkStatus::SUCCESSFULL ||
+                ls->status() == LinkStatus::HTTP_REDIRECTION;
+    }
+    else if(status == ResultView::bad)
+    {
+        return 
+                ls->status() == LinkStatus::BROKEN ||
+                ls->status() == LinkStatus::HTTP_CLIENT_ERROR ||
+                ls->status() == LinkStatus::HTTP_SERVER_ERROR;
+    }
+    else if(status == ResultView::malformed)
+    {
+        return ls->status() == LinkStatus::MALFORMED;
+    }
+    else if(status == ResultView::undetermined)
+    {
+        return 
+                ls->status() == LinkStatus::UNDETERMINED ||
+                ls->status() == LinkStatus::TIMEOUT ||
+                ls->status() == LinkStatus::NOT_SUPPORTED;
+    }
+    else
+        return true;
+}
+
 
 // ******************************* ResultViewItem *****************************
 
@@ -113,8 +143,7 @@ QColor const ResultViewItem::textStatusColor() const
     else if(linkStatus()->absoluteUrl().hasRef())
         return Qt::blue;
 
-    else if(linkStatus()->absoluteUrl().protocol() != "http" &&
-            linkStatus()->absoluteUrl().protocol() != "https")
+    else if(!linkStatus()->absoluteUrl().protocol().startsWith("http"))
         return Qt::darkGreen;
 
     else
@@ -145,11 +174,3 @@ QColor const ResultViewItem::textStatusColor() const
             return Qt::red;
     }
 }
-
-
-
-
-
-
-
-

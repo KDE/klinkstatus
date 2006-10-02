@@ -505,7 +505,7 @@ void SessionWidget::showBottomStatusLabel(Q3ListViewItem * item)
     TreeViewItem* _item = tree_view->myItem(item);
     if(_item)
     {
-        QString status = _item->linkStatus()->status();
+        QString status = _item->linkStatus()->statusText();
         textlabel_status->setText(status);
 
         if(textlabel_status->sizeHint().width() > textlabel_status->maximumWidth())
@@ -598,7 +598,7 @@ void SessionWidget::slotStartSearch()
     }
 
     to_start_ = true;
-    slotLoadSettings(true);
+    slotLoadSettings(false);
     slotCheck();
     resetPendingActions();
 

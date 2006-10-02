@@ -45,13 +45,28 @@ class LinkStatus
 {
 public:
 
+    enum Status {
+        UNDETERMINED,
+        SUCCESSFULL,
+        BROKEN,
+        HTTP_REDIRECTION,
+        HTTP_CLIENT_ERROR,
+        HTTP_SERVER_ERROR,
+        TIMEOUT,
+        NOT_SUPPORTED,
+        MALFORMED
+    };
+    
     LinkStatus();
     LinkStatus(KUrl const& absolute_url);
     LinkStatus(Node* node, LinkStatus* parent);
     ~LinkStatus();
+    
+    void save(QDomElement& element) const;
 
     void reset();
     void setRootUrl(KUrl const& url);
+    void setStatus(Status status);
     void setDepth(uint depth);
     void setParent(LinkStatus* parent);
     void setOriginalUrl(QString const& url_original);
@@ -59,7 +74,7 @@ public:
     void setAbsoluteUrl(KUrl const& url_absoluto);
     void setDocHtml(QString const& doc_html);
     void setHttpHeader(HttpResponseHeader const& cabecalho_http);
-    void setStatus(QString const& status);
+    void setStatusText(QString const& statusText); // FIXME Legacy. This should be eliminated in favor of LinkStatus::Status
     void setError(QString const& error);
     void setIsRoot(bool flag);
     void setErrorOccurred(bool houve_error);
@@ -85,8 +100,9 @@ public:
     void addReferrer(KUrl const& url);
 
     KUrl const& rootUrl() const;
+    Status const& status() const;
     uint depth() const;
-    bool local() const; 		// linkstatus.paradigma.co.pt == paradigma.co.pt
+    bool local() const;         // linkstatus.paradigma.co.pt == paradigma.co.pt
     bool isLocalRestrict() const; // linkstatus.paradigma.co.pt != paradigma.co.pt
     LinkStatus const* parent() const;
     QString const& originalUrl() const;
@@ -95,7 +111,7 @@ public:
     QString const& docHtml() const;
     HttpResponseHeader const& httpHeader() const;
     HttpResponseHeader& httpHeader();
-    QString status() const;
+    QString statusText() const; // FIXME Legacy. This should be eliminated in favor of LinkStatus::Status
     QString const& error() const;
     bool isRoot() const;
     bool errorOccurred() const;
@@ -128,6 +144,7 @@ private:
 private:
 
     KUrl root_url_; // The URL which made the search start
+    Status status_;
     int depth_;
     int external_domain_depth_; // Para se poder escolher explorar domains diferentes ate n depth
     QString original_url_;
@@ -135,7 +152,7 @@ private:
     KUrl absolute_url_;
     QString doc_html_;
     HttpResponseHeader http_header_;
-    QString status_;
+    QString status_text_; // FIXME Legacy. This should be eliminated in favor of LinkStatus::Status
     QString error_;
     bool is_root_;
     bool error_occurred_;

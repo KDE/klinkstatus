@@ -133,7 +133,7 @@ void ActionManager::initTabWidget(TabWidgetSession* tabWidgetSession)
     // *************** View menu *********************
 
 	//     this action must be in the tabwidget because the slot can't be connected to a particular sessionWidget
-    KToggleAction *toggle_action = new KToggleAction(KIcon("svn_switch"), i18n("&Follow last Link checked"), d->actionCollection, "follow_last_link_checked");
+    KToggleAction *toggle_action = new KToggleAction(KIcon("make_kdevelop"), i18n("&Follow last Link checked"), d->actionCollection, "follow_last_link_checked");
     connect(toggle_action, SIGNAL(triggered(bool)), d->tabWidgetSession, SLOT(slotFollowLastLinkChecked()));
     toggle_action->setShortcut(KShortcut("Ctrl+f"));
     toggle_action->setChecked(KLSConfig::followLastLinkChecked());

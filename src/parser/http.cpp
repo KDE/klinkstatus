@@ -21,6 +21,7 @@
 #include "http.h"
 #include "mstring.h"
 
+#include <kdebug.h>
 
 #include <iostream>
 
@@ -54,3 +55,33 @@ void HttpResponseHeader::parseLocation()
   location_ = cabecalho.mid(location, fim_de_linha - location);
 }
 
+QString HttpResponseHeader::charset() const
+{
+    return HttpResponseHeader::charset(value("content-type"));
+}
+
+QString HttpResponseHeader::charset(QString const& contentTypeHttpHeaderLine)
+{
+    QString _charset;
+    
+    if(contentTypeHttpHeaderLine.isEmpty())
+        return _charset;
+    
+    int index = contentTypeHttpHeaderLine.find("charset=");
+    if(index != -1)
+        index += QString("charset=").length();
+    else {
+        index = contentTypeHttpHeaderLine.find("charset:");
+        if(index != -1)
+            index += QString("charset:").length();
+    }
+    
+    if(index != -1) {
+        _charset = contentTypeHttpHeaderLine.mid(index);
+        _charset = _charset.stripWhiteSpace();
+    }
+    
+//     kdDebug(23100) << "Charset: |" << _charset << "|" << endl;
+    return _charset;
+
+}

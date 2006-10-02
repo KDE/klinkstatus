@@ -28,7 +28,7 @@
 class KHTMLPart;
 
 #include "../parser/http.h"
-class LinkStatus;
+#include "linkstatus.h"
 class SearchManager;
 
 #include <iostream>
@@ -74,6 +74,8 @@ protected:
     void checkRef(); // #...
 
 private:
+    
+    LinkStatus::Status getHttpStatus() const;
     void checkRef(LinkStatus const* linkstatus_parent);
     void checkRef(KUrl const& url);
     void killJob();    
@@ -82,6 +84,8 @@ private:
      * @return false if the redirection was already checked by the search manager
      */
     bool processRedirection(KUrl const& url);
+    
+    void findDocumentCharset(QString const& data);
 
 private:
 
@@ -90,6 +94,7 @@ private:
     KIO::TransferJob* t_job_;
     int time_out_;
     LinkChecker* checker_;
+    QString document_charset_;
 /*  A redirection has appened, with the current URL. Several redirections 
     can happen until the final URL is reached.*/
     bool redirection_;
@@ -98,6 +103,18 @@ private:
     bool header_checked_;
     bool finnished_;
     bool parsing_;
+    
+    /**
+     * Whether the charset of the document is already checked.
+     * (e.g. <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>)
+     */
+    bool is_charset_checked_;
+    /**
+     * Wheter the page define the enconding (latin1, utf8, etc).
+     * According to the spec (http://www.w3.org/TR/html4/charset.html), 
+     * it first check the server response and then the info in the html meta element.
+     */
+    bool has_defined_charset_;
     
     static int count_; // debug attribute that counts how many links were checked
 };

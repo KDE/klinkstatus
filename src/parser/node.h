@@ -156,7 +156,8 @@ public:
 class NodeMETA: public Node
 {
 public:
-    NodeMETA(const QString & content);
+    NodeMETA();
+    NodeMETA(QString const& content);
     ~NodeMETA()
     {}
     ;
@@ -167,6 +168,7 @@ public:
     QString atributoHTTP_EQUIV() const;
     QString atributoNAME() const;
     QString atributoCONTENT() const;
+    QString charset() const;
     bool isRedirection() const;
 
     virtual void parse();

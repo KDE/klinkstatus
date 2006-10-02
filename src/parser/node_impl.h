@@ -177,7 +177,13 @@ inline NodeLINK::NodeLINK(const QString & content)
 
 // class NodeMeta________________________________________
 
-inline NodeMETA::NodeMETA(const QString & content)
+inline NodeMETA::NodeMETA()
+    : Node()
+{
+    element_ = META;
+}
+
+inline NodeMETA::NodeMETA(QString const& content)
         : Node(content)
 {
     element_ = Node::META;
@@ -249,6 +255,7 @@ inline void NodeMETA::parseAttributeNAME()
 inline void NodeMETA::parseAttributeCONTENT()
 {
     attribute_content_ = getAttribute("CONTENT=");
+//     kdDebug(23100) << "CONTENT: " << attribute_content_ << endl;
 }
 
 

@@ -19,7 +19,7 @@
  ***************************************************************************/
 
 inline LinkStatus::LinkStatus()
-        : depth_(-1), external_domain_depth_(-1), is_root_(false),
+        : status_(LinkStatus::UNDETERMINED), depth_(-1), external_domain_depth_(-1), is_root_(false),
         error_occurred_(false), is_redirection_(false), parent_(0), redirection_(0), checked_(false),
         only_check_header_(true), malformed_(false),
         node_(0), has_base_URI_(false), has_html_doc_title_(false), ignored_(false),
@@ -27,7 +27,7 @@ inline LinkStatus::LinkStatus()
 {}
 
 inline LinkStatus::LinkStatus(KUrl const& absolute_url)
-        : depth_(-1), external_domain_depth_(-1), is_root_(false),
+        : status_(LinkStatus::UNDETERMINED), depth_(-1), external_domain_depth_(-1), is_root_(false),
         error_occurred_(false), is_redirection_(false), parent_(0), redirection_(0), checked_(false),
         only_check_header_(true), malformed_(false),
         node_(0), has_base_URI_(false), has_html_doc_title_(false), ignored_(false),
@@ -37,7 +37,7 @@ inline LinkStatus::LinkStatus(KUrl const& absolute_url)
 }
 
 inline LinkStatus::LinkStatus(Node* node, LinkStatus* parent)
-        : depth_(-1), external_domain_depth_(-1), is_root_(false),
+        : status_(LinkStatus::UNDETERMINED), depth_(-1), external_domain_depth_(-1), is_root_(false),
         error_occurred_(false), is_redirection_(false), parent_(0), redirection_(0), checked_(false),
         only_check_header_(true), malformed_(false),
         node_(node), has_base_URI_(false), has_html_doc_title_(false), ignored_(false),
@@ -53,6 +53,11 @@ inline LinkStatus::LinkStatus(Node* node, LinkStatus* parent)
 inline void LinkStatus::setRootUrl(KUrl const& url)
 {
     root_url_ = url;
+}
+
+inline void LinkStatus::setStatus(Status status)
+{
+    status_ = status;
 }
 
 inline void LinkStatus::setDepth(uint depth)
@@ -94,10 +99,10 @@ inline void LinkStatus::setHttpHeader(HttpResponseHeader const& cabecalho_http)
     http_header_ = cabecalho_http;
 }
 
-inline void LinkStatus::setStatus(QString const& status)
+inline void LinkStatus::setStatusText(QString const& status)
 {
     Q_ASSERT(!status.isEmpty());
-    status_ = status;
+    status_text_ = status;
 }
 
 inline void LinkStatus::setError(QString const& error)
@@ -236,6 +241,11 @@ inline KUrl const& LinkStatus::rootUrl() const
     return root_url_;
 }
 
+inline LinkStatus::Status const& LinkStatus::status() const
+{
+    return status_;
+}
+
 inline uint LinkStatus::depth() const
 {
     return depth_;
@@ -286,18 +296,17 @@ inline HttpResponseHeader& LinkStatus::httpHeader()
     return http_header_;
 }
 
-inline QString LinkStatus::status() const
+inline QString LinkStatus::statusText() const
 {
     if(errorOccurred())
         return error();
-    else if(absoluteUrl().protocol() != "http" &&
-            absoluteUrl().protocol() != "https")
-        return status_;
+    else if(!absoluteUrl().protocol().startsWith("http"))
+        return status_text_;
     else
     {
         QString string_code = QString::number(httpHeader().statusCode());
         if(absoluteUrl().hasRef()) // ref URL
-            return status_;
+            return status_text_;
         else if(string_code == "200"/* or string_code == "304"*/)
             return "OK";
         else

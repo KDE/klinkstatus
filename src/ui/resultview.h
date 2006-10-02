@@ -35,6 +35,14 @@ public:
     static const QString MARKUP_LABEL;
     static const QString LINK_LABEL_LABEL;
     
+    enum Status {
+        none = 0,
+        good,
+        bad,
+        malformed,
+        undetermined // timeouts and refs
+    };
+
     ResultView();
     virtual ~ResultView();
 
@@ -47,6 +55,7 @@ public:
     virtual void setColumns(QStringList const& columns);
     
     int numberOfColumns() const { return number_of_columns_; }
+    static bool displayableWithStatus(LinkStatus const* ls, Status const& status);
     
     int urlColumnIndex() const {return col_url_; }
     int statusColumnIndex() const {return col_status_; }

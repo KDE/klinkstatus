@@ -52,7 +52,7 @@ void LinkStatusHelper::save(QDomElement& element) const
     // <status>
     tmp_1 = element.ownerDocument().createElement("status");
     tmp_1.setAttribute("broken", isBroken() ? "true" : "false");
-    tmp_1.appendChild(element.ownerDocument().createTextNode(linkstatus_->status()));
+    tmp_1.appendChild(element.ownerDocument().createTextNode(linkstatus_->statusText()));
     child_element.appendChild(tmp_1);
 
     // <label>
@@ -95,12 +95,12 @@ bool LinkStatusHelper::hasStatus(Status status) const
         else
             if(linkstatus_->absoluteUrl().protocol() != "http" &&
                linkstatus_->absoluteUrl().protocol() != "https")
-                return (linkstatus_->status() == "OK" ||
+                return (linkstatus_->statusText() == "OK" ||
                         (!linkstatus_->absoluteUrl().hasRef()));
         else
         {
             QString status_code(QString::number(linkstatus_->httpHeader().statusCode()));
-            return (linkstatus_->status() == "OK" ||
+            return (linkstatus_->statusText() == "OK" ||
                     (!linkstatus_->absoluteUrl().hasRef() &&
                     status_code[0] != '5' &&
                     status_code[0] != '4'));
@@ -117,7 +117,7 @@ bool LinkStatusHelper::hasStatus(Status status) const
     else if(status == undetermined)
     {
         return (linkstatus_->error().contains("Timeout") ||
-                (linkstatus_->absoluteUrl().hasRef() && linkstatus_->status() != "OK"));
+                (linkstatus_->absoluteUrl().hasRef() && linkstatus_->statusText() != "OK"));
     }
     else
         return true;
