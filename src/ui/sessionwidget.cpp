@@ -30,7 +30,7 @@
 #include <kpushbutton.h>
 #include <kfiledialog.h>
 
-#include <ktempfile.h>
+#include <ktemporaryfile.h>
 #include <ksavefile.h>
 #include <kstandarddirs.h>
 #include <kio/netaccess.h>
@@ -691,12 +691,15 @@ void SessionWidget::slotExportAsHTML( )
         return;
 
     QString filename;
-    KTempFile tmp; // ### only used for network export
 
     if(url.isLocalFile())
         filename = url.path();
-    else
-        filename = tmp.name();
+    else {
+        KTemporaryFile tmp; // ### only used for network export
+        tmp.setAutoRemove(false);
+        tmp.open();
+        filename = tmp.fileName();
+    }
 
     KSaveFile *savefile = new KSaveFile(filename);
     if(savefile->status() == 0) // ok
