@@ -251,7 +251,8 @@ void SessionWidget::slotCheck()
     
     if(!url.protocol().startsWith("http")) 
     {
-        DocumentRootDialog dialog(this, url.directory());
+        QString documentRootHint = url.directory().isEmpty() ? "/" : url.directory();
+        DocumentRootDialog dialog(this, documentRootHint);
         dialog.exec();
         search_manager_->setDocumentRoot(KURL::fromPathOrURL(dialog.url()));
     }
