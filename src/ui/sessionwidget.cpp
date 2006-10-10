@@ -494,9 +494,12 @@ void SessionWidget::insertUrlAtCombobox(QString const& url)
     combobox_url->addToHistory(url);
 }
 
-void SessionWidget::showBottomStatusLabel(QListViewItem * item)
+void SessionWidget::showBottomStatusLabel(QListViewItem* item)
 {
     kdDebug(23100) << "SessionWidget::showBottomStatusLabel" << endl;
+    
+    if(!item)
+        return;
 
     TreeViewItem* _item = tree_view->myItem(item);
     if(_item)

@@ -99,6 +99,8 @@ void LinkChecker::check()
                          this, SLOT(slotRedirection(KIO::Job *, const KURL &)));
 
         QTimer::singleShot( time_out_ * 1000, this, SLOT(slotTimeOut()) );
+        
+        t_job_->setInteractive(false);
     }
 }
 
@@ -346,7 +348,8 @@ void LinkChecker::slotResult(KIO::Job* /*job*/)
 
     if(job->error())
     {
-        kdDebug(23100) <<  job->errorString() << endl;
+        kdDebug(23100) << "Job error: " <<  job->errorString() << endl;
+        kdDebug(23100) << "Job error code: " <<  job->error() << endl;
 
         if(job->error() == KIO::ERR_IS_DIRECTORY)
         {
@@ -356,14 +359,17 @@ void LinkChecker::slotResult(KIO::Job* /*job*/)
         else
         {
             ls->setErrorOccurred(true);
-            ls->setStatus(LinkStatus::BROKEN);
+            if(job->error() == KIO::ERR_SERVER_TIMEOUT)
+                ls->setStatus(LinkStatus::TIMEOUT);
+            else
+                ls->setStatus(LinkStatus::BROKEN);
 
             if(job->errorString().isEmpty())
                 kdWarning(23100) << "\n\nError string is empty, error = " << job->error() << "\n\n\n";
             if(job->error() != KIO::ERR_NO_CONTENT) 
                 ls->setError(job->errorString());
             else
-                ls->setError(i18n( "No Content") );
+                ls->setError(i18n("No Content"));
         }
     }
 
