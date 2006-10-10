@@ -605,7 +605,7 @@ QPixmap TreeColumnViewItem::pixmap(int column) const
         else if(linkStatus()->status() == LinkStatus::SUCCESSFULL)
             return SmallIcon("ok");
         else if(linkStatus()->status() == LinkStatus::TIMEOUT)
-            return SmallIcon("kalarm");
+            return SmallIcon("history_clear"); 
         else if(linkStatus()->status() == LinkStatus::UNDETERMINED)
             return SmallIcon("help");
     }

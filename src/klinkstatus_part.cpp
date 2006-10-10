@@ -161,7 +161,7 @@ void KLinkStatusPart::slotAbout()
 {
     if(m_dlgAbout == 0)
     {
-	static KAboutData * about = createAboutData();
+        static KAboutData * about = createAboutData();
         m_dlgAbout = new KAboutApplication(about, tabwidget_, "about_app");
         if(m_dlgAbout == 0)
             return;

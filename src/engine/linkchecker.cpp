@@ -347,7 +347,8 @@ void LinkChecker::slotResult(KIO::Job* /*job*/)
 
     if(job->error())
     {
-        kDebug(23100) <<  job->errorString() << endl;
+        kDebug(23100) << "Job Error: " <<  job->errorString() << endl;
+        kDebug(23100) << "Job Error code: " <<  job->error() << endl;
 
         if(job->error() == KIO::ERR_IS_DIRECTORY)
         {
@@ -357,7 +358,10 @@ void LinkChecker::slotResult(KIO::Job* /*job*/)
         else
         {
             ls->setErrorOccurred(true);
-            ls->setStatus(LinkStatus::BROKEN);
+            if(job->error() == KIO::ERR_SERVER_TIMEOUT)
+                ls->setStatus(LinkStatus::TIMEOUT);
+            else
+                ls->setStatus(LinkStatus::BROKEN);
 
             if(job->errorString().isEmpty())
                 kWarning(23100) << "\n\nError string is empty, error = " << job->error() << "\n\n\n";
