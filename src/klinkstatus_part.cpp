@@ -49,7 +49,7 @@
 
 
 const char KLinkStatusPart::description_[] = I18N_NOOP( "A Link Checker" );
-const char KLinkStatusPart::version_[] = "0.3.1";
+const char KLinkStatusPart::version_[] = "0.3.2";
 
 // Factory code for KDE 3
 typedef KParts::GenericFactory<KLinkStatusPart> KLinkStatusFactory;
