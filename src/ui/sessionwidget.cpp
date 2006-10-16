@@ -705,18 +705,17 @@ void SessionWidget::slotExportAsHTML( )
     }
 
     KSaveFile *savefile = new KSaveFile(filename);
-    if(savefile->status() == 0) // ok
+    if(savefile->open()) // ok
     {
-        QTextStream *outputStream = savefile->textStream();
-        outputStream->setEncoding(QTextStream::UnicodeUTF8);
+        QTextStream outputStream ( savefile );
+        outputStream.setEncoding(QTextStream::UnicodeUTF8);
 
         QString xslt_doc = FileManager::read(KStandardDirs::locate("appdata", "styles/results_stylesheet.xsl"));
         XSLT xslt(xslt_doc);
 //         kDebug(23100) << search_manager_->toXML() << endl;
         QString html_ouptut = xslt.transform(search_manager_->toXML());
-        (*outputStream) << html_ouptut << endl;
-
-        savefile->close();
+        outputStream << html_ouptut << endl;
+        outputStream.flush();
     }
 
     delete savefile;
