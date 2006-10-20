@@ -191,10 +191,10 @@
                                             <property name="specialValueText">
                                                 <string>Unlimited</string>
                                             </property>
-                                            <property name="maxValue">
+                                            <property name="maximum">
                                                 <number>15</number>
                                             </property>
-                                            <property name="minValue">
+                                            <property name="minimum">
                                                 <number>0</number>
                                             </property>
                                             <property name="value">

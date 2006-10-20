@@ -45,10 +45,10 @@
                             <height>0</height>
                         </size>
                     </property>
-                    <property name="maxValue">
+                    <property name="maximum">
                         <number>1000</number>
                     </property>
-                    <property name="minValue">
+                    <property name="minimum">
                         <number>1</number>
                     </property>
                     <property name="value">
@@ -83,10 +83,10 @@
                             <verstretch>0</verstretch>
                         </sizepolicy>
                     </property>
-                    <property name="maxValue">
+                    <property name="maximum">
                         <number>3600</number>
                     </property>
-                    <property name="minValue">
+                    <property name="minimum">
                         <number>1</number>
                     </property>
                     <property name="value">
@@ -134,10 +134,10 @@
                             <verstretch>0</verstretch>
                         </sizepolicy>
                     </property>
-                    <property name="maxValue">
+                    <property name="maximum">
                         <number>1000</number>
                     </property>
-                    <property name="minValue">
+                    <property name="minimum">
                         <number>5</number>
                     </property>
                     <property name="value">
@@ -252,10 +252,10 @@
                                     <property name="specialValueText">
                                         <string>Unlimited</string>
                                     </property>
-                                    <property name="maxValue">
+                                    <property name="maximum">
                                         <number>15</number>
                                     </property>
-                                    <property name="minValue">
+                                    <property name="minimum">
                                         <number>0</number>
                                     </property>
                                     <property name="value">
