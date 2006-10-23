@@ -67,9 +67,9 @@ kde4_add_ui3_files(klinkstatuspart_PART_SRCS
     ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/settings/configidentificationdialogui.ui
 	)
 
-kde4_add_kcfg_files(klinkstatuspart klinkstatuspart_PART_SRCS ${CMAKE_SOURCE_DIR}/klinkstatus/src/cfg/klsconfig.kcfgc)
+kde4_add_kcfg_files(klinkstatuspart_PART_SRCS ${CMAKE_SOURCE_DIR}/klinkstatus/src/cfg/klsconfig.kcfgc)
 
-kde4_automoc(klinkstatuspart ${klinkstatuspart_PART_SRCS})
+kde4_automoc(${klinkstatuspart_PART_SRCS})
 
 kde4_add_plugin(klinkstatuspart WITH_PREFIX ${klinkstatuspart_PART_SRCS})
 
@@ -91,7 +91,7 @@ install(TARGETS klinkstatuspart  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 set(klinkstatus_SRCS klinkstatus.cpp main.cpp )
 
-kde4_automoc(klinkstatus ${klinkstatus_SRCS})
+kde4_automoc(${klinkstatus_SRCS})
 
 kde4_add_executable(klinkstatus ${klinkstatus_SRCS})
 
