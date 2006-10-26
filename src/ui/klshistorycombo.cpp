@@ -18,7 +18,6 @@
 #include <kstdaccel.h>
 #include <kglobalsettings.h>
 //Added by qt3to4:
-#include <Q3ValueList>
 #include <QKeyEvent>
 #include <QEvent>
 #include <QLineEdit>
