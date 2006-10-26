@@ -76,7 +76,7 @@ SessionWidget::SessionWidget(int max_simultaneous_connections, int time_out,
         action_manager_(ActionManager::getInstance()),
         ready_(true), to_start_(false), to_pause_(false), to_stop_(false),
         in_progress_(false), paused_(false), stopped_(true),
-        bottom_status_timer_(this, "bottom_status_timer"),
+        bottom_status_timer_(this),
         max_simultaneous_connections_(max_simultaneous_connections),
         time_out_(time_out), tree_display_(false), follow_last_link_checked_(KLSConfig::followLastLinkChecked()),
         start_search_action_(0)
@@ -107,9 +107,9 @@ void SessionWidget::init()
 {
     combobox_url->init();
 
-    toolButton_clear_combo->setIconSet(SmallIconSet("locationbar_erase"));
+    toolButton_clear_combo->setIcon(SmallIconSet("locationbar_erase"));
 
-    pushbutton_url->setIconSet(KGlobal::iconLoader()->loadIconSet(QString("fileopen"), K3Icon::Small));
+    pushbutton_url->setIcon(KGlobal::iconLoader()->loadIconSet(QString("fileopen"), K3Icon::Small));
     QPixmap pixMap = KGlobal::iconLoader()->loadIcon(QString("fileopen"), K3Icon::Small);
     pushbutton_url->setFixedSize(pixMap.width() + 8, pixMap.height() + 8);
     connect(pushbutton_url, SIGNAL(clicked()), this, SLOT(slotChooseUrlDialog()));
@@ -156,7 +156,7 @@ void SessionWidget::newSearchManager()
 
     search_manager_ = new SearchManager(KLSConfig::maxConnectionsNumber(),
                                         KLSConfig::timeOut(),
-                                        this, "search_manager");
+                                        this);
     Q_ASSERT(search_manager_);
 
     connect(search_manager_, SIGNAL(signalRootChecked(const LinkStatus *, LinkChecker *)),
@@ -182,7 +182,7 @@ void SessionWidget::setColumns(QStringList const& colunas)
 
 void SessionWidget::setUrl(KUrl const& url)
 {
-    combobox_url->setCurrentText(url.prettyUrl());
+  combobox_url->setItemText(combobox_url->currentIndex(), url.prettyUrl());
     combobox_url->setFocus();
 }
 
@@ -257,7 +257,7 @@ void SessionWidget::slotCheck()
     if(!url.protocol().startsWith("http"))
     {
         KUrl dir = url;
-        dir.setPath( url.directory() );
+        dir.setPath(url.directory());
         DocumentRootDialog dialog(this, dir);
         dialog.exec();
         search_manager_->setDocumentRoot(dialog.url());
@@ -321,7 +321,7 @@ void SessionWidget::slotCheck()
     }
 
     kDebug(23100) <<  "URI: " << url.prettyUrl() << endl;
-    combobox_url->setCurrentText(url.prettyUrl());
+    combobox_url->setItemText(combobox_url->currentIndex(), url.prettyUrl());
     search_manager_->startSearch(url);
     slotSetTimeElapsed();
 }
@@ -517,7 +517,7 @@ void SessionWidget::showBottomStatusLabel(Q3ListViewItem* item)
             textlabel_status->setToolTip(QString());
 
         bottom_status_timer_.stop();
-        bottom_status_timer_.start(5 * 1000, true);
+        bottom_status_timer_.start(5 * 1000);
     }
 }
 
@@ -555,7 +555,7 @@ void SessionWidget::slotLinksToCheckTotalSteps(uint steps)
 
 void SessionWidget::slotClearComboUrl()
 {
-    combobox_url->setCurrentText("");
+    combobox_url->setItemText(combobox_url->currentIndex(), "");
 }
 
 void SessionWidget::slotChooseUrlDialog()
@@ -708,7 +708,7 @@ void SessionWidget::slotExportAsHTML( )
     if(savefile->open()) // ok
     {
         QTextStream outputStream ( savefile );
-        outputStream.setEncoding(QTextStream::UnicodeUTF8);
+        outputStream.setCodec(QTextCodec::codecForName("UTF-8"));
 
         QString xslt_doc = FileManager::read(KStandardDirs::locate("appdata", "styles/results_stylesheet.xsl"));
         XSLT xslt(xslt_doc);

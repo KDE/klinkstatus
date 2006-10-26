@@ -42,11 +42,10 @@
 #include <kiconloader.h>
 
 
-TabWidgetSession::TabWidgetSession(QWidget* parent, const char* name, Qt::WFlags f)
+TabWidgetSession::TabWidgetSession(QWidget* parent, Qt::WFlags f)
         : KTabWidget(parent, f) // tabs_ is initialized with size 17
 {
     setFocusPolicy(Qt::NoFocus);
-    setMargin(0);
     setTabReorderingEnabled(true);
     setHoverCloseButton(true);
     setHoverCloseButtonDelayed(true);
@@ -54,19 +53,19 @@ TabWidgetSession::TabWidgetSession(QWidget* parent, const char* name, Qt::WFlags
     tabs_.setAutoDelete(false);
     
     QToolButton* tabs_new = new QToolButton(this);
-    tabs_new->setAccel(QKeySequence("Ctrl+N"));
+    tabs_new->setShortcut(QKeySequence("Ctrl+N"));
     connect(tabs_new, SIGNAL(clicked()), this, SLOT(slotNewSession()));
-    tabs_new->setIconSet(SmallIconSet("tab_new_raised"));
+    tabs_new->setIcon(SmallIconSet("tab_new_raised"));
     tabs_new->adjustSize();
-    QToolTip::add(tabs_new, i18n("Open new tab"));
+    tabs_new->setToolTip(i18n("Open new tab"));
     setCornerWidget(tabs_new, Qt::TopLeftCorner);
 
     tabs_close_ = new QToolButton(this);
-    tabs_close_->setAccel(QKeySequence("Ctrl+W"));
+    tabs_close_->setShortcut(QKeySequence("Ctrl+W"));
     connect(tabs_close_, SIGNAL(clicked()), this, SLOT(closeSession()));
-    tabs_close_->setIconSet(SmallIconSet("tab_remove"));
+    tabs_close_->setIcon(SmallIconSet("tab_remove"));
     tabs_close_->adjustSize();
-    QToolTip::add(tabs_close_, i18n("Close the current tab"));
+    tabs_close_->setToolTip(i18n("Close the current tab"));
     setCornerWidget(tabs_close_, Qt::TopRightCorner);
 
     connect(this, SIGNAL(currentChanged(QWidget*)), this, SLOT(slotCurrentChanged(QWidget*)));
@@ -77,7 +76,7 @@ TabWidgetSession::~TabWidgetSession()
 
 SessionWidget* TabWidgetSession::currentSession() const
 {
-    return tabs_[currentPageIndex()];
+    return tabs_[currentIndex()];
 }
 
 bool TabWidgetSession::emptySessionsExist() const
@@ -120,7 +119,7 @@ SessionWidget* TabWidgetSession::newSession()
     connect(session_widget, SIGNAL(signalUpdateTabLabel(const LinkStatus *, SessionWidget*)),
             this, SLOT(updateTabLabel(const LinkStatus *, SessionWidget*)));
 
-    insertTab(session_widget, i18n("Session%1", count() + 1));
+    addTab(session_widget, i18n("Session") + QString::number(count() + 1));
 #ifdef _GNUC
     #warning The line above was originally like below, perhaps something should be changed in message extraction too?
 #endif
@@ -128,7 +127,7 @@ SessionWidget* TabWidgetSession::newSession()
     
     tabs_.insert(count() - 1, session_widget);
     Q_ASSERT(tabs_[count() - 1]);
-    setCurrentPage(count() - 1);
+    setCurrentIndex(count() - 1);
 
     return session_widget;
 }
@@ -144,7 +143,7 @@ SessionWidget* TabWidgetSession::newSession(KUrl const& url)
 void TabWidgetSession::closeSession()
 {
     if(count() > 1)
-        removePage(currentPage());
+        removePage(currentWidget());
 
     tabs_close_->setEnabled(count() > 1);
     ActionManager::getInstance()->action("close_tab")->setEnabled(count() > 1);
@@ -182,7 +181,7 @@ void TabWidgetSession::updateTabLabel(LinkStatus const* linkstatus, SessionWidge
     }
     else
     {
-        if(url.fileName(false).isEmpty())
+        if(url.fileName(KUrl::ObeyTrailingSlash).isEmpty())
             label = url.prettyUrl();
         else
             label = url.fileName(false);
@@ -190,8 +189,8 @@ void TabWidgetSession::updateTabLabel(LinkStatus const* linkstatus, SessionWidge
         label = KStringHandler::lsqueeze(label, 30);        
     }
     
-    changeTab(page, KCharsets::resolveEntities(label));
-    setTabIconSet(page, QIconSet(KIO::pixmapForUrl(url)));
+    setTabText(indexOf(page), KCharsets::resolveEntities(label));
+    setTabIcon(indexOf(page), QIconSet(KIO::pixmapForUrl(url)));
 }
 
 void TabWidgetSession::slotLoadSettings()
@@ -248,7 +247,7 @@ void TabWidgetSession::slotNewSession(KUrl const& url)
     {
         SessionWidget* sessionwidget = getEmptySession();
         sessionwidget->setUrl(url);
-        showPage(sessionwidget);
+        setCurrentIndex(indexOf(sessionwidget));
     }
 
     ActionManager::getInstance()->action("close_tab")->setEnabled(count() > 1);

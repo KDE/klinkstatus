@@ -66,7 +66,7 @@ ResultsSearchBar::ResultsSearchBar(QWidget* parent)
     d->layout->setSpacing(5);
     
     QToolButton* clearButton = new QToolButton(this);
-    clearButton->setIconSet(SmallIconSet(QApplication::reverseLayout() ? "clear_left" : "locationbar_erase"));
+    clearButton->setIcon(SmallIconSet(QApplication::layoutDirection() == Qt::RightToLeft ? "clear_left" : "locationbar_erase"));
     clearButton->setAutoRaise(true);
     d->layout->addWidget(clearButton);
 
@@ -169,7 +169,7 @@ void ResultsSearchBar::slotSearchComboChanged(int index)
     
     d->m_lastComboIndex = index;
     
-    d->timer.start(200, true);
+    d->timer.start(200);
 }
 
 void ResultsSearchBar::slotSearchStringChanged(const QString& search)
@@ -182,7 +182,7 @@ void ResultsSearchBar::slotSearchStringChanged(const QString& search)
     
     d->searchText = search;
     
-    d->timer.start(200, true);
+    d->timer.start(200);
 }
 
 void ResultsSearchBar::slotActivateSearch()

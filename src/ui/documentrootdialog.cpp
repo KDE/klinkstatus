@@ -48,6 +48,7 @@ DocumentRootDialog::DocumentRootDialog(QWidget *parent, KUrl const& url)
     m_urlRequester = new KUrlRequester(page);
     m_urlRequester->setUrl(url);
     m_urlRequester->setMinimumWidth(fontMetrics().maxWidth()*20);
+    m_urlRequester->setFocus();
     topLayout->addWidget(m_urlRequester);
 
     topLayout->addStretch(10);

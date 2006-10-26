@@ -74,7 +74,7 @@ protected slots:
     virtual void slotCopyParentUrlToClipboard() const = 0;
     virtual void slotCopyCellTextToClipboard() const = 0;
     virtual void slotEditReferrersWithQuanta() = 0;
-    virtual void slotEditReferrerWithQuanta(int id) = 0;
+    virtual void slotEditReferrerWithQuanta(QAction* action) = 0;
     virtual void slotEditReferrerWithQuanta(KUrl const& url) = 0;
     virtual void slotViewUrlInBrowser() = 0;
     virtual void slotViewParentUrlInBrowser() = 0;

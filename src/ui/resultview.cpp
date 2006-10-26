@@ -45,7 +45,7 @@ void ResultView::setColumns(QStringList const& columns)
     Q_ASSERT(columns.size() != 0);
     
     columns_.clear();
-    for(uint i = 0; i != columns.size(); ++i)
+    for(int i = 0; i != columns.size(); ++i)
     {
         if(columns[i] == ResultView::URL_LABEL)
         {
