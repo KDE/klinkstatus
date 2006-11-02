@@ -423,7 +423,7 @@ void TreeViewItem::init(LinkStatus const* linkstatus)
         QString text(KCharsets::resolveEntities(item.text(i + 1)));
 
         if(i + 1 == root_->urlColumnIndex()) {
-            setText(item.columnIndex() - 1, KUrl::decode_string(text));
+            setText(item.columnIndex() - 1, QUrl::fromPercentEncoding(text.toAscii()));
         }
         else if(i + 1 == root_->statusColumnIndex()) {
             setText(item.columnIndex() - 1, i18n(text.toUtf8()));

@@ -40,7 +40,7 @@ public:
     static void openQuanta(QStringList const& args);
     
 private:
-    Global(QObject *parent = 0, const char *name = 0);
+    Global(QObject *parent = 0);
     static void execCommand(QString const& command);
 
 private slots:

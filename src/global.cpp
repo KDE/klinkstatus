@@ -40,8 +40,8 @@ Global* Global::self()
     return m_self_;
 }
 
-Global::Global(QObject *parent, const char *name)
-        : QObject(parent, name), loop_started_(false)
+Global::Global(QObject *parent)
+        : QObject(parent), loop_started_(false)
 {
     m_self_ = this;
 }
