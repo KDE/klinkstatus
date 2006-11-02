@@ -42,7 +42,7 @@
 
 
 KLinkStatus::KLinkStatus()
-        : KParts::MainWindow( 0L, "KLinkStatus" )
+  : KParts::MainWindow(0, Qt::Window)
 {
     // set the shell's ui resource file
     setXMLFile("klinkstatus_shell.rc");
@@ -144,25 +144,10 @@ void KLinkStatus::removeDuplicatedActions()
     KAction* part_report_action = part_action_collection->action("report_bug");
 
     QWidget* container = part_about_action->container(0); // call this only once or segfault
-    part_about_action->unplug(container);
-    part_report_action->unplug(container);
+    container->removeAction(part_about_action);
+    container->removeAction(part_report_action);
     part_action_collection->remove(part_about_action);
     part_action_collection->remove(part_report_action);
-}
-
-void KLinkStatus::saveProperties(KConfig* /*config*/)
-{
-    // the 'config' object points to the session managed
-    // config file.  anything you write here will be available
-    // later when this app is restored
-}
-
-void KLinkStatus::readProperties(KConfig* /*config*/)
-{
-    // the 'config' object points to the session managed
-    // config file.  this function is automatically called whenever
-    // the app is being restored.  read in here whatever you wrote
-    // in 'saveProperties'
 }
 
 void KLinkStatus::optionsShowToolbar()

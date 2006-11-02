@@ -20,7 +20,6 @@
 
 #include "linkstatus.h"
 
-#include <klocale.h>
 #include <kcharsets.h>
 
 #include <QDomElement>
@@ -105,11 +104,11 @@ void LinkStatus::loadNode()
     if(malformed())
     {
         setErrorOccurred(true);
-        setError(i18n("Malformed"));
+        setError("Malformed");
         setStatus(LinkStatus::MALFORMED);
-        kdDebug(23100) <<  "Malformed:" << endl;
-        kdDebug(23100) <<  "Node: " << node()->content() << endl;
-        //kdDebug(23100) <<  toString() << endl; // probable segfault
+        kDebug(23100) <<  "Malformed:" << endl;
+        kDebug(23100) <<  "Node: " << node()->content() << endl;
+        //kDebug(23100) <<  toString() << endl; // probable segfault
     }
 }
 
@@ -130,11 +129,11 @@ void LinkStatus::setMalformed(bool flag)
     if(flag)
     {
         setErrorOccurred(true);
-        setError(i18n("Malformed"));
+        setError("Malformed");
         setStatus(LinkStatus::MALFORMED);
-        kdDebug(23100) <<  "Malformed!" << endl;
-        kdDebug(23100) <<  node()->content() << endl;
-        //kdDebug(23100) <<  toString() << endl; // probable segfault
+        kDebug(23100) <<  "Malformed!" << endl;
+        kDebug(23100) <<  node()->content() << endl;
+        //kDebug(23100) <<  toString() << endl; // probable segfault
     }
     else if(error() == "Malformed")
     {

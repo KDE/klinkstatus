@@ -37,14 +37,14 @@ typedef unsigned int uint;
    e.g.
    findWord("Biltre larvado", "biltre") => 6
 */
-int findWord(QString const& s, QString const& palavra, uint a_partir_do_indice = 0);
+int findWord(QString const& s, QString const& palavra, int a_partir_do_indice = 0);
 
 /**
    Similar to std::string::find but return the next index of the first char
    it finds.
    Case insensitive.
 */
-int findChar(QString const& s, QChar letra, uint a_partir_do_indice = 0);
+int findChar(QString const& s, QChar letra, int a_partir_do_indice = 0);
 
 /**
    Same as findWord but non space chars are eliminated.
@@ -55,7 +55,7 @@ int findChar(QString const& s, QChar letra, uint a_partir_do_indice = 0);
    findWord("<\na href=""></a>", "<a") => -1
    findSeparableWord("<\na href=""></a>", "<a") => 3
 */
-int findSeparableWord(QString const& s, QString const& palavra, uint a_partir_do_indice = 0);
+int findSeparableWord(QString const& s, QString const& palavra, int a_partir_do_indice = 0);
 
 /**
    Space means Unicode characters with decimal values 
@@ -66,11 +66,11 @@ bool isSpace(QChar c);
 /**
  Return -1 if unsuccessful.
 */
-int nextNonSpaceChar(QString const& s, uint i);
-int nextNonSpaceCharReverse(QString const& s, uint i);
-int nextSpaceChar(QString const& s, uint i);
+int nextNonSpaceChar(QString const& s, int i);
+int nextNonSpaceCharReverse(QString const& s, int i);
+int nextSpaceChar(QString const& s, int i);
 
-int nextCharDifferentThan(QChar c, QString const& s, uint i);
+int nextCharDifferentThan(QChar c, QString const& s, int i);
 
 /** Return a vector with the words */
 std::vector<QString> tokenize(QString s);

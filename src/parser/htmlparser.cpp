@@ -128,7 +128,7 @@ void HtmlParser::parseNodesOfType(QString const& tipo, QString const& document, 
 
 int HtmlParser::endOfTag(QString const& s, int index, QChar end_of_tag)
 {
-    if( (uint)index >= s.length() )
+    if(index >= s.length())
         return -1;
 
     int _end_of_tag = s.indexOf(end_of_tag, index);
@@ -142,7 +142,7 @@ int HtmlParser::endOfTag(QString const& s, int index, QChar end_of_tag)
     else if(_end_of_tag < open_aspas)
         return _end_of_tag + 1;
 
-    else if( ((uint)open_aspas + 1) >= s.length() - 1 )
+    else if((open_aspas + 1) >= s.length() - 1)
         return -1;
 
     else
@@ -202,7 +202,7 @@ void HtmlParser::parseNodesOfTypeMETA()
         NodeMETA* node = new NodeMETA(aux[i]);
         nodes_.push_back(node);
         
-        if(!is_content_type_set_ && node->atributoHTTP_EQUIV().lower() == QString("Content-Type").lower()) {
+        if(!is_content_type_set_ && node->atributoHTTP_EQUIV().toLower() == QString("Content-Type").toLower()) {
             is_content_type_set_ = true;
             node_META_content_type_.setNode(aux[i]);
         }
@@ -218,7 +218,7 @@ QString HtmlParser::findCharsetInMetaElement(QString const& html)
     {
         NodeMETA node(metaTags[i]);
         
-        if(node.atributoHTTP_EQUIV().lower() == QString("Content-Type").lower()) {
+        if(node.atributoHTTP_EQUIV().toLower() == QString("Content-Type").toLower()) {
             return node.charset();
         }
     }

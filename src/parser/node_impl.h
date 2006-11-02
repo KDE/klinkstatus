@@ -255,7 +255,7 @@ inline void NodeMETA::parseAttributeNAME()
 inline void NodeMETA::parseAttributeCONTENT()
 {
     attribute_content_ = getAttribute("CONTENT=");
-//     kdDebug(23100) << "CONTENT: " << attribute_content_ << endl;
+//     kDebug(23100) << "CONTENT: " << attribute_content_ << endl;
 }
 
 
@@ -402,8 +402,8 @@ inline QString NodeTITLE::attributeTITLE() const
 inline void NodeTITLE::parseAttributeTITLE()
 {
     attribute_title_ = content_;
-    attribute_title_.replace("<TITLE>", "", false);
-    attribute_title_.replace("</TITLE>", "", false);
+    attribute_title_.replace("<TITLE>", "", Qt::CaseInsensitive);
+    attribute_title_.replace("</TITLE>", "", Qt::CaseInsensitive);
     attribute_title_.trimmed();
     
     //kDebug(23100) << "TITLE: " << attribute_title_ << endl;

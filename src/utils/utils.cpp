@@ -197,7 +197,7 @@ QString read(QString const& path)
     }
 
     QTextStream stream(&file);
-    QString fileString = stream.read();
+    QString fileString = stream.readAll();
 
     file.close();
 

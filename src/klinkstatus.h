@@ -36,7 +36,6 @@ class KToggleAction;
  *
  * @short Application Shell
  * @author Paulo Moura Guedes <moura@kdewebdev.org>
- * @version 0.1.3
  */
 class KLinkStatus : public KParts::MainWindow
 {
@@ -47,20 +46,6 @@ public:
 
     /** Use this method to load whatever file/URL you have */
     void load(const KUrl& url);
-
-protected:
-    /**
-     * This method is called when it is time for the app to save its
-     * properties for session management purposes.
-     */
-    void saveProperties(KConfig *);
-
-    /**
-     * This method is called when this app is restored.  The KConfig
-     * object points to the session management config file that was saved
-     * with @ref saveProperties
-     */
-    void readProperties(KConfig *);
 
 private slots:
     void optionsShowToolbar();

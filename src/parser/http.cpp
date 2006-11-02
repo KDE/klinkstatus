@@ -67,21 +67,21 @@ QString HttpResponseHeader::charset(QString const& contentTypeHttpHeaderLine)
     if(contentTypeHttpHeaderLine.isEmpty())
         return _charset;
     
-    int index = contentTypeHttpHeaderLine.find("charset=");
+    int index = contentTypeHttpHeaderLine.indexOf("charset=");
     if(index != -1)
         index += QString("charset=").length();
     else {
-        index = contentTypeHttpHeaderLine.find("charset:");
+        index = contentTypeHttpHeaderLine.indexOf("charset:");
         if(index != -1)
             index += QString("charset:").length();
     }
     
     if(index != -1) {
         _charset = contentTypeHttpHeaderLine.mid(index);
-        _charset = _charset.stripWhiteSpace();
+        _charset = _charset.trimmed();
     }
     
-//     kdDebug(23100) << "Charset: |" << _charset << "|" << endl;
+//     kDebug(23100) << "Charset: |" << _charset << "|" << endl;
     return _charset;
 
 }

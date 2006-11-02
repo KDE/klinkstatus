@@ -38,7 +38,7 @@ class ActionManager : public QObject
 {
     Q_OBJECT
 public:
-    ActionManager(QObject* parent=0, const char* name=0);
+    ActionManager(QObject* parent = 0);
     virtual ~ActionManager();
 
     static ActionManager* getInstance();

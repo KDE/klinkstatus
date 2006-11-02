@@ -21,7 +21,6 @@
 #include "linkstatushelper.h"
 
 #include <kcharsets.h>
-#include <klocale.h>
 
 #include <qdom.h>
 
@@ -150,14 +149,14 @@ QString const LinkStatusHelper::toString() const
     if(!linkstatus_->isRoot())
     {
         Q_ASSERT(linkstatus_->parent());
-        aux += i18n( "Parent: %1", linkstatus_->parent()->absoluteUrl().prettyUrl() ) + '\n';
+        aux += "Parent: " + linkstatus_->parent()->absoluteUrl().prettyUrl() + '\n';
     }
     Q_ASSERT(!linkstatus_->originalUrl().isNull());
 
-    aux += i18n("URL: %1", linkstatus_->absoluteUrl().prettyUrl()) + '\n';
-    aux += i18n("Original URL: %1", linkstatus_->originalUrl()) + '\n';
+    aux += "URL: " + linkstatus_->absoluteUrl().prettyUrl() + '\n';
+    aux += "Original URL: " + linkstatus_->originalUrl() + '\n';
     if(linkstatus_->node())
-        aux += i18n("Node: %1", linkstatus_->node()->content()) + '\n';
+        aux += "Node: " + linkstatus_->node()->content() + '\n';
 
     return aux;
 }

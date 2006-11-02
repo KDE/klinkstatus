@@ -26,7 +26,7 @@
 using namespace std;
 
 
-int findWord(QString const& s, QString const& palavra, uint a_partir_do_indice)
+int findWord(QString const& s, QString const& palavra, int a_partir_do_indice)
 {
     int indice = s.indexOf(palavra, a_partir_do_indice, Qt::CaseInsensitive);
 
@@ -36,7 +36,7 @@ int findWord(QString const& s, QString const& palavra, uint a_partir_do_indice)
         return (indice + palavra.length());
 }
 
-int findChar(QString const& s, QChar letra, uint a_partir_do_indice)
+int findChar(QString const& s, QChar letra, int a_partir_do_indice)
 {
     int index = s.indexOf(letra, a_partir_do_indice, Qt::CaseInsensitive);
     if(index == -1)
@@ -48,11 +48,11 @@ int findChar(QString const& s, QChar letra, uint a_partir_do_indice)
 /**
   The string palavra, must not have any spaces.
 */
-int findSeparableWord(QString const& s_, QString const& palavra, uint a_partir_do_indice)
+int findSeparableWord(QString const& s_, QString const& palavra, int a_partir_do_indice)
 {
     bool encontrou = true;
     QString s(s_);
-    uint indice_palavra = 0;
+    int indice_palavra = 0;
     int indice = a_partir_do_indice;
 
     do
@@ -68,7 +68,7 @@ int findSeparableWord(QString const& s_, QString const& palavra, uint a_partir_d
         }
         --indice;
 
-        while(encontrou && indice_palavra != palavra.length() && indice < (int)s.length())
+        while(encontrou && indice_palavra != palavra.length() && indice < s.length())
         {
             indice = nextNonSpaceChar(s, indice);
 
@@ -88,7 +88,7 @@ int findSeparableWord(QString const& s_, QString const& palavra, uint a_partir_d
         return -1;
 }
 
-int nextNonSpaceChar(QString const& s, uint i)
+int nextNonSpaceChar(QString const& s, int i)
 {
     ++i;
     //  while( (s[i] == ' ' || s[i] == '\t' || s[i] == '\r' || s[i] == '\n')
@@ -107,7 +107,7 @@ int nextNonSpaceChar(QString const& s, uint i)
    e.g.
    nextSpaceChar("o   biltre") => 1
 */
-int nextSpaceChar(QString const& s, uint i)
+int nextSpaceChar(QString const& s, int i)
 {
     //while( (s[i] != ' ' && s[i] != '\r' && s[i] != '\n' && s[i] != '\t') &&
     //i < s.size() )
@@ -121,7 +121,7 @@ int nextSpaceChar(QString const& s, uint i)
         return -1;
 }
 
-int nextCharDifferentThan(QChar c, QString const& s, uint i)
+int nextCharDifferentThan(QChar c, QString const& s, int i)
 {
     while(i < s.length() && s[i] == c)
         ++i;

@@ -34,7 +34,6 @@
 #include <kio/slave.h>
 #include <kmimetype.h>
 #include <kapplication.h>
-#include <klocale.h>
 #include <khtml_part.h>
 #include <dom/html_misc.h>
 #include <dom/dom_node.h>
@@ -44,8 +43,8 @@
 int LinkChecker::count_ = 0;
 
 LinkChecker::LinkChecker(LinkStatus* linkstatus, int time_out,
-                         QObject *parent, const char *name)
-        : QObject(parent, name), search_manager_(0), 
+                         QObject *parent)
+        : QObject(parent), search_manager_(0),
         linkstatus_(linkstatus), t_job_(0), time_out_(time_out), checker_(0), document_charset_(), 
         redirection_(false), header_checked_(false), finnished_(false), 
         parsing_(false), is_charset_checked_(false), has_defined_charset_(false)
@@ -93,12 +92,14 @@ void LinkChecker::check()
                          this, SLOT(slotData(KIO::Job *, const QByteArray &)));
         QObject::connect(t_job_, SIGNAL(mimetype(KIO::Job *, const QString &)),
                          this, SLOT(slotMimetype(KIO::Job *, const QString &)));
-        QObject::connect(t_job_, SIGNAL(result(KIO::Job *)),
-                         this, SLOT(slotResult(KIO::Job *)));
+        QObject::connect(t_job_, SIGNAL(result(KJob *)),
+                         this, SLOT(slotResult(KJob *)));
         QObject::connect(t_job_, SIGNAL(redirection(KIO::Job *, const KUrl &)),
                          this, SLOT(slotRedirection(KIO::Job *, const KUrl &)));
 
-        QTimer::singleShot( time_out_ * 1000, this, SLOT(slotTimeOut()) );
+        QTimer::singleShot(time_out_ * 1000, this, SLOT(slotTimeOut()));
+        
+        t_job_->setUiDelegate(0);
     }
 }
 
@@ -114,7 +115,7 @@ void LinkChecker::slotTimeOut()
         {
             linkstatus_->setErrorOccurred(true);
             linkstatus_->setChecked(true);
-            linkstatus_->setError(i18n("Timeout"));
+            linkstatus_->setError("Timeout");
             linkstatus_->setStatus(LinkStatus::TIMEOUT);
 
             killJob();
@@ -292,7 +293,7 @@ void LinkChecker::findDocumentCharset(QString const& doc)
 
 // only comes here if an error happened or in case of a clean html page
 // if onlyCheckHeader is false
-void LinkChecker::slotResult(KIO::Job* /*job*/)
+void LinkChecker::slotResult(KJob* /*job*/)
 {
     if(finnished_)
         return;
@@ -503,9 +504,9 @@ HttpResponseHeader LinkChecker::getHttpHeader(KIO::Job* /*job*/, bool remember_c
     QString header_string = t_job_->queryMetaData("HTTP-Headers");
     //    Q_ASSERT(!header_string.isNull() && !header_string.isEmpty());
 //     kDebug(23100) << "HTTP header: " << endl << header_string << endl;
-//     kdDebug(23100) << "Keys: " << HttpResponseHeader(header_string).keys() << endl;
-//     kdDebug(23100) << "Content-type: " << HttpResponseHeader(header_string).contentType() << endl;
-//     kdDebug(23100) << "Content-type: " << HttpResponseHeader(header_string).value("content-type") << endl;
+//     kDebug(23100) << "Keys: " << HttpResponseHeader(header_string).keys() << endl;
+//     kDebug(23100) << "Content-type: " << HttpResponseHeader(header_string).contentType() << endl;
+//     kDebug(23100) << "Content-type: " << HttpResponseHeader(header_string).value("content-type") << endl;
 
     if(header_string.isNull() || header_string.isEmpty())
     {
@@ -554,7 +555,7 @@ void LinkChecker::checkRef()
         checkRef(ls_parent);
     else
     {
-        url = KUrl::fromPathOrUrl(url.url().left(i_ref));
+        url = KUrl(url.url().left(i_ref));
         checkRef(url);
     }
 }

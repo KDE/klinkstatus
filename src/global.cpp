@@ -71,12 +71,12 @@ bool Global::isQuantaAvailableViaDBUS()
     else
     {
         self()->execCommand("ps h -o pid -C quanta -C quanta_be");
-        QStringList ps_list = QStringList::split("\n", self()->script_output_);
+        QStringList ps_list = (self()->script_output_).split("\n");
 
-        for(uint i = 0; i != ps_list.size(); ++i)
+        for(int i = 0; i != ps_list.size(); ++i)
         {
             ps_list[i] = ps_list[i].trimmed ();
-            if(QDBusConnection::sessionBus().interface()->isServiceRegistered("quanta-" + ps_list[i].local8Bit()))
+            if(QDBusConnection::sessionBus().interface()->isServiceRegistered("quanta-" + ps_list[i].toUtf8()))
             {
                 //kDebug(23100) << "Application registered!" << endl;
                 return true;
@@ -103,9 +103,9 @@ QString Global::quantaDBUSAppId()
     else
     {
         self()->execCommand("ps h -o pid -C quanta -C quanta_be");
-        QStringList ps_list = QStringList::split("\n", self()->script_output_);
+        QStringList ps_list = (self()->script_output_).split("\n");
 
-        for(uint i = 0; i != ps_list.size(); ++i)
+        for(int i = 0; i != ps_list.size(); ++i)
         {
             ps_list[i] = ps_list[i].trimmed ();
 /*            if(self()->dcop_client_->isApplicationRegistered(QString("quanta-") + ps_list[i].local8Bit()))
@@ -122,7 +122,7 @@ QString Global::quantaDBUSAppId()
     }
 }
 
-KUrl Global::urlWithQuantaPreviewPrefix(KUrl const& url)
+KUrl Global::urlWithQuantaPreviewPrefix(KUrl const& /*url*/)
 {
     Q_ASSERT(isKLinkStatusEmbeddedInQuanta());
 #warning "kde4; DBUS port"
@@ -147,7 +147,7 @@ void Global::execCommand(QString const& command)
     //We create a KProcess that executes the "ps" *nix command to get the PIDs of the
     //other instances of quanta actually running
     self()->process_PS_ = new KProcess();
-    *(self()->process_PS_) << QStringList::split(" ",command);
+    *(self()->process_PS_) << command.split(" ");
 
     connect( self()->process_PS_, SIGNAL(receivedStdout(KProcess*,char*,int)),
              self(), SLOT(slotGetScriptOutput(KProcess*,char*,int)));
@@ -166,7 +166,7 @@ void Global::execCommand(QString const& command)
         QTimer* timer = new QTimer(self());
         connect(timer, SIGNAL(timeout()),
                 self(), SLOT(slotProcessTimeout()));
-        timer->start(120*1000, true);
+        timer->start(120*1000);
         self()->loop_started_ = true;
         kapp->enter_loop();
         delete timer;

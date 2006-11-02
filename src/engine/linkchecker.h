@@ -25,6 +25,7 @@
 #include <QString>
 
 #include <kio/jobclasses.h>
+class KJob;
 class KHTMLPart;
 
 #include "../parser/http.h"
@@ -42,7 +43,7 @@ class LinkChecker : public QObject
     Q_OBJECT
 public:
     explicit LinkChecker(LinkStatus* linkstatus, int time_out = 50,
-                QObject *parent = 0, const char *name = 0);
+                QObject *parent = 0);
     ~LinkChecker();
 
     //virtual void run();
@@ -64,7 +65,7 @@ protected slots:
     void slotData(KIO::Job *, const QByteArray &data);
     void slotRedirection (KIO::Job *, const KUrl &url);
     void slotMimetype(KIO::Job *, const QString &type);
-    void slotResult(KIO::Job* job);
+    void slotResult(KJob* job);
     void slotTimeOut();
 
 protected:

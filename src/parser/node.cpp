@@ -204,15 +204,15 @@ QString NodeMETA::charset() const
     if(content.isEmpty())
         return charset;
     
-    int index = content.find("charset=");
+    int index = content.indexOf("charset=");
     if(index != -1) 
     {    
         index += QString("charset=").length();
         charset = content.mid(index, content.length() - index);
-        charset = charset.stripWhiteSpace();
+        charset = charset.trimmed();
     }
     
-//     kdDebug(23100) << "Charset: |" << charset << "|" << endl;
+//     kDebug(23100) << "Charset: |" << charset << "|" << endl;
     return charset;
 }
 

@@ -240,7 +240,7 @@ void XSLT::setXSLT( const QString &_document )
     elementMatch.setMinimal( true );
     QString document = _document;
     int pos;
-    while ( ( pos = elementMatch.search( document ) ) != -1 )
+    while((pos = elementMatch.indexIn(document)) != -1)
     {
         QString orig = elementMatch.cap( 1 );
         //kDebug( 14010 ) << k_funcinfo << "Original text: " << orig << endl;
@@ -249,16 +249,16 @@ void XSLT::setXSLT( const QString &_document )
         // WARNING: If you change the translator comment, also change it in the
         //          styles/extracti18n Perl script, because the strings have to be
         //          identical!
-        QStringList parts = QStringList::split( '%', i18nc(
+        QStringList parts = (i18nc(
             "Translators: The %FOO% placeholders are variables that are substituted "
-            "in the code, please leave them untranslated", orig.toUtf8()), true );
+            "in the code, please leave them untranslated", orig.toUtf8())).split(QChar('%'));
 
         // The first part is always text, as our variables are written like %FOO%
         QStringList::Iterator it = parts.begin();
         QString trans = *it;
         bool prependPercent = true;
-        it = parts.remove( it );
-        for ( it = parts.begin(); it != parts.end(); ++it )
+        it = parts.erase(it);
+        for (it = parts.begin(); it != parts.end(); ++it)
         {
             prependPercent = false;
 

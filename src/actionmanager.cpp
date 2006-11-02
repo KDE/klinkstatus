@@ -65,8 +65,8 @@ public:
     SessionWidget* sessionWidget;
 };
 
-ActionManager::ActionManager(QObject *parent, const char *name)
-        : QObject(parent, name), d(new ActionManagerPrivate)
+ActionManager::ActionManager(QObject *parent)
+        : QObject(parent), d(new ActionManagerPrivate)
 {}
 
 ActionManager::~ActionManager()
@@ -156,8 +156,9 @@ void ActionManager::initTabWidget(TabWidgetSession* tabWidgetSession)
     toggle_action->setShortcut(KShortcut("Ctrl+s"));
     toggle_action->setEnabled(false);
     
-    toggle_action = new KToggleAction(i18n("&Pause Search"),
-                                      "player_pause", KShortcut("Ctrl+p"), d->tabWidgetSession, SLOT(slotPauseSearch()), d->actionCollection, "pause_search");    
+    toggle_action = new KToggleAction(KIcon("player_pause"), i18n("&Pause Search"), d->actionCollection, "pause_search");
+    connect(toggle_action, SIGNAL(triggered(bool)), d->tabWidgetSession, SLOT(slotPauseSearch()));
+    toggle_action->setShortcut(KShortcut("Ctrl+p"));
     toggle_action->setEnabled(false);
     
     action = new KAction(KIcon("player_stop"), i18n("St&op Search"), d->actionCollection, "stop_search");

@@ -20,7 +20,6 @@
 
 #include <kapplication.h>
 #include <kdebug.h>
-#include <klocale.h>
 #include <khtml_part.h>
 #include <kprotocolmanager.h>
 
@@ -38,8 +37,8 @@
 
 
 SearchManager::SearchManager(int max_simultaneous_connections, int time_out,
-                             QObject *parent, const char *name)
-        : QObject(parent, name),
+                             QObject *parent)
+        : QObject(parent),
         max_simultaneous_connections_(max_simultaneous_connections), has_document_root_(false), 
         depth_(-1), current_depth_(0), external_domain_depth_(0),
         current_node_(0), current_index_(0), links_being_checked_(0),
@@ -184,7 +183,7 @@ void SearchManager::cancelSearch()
 
 void SearchManager::checkRoot()
 {
-    LinkChecker* checker = new LinkChecker(&root_, time_out_, this, "link_checker");
+    LinkChecker* checker = new LinkChecker(&root_, time_out_, this);
     checker->setSearchManager(this);
 
     connect(checker, SIGNAL(transactionFinished(const LinkStatus *, LinkChecker *)),
@@ -334,7 +333,7 @@ bool SearchManager::existUrl(KUrl const& url, KUrl const& url_parent) const
                     Q3ValueVector<KUrl> referrers(tmp->referrers());
 
                     // Add new referrer
-                    for(uint i = 0; i != referrers.size(); ++i)
+                    for(int i = 0; i != referrers.size(); ++i)
                     {
                         if(referrers[i] == url_parent)
                             return true;
@@ -517,7 +516,7 @@ void SearchManager::checkLinksSimultaneously(vector<LinkStatus*> const& links)
         */
         else
         {
-            LinkChecker* checker = new LinkChecker(ls, time_out_, this, "link_checker");
+            LinkChecker* checker = new LinkChecker(ls, time_out_, this);
             checker->setSearchManager(this);
 
             connect(checker, SIGNAL(transactionFinished(const LinkStatus *, LinkChecker *)),
@@ -626,7 +625,7 @@ bool SearchManager::checkable(KUrl const& url, LinkStatus const& link_parent) co
     {
         Q_ASSERT(!reg_exp_.isEmpty());
 
-        if(reg_exp_.search(url.url()) != -1)
+        if(reg_exp_.indexIn(url.url()) != -1)
             return false;
     }
 
@@ -746,7 +745,7 @@ bool SearchManager::generalDomain() const
             return false;
 
         int barra = domain_.indexOf('/');
-        if(barra != -1 && (uint)barra != domain_.length() - 1)
+        if(barra != -1 && barra != domain_.length() - 1)
         {
             kDebug(23100) <<  "Domain nao vago" << endl;
             return false;
@@ -832,8 +831,8 @@ void SearchManager::removeHtmlParts()
     KHTMLPartMap::Iterator it;
     for(it = html_parts_.begin(); it != html_parts_.end(); ++it) 
     {
-        delete it.data();
-        it.data() = 0;
+        delete it.value();
+        it.value() = 0;
     }
 
     html_parts_.clear();

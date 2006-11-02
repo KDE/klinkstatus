@@ -30,7 +30,7 @@
 Node::LinkType Url::resolveLinkType(QString const& url)
 {
     QString aux(url);
-    aux = KUrl::decode_string(aux);
+    aux = QUrl::fromPercentEncoding(aux.toUtf8());
 
     if(aux.isNull())
         return Node::relative;
@@ -97,7 +97,7 @@ KUrl Url::normalizeUrl(QString const& string_url, LinkStatus const& link_parent,
 //         kDebug(23100) << "Normalized URL: " 
 //                 << KCharsets::resolveEntities(KUrl::decode_string(url.url())) << endl;
 
-        return KUrl(KCharsets::resolveEntities(KUrl::decode_string(url.url())));
+        return KUrl(KCharsets::resolveEntities(QUrl::fromPercentEncoding(url.url().toUtf8())));
     }
 }
 
@@ -208,7 +208,7 @@ bool Url::hasProtocol(QString const& url)
 
     else
     {
-        KUrl url = KUrl::fromPathOrUrl(s_url);
+        KUrl url(s_url);
         if(!url.protocol().isEmpty())
             return true;
         /*

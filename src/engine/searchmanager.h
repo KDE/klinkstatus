@@ -54,7 +54,7 @@ public:
     };
 
     SearchManager(int max_simultaneous_connections = 3, int time_out = 50,
-                  QObject *parent = 0, const char *name = 0);
+                  QObject *parent = 0);
     ~SearchManager();
     
     QString toXML() const;

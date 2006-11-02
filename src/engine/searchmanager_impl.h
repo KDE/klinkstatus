@@ -90,7 +90,8 @@ inline void SearchManager::setCheckRegularExpressions(bool flag)
 
 inline void SearchManager::setRegularExpression(QString const& reg_exp, bool case_sensitive)
 {
-    reg_exp_ = QRegExp(reg_exp, case_sensitive);
+//     int case = case_sensitive ? Qt::CaseSensitive : Qt::CaseInsensitive;
+    reg_exp_ = QRegExp(reg_exp, case_sensitive ? Qt::CaseSensitive : Qt::CaseInsensitive);
 }
 
 inline void SearchManager::setTimeOut(int time_out)
