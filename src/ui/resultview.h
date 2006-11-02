@@ -13,7 +13,7 @@
 #define RESULTVIEW_H
 
 #include <q3valuevector.h>
-#include <q3popupmenu.h>
+#include <QMenu>
 #include <QStringList>
 
 class KUrl;
@@ -85,8 +85,8 @@ protected:
     int col_label_;
     int col_url_;
     int col_markup_; // optional
-    Q3PopupMenu context_table_menu_;
-    Q3PopupMenu* sub_menu_;
+    QMenu context_table_menu_;
+    QMenu* sub_menu_;
     CellToolTip* cell_tip_;
 
 private:

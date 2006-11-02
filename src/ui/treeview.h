@@ -35,7 +35,7 @@ class TreeView : public K3ListView, public ResultView
     Q_OBJECT
 public:
     
-    TreeView(QWidget *parent = 0, const char *name = 0);
+    TreeView(QWidget *parent = 0);
     ~TreeView();
 
     virtual void setColumns(QStringList const& columns);
@@ -67,7 +67,7 @@ private slots:
     virtual void slotCopyParentUrlToClipboard() const;
     virtual void slotCopyCellTextToClipboard() const;
     virtual void slotEditReferrersWithQuanta();
-    virtual void slotEditReferrerWithQuanta(int id);
+    virtual void slotEditReferrerWithQuanta(QAction* action);
     virtual void slotEditReferrerWithQuanta(KUrl const& url);
     virtual void slotViewUrlInBrowser();
     virtual void slotViewParentUrlInBrowser();

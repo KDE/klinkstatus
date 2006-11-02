@@ -9,7 +9,6 @@
 // Copyright: See COPYING file that comes with this distribution
 //
 //
-#include <QtDBus>
 #include <klocale.h>
 #include <kiconloader.h>
 #include <kapplication.h>
@@ -17,7 +16,9 @@
 #include <krun.h>
 #include <kmessagebox.h>
 #include <kcharsets.h>
-
+#include <kaction.h>
+    
+#include <QtDBus>
 #include <q3valuevector.h>
 #include <q3header.h>
 #include <QClipboard>
@@ -33,7 +34,7 @@
 #include "klsconfig.h"
 
 
-TreeView::TreeView(QWidget *parent, const char *name)
+TreeView::TreeView(QWidget *parent)
         : K3ListView(parent),
         ResultView(),
         current_column_(0)
@@ -45,8 +46,6 @@ TreeView::TreeView(QWidget *parent, const char *name)
     //setFocusPolicy( WheelFocus );
     setRootIsDecorated(KLSConfig::displayTreeView());
 //     setResizeMode(QListView::LastColumn);
-
-    sub_menu_ = new Q3PopupMenu(this, "sub_menu_referrers");
 
     connect(this, SIGNAL( rightButtonClicked ( Q3ListViewItem *, const QPoint &, int )),
             this, SLOT( slotPopupContextMenu( Q3ListViewItem *, const QPoint &, int )) );
@@ -64,7 +63,7 @@ void TreeView::setColumns(QStringList const& columns)
     removeColunas();
 
 //     resetColumns is called automatically
-    for(uint i = 0; i != columns.size(); ++i)
+    for(int i = 0; i != columns.size(); ++i)
     {
         addColumn(i18n(columns[i].toUtf8()));
         setColumnWidthMode(i, Q3ListView::Manual);
@@ -182,7 +181,7 @@ void TreeView::ensureRowVisible(const Q3ListViewItem * i, bool tree_display)
     QScrollBar* vertical_scroll_bar = verticalScrollBar();
 
     if(tree_display ||
-            vertical_scroll_bar->value() > (vertical_scroll_bar->maxValue() - vertical_scroll_bar->lineStep()))
+            vertical_scroll_bar->value() > (vertical_scroll_bar->maximum() - vertical_scroll_bar->singleStep()))
         ensureItemVisible(i);
 }
 
@@ -247,23 +246,23 @@ void TreeView::slotEditReferrersWithQuanta()
 
     if(Global::isQuantaAvailableViaDBUS())
     {
-        for(uint i = 0; i != referrers.size(); ++i)
+        for(int i = 0; i != referrers.size(); ++i)
             slotEditReferrerWithQuanta(referrers[i]);
     }
     else
     {
         QStringList list_urls;
 
-        for(uint i = 0; i != referrers.size(); ++i)
+        for(int i = 0; i != referrers.size(); ++i)
             list_urls.append(referrers[i].url());
 
         Global::openQuanta(list_urls);
     }
 }
 
-void TreeView::slotEditReferrerWithQuanta(int id)
+void TreeView::slotEditReferrerWithQuanta(QAction* action)
 {
-    int index = sub_menu_->indexOf(id);
+  int index = actions().indexOf(action);
 
     if(index == 0)
         return;
@@ -278,7 +277,7 @@ void TreeView::slotEditReferrerWithQuanta(int id)
     TreeViewItem* _item = myItem(currentItem());
     if(!_item) return;
     Q3ValueVector<KUrl> referrers = _item->linkStatus()->referrers();
-    Q_ASSERT(index >= 0 && (uint)index < referrers.size());
+    Q_ASSERT(index >= 0 && index < referrers.size());
 
     slotEditReferrerWithQuanta(referrers[index]);
 }
@@ -347,45 +346,41 @@ void TreeView::slotViewParentUrlInBrowser()
 void TreeView::loadContextTableMenu(Q3ValueVector<KUrl> const& referrers, bool is_root)
 {
     context_table_menu_.clear();
-    sub_menu_->clear();
+    delete(sub_menu_);
+
+    sub_menu_ = context_table_menu_.addMenu(SmallIconSet("edit"), i18n("Edit Referrer with Quanta"));
 
     if(!is_root)
     {
-        sub_menu_->insertItem(i18n("All"), this, SLOT(slotEditReferrersWithQuanta()));
-        sub_menu_->insertSeparator();
+        sub_menu_->addAction(i18n("All"), this, SLOT(slotEditReferrersWithQuanta()));
+        sub_menu_->addSeparator();
 
-        for(uint i = 0; i != referrers.size(); ++i)
+        for(int i = 0; i != referrers.size(); ++i)
         {
-            sub_menu_->insertItem(referrers[i].prettyUrl());
+            sub_menu_->addAction(referrers[i].prettyUrl());
         }
-        connect(sub_menu_, SIGNAL(activated(int)), this, SLOT(slotEditReferrerWithQuanta(int)));
-
-        context_table_menu_.insertItem(SmallIconSet("edit"), i18n("Edit Referrer with Quanta"),
-                                       sub_menu_);
-        context_table_menu_.insertSeparator();
+        connect(sub_menu_, SIGNAL(triggered(QAction*)), this, SLOT(slotEditReferrerWithQuanta(QAction*)));
     }
     else
     {
-        int id = context_table_menu_.insertItem(SmallIconSet("fileopen"), i18n("Edit Referrer with Quanta"));
-        context_table_menu_.setItemEnabled(id, false);
+        QMenu* sub_menu = context_table_menu_.addMenu(SmallIconSet("fileopen"), i18n("Edit Referrer with Quanta"));
+        sub_menu->setEnabled(false);
     }
+    context_table_menu_.addSeparator();
 
-    context_table_menu_.insertItem(SmallIconSet("fileopen"), i18n("Open URL"),
-                                   this, SLOT(slotViewUrlInBrowser()));
+    context_table_menu_.addAction(SmallIconSet("fileopen"), i18n("Open URL"),
+                                  this, SLOT(slotViewUrlInBrowser()));
+    context_table_menu_.addAction(/*SmallIconSet("fileopen"), */i18n("Open Referrer URL"),
+                                  this, SLOT(slotViewParentUrlInBrowser()));
+    
+    context_table_menu_.addSeparator();
 
-    context_table_menu_.insertItem(/*SmallIconSet("fileopen"), */i18n("Open Referrer URL"),
-                                   this, SLOT(slotViewParentUrlInBrowser()));
-
-    context_table_menu_.insertSeparator();
-
-    context_table_menu_.insertItem(SmallIconSet("editcopy"), i18n("Copy URL"),
-                                   this, SLOT(slotCopyUrlToClipboard()));
-
-    context_table_menu_.insertItem(/*SmallIconSet("editcopy"), */i18n("Copy Referrer URL"),
-                                   this, SLOT(slotCopyParentUrlToClipboard()));
-
-    context_table_menu_.insertItem(/*SmallIconSet("editcopy"), */i18n("Copy Cell Text"),
-                                   this, SLOT(slotCopyCellTextToClipboard()));
+    context_table_menu_.addAction(SmallIconSet("editcopy"), i18n("Copy URL"),
+                                  this, SLOT(slotCopyUrlToClipboard()));
+    context_table_menu_.addAction(/*SmallIconSet("editcopy"), */i18n("Copy Referrer URL"),
+                                  this, SLOT(slotCopyParentUrlToClipboard()));
+    context_table_menu_.addAction(/*SmallIconSet("editcopy"), */i18n("Copy Cell Text"),
+                                  this, SLOT(slotCopyCellTextToClipboard()));
 }
 
 TreeViewItem* TreeView::myItem(Q3ListViewItem* item) const
@@ -571,7 +566,7 @@ QString TreeColumnViewItem::text(int column) const
     }
     else if(column == root_->labelColumnIndex())
     {
-        QString label(i18n((linkStatus()->label()).toUtf8()));
+        QString label(linkStatus()->label());
         if(!label.isNull())
             return label.simplified();
     }
