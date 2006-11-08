@@ -68,7 +68,9 @@ DocumentRootDialog::DocumentRootDialog(QWidget *parent, KUrl const& url)
 
 DocumentRootDialog::~DocumentRootDialog()
 {
-#warning "kde4: port it"
+#ifdef _GNUC
+	#warning "kde4: port it"
+#endif
     //saveDialogSize("klinkstatus", true);
 }
 

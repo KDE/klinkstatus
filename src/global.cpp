@@ -125,7 +125,9 @@ QString Global::quantaDBUSAppId()
 KUrl Global::urlWithQuantaPreviewPrefix(KUrl const& /*url*/)
 {
     Q_ASSERT(isKLinkStatusEmbeddedInQuanta());
-#warning "kde4; DBUS port"
+#ifdef _GNUC
+	#warning "kde4; DBUS port"
+#endif
 #if 0
     DCOPRef quanta(Global::quantaDBUSAppId(),"WindowManagerIf");
     QString string_url_with_prefix = quanta.call("urlWithPreviewPrefix", url.url());

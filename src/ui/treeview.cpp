@@ -288,7 +288,9 @@ void TreeView::slotEditReferrerWithQuanta(KUrl const& url)
 
     if(Global::isQuantaAvailableViaDBUS())
     {
-#warning "kde4: port it"
+#ifdef _GNUC
+	#warning "kde4: port it"
+#endif
 #if 0
         DCOPRef quanta(Global::quantaDCOPAppId(),"WindowManagerIf");
         bool success = quanta.send("openFile", filePath, 0, 0);
