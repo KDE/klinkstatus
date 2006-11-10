@@ -73,7 +73,7 @@ kde4_automoc(${klinkstatuspart_PART_SRCS})
 
 kde4_add_plugin(klinkstatuspart WITH_PREFIX ${klinkstatuspart_PART_SRCS})
 
-kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} klinkstatuspart )
+
 
 target_link_libraries(klinkstatuspart  
     ${LIBXML2_LIBRARIES}
