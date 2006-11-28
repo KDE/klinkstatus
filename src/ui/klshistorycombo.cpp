@@ -92,10 +92,13 @@ bool KLSHistoryCombo::eventFilter( QObject *o, QEvent *ev )
                 return false;
             }
 
-            KShortcut key = e->key() | e->modifiers();
+            // ### TODO this is hackish; better create a kaction and connect to its slot
+            const QList<QKeySequence> deleteWordBack = KStdAccel::deleteWordBack().toList();
+            const QList<QKeySequence> deleteWordForward = KStdAccel::deleteWordForward().toList();
+            const QKeySequence thisKey(e->key() | e->modifiers());
 
-            if ( key == KStdAccel::deleteWordBack() ||
-                 key == KStdAccel::deleteWordForward() ||
+            if ( deleteWordBack.contains(thisKey) ||
+                 deleteWordForward.contains(thisKey) ||
                  ((e->modifiers() & Qt::ControlModifier) &&
                    (e->key() == Qt::Key_Left || e->key() == Qt::Key_Right) ) ) {
                 selectWord(e);
