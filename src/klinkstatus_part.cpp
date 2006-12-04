@@ -56,8 +56,8 @@ typedef KParts::GenericFactory<KLinkStatusPart> KLinkStatusFactory;
 K_EXPORT_COMPONENT_FACTORY( libklinkstatuspart, KLinkStatusFactory )
 
 
-KLinkStatusPart::KLinkStatusPart(QWidget *parentWidget, 
-                                 QObject *parent, 
+KLinkStatusPart::KLinkStatusPart(QWidget *parentWidget,
+                                 QObject *parent,
                                  const QStringList & /*string_list*/)
     : KParts::ReadOnlyPart(parent), m_dlgAbout(0)
 {
@@ -83,7 +83,7 @@ KLinkStatusPart::~KLinkStatusPart()
 void KLinkStatusPart::initGUI()
 {
     setXMLFile("klinkstatus_part.rc", true);
-    
+
     // initialize the part actions
     action_manager_->initPart(this);
 }
@@ -91,7 +91,7 @@ void KLinkStatusPart::initGUI()
 void KLinkStatusPart::setModified(bool modified)
 {
     // get a handle on our Save action and make sure it is valid
-    KAction *save = actionCollection()->action(KStdAction::stdName(KStdAction::Save));
+    QAction *save = actionCollection()->action(KStdAction::stdName(KStdAction::Save));
     if (!save)
         return;
 
@@ -151,7 +151,7 @@ void KLinkStatusPart::slotConfigureKLinkStatus()
     KConfigDialog *dialog = new KConfigDialog(tabwidget_, "klsconfig", KLSConfig::self());
     dialog->addPage(new ConfigSearchDialog(0, "config_search_dialog"), i18n("Check"), "viewmag");
     dialog->addPage(new ConfigResultsDialog(0, "config_results_dialog"), i18n("Results"), "player_playlist");
-    dialog->addPage(new ConfigIdentificationDialog(0), i18n("Identification"), 
+    dialog->addPage(new ConfigIdentificationDialog(0), i18n("Identification"),
                     "agent", i18n("Configure the way KLinkstatus reports itself"));
     dialog->show();
     connect(dialog, SIGNAL(settingsChanged(const QString&)), tabwidget_, SLOT(slotLoadSettings()));

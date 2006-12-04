@@ -123,7 +123,7 @@ void ActionManager::initTabWidget(TabWidgetSession* tabWidgetSession)
         return;
 
     d->tabWidgetSession = tabWidgetSession;
-    
+
     // *************** File menu *********************
 
     KAction *action = new KAction(KIcon("filesave"), i18n("E&xport Results as HTML..."), d->actionCollection, "file_export_html");
@@ -144,23 +144,23 @@ void ActionManager::initTabWidget(TabWidgetSession* tabWidgetSession)
     toggle_action->setShortcut(KShortcut("Ctrl+h"));
     KGuiItem item(i18n("&Show Search Panel"), "top", "Show Search Panel");
     toggle_action->setCheckedState(item);
-    
+
     action = new KAction(KIcon("reload"), i18n("&Reset Search Options"), d->actionCollection, "reset_search_bar");
     connect(action, SIGNAL(triggered(bool) ), d->tabWidgetSession, SLOT(slotResetSearchOptions()));
     action->setShortcut(KShortcut("F5"));
 
     // *************** Search menu *********************
-    
+
     toggle_action = new KToggleAction(KIcon("player_play"), i18n("&Start Search"), d->actionCollection, "start_search");
     connect(toggle_action, SIGNAL(triggered(bool)), d->tabWidgetSession, SLOT(slotStartSearch()));
     toggle_action->setShortcut(KShortcut("Ctrl+s"));
     toggle_action->setEnabled(false);
-    
+
     toggle_action = new KToggleAction(KIcon("player_pause"), i18n("&Pause Search"), d->actionCollection, "pause_search");
     connect(toggle_action, SIGNAL(triggered(bool)), d->tabWidgetSession, SLOT(slotPauseSearch()));
     toggle_action->setShortcut(KShortcut("Ctrl+p"));
     toggle_action->setEnabled(false);
-    
+
     action = new KAction(KIcon("player_stop"), i18n("St&op Search"), d->actionCollection, "stop_search");
     connect(action, SIGNAL(triggered(bool) ), d->tabWidgetSession, SLOT(slotStopSearch()));
     action->setShortcut(KShortcut("Ctrl+c"));
@@ -188,7 +188,7 @@ KActionCollection* ActionManager::actionCollection()
     return d->actionCollection;
 }
 
-KAction* ActionManager::action(const QString & name)
+QAction* ActionManager::action(const QString & name)
 {
     return d->actionCollection != 0 ? d->actionCollection->action(name) : 0;
 }
@@ -197,27 +197,27 @@ void ActionManager::slotUpdateSessionWidgetActions(SessionWidget* page)
 {
     KToggleAction* start_search_action_ = static_cast<KToggleAction*> (action("start_search"));
     KToggleAction* pause_search_action_ = static_cast<KToggleAction*> (action("pause_search"));
-    KAction* stop_search_action_ = action("stop_search");
-    
+    QAction* stop_search_action_ = action("stop_search");
+
     if(page->inProgress())
     {
         Q_ASSERT(!page->stopped());
-        
+
         start_search_action_->setEnabled(true);
         start_search_action_->setChecked(true);
-        
+
         pause_search_action_->setEnabled(true);
-    
+
         stop_search_action_->setEnabled(true);
     }
     if(page->paused())
     {
         Q_ASSERT(page->inProgress());
         Q_ASSERT(!page->stopped());
-        
+
         start_search_action_->setEnabled(true);
         start_search_action_->setChecked(true);
-        
+
         pause_search_action_->setEnabled(true);
         pause_search_action_->setChecked(true);
 
@@ -227,18 +227,18 @@ void ActionManager::slotUpdateSessionWidgetActions(SessionWidget* page)
     {
         Q_ASSERT(!page->inProgress());
         Q_ASSERT(!page->paused());
-        
+
         start_search_action_->setEnabled(true);
         start_search_action_->setChecked(false);
-        
+
         pause_search_action_->setEnabled(false);
         pause_search_action_->setChecked(false);
 
         stop_search_action_->setEnabled(false);
     }
-    
+
 //     ____________________________________________________________________
-    
+
     KToggleAction* toggleAction = static_cast<KToggleAction*> (action("follow_last_link_checked"));
 
     if(!toggleAction) // the first sessionWidget is created before initSessionWidget is called
@@ -252,7 +252,7 @@ void ActionManager::slotUpdateSessionWidgetActions(SessionWidget* page)
     toggleAction = static_cast<KToggleAction*> (action("hide_search_bar"));
     Q_ASSERT(toggleAction);
     toggleAction->setChecked(page->buttongroup_search->isHidden());
-    
+
     //     ____________________________________________________________________
 
     action("file_export_html")->setEnabled(!page->isEmpty());
