@@ -103,21 +103,21 @@ void KLinkStatus::load(const KUrl& url)
 
 void KLinkStatus::setupActions()
 {
-    //     KStdAction::quit(kapp, SLOT(quit()), actionCollection()); 
+    //     KStdAction::quit(kapp, SLOT(quit()), actionCollection());
     // The above causes a segfault when using File->Quit.
     // Here's Waldo's explanation:
-/*    I had a look. The problem is due to the SessionWidget destructor calling 
-    KLSConfig. If you use the window button, the window and the SessionWidget is 
+/*    I had a look. The problem is due to the SessionWidget destructor calling
+    KLSConfig. If you use the window button, the window and the SessionWidget is
     destructed first and then later the application is destructed.
-    If you use File->Quit it calls kapp->quit which destructs the application 
-    without destructing the window first. The application first destructs all 
-    static deleters and its administration, and then goes on to kill the 
-    remaining windows that it owns. Therein lies the problem because by then the 
-    static deleters aren't usable any longer, and calling KLSConfig from the 
-    SessionWidget destructor crashes when it tries to recreate KLSConfig and 
-    register it with staticKLSConfigDeleter due to the lack of static deleter 
+    If you use File->Quit it calls kapp->quit which destructs the application
+    without destructing the window first. The application first destructs all
+    static deleters and its administration, and then goes on to kill the
+    remaining windows that it owns. Therein lies the problem because by then the
+    static deleters aren't usable any longer, and calling KLSConfig from the
+    SessionWidget destructor crashes when it tries to recreate KLSConfig and
+    register it with staticKLSConfigDeleter due to the lack of static deleter
     administration.
-    The easiest solution is to call close() on the mainwindow instead of 
+    The easiest solution is to call close() on the mainwindow instead of
     KApplication::quit()*/
     KStdAction::quit(this, SLOT(close()), actionCollection());
 
@@ -132,18 +132,18 @@ void KLinkStatus::setupPartActions()
 {
     Q_ASSERT(m_part);
     KActionCollection* part_action_collection = m_part->actionCollection();
-    part_action_collection->action("new_link_check")->setShortcut(KStdAccel::shortcut(KStdAccel::New));
-    part_action_collection->action("open_link")->setShortcut(KStdAccel::shortcut(KStdAccel::Open));
-    part_action_collection->action("close_tab")->setShortcut(KStdAccel::shortcut(KStdAccel::Close));
+    part_action_collection->action("new_link_check")->setShortcuts(KStdAccel::shortcut(KStdAccel::New).toList());
+    part_action_collection->action("open_link")->setShortcuts(KStdAccel::shortcut(KStdAccel::Open).toList());
+    part_action_collection->action("close_tab")->setShortcuts(KStdAccel::shortcut(KStdAccel::Close).toList());
 }
 
 void KLinkStatus::removeDuplicatedActions()
 {
     KActionCollection* part_action_collection = m_part->actionCollection();
-    KAction* part_about_action = part_action_collection->action("about_klinkstatus");
-    KAction* part_report_action = part_action_collection->action("report_bug");
+    QAction* part_about_action = part_action_collection->action("about_klinkstatus");
+    QAction* part_report_action = part_action_collection->action("report_bug");
 
-    QWidget* container = part_about_action->container(0); // call this only once or segfault
+    QWidget* container = part_about_action->associatedWidgets().value(0); // call this only once or segfault
     container->removeAction(part_about_action);
     container->removeAction(part_report_action);
     part_action_collection->remove(part_about_action);

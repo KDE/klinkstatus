@@ -22,7 +22,7 @@
 
 #include <QObject>
 
-class KAction;
+class QAction;
 class KActionCollection;
 
 class SessionWidget;
@@ -31,7 +31,7 @@ class TabWidgetSession;
 
 /**
     @author Paulo Moura Guedes <moura@kdewebdev.org>
- 
+
     interface for accessing actions, popup menus etc. from widgets.
 */
 class ActionManager : public QObject
@@ -44,7 +44,7 @@ public:
     static ActionManager* getInstance();
     static void setInstance(ActionManager* manager);
 
-    virtual KAction* action(const QString & name);
+    virtual QAction* action(const QString & name);
     virtual QWidget* container(const char* name);
 
     void initPart(KLinkStatusPart* part);
@@ -61,7 +61,7 @@ protected:
 private:
 
     static ActionManager* m_self;
-    
+
     class ActionManagerPrivate;
     ActionManagerPrivate* d;
 };
