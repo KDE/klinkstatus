@@ -132,9 +132,9 @@ void KLinkStatus::setupPartActions()
 {
     Q_ASSERT(m_part);
     KActionCollection* part_action_collection = m_part->actionCollection();
-    part_action_collection->action("new_link_check")->setShortcuts(KStdAccel::shortcut(KStdAccel::New).toList());
-    part_action_collection->action("open_link")->setShortcuts(KStdAccel::shortcut(KStdAccel::Open).toList());
-    part_action_collection->action("close_tab")->setShortcuts(KStdAccel::shortcut(KStdAccel::Close).toList());
+    part_action_collection->action("new_link_check")->setShortcuts(KStdAccel::shortcut(KStdAccel::New));
+    part_action_collection->action("open_link")->setShortcuts(KStdAccel::shortcut(KStdAccel::Open));
+    part_action_collection->action("close_tab")->setShortcuts(KStdAccel::shortcut(KStdAccel::Close));
 }
 
 void KLinkStatus::removeDuplicatedActions()
