@@ -93,8 +93,8 @@ bool KLSHistoryCombo::eventFilter( QObject *o, QEvent *ev )
             }
 
             // ### TODO this is hackish; better create a kaction and connect to its slot
-            const QList<QKeySequence> deleteWordBack = KStdAccel::deleteWordBack().toList();
-            const QList<QKeySequence> deleteWordForward = KStdAccel::deleteWordForward().toList();
+            const QList<QKeySequence> deleteWordBack = KStdAccel::deleteWordBack();
+            const QList<QKeySequence> deleteWordForward = KStdAccel::deleteWordForward();
             const QKeySequence thisKey(e->key() | e->modifiers());
 
             if ( deleteWordBack.contains(thisKey) ||
