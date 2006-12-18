@@ -25,7 +25,7 @@
 #include <ksqueezedtextlabel.h>
 #include <kmessagebox.h>
 #include <kconfig.h>
-#include <kiconloader.h>
+#include <kicon.h>
 #include <kglobal.h>
 #include <kpushbutton.h>
 #include <kfiledialog.h>
@@ -107,11 +107,11 @@ void SessionWidget::init()
 {
     combobox_url->init();
 
-    toolButton_clear_combo->setIcon(SmallIconSet("locationbar_erase"));
+    toolButton_clear_combo->setIcon(KIcon("locationbar_erase"));
 
-    pushbutton_url->setIcon(KGlobal::iconLoader()->loadIconSet(QString("fileopen"), K3Icon::Small));
-    QPixmap pixMap = KGlobal::iconLoader()->loadIcon(QString("fileopen"), K3Icon::Small);
-    pushbutton_url->setFixedSize(pixMap.width() + 8, pixMap.height() + 8);
+    pushbutton_url->setIcon(KIcon("fileopen"));
+    const int pixmapSize = style()->pixelMetric(QStyle::PM_SmallIconSize);
+    pushbutton_url->setFixedSize( pixmapSize+8, pixmapSize+8 );
     connect(pushbutton_url, SIGNAL(clicked()), this, SLOT(slotChooseUrlDialog()));
 
     resultsSearchBar->hide();
