@@ -23,7 +23,7 @@
 #include <kinstance.h>
 #include <kaction.h>
 #include <kactioncollection.h>
-#include <kstdaction.h>
+#include <kstandardaction.h>
 #include <kfiledialog.h>
 #include <kparts/genericfactory.h>
 #include <kparts/factory.h>
@@ -91,7 +91,7 @@ void KLinkStatusPart::initGUI()
 void KLinkStatusPart::setModified(bool modified)
 {
     // get a handle on our Save action and make sure it is valid
-    QAction *save = actionCollection()->action(KStdAction::stdName(KStdAction::Save));
+    QAction *save = actionCollection()->action(KStandardAction::stdName(KStandardAction::Save));
     if (!save)
         return;
 

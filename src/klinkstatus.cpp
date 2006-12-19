@@ -28,7 +28,7 @@
 #include <kaction.h>
 #include <kactioncollection.h>
 #include <ktoggleaction.h>
-#include <kstdaction.h>
+#include <kstandardaction.h>
 #include <klibloader.h>
 #include <kmessagebox.h>
 #include <kstatusbar.h>
@@ -103,7 +103,7 @@ void KLinkStatus::load(const KUrl& url)
 
 void KLinkStatus::setupActions()
 {
-    //     KStdAction::quit(kapp, SLOT(quit()), actionCollection());
+    //     KStandardAction::quit(kapp, SLOT(quit()), actionCollection());
     // The above causes a segfault when using File->Quit.
     // Here's Waldo's explanation:
 /*    I had a look. The problem is due to the SessionWidget destructor calling
@@ -119,13 +119,13 @@ void KLinkStatus::setupActions()
     administration.
     The easiest solution is to call close() on the mainwindow instead of
     KApplication::quit()*/
-    KStdAction::quit(this, SLOT(close()), actionCollection());
+    KStandardAction::quit(this, SLOT(close()), actionCollection());
 
-    //m_toolbarAction = KStdAction::showToolbar(this, SLOT(optionsShowToolbar()), actionCollection());
-    //m_statusbarAction = KStdAction::showStatusbar(this, SLOT(optionsShowStatusbar()), actionCollection());
+    //m_toolbarAction = KStandardAction::showToolbar(this, SLOT(optionsShowToolbar()), actionCollection());
+    //m_statusbarAction = KStandardAction::showStatusbar(this, SLOT(optionsShowStatusbar()), actionCollection());
 
-    KStdAction::keyBindings(this, SLOT(optionsConfigureKeys()), actionCollection());
-    KStdAction::configureToolbars(this, SLOT(optionsConfigureToolbars()), actionCollection());
+    KStandardAction::keyBindings(this, SLOT(optionsConfigureKeys()), actionCollection());
+    KStandardAction::configureToolbars(this, SLOT(optionsConfigureToolbars()), actionCollection());
 }
 
 void KLinkStatus::setupPartActions()
