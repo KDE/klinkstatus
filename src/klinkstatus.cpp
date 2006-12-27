@@ -35,7 +35,7 @@
 #include <klocale.h>
 #include <kdebug.h>
 #include <kxmlguifactory.h>
-#include <kstdaccel.h>
+#include <kstandardshortcut.h>
 #include <ktoolbar.h>
 //Added by qt3to4:
 #include <Q3PtrList>
@@ -132,9 +132,9 @@ void KLinkStatus::setupPartActions()
 {
     Q_ASSERT(m_part);
     KActionCollection* part_action_collection = m_part->actionCollection();
-    part_action_collection->action("new_link_check")->setShortcuts(KStdAccel::shortcut(KStdAccel::New));
-    part_action_collection->action("open_link")->setShortcuts(KStdAccel::shortcut(KStdAccel::Open));
-    part_action_collection->action("close_tab")->setShortcuts(KStdAccel::shortcut(KStdAccel::Close));
+    part_action_collection->action("new_link_check")->setShortcuts(KStandardShortcut::shortcut(KStandardShortcut::New));
+    part_action_collection->action("open_link")->setShortcuts(KStandardShortcut::shortcut(KStandardShortcut::Open));
+    part_action_collection->action("close_tab")->setShortcuts(KStandardShortcut::shortcut(KStandardShortcut::Close));
 }
 
 void KLinkStatus::removeDuplicatedActions()

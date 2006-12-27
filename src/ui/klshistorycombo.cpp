@@ -15,7 +15,7 @@
 #include <kconfig.h>
 #include <kcompletionbox.h>
 #include <kdebug.h>
-#include <kstdaccel.h>
+#include <kstandardshortcut.h>
 #include <kglobalsettings.h>
 //Added by qt3to4:
 #include <QKeyEvent>
@@ -27,7 +27,7 @@
 bool KLSHistoryCombo::items_saved_ = false;
 
 
-KLSHistoryCombo::KLSHistoryCombo(QWidget *parent, const char */*name*/)
+KLSHistoryCombo::KLSHistoryCombo(QWidget *parent)
         : KHistoryCombo(parent)
 {
     setMaxCount(KLSConfig::maxCountComboUrl());
@@ -93,8 +93,8 @@ bool KLSHistoryCombo::eventFilter( QObject *o, QEvent *ev )
             }
 
             // ### TODO this is hackish; better create a kaction and connect to its slot
-            const QList<QKeySequence> deleteWordBack = KStdAccel::deleteWordBack();
-            const QList<QKeySequence> deleteWordForward = KStdAccel::deleteWordForward();
+            const QList<QKeySequence> deleteWordBack = KStandardShortcut::deleteWordBack();
+            const QList<QKeySequence> deleteWordForward = KStandardShortcut::deleteWordForward();
             const QKeySequence thisKey(e->key() | e->modifiers());
 
             if ( deleteWordBack.contains(thisKey) ||
