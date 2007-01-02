@@ -86,11 +86,11 @@ ResultsSearchBar::ResultsSearchBar(QWidget* parent)
     d->layout->addWidget(statusLabel);
 
     d->searchCombo = new KComboBox(this);
-    QPixmap iconAll = KGlobal::iconLoader()->loadIcon("exec", K3Icon::Small);
-    QPixmap iconGood = KGlobal::iconLoader()->loadIcon("ok", K3Icon::Small);
-    QPixmap iconBroken = KGlobal::iconLoader()->loadIcon("no", K3Icon::Small);
-    QPixmap iconMalformed = KGlobal::iconLoader()->loadIcon("bug", K3Icon::Small);
-    QPixmap iconUndetermined = KGlobal::iconLoader()->loadIcon("help", K3Icon::Small);
+    QPixmap iconAll = kapp->iconLoader()->loadIcon("exec", K3Icon::Small);
+    QPixmap iconGood = kapp->iconLoader()->loadIcon("ok", K3Icon::Small);
+    QPixmap iconBroken = kapp->iconLoader()->loadIcon("no", K3Icon::Small);
+    QPixmap iconMalformed = kapp->iconLoader()->loadIcon("bug", K3Icon::Small);
+    QPixmap iconUndetermined = kapp->iconLoader()->loadIcon("help", K3Icon::Small);
 
     d->searchCombo->addItem(iconAll, i18n("All Links"));
     d->searchCombo->addItem(iconGood, i18n("Good Links"));
