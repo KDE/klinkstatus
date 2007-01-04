@@ -38,7 +38,7 @@
 #include <QLayout>
 //Added by qt3to4:
 #include <Q3HBoxLayout>
-
+#include <kapplication.h>
 
 class ResultsSearchBar::ResultsSearchBarPrivate
 {
