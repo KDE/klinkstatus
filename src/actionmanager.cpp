@@ -85,31 +85,49 @@ void ActionManager::initPart(KLinkStatusPart* part)
     d->part = part;
     d->actionCollection = part->actionCollection();
 
-    KAction* action = 0;
+    QAction* action = 0;
 
     // *************** File menu *********************
 
-    action = new KAction(KIcon("filenew"), i18n("New Link Check"), d->actionCollection, "new_link_check");
+    action = d->actionCollection->addAction( "new_link_check" );
+    action->setText( i18n("New Link Check") );
+    action->setIcon( KIcon("filenew") );
     connect(action, SIGNAL(triggered(bool) ), d->part, SLOT(slotNewLinkCheck()));
 
-    action = new KAction(KIcon("fileopen"), i18n("Open URL..."), d->actionCollection, "open_link");
+    action = d->actionCollection->addAction( "open_link" );
+    action->setText( i18n("Open URL...") );
+    action->setIcon( KIcon("fileopen") );
+
     connect(action, SIGNAL(triggered(bool) ), d->part, SLOT(slotOpenLink()));
 
-    action = new KAction(KIcon("fileclose"), i18n("Close Tab"), d->actionCollection, "close_tab");
+
+    action = d->actionCollection->addAction( "close_tab" );
+    action->setText( i18n("Close Tab") );
+    action->setIcon( KIcon("fileclose") );
+
     connect(action, SIGNAL(triggered(bool) ), d->part, SLOT(slotClose()));
     action->setEnabled(false);
 
     // *************** Settings menu *********************
 
-    action = new KAction(KIcon("configure"), i18n("Configure KLinkStatus..."), d->actionCollection, "configure_klinkstatus");
+    action = d->actionCollection->addAction( "configure_klinkstatus" );
+    action->setText( i18n("Configure KLinkStatus...") );
+    action->setIcon( KIcon("configure") );
     connect(action, SIGNAL(triggered(bool) ), d->part, SLOT(slotConfigureKLinkStatus()));
 
     // *************** Help menu *********************
 
-    action = new KAction(KIcon("klinkstatus"), i18n("About KLinkStatus"), d->actionCollection, "about_klinkstatus");
+    action = d->actionCollection->addAction( "about_klinkstatus" );
+    action->setText( i18n("About KLinkStatus") );
+    action->setIcon( KIcon("klinkstatus") );
+
     connect(action, SIGNAL(triggered(bool) ), d->part, SLOT(slotAbout()));
 
-    action = new KAction(i18n("&Report Bug..."), d->actionCollection, "report_bug");
+    action  = new KAction(i18n("&Report Bug..."), this);
+    actionCollection()->addAction("report_bug", action );
+    action = d->actionCollection->addAction( "report_bug" );
+    action->setText( i18n("&Report Bug...") );
+
     connect(action, SIGNAL(triggered(bool) ), d->part, SLOT(slotReportBug()));
 
     // *************** View menu *********************
@@ -126,42 +144,49 @@ void ActionManager::initTabWidget(TabWidgetSession* tabWidgetSession)
 
     // *************** File menu *********************
 
-    KAction *action = new KAction(KIcon("filesave"), i18n("E&xport Results as HTML..."), d->actionCollection, "file_export_html");
+    KAction *action  = new KAction(KIcon("filesave"), i18n("E&xport Results as HTML..."), this);
+    actionCollection()->addAction("file_export_html", action );
     connect(action, SIGNAL(triggered(bool) ), d->tabWidgetSession, SLOT(slotExportAsHTML()));
     action->setEnabled(false);
 
     // *************** View menu *********************
 
 	//     this action must be in the tabwidget because the slot can't be connected to a particular sessionWidget
-    KToggleAction *toggle_action = new KToggleAction(KIcon("make_kdevelop"), i18n("&Follow last Link checked"), d->actionCollection, "follow_last_link_checked");
+    KToggleAction *toggle_action  = new KToggleAction(KIcon("make_kdevelop"), i18n("&Follow last Link checked"), this);
+    actionCollection()->addAction("follow_last_link_checked", toggle_action );
     connect(toggle_action, SIGNAL(triggered(bool)), d->tabWidgetSession, SLOT(slotFollowLastLinkChecked()));
     toggle_action->setShortcut(KShortcut("Ctrl+f"));
     toggle_action->setChecked(KLSConfig::followLastLinkChecked());
 
     //     this action must be in the tabwidget because the slot can't be connected to a particular sessionWidget
-    toggle_action = new KToggleAction(KIcon("bottom"), i18n("&Hide Search Panel"), d->actionCollection, "hide_search_bar");
+    toggle_action  = new KToggleAction(KIcon("bottom"), i18n("&Hide Search Panel"), this);
+    actionCollection()->addAction("hide_search_bar", toggle_action );
     connect(toggle_action, SIGNAL(triggered(bool)), d->tabWidgetSession, SLOT(slotHideSearchPanel()));
     toggle_action->setShortcut(KShortcut("Ctrl+h"));
     KGuiItem item(i18n("&Show Search Panel"), "top", "Show Search Panel");
     toggle_action->setCheckedState(item);
 
-    action = new KAction(KIcon("reload"), i18n("&Reset Search Options"), d->actionCollection, "reset_search_bar");
+    action  = new KAction(KIcon("reload"), i18n("&Reset Search Options"), this);
+    actionCollection()->addAction("reset_search_bar", action );
     connect(action, SIGNAL(triggered(bool) ), d->tabWidgetSession, SLOT(slotResetSearchOptions()));
     action->setShortcut(KShortcut("F5"));
 
     // *************** Search menu *********************
 
-    toggle_action = new KToggleAction(KIcon("player_play"), i18n("&Start Search"), d->actionCollection, "start_search");
+    toggle_action  = new KToggleAction(KIcon("player_play"), i18n("&Start Search"), this);
+    actionCollection()->addAction("start_search", toggle_action );
     connect(toggle_action, SIGNAL(triggered(bool)), d->tabWidgetSession, SLOT(slotStartSearch()));
     toggle_action->setShortcut(KShortcut("Ctrl+s"));
     toggle_action->setEnabled(false);
 
-    toggle_action = new KToggleAction(KIcon("player_pause"), i18n("&Pause Search"), d->actionCollection, "pause_search");
+    toggle_action  = new KToggleAction(KIcon("player_pause"), i18n("&Pause Search"), this);
+    actionCollection()->addAction("pause_search", toggle_action );
     connect(toggle_action, SIGNAL(triggered(bool)), d->tabWidgetSession, SLOT(slotPauseSearch()));
     toggle_action->setShortcut(KShortcut("Ctrl+p"));
     toggle_action->setEnabled(false);
 
-    action = new KAction(KIcon("player_stop"), i18n("St&op Search"), d->actionCollection, "stop_search");
+    action  = new KAction(KIcon("player_stop"), i18n("St&op Search"), this);
+    actionCollection()->addAction("stop_search", action );
     connect(action, SIGNAL(triggered(bool) ), d->tabWidgetSession, SLOT(slotStopSearch()));
     action->setShortcut(KShortcut("Ctrl+c"));
     action->setEnabled(false);
