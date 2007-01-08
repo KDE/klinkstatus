@@ -146,8 +146,8 @@ void KLinkStatus::removeDuplicatedActions()
     QWidget* container = part_about_action->associatedWidgets().value(0); // call this only once or segfault
     container->removeAction(part_about_action);
     container->removeAction(part_report_action);
-    part_action_collection->remove(part_about_action);
-    part_action_collection->remove(part_report_action);
+    part_action_collection->removeAction(part_about_action);
+    part_action_collection->removeAction(part_report_action);
 }
 
 void KLinkStatus::optionsShowToolbar()
