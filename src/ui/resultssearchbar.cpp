@@ -38,7 +38,6 @@
 #include <QLayout>
 //Added by qt3to4:
 #include <Q3HBoxLayout>
-#include <kapplication.h>
 
 class ResultsSearchBar::ResultsSearchBarPrivate
 {
@@ -86,11 +85,11 @@ ResultsSearchBar::ResultsSearchBar(QWidget* parent)
     d->layout->addWidget(statusLabel);
 
     d->searchCombo = new KComboBox(this);
-    QPixmap iconAll = kapp->iconLoader()->loadIcon("exec", K3Icon::Small);
-    QPixmap iconGood = kapp->iconLoader()->loadIcon("ok", K3Icon::Small);
-    QPixmap iconBroken = kapp->iconLoader()->loadIcon("no", K3Icon::Small);
-    QPixmap iconMalformed = kapp->iconLoader()->loadIcon("bug", K3Icon::Small);
-    QPixmap iconUndetermined = kapp->iconLoader()->loadIcon("help", K3Icon::Small);
+    QPixmap iconAll = KIconLoader::global()->loadIcon("exec", K3Icon::Small);
+    QPixmap iconGood = KIconLoader::global()->loadIcon("ok", K3Icon::Small);
+    QPixmap iconBroken = KIconLoader::global()->loadIcon("no", K3Icon::Small);
+    QPixmap iconMalformed = KIconLoader::global()->loadIcon("bug", K3Icon::Small);
+    QPixmap iconUndetermined = KIconLoader::global()->loadIcon("help", K3Icon::Small);
 
     d->searchCombo->addItem(iconAll, i18n("All Links"));
     d->searchCombo->addItem(iconGood, i18n("Good Links"));
