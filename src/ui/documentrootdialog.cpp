@@ -64,6 +64,7 @@ DocumentRootDialog::DocumentRootDialog(QWidget *parent, KUrl const& url)
             this, SLOT(slotReturnPressed (const QString &)));
     connect(m_urlRequester, SIGNAL(urlSelected (const KUrl &)),
             this, SLOT(slotUrlChanged( const KUrl &)));
+    connect(this,SIGNAL(okClicked()),this,SLOT(slotOk()));
 }
 
 DocumentRootDialog::~DocumentRootDialog()
