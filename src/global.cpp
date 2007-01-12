@@ -91,11 +91,11 @@ QString Global::quantaDBUSAppId()
     QString app_id;
 
     if(QDBusConnection::sessionBus().interface()->isServiceRegistered("org.kdewebdev.quanta")) // quanta is unnique application
-        app_id = "quanta";
+        app_id = "org.kdewebdev.quanta";
 
     else if(self()->isKLinkStatusEmbeddedInQuanta()) // klinkstatus is running as a part inside quanta
     {
-        QString app = "quanta-";
+        QString app = "org.kde.kdewebdev.quanta-";
         QString pid = QString().setNum(getpid());
         app_id = app + pid;
     }
@@ -108,8 +108,8 @@ QString Global::quantaDBUSAppId()
         for(int i = 0; i != ps_list.size(); ++i)
         {
             ps_list[i] = ps_list[i].trimmed ();
-/*            if(self()->dcop_client_->isApplicationRegistered(QString("quanta-") + ps_list[i].local8Bit()))
-                app_id = QString("quanta-") + ps_list[i];*/
+	    if(QDBusConnection::sessionBus().interface()->isServiceRegistered(QString("org.kdewebdev.quanta-")+ ps_list[i].local8Bit()))
+		app_id = QString("org.kdewebdev.quanta-") + ps_list[i];
         }
     }
 
