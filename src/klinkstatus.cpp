@@ -177,14 +177,14 @@ void KLinkStatus::optionsConfigureKeys()
     KKeyDialog dlg( KKeyChooser::AllActions, KKeyChooser::LetterShortcutsDisallowed, this );
     QList<KXMLGUIClient*> clients = guiFactory()->clients();
 	foreach(KXMLGUIClient *client, clients)
-		dlg.insert ( client->actionCollection()/*, client->instance()->aboutData()->programName() */);
+		dlg.insert ( client->actionCollection()/*, client->componentData().aboutData()->programName() */);
 
     dlg.configure();
 }
 
 void KLinkStatus::optionsConfigureToolbars()
 {
-    saveMainWindowSettings(KGlobal::config(), autoSaveGroup());
+    saveMainWindowSettings(KGlobal::config().data(), autoSaveGroup());
 
     // use the standard toolbar editor
     KEditToolbar dlg(factory());
@@ -195,7 +195,7 @@ void KLinkStatus::optionsConfigureToolbars()
 
 void KLinkStatus::applyNewToolbarConfig()
 {
-    applyMainWindowSettings(KGlobal::config(), autoSaveGroup());
+    applyMainWindowSettings(KGlobal::config().data(), autoSaveGroup());
 }
 
 

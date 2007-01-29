@@ -142,7 +142,7 @@ QString KopeteXSLThread::xsltTransform( const QString &xmlString, xsltStylesheet
     {
         if ( styleSheet )
         {
-            static QByteArray appPath( QString::fromLatin1("\"%1\"").arg( KApplication::kApplication()->dirs()->findDirs("appdata", QString::fromLatin1("styles/data") ).front() ).toUtf8() );
+            static QByteArray appPath( QString::fromLatin1("\"%1\"").arg( KGlobal::dirs()->findDirs("appdata", QString::fromLatin1("styles/data") ).front() ).toUtf8() );
 
             static const char* params[3] = {
                 "appdata",
