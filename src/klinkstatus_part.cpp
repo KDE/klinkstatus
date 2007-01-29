@@ -20,7 +20,7 @@
 
 #include <kaboutdata.h>
 #include <klocale.h>
-#include <kinstance.h>
+#include <kcomponentdata.h>
 #include <kaction.h>
 #include <kactioncollection.h>
 #include <kstandardaction.h>
@@ -61,7 +61,7 @@ KLinkStatusPart::KLinkStatusPart(QWidget *parentWidget,
                                  const QStringList & /*string_list*/)
     : KParts::ReadOnlyPart(parent), m_dlgAbout(0)
 {
-    setInstance(KLinkStatusFactory::instance());
+    setComponentData(KLinkStatusFactory::componentData());
 
     action_manager_ = new ActionManager(this);
     ActionManager::setInstance(action_manager_);
