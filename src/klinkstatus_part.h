@@ -31,7 +31,7 @@ class QPainter;
 
 class KUrl;
 class KAboutData;
-class KAboutApplication;
+class KAboutApplicationDialog;
 class KAction;
 
 class KLinkStatusPart: public KParts::ReadOnlyPart
@@ -79,7 +79,7 @@ private:
     ActionManager* action_manager_;
 
     TabWidgetSession* tabwidget_;
-    KAboutApplication* m_dlgAbout;
+    KAboutApplicationDialog* m_dlgAbout;
 };
 
 #endif // _KLINKSTATUSPART_H_

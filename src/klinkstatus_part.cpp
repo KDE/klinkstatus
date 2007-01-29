@@ -28,7 +28,7 @@
 #include <kparts/genericfactory.h>
 #include <kparts/factory.h>
 #include <kstandarddirs.h>
-#include <kaboutapplication.h>
+#include <kaboutapplicationdialog.h>
 #include <kbugreport.h>
 #include <kconfigdialog.h>
 #include <kglobalsettings.h>
@@ -162,7 +162,7 @@ void KLinkStatusPart::slotAbout()
     if(m_dlgAbout == 0)
     {
         static KAboutData * about = createAboutData();
-        m_dlgAbout = new KAboutApplication(about, tabwidget_, "about_app");
+        m_dlgAbout = new KAboutApplicationDialog(about, tabwidget_);
         if(m_dlgAbout == 0)
             return;
     }
