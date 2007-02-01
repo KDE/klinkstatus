@@ -237,7 +237,10 @@ void SessionWidget::slotCheck()
 
     newSearchManager();
 
-    insertUrlAtCombobox(combobox_url->currentText());
+    // WORKAROUND addToHistory breaks currentText()
+    QString current_text = combobox_url->currentText();
+    insertUrlAtCombobox(current_text);
+
     combobox_url->saveItems();
     progressbar_checker->reset();
     progressbar_checker->setPercentageVisible(true);
@@ -252,7 +255,7 @@ void SessionWidget::slotCheck()
     //table_linkstatus->clear();
     tree_view->clear();
 
-    KUrl url = Url::normalizeUrl(combobox_url->currentText());
+    KUrl url = Url::normalizeUrl(current_text);
 
     if(!url.protocol().startsWith("http"))
     {
@@ -339,10 +342,7 @@ void SessionWidget::keyPressEvent ( QKeyEvent* e )
         checkbox_external_links->hasFocus() ||
         checkbox_subdirs_only->hasFocus() ) )
     {
-        if(validFields())
-        {
-            slotStartSearch();
-        }
+        slotStartSearch();
     }
 
     else if(e->key() == Qt::Key_F6)
@@ -353,16 +353,14 @@ void SessionWidget::keyPressEvent ( QKeyEvent* e )
 
 bool SessionWidget::validFields()
 {
-    KUrl url = Url::normalizeUrl(combobox_url->currentText());
-
-    if(combobox_url->currentText().isEmpty())
+    QString url_string = combobox_url->currentText();
+//     kDebug() << "SessionWidget::validFields: " << url_string << endl;
+    if(url_string.isEmpty())
     {
         KMessageBox::sorry(this, i18n("Cowardly refusing to check an empty URL."));
         return false;
     }
-
-    else
-        return true;
+    return true;
 }
 
 void SessionWidget::slotRootChecked(LinkStatus const* linkstatus, LinkChecker * anal)
@@ -495,6 +493,7 @@ void SessionWidget::slotSearchPaused()
 
 void SessionWidget::insertUrlAtCombobox(QString const& url)
 {
+//     kDebug() << "SessionWidget::insertUrlAtCombobox: " << url << endl;
     combobox_url->addToHistory(url);
 }
 
