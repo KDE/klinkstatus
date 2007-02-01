@@ -68,7 +68,7 @@ int findSeparableWord(QString const& s_, QString const& palavra, int a_partir_do
         }
         --indice;
 
-        while(encontrou && indice_palavra != palavra.length() && indice < s.length())
+        while(encontrou && indice_palavra != palavra.length() && indice < s.length() && indice >= 0)
         {
             indice = nextNonSpaceChar(s, indice);
 

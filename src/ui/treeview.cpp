@@ -262,24 +262,7 @@ void TreeView::slotEditReferrersWithQuanta()
 
 void TreeView::slotEditReferrerWithQuanta(QAction* action)
 {
-  int index = actions().indexOf(action);
-
-    if(index == 0)
-        return;
-    Q_ASSERT(index != -1);
-    Q_ASSERT(index != 1); // separator
-
-    //kDebug(23100) << "id: " << id << endl;
-    //kDebug(23100) << "index: " << index << endl;
-
-    index -= 2; // The list of referrers starts on index = 2
-
-    TreeViewItem* _item = myItem(currentItem());
-    if(!_item) return;
-    Q3ValueVector<KUrl> referrers = _item->linkStatus()->referrers();
-    Q_ASSERT(index >= 0 && index < referrers.size());
-
-    slotEditReferrerWithQuanta(referrers[index]);
+    slotEditReferrerWithQuanta(KUrl(action->text()));
 }
 
 void TreeView::slotEditReferrerWithQuanta(KUrl const& url)

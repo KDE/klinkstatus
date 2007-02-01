@@ -184,7 +184,7 @@ void TabWidgetSession::updateTabLabel(LinkStatus const* linkstatus, SessionWidge
         if(url.fileName(KUrl::ObeyTrailingSlash).isEmpty())
             label = url.prettyUrl();
         else
-            label = url.fileName(false);
+            label = url.fileName(KUrl::ObeyTrailingSlash);
         
         label = KStringHandler::lsqueeze(label, 30);        
     }

@@ -80,7 +80,7 @@ KUrl Url::normalizeUrl(QString const& string_url, LinkStatus const& link_parent,
                 _string_url[0] == '?' || // query
                 _string_url[0] == '#') ) // fragment or reference
         {
-            s_url.append(base_url.fileName(false));
+            s_url.append(base_url.fileName(KUrl::ObeyTrailingSlash));
         }
 
         s_url.append(_string_url);
