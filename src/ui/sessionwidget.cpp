@@ -88,6 +88,9 @@ SessionWidget::SessionWidget(int max_simultaneous_connections, int time_out,
     init();
     slotLoadSettings();
 
+    connect(toolButton_clear_combo, SIGNAL(clicked()),
+            this, SLOT(slotClearComboUrl()));
+    
     connect(combobox_url, SIGNAL( textChanged ( const QString & ) ),
             this, SLOT( slotEnableCheckButton( const QString & ) ) );
 
