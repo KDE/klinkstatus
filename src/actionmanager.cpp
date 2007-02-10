@@ -276,7 +276,7 @@ void ActionManager::slotUpdateSessionWidgetActions(SessionWidget* page)
 
     toggleAction = static_cast<KToggleAction*> (action("hide_search_bar"));
     Q_ASSERT(toggleAction);
-    toggleAction->setChecked(page->buttongroup_search->isHidden());
+    toggleAction->setChecked(page->searchGroupBox->isHidden());
 
     //     ____________________________________________________________________
 

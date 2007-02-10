@@ -12,15 +12,16 @@
     <description></description>
     <versioncontrol/>
     <defaultencoding></defaultencoding>
+    <projectname>klinkstatus</projectname>
   </general>
   <kdevcustomproject>
     <run>
-      <mainprogram>src/klinkstatus</mainprogram>
+      <mainprogram>/home/kde/trunk/KDE/build/kdewebdev/klinkstatus/src/klinkstatus</mainprogram>
       <directoryradio>build</directoryradio>
       <customdirectory>/home/kde/trunk/KDE/build/kdewebdev/klinkstatus/src/home/kde/trunk/KDE/build/kdewebdev/klinkstatus/src/</customdirectory>
       <programargs></programargs>
       <terminal>false</terminal>
-      <autocompile>false</autocompile>
+      <autocompile>true</autocompile>
       <envvars>
         <envvar value="/home/kde/installs/cmake" name="CMAKEDIR" />
         <envvar value="/home/kde/installs/dbus" name="DBUSDIR" />
@@ -38,6 +39,9 @@
       </envvars>
       <autoinstall>false</autoinstall>
       <autokdesu>false</autokdesu>
+      <globaldebugarguments></globaldebugarguments>
+      <globalcwd>/home/kde/trunk/KDE/build/kdewebdev/klinkstatus</globalcwd>
+      <useglobalprogram>false</useglobalprogram>
     </run>
     <build>
       <buildtool>make</buildtool>
@@ -76,7 +80,7 @@
   <kdevdebugger>
     <general>
       <dbgshell></dbgshell>
-      <programargs></programargs>
+      <programargs/>
       <gdbpath></gdbpath>
       <configGdbScript></configGdbScript>
       <runShellScript></runShellScript>
@@ -153,11 +157,14 @@
   </cppsupportpart>
   <kdevcppsupport>
     <qt>
-      <used>false</used>
-      <version>3</version>
-      <root></root>
-      <includestyle>3</includestyle>
-      <designerintegration>EmbeddedKDevDesigner</designerintegration>
+      <used>true</used>
+      <version>4</version>
+      <root>/home/kde/installs/qt-4.2</root>
+      <includestyle>4</includestyle>
+      <designerintegration>ExternalDesigner</designerintegration>
+      <qmake>/usr/bin/qmake</qmake>
+      <designer>/home/kde/installs/qt-4.2/bin/designer</designer>
+      <designerpluginpaths/>
     </qt>
     <codecompletion>
       <includeGlobalFunctions>true</includeGlobalFunctions>
@@ -201,7 +208,7 @@
     <splitheadersource>
       <enabled>false</enabled>
       <synchronize>true</synchronize>
-      <orientation>Vertical</orientation>
+      <orientation>Horizontal</orientation>
     </splitheadersource>
   </kdevcppsupport>
   <kdevdocumentation>

@@ -72,7 +72,7 @@
 
 SessionWidget::SessionWidget(int max_simultaneous_connections, int time_out,
                              QWidget* parent, const char* name, Qt::WFlags f)
-    : SessionWidgetBase(parent, name, f), search_manager_(0),
+    : QWidget(parent, name, f), search_manager_(0),
         action_manager_(ActionManager::getInstance()),
         ready_(true), to_start_(false), to_pause_(false), to_stop_(false),
         in_progress_(false), paused_(false), stopped_(true),
@@ -81,6 +81,8 @@ SessionWidget::SessionWidget(int max_simultaneous_connections, int time_out,
         time_out_(time_out), tree_display_(false), follow_last_link_checked_(KLSConfig::followLastLinkChecked()),
         start_search_action_(0)
 {
+    setupUi(this);
+    
     newSearchManager();
 
     init();
@@ -243,9 +245,9 @@ void SessionWidget::slotCheck()
 
     combobox_url->saveItems();
     progressbar_checker->reset();
-    progressbar_checker->setPercentageVisible(true);
-    progressbar_checker->setTotalSteps(1); // check root page
-    progressbar_checker->setProgress(0);
+    progressbar_checker->setTextVisible(true);
+    progressbar_checker->setRange(0, 1); // check root page
+    progressbar_checker->setValue(0);
     textlabel_progressbar->setText(i18n( "Checking..." ));
 
     textlabel_elapsed_time->setEnabled(true);
@@ -370,7 +372,7 @@ void SessionWidget::slotRootChecked(LinkStatus const* linkstatus, LinkChecker * 
 
     Q_ASSERT(textlabel_progressbar->text() == i18n("Checking...") ||
             textlabel_progressbar->text() == i18n("Stopped"));
-    progressbar_checker->setProgress(1);
+    progressbar_checker->setValue(1);
 
     //table_linkstatus->insertResult(linkstatus);
     TreeViewItem* tree_view_item = new TreeViewItem(tree_view, tree_view->lastItem(), linkstatus);
@@ -391,7 +393,7 @@ void SessionWidget::slotLinkChecked(LinkStatus const* linkstatus, LinkChecker * 
     kDebug(23100) << textlabel_progressbar->text() << endl;
     Q_ASSERT(textlabel_progressbar->text() == i18n("Checking...") ||
             textlabel_progressbar->text() == i18n("Stopped"));
-    progressbar_checker->setProgress(progressbar_checker->progress() + 1);
+    progressbar_checker->setValue(progressbar_checker->value() + 1);
 
     if(linkstatus->checked())
     {
@@ -437,9 +439,9 @@ void SessionWidget::slotSearchFinished()
 
     textlabel_progressbar->setText(i18n( "Ready" ));
     progressbar_checker->reset();
-    progressbar_checker->setPercentageVisible(false);
-    progressbar_checker->setTotalSteps(1);
-    progressbar_checker->setProgress(0);
+    progressbar_checker->setTextVisible(false);
+    progressbar_checker->setRange(0, 1);
+    progressbar_checker->setValue(0);
 
     ready_ = true;
 
@@ -534,22 +536,22 @@ void SessionWidget::slotAddingLevelTotalSteps(uint steps)
 {
     textlabel_progressbar->setText(i18n( "Adding level..." ));
     progressbar_checker->reset();
-    progressbar_checker->setTotalSteps(steps);
-    progressbar_checker->setProgress(0);
+    progressbar_checker->setRange(0, steps);
+    progressbar_checker->setValue(0);
 }
 
 void SessionWidget::slotAddingLevelProgress()
 {
     Q_ASSERT(textlabel_progressbar->text() == i18n( "Adding level..." ));
-    progressbar_checker->setProgress(progressbar_checker->progress() + 1);
+    progressbar_checker->setValue(progressbar_checker->value() + 1);
 }
 
 void SessionWidget::slotLinksToCheckTotalSteps(uint steps)
 {
     textlabel_progressbar->setText(i18n( "Checking..." ));
     progressbar_checker->reset();
-    progressbar_checker->setTotalSteps(steps);
-    progressbar_checker->setProgress(0);
+    progressbar_checker->setRange(0, steps);
+    progressbar_checker->setValue(0);
 }
 
 void SessionWidget::slotClearComboUrl()
@@ -564,10 +566,10 @@ void SessionWidget::slotChooseUrlDialog()
 
 void SessionWidget::slotHideSearchPanel()
 {
-    if(buttongroup_search->isHidden())
-        buttongroup_search->show();
+    if(searchGroupBox->isHidden())
+        searchGroupBox->show();
     else
-        buttongroup_search->hide();
+        searchGroupBox->hide();
 }
 
 void SessionWidget::setFollowLastLinkChecked(bool follow)

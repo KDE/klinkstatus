@@ -21,7 +21,7 @@
 #ifndef SESSION_WIDGET_H
 #define SESSION_WIDGET_H
 
-#include "sessionwidgetbase.h"
+#include "ui_sessionwidgetbase.h"
 #include "../engine/linkchecker.h"
 #include "../engine/linkstatus.h"
 //Added by qt3to4:
@@ -44,7 +44,7 @@ class KToggleAction;
 
 using namespace std;
 
-class SessionWidget: public SessionWidgetBase
+class SessionWidget: public QWidget, public Ui_SessionWidgetBase
 {
     Q_OBJECT
 
