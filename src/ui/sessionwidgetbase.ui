@@ -538,5 +538,54 @@
   <include location="local" >ksqueezedtextlabel.h</include>
  </includes>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>checkbox_recursively</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>spinbox_depth</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>66</x>
+     <y>71</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>137</x>
+     <y>69</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>checkbox_recursively</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>checkbox_external_links</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>11</x>
+     <y>70</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>23</x>
+     <y>102</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>checkbox_recursively</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>checkbox_subdirs_only</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>11</x>
+     <y>71</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>273</x>
+     <y>65</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>
