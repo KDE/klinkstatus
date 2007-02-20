@@ -184,7 +184,7 @@ void KLinkStatus::optionsConfigureKeys()
 
 void KLinkStatus::optionsConfigureToolbars()
 {
-    saveMainWindowSettings(KGlobal::config().data(), autoSaveGroup());
+    saveMainWindowSettings(KGlobal::config()->group( autoSaveGroup()) );
 
     // use the standard toolbar editor
     KEditToolbar dlg(factory());
@@ -195,7 +195,7 @@ void KLinkStatus::optionsConfigureToolbars()
 
 void KLinkStatus::applyNewToolbarConfig()
 {
-    applyMainWindowSettings(KGlobal::config().data(), autoSaveGroup());
+    applyMainWindowSettings(KGlobal::config()->group( autoSaveGroup()) );
 }
 
 
