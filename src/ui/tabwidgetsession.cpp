@@ -273,5 +273,9 @@ void TabWidgetSession::slotExportAsHTML()
     currentSession()->slotExportAsHTML();
 }
 
+void TabWidgetSession::slotValidateAll( )
+{
+    currentSession()->slotValidateAll();
+}
 
 #include "tabwidgetsession.moc"

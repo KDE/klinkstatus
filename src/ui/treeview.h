@@ -71,7 +71,7 @@ private slots:
     virtual void slotEditReferrerWithQuanta(KUrl const& url);
     virtual void slotViewUrlInBrowser();
     virtual void slotViewParentUrlInBrowser();
-    virtual void loadContextTableMenu(Q3ValueVector<KUrl> const& referrers, bool is_root = false);
+    virtual void loadContextTableMenu(Q3ValueList<KUrl> const& referrers, bool is_root = false);
 
 private:
     void resetColumns();
@@ -113,7 +113,7 @@ private:
     void init(LinkStatus const* linkstatus);
 
 private:
-    Q3ValueVector<TreeColumnViewItem> column_items_;
+    Q3ValueList<TreeColumnViewItem> column_items_;
     Q3ListViewItem* last_child_;
     TreeView* root_;
 };

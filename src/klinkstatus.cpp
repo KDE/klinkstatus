@@ -65,9 +65,10 @@ KLinkStatus::KLinkStatus()
 
         if (m_part)
         {
+            m_part->widget()->setFocusPolicy(Qt::ClickFocus);
             // tell the KParts::MainWindow that this is indeed the main widget
             setCentralWidget(m_part->widget());
-	    setStandardToolBarMenuEnabled(true);
+            setStandardToolBarMenuEnabled(true);
 
             // and integrate the part's GUI with the shell's
             createGUI(m_part);

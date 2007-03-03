@@ -9,16 +9,17 @@
     <ignoreparts/>
     <projectdirectory>.</projectdirectory>
     <absoluteprojectpath>false</absoluteprojectpath>
-    <description></description>
+    <description/>
     <versioncontrol/>
-    <defaultencoding></defaultencoding>
+    <defaultencoding/>
+    <projectname>klinkstatus</projectname>
   </general>
   <kdevcustomproject>
     <run>
-      <mainprogram>src/klinkstatus</mainprogram>
+      <mainprogram>/home/kde/trunk/KDE/build/klinkstatus4-tidy/klinkstatus/src/klinkstatus</mainprogram>
       <directoryradio>build</directoryradio>
       <customdirectory>/home/kde/trunk/KDE/build/kdewebdev/klinkstatus/src/home/kde/trunk/KDE/build/kdewebdev/klinkstatus/src/</customdirectory>
-      <programargs></programargs>
+      <programargs/>
       <terminal>false</terminal>
       <autocompile>false</autocompile>
       <envvars>
@@ -38,19 +39,22 @@
       </envvars>
       <autoinstall>false</autoinstall>
       <autokdesu>false</autokdesu>
+      <globaldebugarguments/>
+      <globalcwd>/home/kde/trunk/KDE/build/klinkstatus4-tidy/klinkstatus</globalcwd>
+      <useglobalprogram>false</useglobalprogram>
     </run>
     <build>
       <buildtool>make</buildtool>
-      <builddir>/home/kde/trunk/KDE/build/kdewebdev/klinkstatus</builddir>
+      <builddir>/home/kde/trunk/KDE/build/klinkstatus4-tidy/klinkstatus</builddir>
     </build>
     <make>
       <abortonerror>true</abortonerror>
       <numberofjobs>2</numberofjobs>
       <prio>0</prio>
       <dontact>false</dontact>
-      <makebin></makebin>
-      <defaulttarget></defaulttarget>
-      <makeoptions></makeoptions>
+      <makebin/>
+      <defaulttarget/>
+      <makeoptions/>
       <selectedenvironment>default</selectedenvironment>
       <environments>
         <default>
@@ -75,12 +79,12 @@
   </kdevcustomproject>
   <kdevdebugger>
     <general>
-      <dbgshell></dbgshell>
-      <programargs></programargs>
-      <gdbpath></gdbpath>
-      <configGdbScript></configGdbScript>
-      <runShellScript></runShellScript>
-      <runGdbScript></runGdbScript>
+      <dbgshell/>
+      <programargs/>
+      <gdbpath/>
+      <configGdbScript/>
+      <runShellScript/>
+      <runGdbScript/>
       <breakonloadinglibs>true</breakonloadinglibs>
       <separatetty>false</separatetty>
       <floatingtoolbar>false</floatingtoolbar>
@@ -155,9 +159,12 @@
     <qt>
       <used>false</used>
       <version>3</version>
-      <root></root>
+      <root>/usr/share/qt3</root>
       <includestyle>3</includestyle>
       <designerintegration>EmbeddedKDevDesigner</designerintegration>
+      <qmake>/usr/bin/qmake-qt3</qmake>
+      <designer>/usr/bin/designer-qt3</designer>
+      <designerpluginpaths/>
     </qt>
     <codecompletion>
       <includeGlobalFunctions>true</includeGlobalFunctions>
@@ -187,7 +194,7 @@
       <includePaths>.;</includePaths>
     </codecompletion>
     <creategettersetter>
-      <prefixGet></prefixGet>
+      <prefixGet/>
       <prefixSet>set</prefixSet>
       <prefixVariable>m_,_</prefixVariable>
       <parameterName>theValue</parameterName>

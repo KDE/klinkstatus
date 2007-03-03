@@ -186,10 +186,18 @@ void ActionManager::initTabWidget(TabWidgetSession* tabWidgetSession)
     toggle_action->setEnabled(false);
 
     action  = new KAction(KIcon("player_stop"), i18n("St&op Search"), this);
-    actionCollection()->addAction("stop_search", action );
+    actionCollection()->addAction("stop_search", action);
     connect(action, SIGNAL(triggered(bool) ), d->tabWidgetSession, SLOT(slotStopSearch()));
     action->setShortcut(KShortcut("Ctrl+c"));
     action->setEnabled(false);
+        
+    // *************** Validate menu *********************
+        
+    action = new KAction(KIcon("validators"), i18n("&Fix All..."), this);
+    actionCollection()->addAction("html_fix_all", action);
+    connect(action, SIGNAL(triggered(bool) ), d->tabWidgetSession, SLOT(slotValidateAll()));
+    action->setShortcut(KShortcut());
+    action->setEnabled(true);
 }
 
 void ActionManager::initSessionWidget(SessionWidget* sessionWidget)
@@ -219,6 +227,16 @@ QAction* ActionManager::action(const QString & name)
 }
 
 void ActionManager::slotUpdateSessionWidgetActions(SessionWidget* page)
+{
+    updatePlayActions(page);
+    updateFollowLinkAction(page);
+      
+      // One liners
+    action("file_export_html")->setEnabled(!page->isEmpty());
+    action("html_fix_all")->setEnabled(!page->isEmpty() && page->stopped());
+}
+
+void ActionManager::updatePlayActions(SessionWidget* page)
 {
     KToggleAction* start_search_action_ = static_cast<KToggleAction*> (action("start_search"));
     KToggleAction* pause_search_action_ = static_cast<KToggleAction*> (action("pause_search"));
@@ -261,9 +279,10 @@ void ActionManager::slotUpdateSessionWidgetActions(SessionWidget* page)
 
         stop_search_action_->setEnabled(false);
     }
+}
 
-//     ____________________________________________________________________
-
+void ActionManager::updateFollowLinkAction(SessionWidget* page)
+{
     KToggleAction* toggleAction = static_cast<KToggleAction*> (action("follow_last_link_checked"));
 
     if(!toggleAction) // the first sessionWidget is created before initSessionWidget is called
@@ -276,11 +295,7 @@ void ActionManager::slotUpdateSessionWidgetActions(SessionWidget* page)
 
     toggleAction = static_cast<KToggleAction*> (action("hide_search_bar"));
     Q_ASSERT(toggleAction);
-    toggleAction->setChecked(page->buttongroup_search->isHidden());
-
-    //     ____________________________________________________________________
-
-    action("file_export_html")->setEnabled(!page->isEmpty());
+    toggleAction->setChecked(page->searchGroupBox->isHidden());
 }
 
 

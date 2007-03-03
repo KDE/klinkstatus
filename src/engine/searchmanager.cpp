@@ -24,7 +24,7 @@
 #include <kprotocolmanager.h>
 
 #include <QString>
-#include <q3valuevector.h>
+#include <qvaluelist.h>
 #include <qdom.h>
 
 #include <iostream>
@@ -119,7 +119,6 @@ void SearchManager::startSearch(KUrl const& root, SearchMode const& modo)
     time_.start();
 
     Q_ASSERT(root.isValid());
-    //Q_ASSERT(root.protocol() == "http" || root.protocol() == "https");
 
     if(root.hasHost() && (domain_.isNull() || domain_.isEmpty()))
     {
@@ -186,8 +185,8 @@ void SearchManager::checkRoot()
     LinkChecker* checker = new LinkChecker(&root_, time_out_, this);
     checker->setSearchManager(this);
 
-    connect(checker, SIGNAL(transactionFinished(const LinkStatus *, LinkChecker *)),
-            this, SLOT(slotRootChecked(const LinkStatus *, LinkChecker *)));
+    connect(checker, SIGNAL(transactionFinished(LinkStatus*, LinkChecker*)),
+            this, SLOT(slotRootChecked(LinkStatus*, LinkChecker*)));
     /*
         connect(checker, SIGNAL(jobFinnished(LinkChecker *)),
                 this, SLOT(slotLinkCheckerFinnished(LinkChecker *)));
@@ -204,6 +203,9 @@ void SearchManager::slotRootChecked(const LinkStatus * link, LinkChecker * check
     Q_ASSERT(checked_links_ == 0);
     Q_ASSERT(search_results_.size() == 0);
 
+    if(KLSConfig::validateMarkup() && link->isHtmlDocument())
+        link->validateMarkup();
+    
     ++checked_links_;
     //kDebug(23100) <<  "++checked_links_: SearchManager::slotRootChecked" << endl;
     emit signalRootChecked(link, checker);
@@ -212,12 +214,12 @@ void SearchManager::slotRootChecked(const LinkStatus * link, LinkChecker * check
     {
         current_depth_ = 1;
 
-        vector<LinkStatus*> no = children(LinkStatusHelper::lastRedirection(&root_));
+        vector<LinkStatus*> node = children(LinkStatusHelper::lastRedirection(&root_));
 
-        emit signalLinksToCheckTotalSteps(no.size());
+        emit signalLinksToCheckTotalSteps(node.size());
 
         vector< vector<LinkStatus*> > nivel;
-        nivel.push_back(no);
+        nivel.push_back(node);
 
         search_results_.push_back(nivel);
 
@@ -228,7 +230,7 @@ void SearchManager::slotRootChecked(const LinkStatus * link, LinkChecker * check
         }
         Q_ASSERT(search_results_.size() == 1);
 
-        if(no.size() > 0)
+        if(node.size() > 0)
         {
             startSearch();
         }
@@ -302,8 +304,10 @@ vector<LinkStatus*> SearchManager::children(LinkStatus* link)
                 << link->externalDomainDepth() << endl;
                 kDebug(23100) <<  "link: " << endl << LinkStatusHelper(link).toString() << endl;
                 kDebug(23100) <<  "child: " << endl << LinkStatusHelper(ls).toString() << endl;
+
+                Q_ASSERT(false);
             }
-            Q_ASSERT(link->externalDomainDepth() <= external_domain_depth_);
+//             Q_ASSERT(link->externalDomainDepth() <= external_domain_depth_);
 
             children.push_back(ls);
         }
@@ -330,7 +334,7 @@ bool SearchManager::existUrl(KUrl const& url, KUrl const& url_parent) const
                 Q_ASSERT(tmp);                
                 if(tmp->absoluteUrl() == url)
                 { // URL exists
-                    Q3ValueVector<KUrl> referrers(tmp->referrers());
+                    Q3ValueList<KUrl> referrers(tmp->referrers());
 
                     // Add new referrer
                     for(int i = 0; i != referrers.size(); ++i)
@@ -397,10 +401,10 @@ void SearchManager::continueSearch()
 {
     Q_ASSERT(!links_being_checked_);
 
-    vector<LinkStatus*> const& no = nodeToAnalize();
+    vector<LinkStatus*> const& node = nodeToAnalize();
 
-    if((uint)current_index_ < no.size())
-        checkVectorLinks(no);
+    if((uint)current_index_ < node.size())
+        checkVectorLinks(node);
 
     else
     {
@@ -519,8 +523,8 @@ void SearchManager::checkLinksSimultaneously(vector<LinkStatus*> const& links)
             LinkChecker* checker = new LinkChecker(ls, time_out_, this);
             checker->setSearchManager(this);
 
-            connect(checker, SIGNAL(transactionFinished(const LinkStatus *, LinkChecker *)),
-                    this, SLOT(slotLinkChecked(const LinkStatus *, LinkChecker *)));
+            connect(checker, SIGNAL(transactionFinished(LinkStatus*, LinkChecker*)),
+                    this, SLOT(slotLinkChecked(LinkStatus*, LinkChecker*)));
             /*
                         connect(checker, SIGNAL(jobFinnished(LinkChecker *)),
                                 this, SLOT(slotLinkCheckerFinnished(LinkChecker *)));
@@ -530,18 +534,22 @@ void SearchManager::checkLinksSimultaneously(vector<LinkStatus*> const& links)
     }
 }
 
-void SearchManager::slotLinkChecked(const LinkStatus * link, LinkChecker * checker)
+void SearchManager::slotLinkChecked(LinkStatus* link, LinkChecker * checker)
 {
     kDebug(23100) <<  "SearchManager::slotLinkChecked:" << endl;
 //     kDebug(23100) <<  link->absoluteUrl().url() << " -> " << 
 //             LinkStatus::lastRedirection((const_cast<LinkStatus*> (link)))->absoluteUrl().url() << endl;
 
     Q_ASSERT(link);
+
+    if(KLSConfig::validateMarkup() && link->isHtmlDocument())
+        link->validateMarkup();
+
     emit signalLinkChecked(link, checker);
     ++checked_links_;
     ++finished_connections_;
     --links_being_checked_;
-
+  
     if(links_being_checked_ < 0)
         kDebug(23100) <<  LinkStatusHelper(link).toString() << endl;
     Q_ASSERT(links_being_checked_ >= 0);

@@ -70,6 +70,9 @@ public slots:
     void slotStopSearch();
 
     void slotExportAsHTML();
+
+    // Tidy all the HTML documents present in the current session
+    void slotValidateAll();
     
 private slots:
     void slotCurrentChanged(QWidget* page);

@@ -19,7 +19,7 @@
 #include <kaction.h>
     
 #include <QtDBus>
-#include <q3valuevector.h>
+#include <qvaluelist.h>
 #include <q3header.h>
 #include <QClipboard>
 //Added by qt3to4:
@@ -32,6 +32,7 @@
 #include "engine/linkstatus.h"
 #include "engine/linkfilter.h"
 #include "klsconfig.h"
+#include "tidy/markupvalidator.h"
 
 
 TreeView::TreeView(QWidget *parent)
@@ -113,7 +114,7 @@ void TreeView::show(LinkStatusHelper::Status const& status)
     while(it.current())
     {
         TreeViewItem* item = myItem(it.current());
-	if(!item) return;
+    if(!item) return;
         if(!LinkStatusHelper(item->linkStatus()).hasStatus(status))
         {
             item->setVisible(false);
@@ -153,7 +154,7 @@ void TreeView::show(LinkMatcher link_matcher)
     while(it.current())
     {
         TreeViewItem* item = myItem(it.current());
-	if(!item) return;
+    if(!item) return;
         bool match = link_matcher.matches(*(item->linkStatus()));
 
         if(tree_display_)
@@ -204,7 +205,7 @@ void TreeView::slotPopupContextMenu(Q3ListViewItem* item, const QPoint& pos, int
     TreeViewItem* tree_item = myItem(item);
     if(tree_item)
     {
-        Q3ValueVector<KUrl> referrers = tree_item->linkStatus()->referrers();
+        Q3ValueList<KUrl> referrers = tree_item->linkStatus()->referrers();
         loadContextTableMenu(referrers, tree_item->linkStatus()->isRoot());
         context_table_menu_.popup(pos);
     }
@@ -242,7 +243,7 @@ void TreeView::slotEditReferrersWithQuanta()
 {
     TreeViewItem* _item = myItem(currentItem());
     if(!_item) return;
-    Q3ValueVector<KUrl> referrers = _item->linkStatus()->referrers();
+    Q3ValueList<KUrl> referrers = _item->linkStatus()->referrers();
 
     if(Global::isQuantaAvailableViaDBUS())
     {
@@ -272,7 +273,7 @@ void TreeView::slotEditReferrerWithQuanta(KUrl const& url)
     if(Global::isQuantaAvailableViaDBUS())
     {
 #ifdef _GNUC
-	#warning "kde4: port it"
+    #warning "kde4: port it"
 #endif
 #if 0
         DCOPRef quanta(Global::quantaDCOPAppId(),"WindowManagerIf");
@@ -328,7 +329,7 @@ void TreeView::slotViewParentUrlInBrowser()
     }
 }
 
-void TreeView::loadContextTableMenu(Q3ValueVector<KUrl> const& referrers, bool is_root)
+void TreeView::loadContextTableMenu(Q3ValueList<KUrl> const& referrers, bool is_root)
 {
     context_table_menu_.clear();
     delete(sub_menu_);
@@ -588,6 +589,13 @@ QPixmap TreeColumnViewItem::pixmap(int column) const
             return SmallIcon("history_clear"); 
         else if(linkStatus()->status() == LinkStatus::UNDETERMINED)
             return SmallIcon("help");
+    }
+    else if(column == root_->markupColumnIndex())
+    {
+        if(linkStatus()->hasHtmlErrors())
+            return SmallIcon("remove");
+        else if(linkStatus()->hasHtmlWarnings())
+            return SmallIcon("pencil");
     }
 
     return QPixmap();

@@ -44,23 +44,24 @@ public:
         undetermined // timeouts and refs
     };
 
-    explicit LinkStatusHelper(LinkStatus const* linkstatus);
-    ~LinkStatusHelper();
+    static QString const toString(LinkStatus const* linkstatus);
 
-    QString const toString() const;
-
-    void save(QDomElement& element) const;
+    static void save(LinkStatus const* linkstatus, QDomElement& element);
     
     static LinkStatus* lastRedirection(LinkStatus* ls);
 
-    bool hasStatus(Status state) const;
-    bool isGood() const;
-    bool isBroken() const;
-    bool isMalformed() const;
-    bool isUndetermined() const;
-    
+    static bool hasStatus(LinkStatus const* linkstatus, Status state);
+    static bool isGood(LinkStatus const* linkstatus);
+    static bool isBroken(LinkStatus const* linkstatus);
+    static bool isMalformed(LinkStatus const* linkstatus);
+    static bool isUndetermined(LinkStatus const* linkstatus);
+
+    static void validateMarkup();
+    static bool hasHtmlErrors();
+    static bool hasHtmlWarnings();
+
 private:
-    LinkStatus const* linkstatus_;
+    LinkStatusHelper();
 };
 
 #endif

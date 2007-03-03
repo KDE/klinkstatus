@@ -21,25 +21,23 @@
 #ifndef LINKSTATUS_H
 #define LINKSTATUS_H
 
-#include "../parser/http.h"
-#include "../utils/mvector.h"
-
 #include <kurl.h>
 #include <kdebug.h>
 class TreeView;
 class TreeViewItem;
 
 #include <QString>
-#include <q3valuevector.h>
+#include <q3valuelist.h>
 class QDomElement;
 
 #include <vector>
 #include <iostream>
 
-using namespace std;
-
-
+#include "parser/http.h"
+#include "utils/mvector.h"
+#include "tidy/markupvalidator.h"
 class Node;
+
 
 class LinkStatus
 {
@@ -132,7 +130,8 @@ public:
     QString mimeType() const;
     bool isErrorPage() const;
     TreeViewItem* treeViewItem() const;
-    Q3ValueVector<KUrl> const& referrers() const;
+    Q3ValueList<KUrl> const& referrers() const;
+    bool isHtmlDocument() const { return !doc_html_.isEmpty(); }
 
 private:
 
@@ -173,7 +172,10 @@ private:
     bool is_error_page_;
     bool is_local_restrict_;
     TreeViewItem* tree_view_item_;
-    Q3ValueVector<KUrl> referrers_;
+    Q3ValueList<KUrl> referrers_;
+    
+    class TidyInfo;
+    TidyInfo* tidy_info_;
 };
 
 #include "../parser/url.h"

@@ -59,11 +59,11 @@ void LinkStatusHelper::save(QDomElement& element) const
     tmp_1.appendChild(element.ownerDocument().createTextNode(KCharsets::resolveEntities(linkstatus_->label())));
     child_element.appendChild(tmp_1);
 
-    // <referers>
+    // <referrers>
     tmp_1 = element.ownerDocument().createElement("referrers");
     
-    Q3ValueVector<KUrl> referrers = linkstatus_->referrers();
-    for(Q3ValueVector<KUrl>::const_iterator it = referrers.begin(); it != referrers.end(); ++it)
+    Q3ValueList<KUrl> referrers = linkstatus_->referrers();
+    for(Q3ValueList<KUrl>::const_iterator it = referrers.begin(); it != referrers.end(); ++it)
     {
         QDomElement tmp_2 = element.ownerDocument().createElement("url");
         tmp_2.appendChild(element.ownerDocument().createTextNode(it->prettyUrl()));
@@ -159,4 +159,30 @@ QString const LinkStatusHelper::toString() const
         aux += "Node: " + linkstatus_->node()->content() + '\n';
 
     return aux;
+}
+
+void LinkStatusHelper::validateMarkup()
+{
+    Tidy::MarkupValidator markup_validator(absoluteUrl(), docHtml());
+    markup_validator.validate();
+    
+    tidy_info_->has_errors = markup_validator.hasErrors();
+    tidy_info_->has_warnings = markup_validator.hasWarnings();
+//     tidy_messages_ = markup_validator.messages();
+}
+
+bool LinkStatusHelper::hasHtmlErrors() const
+{
+    if(!isHtmlDocument())
+        return false;
+    
+    return tidy_info_->has_errors;
+}
+
+bool LinkStatusHelper::hasHtmlWarnings() const
+{
+    if(!isHtmlDocument())
+        return false;
+    
+    return tidy_info_->has_warnings;
 }

@@ -27,6 +27,53 @@
 #include "../parser/node.h"
 #include "../ui/treeview.h"
 
+    
+class LinkStatus::TidyInfo
+{
+public:
+    TidyInfo() 
+    : has_errors(false), 
+    has_warnings(false)
+    {}
+    
+    bool has_errors;
+    bool has_warnings;  
+};
+
+LinkStatus::LinkStatus()
+    : depth_(-1), external_domain_depth_(-1), is_root_(false),
+        error_occurred_(false), is_redirection_(false), parent_(0), redirection_(0), checked_(false),
+        only_check_header_(true), malformed_(false),
+        node_(0), has_base_URI_(false), has_html_doc_title_(false), ignored_(false),
+        mimetype_(""), is_error_page_(false), tree_view_item_(0), 
+        tidy_info_(new TidyInfo)
+{
+}
+
+LinkStatus::LinkStatus(KUrl const& absolute_url)
+    : depth_(-1), external_domain_depth_(-1), is_root_(false),
+        error_occurred_(false), is_redirection_(false), parent_(0), redirection_(0), checked_(false),
+        only_check_header_(true), malformed_(false),
+        node_(0), has_base_URI_(false), has_html_doc_title_(false), ignored_(false),
+        mimetype_(""), is_error_page_(false), tree_view_item_(0)
+{
+    setAbsoluteUrl(absolute_url);
+}
+
+LinkStatus::LinkStatus(Node* node, LinkStatus* parent)
+    : depth_(-1), external_domain_depth_(-1), is_root_(false),
+        error_occurred_(false), is_redirection_(false), parent_(0), redirection_(0), checked_(false),
+        only_check_header_(true), malformed_(false),
+        node_(node), has_base_URI_(false), has_html_doc_title_(false), ignored_(false),
+        mimetype_(""), is_error_page_(false), tree_view_item_(0), 
+        tidy_info_(new TidyInfo)
+{
+    loadNode();
+
+    setDepth(parent->depth() + 1);
+    setParent(parent);
+    setRootUrl(parent->rootUrl());
+}
 
 LinkStatus::~LinkStatus()
 {
@@ -51,6 +98,9 @@ LinkStatus::~LinkStatus()
             redirection_ = 0;
         }
     }
+
+    delete tidy_info_;
+    tidy_info_ = 0;
 }
 
 void LinkStatus::reset()
@@ -149,33 +199,32 @@ void LinkStatus::save(QDomElement& element) const
 
     // <url>
     QDomElement tmp_1 = element.ownerDocument().createElement("url");
-    tmp_1.appendChild(element.ownerDocument().createTextNode(absoluteUrl().prettyUrl()));
+    tmp_1.appendChild(element.ownerDocument().createTextNode(linkstatus_->absoluteUrl().prettyUrl()));
     child_element.appendChild(tmp_1);
     
     // <status>
     tmp_1 = element.ownerDocument().createElement("status");
-    tmp_1.setAttribute("broken", 
-                       ResultView::displayableWithStatus(this, ResultView::bad) ? 
-                               "true" : "false");
-    tmp_1.appendChild(element.ownerDocument().createTextNode(statusText()));
+    tmp_1.setAttribute("broken", isBroken() ? "true" : "false");
+    tmp_1.appendChild(element.ownerDocument().createTextNode(linkstatus_->statusText()));
     child_element.appendChild(tmp_1);
 
     // <label>
     tmp_1 = element.ownerDocument().createElement("label");
-    tmp_1.appendChild(element.ownerDocument().createTextNode(KCharsets::resolveEntities(label())));
+    tmp_1.appendChild(element.ownerDocument().createTextNode(KCharsets::resolveEntities(linkstatus_->label())));
     child_element.appendChild(tmp_1);
 
-    // <referers>
+    // <referrers>
     tmp_1 = element.ownerDocument().createElement("referrers");
     
-    for(Q3ValueVector<KUrl>::const_iterator it = referrers_.begin(); it != referrers_.end(); ++it)
+    Q3ValueList<KUrl> referrers = linkstatus_->referrers();
+    for(Q3ValueList<KUrl>::const_iterator it = referrers.begin(); it != referrers.end(); ++it)
     {
         QDomElement tmp_2 = element.ownerDocument().createElement("url");
         tmp_2.appendChild(element.ownerDocument().createTextNode(it->prettyUrl()));
     
         tmp_1.appendChild(tmp_2);
     }
-    Q_ASSERT(!referrers_.isEmpty());
+    Q_ASSERT(!referrers.isEmpty());
     child_element.appendChild(tmp_1);
 
     element.appendChild(child_element);

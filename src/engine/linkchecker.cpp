@@ -22,6 +22,7 @@
 #include "searchmanager.h"
 #include "../utils/utils.h"
 #include "../parser/htmlparser.h"
+#include "klsconfig.h"
 
 #include <QString>
 #include <QTimer>
@@ -148,7 +149,7 @@ void LinkChecker::slotMimetype (KIO::Job* /*job*/, const QString &type)
     // which is only available in the data response
     if(!t_job_->error()) // if a error happened let result() handle that
     {
-        if(ls->onlyCheckHeader())
+        if(ls->onlyCheckHeader() && !KLSConfig::validateMarkup())
         {
             //kDebug(23100) <<  "only check header: " << ls->absoluteUrl().prettyUrl() << endl;
 
@@ -205,7 +206,7 @@ void LinkChecker::slotData(KIO::Job* /*job*/, const QByteArray& data)
 
     if(!t_job_->error())
     {
-        if(ls->onlyCheckHeader())
+        if(ls->onlyCheckHeader() && !KLSConfig::validateMarkup())
         {
             Q_ASSERT(header_checked_ == false);
             // the job should have been killed in slotMimetype
@@ -321,7 +322,7 @@ void LinkChecker::slotResult(KJob* /*job*/)
     if(job->error() == KIO::ERR_USER_CANCELED)
     {
         kWarning(23100) << endl << "Job killed quietly, yet signal result was emited..." << endl;
-        kDebug(23100) << LinkStatusHelper(linkstatus_).toString() << endl;
+        kDebug(23100) << LinkStatusHelper::toString(linkstatus_) << endl;
 
         finnish();
         return;
@@ -337,12 +338,12 @@ void LinkChecker::slotResult(KJob* /*job*/)
     if(!(!ls->onlyCheckHeader() ||
           job->error() ||
           !header_checked_))
-        kWarning(23100) << LinkStatusHelper(ls).toString() << endl;
+        kWarning(23100) << LinkStatusHelper::toString(ls) << endl;
 
     Q_ASSERT(!ls->onlyCheckHeader() || job->error() || !header_checked_);
 
     if(ls->isErrorPage())
-        kWarning(23100) << "\n\n" << LinkStatusHelper(ls).toString() << endl << endl;
+        kWarning(23100) << "\n\n" << LinkStatusHelper::toString(ls) << endl << endl;
 
     Q_ASSERT(!job->isErrorPage());
 
@@ -512,7 +513,7 @@ HttpResponseHeader LinkChecker::getHttpHeader(KIO::Job* /*job*/, bool remember_c
     {
         header_checked_ = false;
         kWarning(23100) <<  "header_string.isNull() || header_string.isEmpty(): "
-                << LinkStatusHelper(linkstatus_).toString()  << endl;
+            << LinkStatusHelper::toString(linkstatus_) << endl;
     }
     else if(remember_check)
         header_checked_ = true;

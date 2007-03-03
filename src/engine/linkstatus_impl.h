@@ -18,38 +18,6 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.             *
  ***************************************************************************/
 
-inline LinkStatus::LinkStatus()
-        : status_(LinkStatus::UNDETERMINED), depth_(-1), external_domain_depth_(-1), is_root_(false),
-        error_occurred_(false), is_redirection_(false), parent_(0), redirection_(0), checked_(false),
-        only_check_header_(true), malformed_(false),
-        node_(0), has_base_URI_(false), has_html_doc_title_(false), ignored_(false),
-        mimetype_(""), is_error_page_(false), tree_view_item_(0)
-{}
-
-inline LinkStatus::LinkStatus(KUrl const& absolute_url)
-        : status_(LinkStatus::UNDETERMINED), depth_(-1), external_domain_depth_(-1), is_root_(false),
-        error_occurred_(false), is_redirection_(false), parent_(0), redirection_(0), checked_(false),
-        only_check_header_(true), malformed_(false),
-        node_(0), has_base_URI_(false), has_html_doc_title_(false), ignored_(false),
-        mimetype_(""), is_error_page_(false), tree_view_item_(0)
-{
-    setAbsoluteUrl(absolute_url);
-}
-
-inline LinkStatus::LinkStatus(Node* node, LinkStatus* parent)
-        : status_(LinkStatus::UNDETERMINED), depth_(-1), external_domain_depth_(-1), is_root_(false),
-        error_occurred_(false), is_redirection_(false), parent_(0), redirection_(0), checked_(false),
-        only_check_header_(true), malformed_(false),
-        node_(node), has_base_URI_(false), has_html_doc_title_(false), ignored_(false),
-        mimetype_(""), is_error_page_(false), tree_view_item_(0)
-{
-    loadNode();
-
-    setDepth(parent->depth() + 1);
-    setParent(parent);
-    setRootUrl(parent->rootUrl());
-}
-
 inline void LinkStatus::setRootUrl(KUrl const& url)
 {
     root_url_ = url;
@@ -410,7 +378,7 @@ inline TreeViewItem* LinkStatus::treeViewItem() const
     return tree_view_item_;
 }
 
-inline Q3ValueVector<KUrl> const& LinkStatus::referrers() const
+inline Q3ValueList<KUrl> const& LinkStatus::referrers() const
 {
     return referrers_;
 }

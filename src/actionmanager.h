@@ -55,8 +55,12 @@ public slots:
     void slotUpdateSessionWidgetActions(SessionWidget*);
 
 protected:
-
     KActionCollection* actionCollection();
+
+private:
+    // start, pause and stop
+    void updatePlayActions(SessionWidget* );
+    void updateFollowLinkAction(SessionWidget* );
 
 private:
 

@@ -65,7 +65,7 @@ public:
 protected:
     //virtual bool textFitsInCell(int row, int col) const = 0;
     virtual bool isEmpty() const = 0;
-    virtual void loadContextTableMenu(Q3ValueVector<KUrl> const& referrers, bool is_root = false) = 0;
+    virtual void loadContextTableMenu(Q3ValueList<KUrl> const& referrers, bool is_root = false) = 0;
 
 protected slots:
 
