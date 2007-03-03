@@ -12,7 +12,7 @@
 #ifndef RESULTVIEW_H
 #define RESULTVIEW_H
 
-#include <q3valuevector.h>
+#include <q3valuelist.h>
 #include <QMenu>
 #include <QStringList>
 

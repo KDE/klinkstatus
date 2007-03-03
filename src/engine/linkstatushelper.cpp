@@ -27,42 +27,30 @@
 #include "linkstatus.h"
 
 
-LinkStatusHelper::LinkStatusHelper(LinkStatus const* linkstatus)
-    : linkstatus_(linkstatus)
-{
-    Q_ASSERT(linkstatus_);
-}
-
-
-LinkStatusHelper::~LinkStatusHelper()
-{
-}
-
-
-void LinkStatusHelper::save(QDomElement& element) const
+void LinkStatusHelper::save(LinkStatus const* linkstatus, QDomElement& element)
 {
     QDomElement child_element = element.ownerDocument().createElement("link");
 
     // <url>
     QDomElement tmp_1 = element.ownerDocument().createElement("url");
-    tmp_1.appendChild(element.ownerDocument().createTextNode(linkstatus_->absoluteUrl().prettyUrl()));
+    tmp_1.appendChild(element.ownerDocument().createTextNode(linkstatus->absoluteUrl().prettyUrl()));
     child_element.appendChild(tmp_1);
     
     // <status>
     tmp_1 = element.ownerDocument().createElement("status");
-    tmp_1.setAttribute("broken", isBroken() ? "true" : "false");
-    tmp_1.appendChild(element.ownerDocument().createTextNode(linkstatus_->statusText()));
+    tmp_1.setAttribute("broken", isBroken(linkstatus) ? "true" : "false");
+    tmp_1.appendChild(element.ownerDocument().createTextNode(linkstatus->statusText()));
     child_element.appendChild(tmp_1);
 
     // <label>
     tmp_1 = element.ownerDocument().createElement("label");
-    tmp_1.appendChild(element.ownerDocument().createTextNode(KCharsets::resolveEntities(linkstatus_->label())));
+    tmp_1.appendChild(element.ownerDocument().createTextNode(KCharsets::resolveEntities(linkstatus->label())));
     child_element.appendChild(tmp_1);
 
     // <referrers>
     tmp_1 = element.ownerDocument().createElement("referrers");
     
-    Q3ValueList<KUrl> referrers = linkstatus_->referrers();
+    Q3ValueList<KUrl> referrers = linkstatus->referrers();
     for(Q3ValueList<KUrl>::const_iterator it = referrers.begin(); it != referrers.end(); ++it)
     {
         QDomElement tmp_2 = element.ownerDocument().createElement("url");
@@ -85,104 +73,88 @@ LinkStatus* LinkStatusHelper::lastRedirection(LinkStatus* ls)
     return ls;
 }
 
-bool LinkStatusHelper::hasStatus(Status status) const
+bool LinkStatusHelper::hasStatus(LinkStatus const* linkstatus, Status status) 
 {
     if(status == good)
     {
-        if(linkstatus_->errorOccurred())
+        if(linkstatus->errorOccurred())
             return false;
         else
-            if(linkstatus_->absoluteUrl().protocol() != "http" &&
-               linkstatus_->absoluteUrl().protocol() != "https")
-                return (linkstatus_->statusText() == "OK" ||
-                        (!linkstatus_->absoluteUrl().hasRef()));
+            if(linkstatus->absoluteUrl().protocol() != "http" &&
+               linkstatus->absoluteUrl().protocol() != "https")
+                return (linkstatus->statusText() == "OK" ||
+                        (!linkstatus->absoluteUrl().hasRef()));
         else
         {
-            QString status_code(QString::number(linkstatus_->httpHeader().statusCode()));
-            return (linkstatus_->statusText() == "OK" ||
-                    (!linkstatus_->absoluteUrl().hasRef() &&
+            QString status_code(QString::number(linkstatus->httpHeader().statusCode()));
+            return (linkstatus->statusText() == "OK" ||
+                    (!linkstatus->absoluteUrl().hasRef() &&
                     status_code[0] != '5' &&
                     status_code[0] != '4'));
         }
     }
     else if(status == bad)
     {
-        return (!hasStatus(good) && !linkstatus_->error().contains("Timeout"));
+        return (!hasStatus(linkstatus, good) && !linkstatus->error().contains("Timeout"));
     }
     else if(status == malformed)
     {
-        return (linkstatus_->error() == "Malformed");
+        return (linkstatus->error() == "Malformed");
     }
     else if(status == undetermined)
     {
-        return (linkstatus_->error().contains("Timeout") ||
-                (linkstatus_->absoluteUrl().hasRef() && linkstatus_->statusText() != "OK"));
+        return (linkstatus->error().contains("Timeout") ||
+                (linkstatus->absoluteUrl().hasRef() && linkstatus->statusText() != "OK"));
     }
     else
         return true;
 }
 
-bool LinkStatusHelper::isGood() const
+bool LinkStatusHelper::isGood(LinkStatus const* linkstatus) 
 {
-    return hasStatus(good);
+    return hasStatus(linkstatus, good);
 }
 
-bool LinkStatusHelper::isBroken() const
+bool LinkStatusHelper::isBroken(LinkStatus const* linkstatus) 
 {
-    return hasStatus(bad);    
+    return hasStatus(linkstatus, bad);
 }
 
-bool LinkStatusHelper::isMalformed() const
+bool LinkStatusHelper::isMalformed(LinkStatus const* linkstatus) 
 {
-    return hasStatus(malformed);
+    return hasStatus(linkstatus, malformed);
 }
 
-bool LinkStatusHelper::isUndetermined() const
+bool LinkStatusHelper::isUndetermined(LinkStatus const* linkstatus) 
 {
-    return hasStatus(undetermined);
+    return hasStatus(linkstatus, undetermined);
 }
 
-QString const LinkStatusHelper::toString() const
+QString const LinkStatusHelper::toString(LinkStatus const* linkstatus) 
 {
     QString aux;
 
-    if(!linkstatus_->isRoot())
+    if(!linkstatus->isRoot())
     {
-        Q_ASSERT(linkstatus_->parent());
-        aux += "Parent: " + linkstatus_->parent()->absoluteUrl().prettyUrl() + '\n';
+        Q_ASSERT(linkstatus->parent());
+        aux += "Parent: " + linkstatus->parent()->absoluteUrl().prettyUrl() + '\n';
     }
-    Q_ASSERT(!linkstatus_->originalUrl().isNull());
+    Q_ASSERT(!linkstatus->originalUrl().isNull());
 
-    aux += "URL: " + linkstatus_->absoluteUrl().prettyUrl() + '\n';
-    aux += "Original URL: " + linkstatus_->originalUrl() + '\n';
-    if(linkstatus_->node())
-        aux += "Node: " + linkstatus_->node()->content() + '\n';
+    aux += "URL: " + linkstatus->absoluteUrl().prettyUrl() + '\n';
+    aux += "Original URL: " + linkstatus->originalUrl() + '\n';
+    if(linkstatus->node())
+        aux += "Node: " + linkstatus->node()->content() + '\n';
 
     return aux;
 }
 
-void LinkStatusHelper::validateMarkup()
+void LinkStatusHelper::validateMarkup(LinkStatus const* linkstatus)
 {
-    Tidy::MarkupValidator markup_validator(absoluteUrl(), docHtml());
+    Tidy::MarkupValidator markup_validator(linkstatus->absoluteUrl(), linkstatus->docHtml());
     markup_validator.validate();
     
-    tidy_info_->has_errors = markup_validator.hasErrors();
-    tidy_info_->has_warnings = markup_validator.hasWarnings();
+    linkstatus->tidy_info_->has_errors = markup_validator.hasErrors();
+    linkstatus->tidy_info_->has_warnings = markup_validator.hasWarnings();
 //     tidy_messages_ = markup_validator.messages();
-}
-
-bool LinkStatusHelper::hasHtmlErrors() const
-{
-    if(!isHtmlDocument())
-        return false;
-    
-    return tidy_info_->has_errors;
-}
-
-bool LinkStatusHelper::hasHtmlWarnings() const
-{
-    if(!isHtmlDocument())
-        return false;
-    
-    return tidy_info_->has_warnings;
 }

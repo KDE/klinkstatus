@@ -149,7 +149,7 @@ void LinkChecker::slotMimetype (KIO::Job* /*job*/, const QString &type)
     // which is only available in the data response
     if(!t_job_->error()) // if a error happened let result() handle that
     {
-        if(ls->onlyCheckHeader() && !KLSConfig::validateMarkup())
+        if(ls->onlyCheckHeader() && !KLSConfig::showMarkupStatus())
         {
             //kDebug(23100) <<  "only check header: " << ls->absoluteUrl().prettyUrl() << endl;
 
@@ -206,7 +206,7 @@ void LinkChecker::slotData(KIO::Job* /*job*/, const QByteArray& data)
 
     if(!t_job_->error())
     {
-        if(ls->onlyCheckHeader() && !KLSConfig::validateMarkup())
+      if(ls->onlyCheckHeader() && !KLSConfig::showMarkupStatus())
         {
             Q_ASSERT(header_checked_ == false);
             // the job should have been killed in slotMimetype

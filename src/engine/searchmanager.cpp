@@ -24,7 +24,7 @@
 #include <kprotocolmanager.h>
 
 #include <QString>
-#include <qvaluelist.h>
+#include <q3valuelist.h>
 #include <qdom.h>
 
 #include <iostream>
@@ -194,7 +194,7 @@ void SearchManager::checkRoot()
     checker->check();
 }
 
-void SearchManager::slotRootChecked(const LinkStatus * link, LinkChecker * checker)
+void SearchManager::slotRootChecked(LinkStatus * link, LinkChecker * checker)
 {
     kDebug(23100) <<  "SearchManager::slotRootChecked:" << endl;
     kDebug(23100) <<  link->absoluteUrl().url() << " -> " << 
@@ -203,8 +203,8 @@ void SearchManager::slotRootChecked(const LinkStatus * link, LinkChecker * check
     Q_ASSERT(checked_links_ == 0);
     Q_ASSERT(search_results_.size() == 0);
 
-    if(KLSConfig::validateMarkup() && link->isHtmlDocument())
-        link->validateMarkup();
+    if(KLSConfig::showMarkupStatus() && link->isHtmlDocument())
+        LinkStatusHelper::validateMarkup(link);
     
     ++checked_links_;
     //kDebug(23100) <<  "++checked_links_: SearchManager::slotRootChecked" << endl;
@@ -302,8 +302,8 @@ vector<LinkStatus*> SearchManager::children(LinkStatus* link)
             {
                 kDebug(23100) <<  "link->externalDomainDepth() > external_domain_depth_: "
                 << link->externalDomainDepth() << endl;
-                kDebug(23100) <<  "link: " << endl << LinkStatusHelper(link).toString() << endl;
-                kDebug(23100) <<  "child: " << endl << LinkStatusHelper(ls).toString() << endl;
+                kDebug(23100) <<  "link: " << endl << LinkStatusHelper::toString(link) << endl;
+                kDebug(23100) <<  "child: " << endl << LinkStatusHelper::toString(ls) << endl;
 
                 Q_ASSERT(false);
             }
@@ -542,8 +542,8 @@ void SearchManager::slotLinkChecked(LinkStatus* link, LinkChecker * checker)
 
     Q_ASSERT(link);
 
-    if(KLSConfig::validateMarkup() && link->isHtmlDocument())
-        link->validateMarkup();
+    if(KLSConfig::showMarkupStatus() && link->isHtmlDocument())
+      LinkStatusHelper::validateMarkup(link);
 
     emit signalLinkChecked(link, checker);
     ++checked_links_;
@@ -551,7 +551,7 @@ void SearchManager::slotLinkChecked(LinkStatus* link, LinkChecker * checker)
     --links_being_checked_;
   
     if(links_being_checked_ < 0)
-        kDebug(23100) <<  LinkStatusHelper(link).toString() << endl;
+        kDebug(23100) <<  LinkStatusHelper::toString(link) << endl;
     Q_ASSERT(links_being_checked_ >= 0);
 
     if(canceled_ && searching_ && !links_being_checked_)
@@ -896,7 +896,7 @@ void SearchManager::save(QDomElement& element) const
             {
                 LinkStatus* ls = ((search_results_[i])[j])[l];
                 if(ls->checked())
-                    LinkStatusHelper(ls).save(child_element);
+                    LinkStatusHelper::save(ls, child_element);
             }
         }
     } 

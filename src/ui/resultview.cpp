@@ -153,7 +153,7 @@ QColor const ResultViewItem::textStatusColor() const
         if(status_code[0] == '0')
         {
             kWarning(23100) << "status code == 0: " << endl;
-            kWarning(23100) << LinkStatusHelper(linkStatus()).toString() << endl;
+            kWarning(23100) << LinkStatusHelper::toString(linkStatus()) << endl;
             kWarning(23100) << linkStatus()->httpHeader().toString() << endl;
         }
         //Q_ASSERT(status_code[0] != '0');

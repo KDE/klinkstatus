@@ -28,18 +28,6 @@
 #include "../ui/treeview.h"
 
     
-class LinkStatus::TidyInfo
-{
-public:
-    TidyInfo() 
-    : has_errors(false), 
-    has_warnings(false)
-    {}
-    
-    bool has_errors;
-    bool has_warnings;  
-};
-
 LinkStatus::LinkStatus()
     : depth_(-1), external_domain_depth_(-1), is_root_(false),
         error_occurred_(false), is_redirection_(false), parent_(0), redirection_(0), checked_(false),
@@ -193,39 +181,18 @@ void LinkStatus::setMalformed(bool flag)
     }
 }
 
-void LinkStatus::save(QDomElement& element) const
+bool LinkStatus::hasHtmlErrors() const
 {
-    QDomElement child_element = element.ownerDocument().createElement("link");
-
-    // <url>
-    QDomElement tmp_1 = element.ownerDocument().createElement("url");
-    tmp_1.appendChild(element.ownerDocument().createTextNode(linkstatus_->absoluteUrl().prettyUrl()));
-    child_element.appendChild(tmp_1);
+  if(!isHtmlDocument())
+    return false;
     
-    // <status>
-    tmp_1 = element.ownerDocument().createElement("status");
-    tmp_1.setAttribute("broken", isBroken() ? "true" : "false");
-    tmp_1.appendChild(element.ownerDocument().createTextNode(linkstatus_->statusText()));
-    child_element.appendChild(tmp_1);
+  return tidy_info_->has_errors;
+}
 
-    // <label>
-    tmp_1 = element.ownerDocument().createElement("label");
-    tmp_1.appendChild(element.ownerDocument().createTextNode(KCharsets::resolveEntities(linkstatus_->label())));
-    child_element.appendChild(tmp_1);
-
-    // <referrers>
-    tmp_1 = element.ownerDocument().createElement("referrers");
+bool LinkStatus::hasHtmlWarnings() const
+{
+  if(!isHtmlDocument())
+    return false;
     
-    Q3ValueList<KUrl> referrers = linkstatus_->referrers();
-    for(Q3ValueList<KUrl>::const_iterator it = referrers.begin(); it != referrers.end(); ++it)
-    {
-        QDomElement tmp_2 = element.ownerDocument().createElement("url");
-        tmp_2.appendChild(element.ownerDocument().createTextNode(it->prettyUrl()));
-    
-        tmp_1.appendChild(tmp_2);
-    }
-    Q_ASSERT(!referrers.isEmpty());
-    child_element.appendChild(tmp_1);
-
-    element.appendChild(child_element);
+  return tidy_info_->has_warnings;
 }

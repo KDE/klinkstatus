@@ -19,7 +19,7 @@
 #include <kaction.h>
     
 #include <QtDBus>
-#include <qvaluelist.h>
+#include <q3valuelist.h>
 #include <q3header.h>
 #include <QClipboard>
 //Added by qt3to4:
@@ -115,7 +115,7 @@ void TreeView::show(LinkStatusHelper::Status const& status)
     {
         TreeViewItem* item = myItem(it.current());
     if(!item) return;
-        if(!LinkStatusHelper(item->linkStatus()).hasStatus(status))
+        if(!LinkStatusHelper::hasStatus(item->linkStatus(), status))
         {
             item->setVisible(false);
             //kDebug(23100) << "Hide: " << item->linkStatus()->absoluteUrl().url() << endl;

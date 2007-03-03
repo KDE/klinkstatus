@@ -42,9 +42,10 @@
 #include "klinkstatus_part.h"
 #include "ui/tabwidgetsession.h"
 #include "ui/sessionwidget.h"
-#include "configsearchdialog.h"
-#include "configresultsdialog.h"
+#include "ui_configsearchdialog.h"
+#include "ui_configresultsdialog.h"
 #include "ui/settings/configidentificationdialog.h"
+//#include "ui_configidentificationdialogui.h"
 #include "actionmanager.h"
 
 
@@ -149,12 +150,24 @@ void KLinkStatusPart::slotClose()
 void KLinkStatusPart::slotConfigureKLinkStatus()
 {
     KConfigDialog *dialog = new KConfigDialog(tabwidget_, "klsconfig", KLSConfig::self());
-    dialog->addPage(new ConfigSearchDialog(0, "config_search_dialog"), i18n("Check"), "viewmag");
-    dialog->addPage(new ConfigResultsDialog(0, "config_results_dialog"), i18n("Results"), "player_playlist");
-    dialog->addPage(new ConfigIdentificationDialog(0), i18n("Identification"),
+
+    Ui::ConfigSearchDialog search_ui;
+    Ui::ConfigResultsDialog results_ui;
+    
+    QWidget *search_widget = new QWidget;
+    QWidget *results_widget = new QWidget;
+    
+    search_ui.setupUi(search_widget);
+    results_ui.setupUi(results_widget);
+
+    dialog->addPage(search_widget, i18n("Check"), "viewmag");
+    dialog->addPage(results_widget, i18n("Results"), "player_playlist");
+    dialog->addPage(new ConfigIdentificationDialog(), i18n("Identification"),
                     "agent", i18n("Configure the way KLinkstatus reports itself"));
-    dialog->show();
+
+    // FIXME check this connection - mismatched arguments between slot and signal
     connect(dialog, SIGNAL(settingsChanged(const QString&)), tabwidget_, SLOT(slotLoadSettings()));
+    dialog->show();
 }
 
 void KLinkStatusPart::slotAbout()

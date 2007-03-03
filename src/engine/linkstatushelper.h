@@ -56,9 +56,7 @@ public:
     static bool isMalformed(LinkStatus const* linkstatus);
     static bool isUndetermined(LinkStatus const* linkstatus);
 
-    static void validateMarkup();
-    static bool hasHtmlErrors();
-    static bool hasHtmlWarnings();
+    static void validateMarkup(LinkStatus const* linkstatus);
 
 private:
     LinkStatusHelper();

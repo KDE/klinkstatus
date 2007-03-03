@@ -38,10 +38,11 @@ class QDomElement;
 #include "tidy/markupvalidator.h"
 class Node;
 
-
 class LinkStatus
 {
 public:
+
+    friend class LinkStatusHelper;
 
     enum Status {
         UNDETERMINED,
@@ -132,6 +133,8 @@ public:
     TreeViewItem* treeViewItem() const;
     Q3ValueList<KUrl> const& referrers() const;
     bool isHtmlDocument() const { return !doc_html_.isEmpty(); }
+    bool hasHtmlErrors() const;
+    bool hasHtmlWarnings() const;
 
 private:
 
@@ -174,7 +177,17 @@ private:
     TreeViewItem* tree_view_item_;
     Q3ValueList<KUrl> referrers_;
     
-    class TidyInfo;
+    class TidyInfo
+    {
+      public:
+        TidyInfo()
+        : has_errors(false),
+        has_warnings(false)
+        {}
+    
+        bool has_errors;
+        bool has_warnings;
+    };
     TidyInfo* tidy_info_;
 };
 

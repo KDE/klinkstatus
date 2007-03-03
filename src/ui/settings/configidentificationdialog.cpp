@@ -29,9 +29,9 @@
 #include "klsconfig.h"
 
 
-ConfigIdentificationDialog::ConfigIdentificationDialog(QWidget *parent, const char *name)
- : ConfigIdentificationDialogUi(parent, name)
+ConfigIdentificationDialog::ConfigIdentificationDialog(QWidget *parent) : QWidget(parent)
 {
+    setupUi(this);
     if(KLSConfig::userAgent().isEmpty())
     {
         slotDefaultUA();
@@ -40,9 +40,9 @@ ConfigIdentificationDialog::ConfigIdentificationDialog(QWidget *parent, const ch
     connect(buttonDefault, SIGNAL(clicked()), this, SLOT(slotDefaultUA()));
 }
 
-
 ConfigIdentificationDialog::~ConfigIdentificationDialog()
 {
+
 }
 
 void ConfigIdentificationDialog::slotDefaultUA()
