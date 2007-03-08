@@ -5,6 +5,7 @@ set(libutils_SRCS
 )
 
 include_directories( ${CMAKE_SOURCE_DIR}/src/cfg ${CMAKE_SOURCE_DIR}/src/ui )
+    
 set(libparser_SRCS 
     ${CMAKE_SOURCE_DIR}/klinkstatus/src/parser/htmlparser.cpp 
     ${CMAKE_SOURCE_DIR}/klinkstatus/src/parser/http.cpp 
@@ -39,13 +40,13 @@ set(libuisettings_SRCS
     ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/settings/configidentificationdialog.cpp 
 )
 
-
 include_directories( 
     ${CMAKE_SOURCE_DIR}/klinkstatus/src 
     ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui
     ${CMAKE_BINARY_DIR}/klinkstatus/src 
     ${LIBXML2_INCLUDE_DIR}
     ${LIBXSLT_INCLUDE_DIR}
+    ${LIBTIDY_INCLUDE_DIR}
     ${KDE4_INCLUDE_DIR} 
     ${QT_INCLUDES}  
 )

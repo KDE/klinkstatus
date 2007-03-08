@@ -252,6 +252,7 @@ void LinkChecker::slotData(KIO::Job* /*job*/, const QByteArray& data)
                     //kDebug(23100) <<  "ERROR PAGE" << endl;
                     ls->setIsErrorPage(true);
                     ls->setStatus(getHttpStatus());
+                    ls->setChecked(true);
                     killJob();
                     finnish();
                     return;
@@ -340,7 +341,10 @@ void LinkChecker::slotResult(KJob* /*job*/)
           !header_checked_))
         kWarning(23100) << LinkStatusHelper::toString(ls) << endl;
 
-    Q_ASSERT(!ls->onlyCheckHeader() || job->error() || !header_checked_);
+    Q_ASSERT(
+        (!ls->onlyCheckHeader() || (ls->onlyCheckHeader() && KLSConfig::showMarkupStatus()))
+        || job->error()
+        || !header_checked_);
 
     if(ls->isErrorPage())
         kWarning(23100) << "\n\n" << LinkStatusHelper::toString(ls) << endl << endl;
