@@ -348,23 +348,23 @@ void TreeView::loadContextTableMenu(Q3ValueVector<KUrl> const& referrers, bool i
     }
     else
     {
-        QMenu* sub_menu = context_table_menu_.addMenu(SmallIconSet("fileopen"), i18n("Edit Referrer with Quanta"));
+        QMenu* sub_menu = context_table_menu_.addMenu(SmallIconSet("document-open"), i18n("Edit Referrer with Quanta"));
         sub_menu->setEnabled(false);
     }
     context_table_menu_.addSeparator();
 
-    context_table_menu_.addAction(SmallIconSet("fileopen"), i18n("Open URL"),
+    context_table_menu_.addAction(SmallIconSet("document-open"), i18n("Open URL"),
                                   this, SLOT(slotViewUrlInBrowser()));
-    context_table_menu_.addAction(/*SmallIconSet("fileopen"), */i18n("Open Referrer URL"),
+    context_table_menu_.addAction(/*SmallIconSet("document-open"), */i18n("Open Referrer URL"),
                                   this, SLOT(slotViewParentUrlInBrowser()));
     
     context_table_menu_.addSeparator();
 
-    context_table_menu_.addAction(SmallIconSet("editcopy"), i18n("Copy URL"),
+    context_table_menu_.addAction(SmallIconSet("edit-copy"), i18n("Copy URL"),
                                   this, SLOT(slotCopyUrlToClipboard()));
-    context_table_menu_.addAction(/*SmallIconSet("editcopy"), */i18n("Copy Referrer URL"),
+    context_table_menu_.addAction(/*SmallIconSet("edit-copy"), */i18n("Copy Referrer URL"),
                                   this, SLOT(slotCopyParentUrlToClipboard()));
-    context_table_menu_.addAction(/*SmallIconSet("editcopy"), */i18n("Copy Cell Text"),
+    context_table_menu_.addAction(/*SmallIconSet("edit-copy"), */i18n("Copy Cell Text"),
                                   this, SLOT(slotCopyCellTextToClipboard()));
 }
 
@@ -574,20 +574,20 @@ QPixmap TreeColumnViewItem::pixmap(int column) const
             if(linkStatus()->statusText() == "304")
                 return UserIcon("304");
             else
-                return SmallIcon("redo");
+                return SmallIcon("edit-redo");
         }
         else if(linkStatus()->status() == LinkStatus::HTTP_SERVER_ERROR)
             return SmallIcon("no");
         else if(linkStatus()->status() == LinkStatus::MALFORMED)
-            return SmallIcon("editdelete");
+            return SmallIcon("edit-delete");
         else if(linkStatus()->status() == LinkStatus::NOT_SUPPORTED)
-            return SmallIcon("help");
+            return SmallIcon("help-contents");
         else if(linkStatus()->status() == LinkStatus::SUCCESSFULL)
             return SmallIcon("ok");
         else if(linkStatus()->status() == LinkStatus::TIMEOUT)
-            return SmallIcon("history_clear"); 
+            return SmallIcon("history-clear"); 
         else if(linkStatus()->status() == LinkStatus::UNDETERMINED)
-            return SmallIcon("help");
+            return SmallIcon("help-contents");
     }
 
     return QPixmap();

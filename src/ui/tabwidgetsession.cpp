@@ -63,7 +63,7 @@ TabWidgetSession::TabWidgetSession(QWidget* parent, Qt::WFlags f)
     tabs_close_ = new QToolButton(this);
     tabs_close_->setShortcut(QKeySequence("Ctrl+W"));
     connect(tabs_close_, SIGNAL(clicked()), this, SLOT(closeSession()));
-    tabs_close_->setIcon(SmallIconSet("tab_remove"));
+    tabs_close_->setIcon(SmallIconSet("tab-remove"));
     tabs_close_->adjustSize();
     tabs_close_->setToolTip(i18n("Close the current tab"));
     setCornerWidget(tabs_close_, Qt::TopRightCorner);

@@ -160,7 +160,7 @@ void KLinkStatusPart::slotConfigureKLinkStatus()
     search_ui.setupUi(search_widget);
     results_ui.setupUi(results_widget);
 
-    dialog->addPage(search_widget, i18n("Check"), "viewmag");
+    dialog->addPage(search_widget, i18n("Check"), "zoom-original");
     dialog->addPage(results_widget, i18n("Results"), "player_playlist");
     dialog->addPage(new ConfigIdentificationDialog(), i18n("Identification"),
                     "agent", i18n("Configure the way KLinkstatus reports itself"));

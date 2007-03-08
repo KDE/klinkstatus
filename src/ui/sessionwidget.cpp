@@ -114,7 +114,7 @@ void SessionWidget::init()
 
     toolButton_clear_combo->setIcon(KIcon("locationbar_erase"));
 
-    pushbutton_url->setIcon(KIcon("fileopen"));
+    pushbutton_url->setIcon(KIcon("document-open"));
     const int pixmapSize = style()->pixelMetric(QStyle::PM_SmallIconSize);
     pushbutton_url->setFixedSize( pixmapSize+8, pixmapSize+8 );
     connect(pushbutton_url, SIGNAL(clicked()), this, SLOT(slotChooseUrlDialog()));
