@@ -41,7 +41,7 @@ public:
     void setStatus(LinkStatusHelper::Status status) { m_status = status; }
     LinkStatusHelper::Status status() const { return m_status; }
     
-    bool nullFilter() const { return m_text.isEmpty() && m_status == LinkStatusHelper::none; }
+//     bool nullFilter() const { return m_text.isEmpty() && m_status == LinkStatus::none; }
         
 private:
     QString m_text;

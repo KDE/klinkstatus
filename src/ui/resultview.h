@@ -21,7 +21,7 @@ class KUrl;
 #include "../engine/linkstatushelper.h"
 class LinkStatus;
 class CellToolTip;
-
+class LinkMatcher;
 
 /**
 @author Paulo Moura Guedes
@@ -48,7 +48,7 @@ public:
 
     //virtual void insertResult(LinkStatus const* linkstatus) = 0;
     virtual void clear() = 0;
-    virtual void show(LinkStatusHelper::Status const& status) = 0;
+    virtual void show(LinkMatcher const& link_matcher) = 0;
     virtual void showAll() = 0;
     //virtual void ensureCellVisible(int row, int col) = 0;
 

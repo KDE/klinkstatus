@@ -55,7 +55,7 @@ TabWidgetSession::TabWidgetSession(QWidget* parent, Qt::WFlags f)
     QToolButton* tabs_new = new QToolButton(this);
     tabs_new->setShortcut(QKeySequence("Ctrl+N"));
     connect(tabs_new, SIGNAL(clicked()), this, SLOT(slotNewSession()));
-    tabs_new->setIcon(SmallIconSet("tab_new_raised"));
+    tabs_new->setIcon(SmallIconSet("tab-new"));
     tabs_new->adjustSize();
     tabs_new->setToolTip(i18n("Open new tab"));
     setCornerWidget(tabs_new, Qt::TopLeftCorner);
@@ -63,12 +63,12 @@ TabWidgetSession::TabWidgetSession(QWidget* parent, Qt::WFlags f)
     tabs_close_ = new QToolButton(this);
     tabs_close_->setShortcut(QKeySequence("Ctrl+W"));
     connect(tabs_close_, SIGNAL(clicked()), this, SLOT(closeSession()));
-    tabs_close_->setIcon(SmallIconSet("tab_remove"));
+    tabs_close_->setIcon(SmallIconSet("tab-remove"));
     tabs_close_->adjustSize();
     tabs_close_->setToolTip(i18n("Close the current tab"));
     setCornerWidget(tabs_close_, Qt::TopRightCorner);
 
-    connect(this, SIGNAL(currentChanged(QWidget*)), this, SLOT(slotCurrentChanged(QWidget*)));
+    connect(this, SIGNAL(currentChanged(int)), this, SLOT(slotCurrentChanged(int)));
 }
 
 TabWidgetSession::~TabWidgetSession()
@@ -164,7 +164,8 @@ SessionWidget* TabWidgetSession::newSessionWidget()
     
     session_widget->setColumns(columns);
 
-    session_widget->tree_view->restoreLayout(KLSConfig::self()->config(), "klinkstatus");
+    // FIXME
+//     session_widget->tree_view->restoreLayout(KLSConfig::self()->config(), "klinkstatus");
 
     return session_widget;
 }
@@ -213,7 +214,7 @@ void TabWidgetSession::setUrl(KUrl const& url)
     currentSession()->setUrl(url);
 }
 
-void TabWidgetSession::slotCurrentChanged(QWidget* /*page*/)
+void TabWidgetSession::slotCurrentChanged(int)
 {
     tabs_close_->setEnabled(count() > 1);
 

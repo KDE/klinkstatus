@@ -187,10 +187,7 @@ void SearchManager::checkRoot()
 
     connect(checker, SIGNAL(transactionFinished(LinkStatus*, LinkChecker*)),
             this, SLOT(slotRootChecked(LinkStatus*, LinkChecker*)));
-    /*
-        connect(checker, SIGNAL(jobFinnished(LinkChecker *)),
-                this, SLOT(slotLinkCheckerFinnished(LinkChecker *)));
-    */
+
     checker->check();
 }
 
@@ -506,18 +503,6 @@ void SearchManager::checkLinksSimultaneously(vector<LinkStatus*> const& links)
             ls->setChecked(true);
             slotLinkChecked(ls, 0);
         }
-        /*
-                else if(!(protocol == "http" || protocol == "https"))
-                {
-                    ++ignored_links_;
-                    ls->setIgnored(true);
-                    ls->setErrorOccurred(true);
-                    ls->setError(i18n("Protocol %1 not supported").arg(protocol));
-                    ls->setStatus(LinkStatus::MALFORMED);
-                    ls->setChecked(true);
-                    slotLinkChecked(ls, 0);
-                }
-        */
         else
         {
             LinkChecker* checker = new LinkChecker(ls, time_out_, this);
@@ -525,10 +510,7 @@ void SearchManager::checkLinksSimultaneously(vector<LinkStatus*> const& links)
 
             connect(checker, SIGNAL(transactionFinished(LinkStatus*, LinkChecker*)),
                     this, SLOT(slotLinkChecked(LinkStatus*, LinkChecker*)));
-            /*
-                        connect(checker, SIGNAL(jobFinnished(LinkChecker *)),
-                                this, SLOT(slotLinkCheckerFinnished(LinkChecker *)));
-            */
+
             checker->check();
         }
     }
@@ -564,6 +546,7 @@ void SearchManager::slotLinkChecked(LinkStatus* link, LinkChecker * checker)
         continueSearch();
         return;
     }
+    // FIXME
     /*
             delete checker;
             checker = 0;
@@ -802,17 +785,6 @@ bool SearchManager::onlyCheckHeader(LinkStatus* ls) const
 
 void SearchManager::slotSearchFinished()
 {}
-
-void SearchManager::slotLinkCheckerFinnished(LinkChecker * checker)
-{
-    kDebug(23100) <<  "deleting linkchecker" << endl;
-
-    Q_ASSERT(checker);
-    //Q_ASSERT(checker->linkStatus()->checked());
-
-    delete checker;
-    checker = 0;
-}
 
 KHTMLPart* SearchManager::htmlPart(QString const& key_url) const
 {

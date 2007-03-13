@@ -91,19 +91,19 @@ void ActionManager::initPart(KLinkStatusPart* part)
 
     action = d->actionCollection->addAction( "new_link_check" );
     action->setText( i18n("New Link Check") );
-    action->setIcon( KIcon("filenew") );
+    action->setIcon( KIcon("document-new") );
     connect(action, SIGNAL(triggered(bool) ), d->part, SLOT(slotNewLinkCheck()));
 
     action = d->actionCollection->addAction( "open_link" );
     action->setText( i18n("Open URL...") );
-    action->setIcon( KIcon("fileopen") );
+    action->setIcon( KIcon("document-open") );
 
     connect(action, SIGNAL(triggered(bool) ), d->part, SLOT(slotOpenLink()));
 
 
     action = d->actionCollection->addAction( "close_tab" );
-    action->setText( i18n("Close Tab") );
-    action->setIcon( KIcon("fileclose") );
+    action->setText(i18n("Close Tab"));
+    action->setIcon(KIcon("tab-remove") );
 
     connect(action, SIGNAL(triggered(bool) ), d->part, SLOT(slotClose()));
     action->setEnabled(false);
@@ -144,7 +144,7 @@ void ActionManager::initTabWidget(TabWidgetSession* tabWidgetSession)
 
     // *************** File menu *********************
 
-    KAction *action  = new KAction(KIcon("filesave"), i18n("E&xport Results as HTML..."), this);
+    KAction *action  = new KAction(KIcon("document-save"), i18n("E&xport Results as HTML..."), this);
     actionCollection()->addAction("file_export_html", action );
     connect(action, SIGNAL(triggered(bool) ), d->tabWidgetSession, SLOT(slotExportAsHTML()));
     action->setEnabled(false);
@@ -152,40 +152,40 @@ void ActionManager::initTabWidget(TabWidgetSession* tabWidgetSession)
     // *************** View menu *********************
 
 	//     this action must be in the tabwidget because the slot can't be connected to a particular sessionWidget
-    KToggleAction *toggle_action  = new KToggleAction(KIcon("make_kdevelop"), i18n("&Follow last Link checked"), this);
+    KToggleAction *toggle_action  = new KToggleAction(KIcon("goto-page"), i18n("&Follow last Link checked"), this);
     actionCollection()->addAction("follow_last_link_checked", toggle_action );
     connect(toggle_action, SIGNAL(triggered(bool)), d->tabWidgetSession, SLOT(slotFollowLastLinkChecked()));
     toggle_action->setShortcut(KShortcut("Ctrl+f"));
     toggle_action->setChecked(KLSConfig::followLastLinkChecked());
 
     //     this action must be in the tabwidget because the slot can't be connected to a particular sessionWidget
-    toggle_action  = new KToggleAction(KIcon("bottom"), i18n("&Hide Search Panel"), this);
+    toggle_action  = new KToggleAction(KIcon("go-bottom"), i18n("&Hide Search Panel"), this);
     actionCollection()->addAction("hide_search_bar", toggle_action );
     connect(toggle_action, SIGNAL(triggered(bool)), d->tabWidgetSession, SLOT(slotHideSearchPanel()));
     toggle_action->setShortcut(KShortcut("Ctrl+h"));
-    KGuiItem item(i18n("&Show Search Panel"), "top", "Show Search Panel");
+    KGuiItem item(i18n("&Show Search Panel"), "go-top", "Show Search Panel");
     toggle_action->setCheckedState(item);
 
-    action  = new KAction(KIcon("reload"), i18n("&Reset Search Options"), this);
+    action  = new KAction(KIcon("view-refresh"), i18n("&Reset Search Options"), this);
     actionCollection()->addAction("reset_search_bar", action );
     connect(action, SIGNAL(triggered(bool) ), d->tabWidgetSession, SLOT(slotResetSearchOptions()));
     action->setShortcut(KShortcut("F5"));
 
     // *************** Search menu *********************
 
-    toggle_action  = new KToggleAction(KIcon("player_play"), i18n("&Start Search"), this);
+    toggle_action  = new KToggleAction(KIcon("media-playback-start"), i18n("&Start Search"), this);
     actionCollection()->addAction("start_search", toggle_action );
     connect(toggle_action, SIGNAL(triggered(bool)), d->tabWidgetSession, SLOT(slotStartSearch()));
     toggle_action->setShortcut(KShortcut("Ctrl+s"));
     toggle_action->setEnabled(false);
 
-    toggle_action  = new KToggleAction(KIcon("player_pause"), i18n("&Pause Search"), this);
+    toggle_action  = new KToggleAction(KIcon("media-playback-pause"), i18n("&Pause Search"), this);
     actionCollection()->addAction("pause_search", toggle_action );
     connect(toggle_action, SIGNAL(triggered(bool)), d->tabWidgetSession, SLOT(slotPauseSearch()));
     toggle_action->setShortcut(KShortcut("Ctrl+p"));
     toggle_action->setEnabled(false);
 
-    action  = new KAction(KIcon("player_stop"), i18n("St&op Search"), this);
+    action  = new KAction(KIcon("media-playback-stop"), i18n("St&op Search"), this);
     actionCollection()->addAction("stop_search", action);
     connect(action, SIGNAL(triggered(bool) ), d->tabWidgetSession, SLOT(slotStopSearch()));
     action->setShortcut(KShortcut("Ctrl+c"));

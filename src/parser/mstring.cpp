@@ -92,8 +92,7 @@ int nextNonSpaceChar(QString const& s, int i)
 {
     ++i;
     //  while( (s[i] == ' ' || s[i] == '\t' || s[i] == '\r' || s[i] == '\n')
-    while(isSpace(s[i])
-            && i < s.length() )
+    while(i < s.length() && isSpace(s[i]))
         ++i;
 
     if(i < s.length())
@@ -111,8 +110,7 @@ int nextSpaceChar(QString const& s, int i)
 {
     //while( (s[i] != ' ' && s[i] != '\r' && s[i] != '\n' && s[i] != '\t') &&
     //i < s.size() )
-    while(!isSpace(s[i]) &&
-            i < s.length() )
+    while(i < s.length() && !isSpace(s[i]))
         ++i;
 
     if(i < s.length())

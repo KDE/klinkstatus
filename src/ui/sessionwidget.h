@@ -34,7 +34,7 @@ class LinkMatcher;
 #include <QTimer>
 #include <QString>
 class QStringList;
-class Q3ListViewItem;
+class QTreeWidgetItem;
 
 class KUrl;
 class KConfig;
@@ -105,7 +105,7 @@ private slots:
     void slotSearchFinished();
     void slotSearchPaused();
     /** Shows the status of the clicked URL (row) for 5 seconds */
-    void showBottomStatusLabel(Q3ListViewItem* item);
+    void showBottomStatusLabel(QTreeWidgetItem* item, int);
     void clearBottomStatusLabel();
     void slotSetTimeElapsed();
     void newSearchManager();

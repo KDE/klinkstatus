@@ -139,7 +139,6 @@ private slots:
     void slotRootChecked(LinkStatus* link, LinkChecker* checker);
     void slotLinkChecked(LinkStatus* link, LinkChecker* checker);
     void slotSearchFinished();
-    void slotLinkCheckerFinnished(LinkChecker * checker);
 
 signals:
 

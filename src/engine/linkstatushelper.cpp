@@ -24,8 +24,6 @@
 
 #include <qdom.h>
 
-#include "linkstatus.h"
-
 
 void LinkStatusHelper::save(LinkStatus const* linkstatus, QDomElement& element)
 {
@@ -73,64 +71,58 @@ LinkStatus* LinkStatusHelper::lastRedirection(LinkStatus* ls)
     return ls;
 }
 
-bool LinkStatusHelper::hasStatus(LinkStatus const* linkstatus, Status status) 
+bool LinkStatusHelper::hasStatus(LinkStatus const* linkstatus, LinkStatusHelper::Status ui_status)
 {
-    if(status == good)
+    LinkStatus::Status detailed_status = linkstatus->status();
+    
+    if(ui_status == good)
     {
-        if(linkstatus->errorOccurred())
-            return false;
-        else
-            if(linkstatus->absoluteUrl().protocol() != "http" &&
-               linkstatus->absoluteUrl().protocol() != "https")
-                return (linkstatus->statusText() == "OK" ||
-                        (!linkstatus->absoluteUrl().hasRef()));
-        else
-        {
-            QString status_code(QString::number(linkstatus->httpHeader().statusCode()));
-            return (linkstatus->statusText() == "OK" ||
-                    (!linkstatus->absoluteUrl().hasRef() &&
-                    status_code[0] != '5' &&
-                    status_code[0] != '4'));
-        }
+        return (detailed_status == LinkStatus::HTTP_REDIRECTION
+               || detailed_status == LinkStatus::SUCCESSFULL);
     }
-    else if(status == bad)
+    else if(ui_status == bad)
     {
-        return (!hasStatus(linkstatus, good) && !linkstatus->error().contains("Timeout"));
+    return
+        (detailed_status == LinkStatus::BROKEN
+        || detailed_status == LinkStatus::HTTP_CLIENT_ERROR
+        || detailed_status == LinkStatus::HTTP_SERVER_ERROR
+        || detailed_status == LinkStatus::MALFORMED);
     }
-    else if(status == malformed)
+    else if(ui_status == malformed)
     {
-        return (linkstatus->error() == "Malformed");
+        return (detailed_status == LinkStatus::MALFORMED);
     }
-    else if(status == undetermined)
+    else if(ui_status == undetermined)
     {
-        return (linkstatus->error().contains("Timeout") ||
-                (linkstatus->absoluteUrl().hasRef() && linkstatus->statusText() != "OK"));
+        return (detailed_status == LinkStatus::NOT_SUPPORTED
+               || detailed_status == LinkStatus::TIMEOUT
+               || detailed_status == LinkStatus::UNDETERMINED);
     }
     else
         return true;
 }
 
-bool LinkStatusHelper::isGood(LinkStatus const* linkstatus) 
+bool LinkStatusHelper::isGood(LinkStatus const* linkstatus)
 {
-    return hasStatus(linkstatus, good);
+    return hasStatus(linkstatus, LinkStatusHelper::good);
 }
 
-bool LinkStatusHelper::isBroken(LinkStatus const* linkstatus) 
+bool LinkStatusHelper::isBroken(LinkStatus const* linkstatus)
 {
-    return hasStatus(linkstatus, bad);
+    return hasStatus(linkstatus, LinkStatusHelper::bad);
 }
 
-bool LinkStatusHelper::isMalformed(LinkStatus const* linkstatus) 
+bool LinkStatusHelper::isMalformed(LinkStatus const* linkstatus)
 {
-    return hasStatus(linkstatus, malformed);
+    return hasStatus(linkstatus, LinkStatusHelper::malformed);
 }
 
-bool LinkStatusHelper::isUndetermined(LinkStatus const* linkstatus) 
+bool LinkStatusHelper::isUndetermined(LinkStatus const* linkstatus)
 {
-    return hasStatus(linkstatus, undetermined);
+    return hasStatus(linkstatus, LinkStatusHelper::undetermined);
 }
 
-QString const LinkStatusHelper::toString(LinkStatus const* linkstatus) 
+QString const LinkStatusHelper::toString(LinkStatus const* linkstatus)
 {
     QString aux;
 

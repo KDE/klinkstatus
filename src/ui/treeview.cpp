@@ -17,7 +17,7 @@
 #include <kmessagebox.h>
 #include <kcharsets.h>
 #include <kaction.h>
-    
+
 #include <QtDBus>
 #include <q3valuelist.h>
 #include <q3header.h>
@@ -26,6 +26,8 @@
 #include <QPixmap>
 #include <QResizeEvent>
 #include <Q3PopupMenu>
+#include <QHeaderView>
+#include <QScrollBar>
 
 #include "treeview.h"
 #include "global.h"
@@ -36,61 +38,62 @@
 
 
 TreeView::TreeView(QWidget *parent)
-        : K3ListView(parent),
+    : QTreeWidget(parent),
         ResultView(),
         current_column_(0)
 {
-    setShowToolTips(true);
-    //setAllColumnsShowFocus(true);
-    setSorting(1000); // don't start sorting any column
-    setShowSortIndicator(true);
-    //setFocusPolicy( WheelFocus );
+//     setShowToolTips(true); // FIXME
+//     setAllColumnsShowFocus(true);
+    setSortingEnabled(false);
+//     setShowSortIndicator(true);
+//     setFocusPolicy( WheelFocus );
     setRootIsDecorated(KLSConfig::displayTreeView());
 //     setResizeMode(QListView::LastColumn);
 
-    connect(this, SIGNAL( rightButtonClicked ( Q3ListViewItem *, const QPoint &, int )),
-            this, SLOT( slotPopupContextMenu( Q3ListViewItem *, const QPoint &, int )) );
+    connect(this, SIGNAL(itemClicked(QTreeWidgetItem*,int)),
+            this, SLOT(slotItemClicked(QTreeWidgetItem*,int)));
+    connect(this, SIGNAL(customContextMenuRequested(const QPoint&)),
+            this, SLOT(slotCustomContextMenuRequested(const QPoint&)));
 }
 
 
 TreeView::~TreeView()
 {
-   saveLayout(KLSConfig::self()->config(), "klinkstatus");
+   // FIXME
+//    saveLayout(KLSConfig::self()->config(), "klinkstatus");
 }
 
 void TreeView::setColumns(QStringList const& columns)
 {
     ResultView::setColumns(columns);
     removeColunas();
-
-//     resetColumns is called automatically
-    for(int i = 0; i != columns.size(); ++i)
-    {
-        addColumn(i18n(columns[i].toUtf8()));
-        setColumnWidthMode(i, Q3ListView::Manual);
-    }
-
-    setColumnAlignment(col_status_ - 1, Qt::AlignCenter);
-    if(KLSConfig::showMarkupStatus())
-        setColumnAlignment(col_markup_ - 1, Qt::AlignCenter);
+    setColumnCount(columns.size());
+    setHeaderLabels(columns);
+    resetColumns();
 }
 
 void TreeView::resetColumns()
 {
     setColumnWidth(col_url_ - 1, (int)(0.45 * width()));
+    header()->setResizeMode(col_url_ - 1, QHeaderView::Interactive);
 
-    setResizeMode(Q3ListView::LastColumn); // fit to the window
+    header()->setResizeMode(col_status_ - 1, QHeaderView::ResizeToContents);
+
+    if(KLSConfig::showMarkupStatus())
+        header()->setResizeMode(col_markup_ - 1, QHeaderView::ResizeToContents);
+
+    header()->setResizeMode(col_label_ - 1, QHeaderView::Stretch);
+
     // resize again
-    setColumnWidthMode(col_label_ - 1, Q3ListView::Manual);
-    setResizeMode(Q3ListView::NoColumn);
+    header()->setResizeMode(col_label_ - 1, QHeaderView::Interactive);
 }
 
 double TreeView::columnsWidth() const
 {
-    kDebug(23100) << "columns: " << columns() << endl;
+    kDebug(23100) << "number of columns: " << header()->count() << endl;
 
     double width = 0.0;
-    for(int i = 0; i != columns(); ++i)
+    for(int i = 0; i != header()->count(); ++i)
     {
         kDebug(23100) << "column width: " << columnWidth(i) << endl;
         width += columnWidth(i);
@@ -100,7 +103,7 @@ double TreeView::columnsWidth() const
 
 void TreeView::clear()
 {
-    K3ListView::clear();
+    QTreeWidget::clear();
 }
 
 void TreeView::removeColunas()
@@ -108,106 +111,88 @@ void TreeView::removeColunas()
     clear();
 }
 
-void TreeView::show(LinkStatusHelper::Status const& status)
+void TreeView::show(LinkMatcher const& link_matcher)
 {
-    Q3ListViewItemIterator it(static_cast<K3ListView*> (this));
-    while(it.current())
-    {
-        TreeViewItem* item = myItem(it.current());
-    if(!item) return;
-        if(!LinkStatusHelper::hasStatus(item->linkStatus(), status))
-        {
-            item->setVisible(false);
-            //kDebug(23100) << "Hide: " << item->linkStatus()->absoluteUrl().url() << endl;
-        }
-        else
-        {
-            item->setVisible(true);
-            //item->setEnabled(true);
-            /*
-            if(KLSConfig::displayTreeView() && status != ResultView::good && item->parent())
-            {
-                TreeViewItem* parent = myItem(item->parent());
-                while(parent)
-                {
-                    kDebug(23100) << "Show: " << parent->linkStatus()->absoluteUrl().url() << endl;
-
-                    parent->setVisible(true);
-                    //parent->setEnabled(false);
-
-                    if(parent->parent())
-                        parent = myItem(parent->parent());
-                    else
-                        parent = 0;
-                }
-            }
-            */
-        }
-//
-        ++it;
+    for(int i = 0; i != topLevelItemCount(); ++i) {
+        QTreeWidgetItem* item = topLevelItem(i);
+        setItemVisibleRecursively(item, link_matcher);
     }
 }
 
-void TreeView::show(LinkMatcher link_matcher)
+bool TreeView::isVisible(QTreeWidgetItem* item, LinkMatcher const& link_matcher) const
 {
-    Q3ListViewItemIterator it(this);
-    while(it.current())
-    {
-        TreeViewItem* item = myItem(it.current());
-    if(!item) return;
-        bool match = link_matcher.matches(*(item->linkStatus()));
+    if(link_matcher.matches(*(myItem(item)->linkStatus())))
+        return true;
 
-        if(tree_display_)
-            item->setEnabled(match);
-        else
-            item->setVisible(match);
+    for(int i = 0; i != item->childCount(); ++i) {
+        QTreeWidgetItem* child = item->child(i);
+        if(isVisible(child, link_matcher))
+            return true;
+    }
 
-        ++it;
+    return false;
+}
+
+void TreeView::setItemVisibleRecursively(QTreeWidgetItem* item, LinkMatcher const& link_matcher)
+{
+    bool visible = isVisible(item, link_matcher);
+    item->setHidden(!visible);
+
+    if(!visible)
+        return;
+
+    for(int i = 0; i != item->childCount(); ++i) {
+        QTreeWidgetItem* child = item->child(i);
+        setItemVisibleRecursively(child, link_matcher);
     }
 }
+
 
 void TreeView::showAll()
 {
-    Q3ListViewItemIterator it(this);
-    while(it.current())
-    {
-        it.current()->setVisible(true);
-        //it.current()->setEnabled(true);
-        ++it;
+    for(int i = 0; i != topLevelItemCount(); ++i) {
+        QTreeWidgetItem* item = topLevelItem(i);
+        setItemVisibleRecursively(item, false);
+        item->setHidden(false);
     }
 }
 
-void TreeView::ensureRowVisible(const Q3ListViewItem * i, bool tree_display)
+void TreeView::setItemVisibleRecursively(QTreeWidgetItem* item, bool hidden)
 {
-    QScrollBar* vertical_scroll_bar = verticalScrollBar();
+    setHidden(hidden);
 
-    if(tree_display ||
-            vertical_scroll_bar->value() > (vertical_scroll_bar->maximum() - vertical_scroll_bar->singleStep()))
-        ensureItemVisible(i);
+    for(int i = 0; i != item->childCount(); ++i) {
+        QTreeWidgetItem* child = item->child(i);
+        setItemVisibleRecursively(child, hidden);
+    }
+}
+
+void TreeView::ensureRowVisible(const QTreeWidgetItem* item, bool /*tree_display*/)
+{
+    scrollToItem(item, QAbstractItemView::PositionAtCenter);
 }
 
 bool TreeView::isEmpty() const
 {
-    return !childCount();
+    return topLevelItemCount() == 0;
 }
 
 void TreeView::resizeEvent(QResizeEvent *e)
 {
-    K3ListView::resizeEvent(e);
+    QTreeWidget::resizeEvent(e);
     resetColumns();
-    clipper()->repaint();
+//    clipper()->repaint();
+    repaint();
 }
 
-void TreeView::slotPopupContextMenu(Q3ListViewItem* item, const QPoint& pos, int col)
+void TreeView::slotPopupContextMenu(QTreeWidgetItem* item, QPoint const& point)
 {
-    current_column_ = col;
-
     TreeViewItem* tree_item = myItem(item);
     if(tree_item)
     {
         Q3ValueList<KUrl> referrers = tree_item->linkStatus()->referrers();
         loadContextTableMenu(referrers, tree_item->linkStatus()->isRoot());
-        context_table_menu_.popup(pos);
+        context_table_menu_.popup(point);
     }
 }
 
@@ -349,46 +334,63 @@ void TreeView::loadContextTableMenu(Q3ValueList<KUrl> const& referrers, bool is_
     }
     else
     {
-        QMenu* sub_menu = context_table_menu_.addMenu(SmallIconSet("fileopen"), i18n("Edit Referrer with Quanta"));
+        QMenu* sub_menu = context_table_menu_.addMenu(SmallIconSet("document-open"), i18n("Edit Referrer with Quanta"));
         sub_menu->setEnabled(false);
     }
     context_table_menu_.addSeparator();
 
-    context_table_menu_.addAction(SmallIconSet("fileopen"), i18n("Open URL"),
+    context_table_menu_.addAction(SmallIconSet("document-open"), i18n("Open URL"),
                                   this, SLOT(slotViewUrlInBrowser()));
-    context_table_menu_.addAction(/*SmallIconSet("fileopen"), */i18n("Open Referrer URL"),
+    context_table_menu_.addAction(/*SmallIconSet("document-open"), */i18n("Open Referrer URL"),
                                   this, SLOT(slotViewParentUrlInBrowser()));
-    
+
     context_table_menu_.addSeparator();
 
-    context_table_menu_.addAction(SmallIconSet("editcopy"), i18n("Copy URL"),
+    context_table_menu_.addAction(SmallIconSet("edit-copy"), i18n("Copy URL"),
                                   this, SLOT(slotCopyUrlToClipboard()));
-    context_table_menu_.addAction(/*SmallIconSet("editcopy"), */i18n("Copy Referrer URL"),
+    context_table_menu_.addAction(/*SmallIconSet("edit-copy"), */i18n("Copy Referrer URL"),
                                   this, SLOT(slotCopyParentUrlToClipboard()));
-    context_table_menu_.addAction(/*SmallIconSet("editcopy"), */i18n("Copy Cell Text"),
+    context_table_menu_.addAction(/*SmallIconSet("edit-copy"), */i18n("Copy Cell Text"),
                                   this, SLOT(slotCopyCellTextToClipboard()));
 }
 
-TreeViewItem* TreeView::myItem(Q3ListViewItem* item) const
+TreeViewItem* TreeView::myItem(QTreeWidgetItem* item) const
 {
-    TreeViewItem* _item = dynamic_cast<TreeViewItem*> (item);
+    TreeViewItem* _item = static_cast<TreeViewItem*> (item);
     return _item;
 }
 
+void TreeView::slotItemClicked(QTreeWidgetItem*, int column)
+{
+    current_column_ = column;
+}
+
+void TreeView::slotCustomContextMenuRequested(const QPoint& point)
+{
+    QTreeWidgetItem* item = itemAt(point);
+    slotPopupContextMenu(item, point);
+}
 
 /* ******************************* TreeViewItem ******************************* */
 
-TreeViewItem::TreeViewItem(TreeView* parent, Q3ListViewItem* after,
-                           LinkStatus const* linkstatus)
-        : K3ListViewItem(parent, after),
+TreeViewItem::TreeViewItem(TreeView* parent, LinkStatus const* linkstatus)
+        : QTreeWidgetItem(parent),
         last_child_(0), root_(parent)
 {
     init(linkstatus);
 }
 
-TreeViewItem::TreeViewItem(TreeView* root, Q3ListViewItem* listview_item, Q3ListViewItem* after,
+TreeViewItem::TreeViewItem(TreeView* parent, QTreeWidgetItem* after,
                            LinkStatus const* linkstatus)
-        : K3ListViewItem(listview_item, after),
+        : QTreeWidgetItem(parent, after),
+        last_child_(0), root_(parent)
+{
+    init(linkstatus);
+}
+
+TreeViewItem::TreeViewItem(TreeView* root, QTreeWidgetItem* listview_item, QTreeWidgetItem* after,
+                           LinkStatus const* linkstatus)
+        : QTreeWidgetItem(listview_item, after),
         last_child_(0), root_(root)
 {
     init(linkstatus);
@@ -399,7 +401,7 @@ TreeViewItem::~TreeViewItem()
 
 void TreeViewItem::init(LinkStatus const* linkstatus)
 {
-    setOpen(true);
+    setExpanded(true);
 
     for(int i = 0; i != root_->numberOfColumns(); ++i)
     {
@@ -418,17 +420,18 @@ void TreeViewItem::init(LinkStatus const* linkstatus)
             setText(item.columnIndex() - 1, text);
         }
 
-        setPixmap(item.columnIndex() - 1, item.pixmap(i + 1));
+        setIcon(item.columnIndex() - 1, item.pixmap(i + 1));
+        setForeground(item.columnIndex() - 1, QBrush(item.textStatusColor()));
     }
 }
 
-void TreeViewItem::setLastChild(Q3ListViewItem* last_child)
+void TreeViewItem::setLastChild(QTreeWidgetItem* last_child)
 {
     Q_ASSERT(last_child);
     last_child_ = last_child;
 }
 
-Q3ListViewItem* TreeViewItem::lastChild() const
+QTreeWidgetItem* TreeViewItem::lastChild() const
 {
     return last_child_;
 }
@@ -449,7 +452,7 @@ LinkStatus const* TreeViewItem::linkStatus() const
 {
     return column_items_[0].linkStatus();
 }
-
+/*
 void TreeViewItem::paintCell(QPainter * p, const QColorGroup & cg, int column, int width, int align)
 {
     TreeColumnViewItem item = column_items_[column];
@@ -459,11 +462,11 @@ void TreeViewItem::paintCell(QPainter * p, const QColorGroup & cg, int column, i
     QColor color(item.textStatusColor());
     m_cg.setColor(QPalette::Text, color);
 
-    K3ListViewItem::paintCell(p, m_cg, column, width, align);
+    QTreeWidgetItem::paintCell(p, m_cg, column, width, align);
 
     setHeight(22);
 }
-
+*/
 
 /* ******************************* TreeColumnViewItem ******************************* */
 
@@ -518,9 +521,9 @@ QColor const TreeColumnViewItem::textStatusColor() const
             return Qt::darkMagenta;
         else if(linkStatus()->status() == LinkStatus::UNDETERMINED)
             return Qt::blue;
-        
+
         return Qt::red;
-    }        
+    }
     else
         return Qt::black;
 }
@@ -567,33 +570,33 @@ QPixmap TreeColumnViewItem::pixmap(int column) const
     if(column == root_->statusColumnIndex())
     {
         if(linkStatus()->status() == LinkStatus::BROKEN)
-            return SmallIcon("no");
+            return SmallIcon("flag-red");
         else if(linkStatus()->status() == LinkStatus::HTTP_CLIENT_ERROR)
-            return SmallIcon("no");
-        else if(linkStatus()->status() == LinkStatus::HTTP_REDIRECTION) 
+            return SmallIcon("flag-red");
+        else if(linkStatus()->status() == LinkStatus::HTTP_REDIRECTION)
         {
             if(linkStatus()->statusText() == "304")
-                return UserIcon("304");
+                return SmallIcon("flag-green");
             else
-                return SmallIcon("redo");
+                return SmallIcon("edit-redo");
         }
         else if(linkStatus()->status() == LinkStatus::HTTP_SERVER_ERROR)
-            return SmallIcon("no");
+            return SmallIcon("flag-red");
         else if(linkStatus()->status() == LinkStatus::MALFORMED)
-            return SmallIcon("editdelete");
+          return SmallIcon("media-scripts");
         else if(linkStatus()->status() == LinkStatus::NOT_SUPPORTED)
-            return SmallIcon("help");
+            return SmallIcon("help-contents");
         else if(linkStatus()->status() == LinkStatus::SUCCESSFULL)
-            return SmallIcon("ok");
+            return SmallIcon("flag-green");
         else if(linkStatus()->status() == LinkStatus::TIMEOUT)
-            return SmallIcon("history_clear"); 
+            return SmallIcon("chronometer");
         else if(linkStatus()->status() == LinkStatus::UNDETERMINED)
-            return SmallIcon("help");
+            return SmallIcon("help-contents");
     }
     else if(column == root_->markupColumnIndex())
     {
         if(linkStatus()->hasHtmlErrors())
-            return SmallIcon("remove");
+            return SmallIcon("no");
         else if(linkStatus()->hasHtmlWarnings())
             return SmallIcon("pencil");
     }

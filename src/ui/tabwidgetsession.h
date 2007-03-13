@@ -75,7 +75,7 @@ public slots:
     void slotValidateAll();
     
 private slots:
-    void slotCurrentChanged(QWidget* page);
+    void slotCurrentChanged(int);
     
 private:
     SessionWidget* newSessionWidget();

@@ -24,8 +24,8 @@
 #include <QString>
 #include <qwidget.h>
 
-#include "../engine/linkstatushelper.h"
-#include "../engine/linkfilter.h"
+#include "engine/linkstatushelper.h"
+#include "engine/linkfilter.h"
 
 /**
     @author Paulo Moura Guedes <moura@kdewebdev.org>
