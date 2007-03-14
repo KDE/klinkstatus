@@ -38,7 +38,7 @@
 
 SearchManager::SearchManager(int max_simultaneous_connections, int time_out,
                              QObject *parent)
-        : QObject(parent),
+        : QObject(parent), 
         max_simultaneous_connections_(max_simultaneous_connections), has_document_root_(false), 
         depth_(-1), current_depth_(0), external_domain_depth_(0),
         current_node_(0), current_index_(0), links_being_checked_(0),
@@ -156,23 +156,23 @@ void SearchManager::resume()
 
 void SearchManager::finnish()
 {
-    searching_ = false;
     while(links_being_checked_)
     {
         kDebug(23100) <<  "links_being_checked_: " << links_being_checked_ << endl;
         sleep(1);
     }
+    searching_ = false;
     emit signalSearchFinished();
 }
 
 void SearchManager::pause()
 {
-    searching_ = false;
     while(links_being_checked_)
     {
         kDebug(23100) <<  "links_being_checked_: " << links_being_checked_ << endl;
         sleep(1);
     }
+    searching_ = false;
     emit signalSearchPaused();
 }
 
