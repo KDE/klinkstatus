@@ -30,6 +30,14 @@
    </property>
    <item>
     <widget class="QGroupBox" name="searchGroupBox" >
+     <property name="sizePolicy" >
+      <sizepolicy>
+       <hsizetype>5</hsizetype>
+       <vsizetype>1</vsizetype>
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <property name="title" >
       <string>Search</string>
      </property>
@@ -351,7 +359,7 @@
    <item>
     <layout class="QHBoxLayout" >
      <property name="margin" >
-      <number>0</number>
+      <number>2</number>
      </property>
      <property name="spacing" >
       <number>6</number>
@@ -405,7 +413,7 @@
        <property name="sizePolicy" >
         <sizepolicy>
          <hsizetype>7</hsizetype>
-         <vsizetype>5</vsizetype>
+         <vsizetype>1</vsizetype>
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
@@ -437,7 +445,7 @@
      <item>
       <layout class="QGridLayout" >
        <property name="margin" >
-        <number>0</number>
+        <number>2</number>
        </property>
        <property name="spacing" >
         <number>6</number>
@@ -450,7 +458,7 @@
          <property name="sizePolicy" >
           <sizepolicy>
            <hsizetype>4</hsizetype>
-           <vsizetype>5</vsizetype>
+           <vsizetype>1</vsizetype>
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
@@ -474,7 +482,7 @@
          <property name="sizePolicy" >
           <sizepolicy>
            <hsizetype>4</hsizetype>
-           <vsizetype>5</vsizetype>
+           <vsizetype>1</vsizetype>
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
@@ -505,14 +513,9 @@
  <layoutdefault spacing="6" margin="11" />
  <customwidgets>
   <customwidget>
-   <class>TreeView</class>
+   <class>KLSHistoryCombo</class>
    <extends>QWidget</extends>
-   <header>treeview.h</header>
-  </customwidget>
-  <customwidget>
-   <class>ResultsSearchBar</class>
-   <extends>QWidget</extends>
-   <header>resultssearchbar.h</header>
+   <header>klshistorycombo.h</header>
   </customwidget>
   <customwidget>
    <class>KSqueezedTextLabel</class>
@@ -525,9 +528,14 @@
    <header>kpushbutton.h</header>
   </customwidget>
   <customwidget>
-   <class>KLSHistoryCombo</class>
+   <class>TreeView</class>
    <extends>QWidget</extends>
-   <header>klshistorycombo.h</header>
+   <header>treeview.h</header>
+  </customwidget>
+  <customwidget>
+   <class>ResultsSearchBar</class>
+   <extends>QWidget</extends>
+   <header>resultssearchbar.h</header>
   </customwidget>
  </customwidgets>
  <includes>

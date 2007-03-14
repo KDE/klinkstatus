@@ -9,9 +9,9 @@
     <ignoreparts/>
     <projectdirectory>.</projectdirectory>
     <absoluteprojectpath>false</absoluteprojectpath>
-    <description></description>
+    <description/>
     <versioncontrol/>
-    <defaultencoding></defaultencoding>
+    <defaultencoding/>
     <projectname>klinkstatus</projectname>
   </general>
   <kdevcustomproject>
@@ -19,7 +19,7 @@
       <mainprogram>/home/kde/trunk/KDE/build/kdewebdev/klinkstatus/src/klinkstatus</mainprogram>
       <directoryradio>build</directoryradio>
       <customdirectory>/home/kde/trunk/KDE/build/kdewebdev/klinkstatus/src/home/kde/trunk/KDE/build/kdewebdev/klinkstatus/src/</customdirectory>
-      <programargs></programargs>
+      <programargs/>
       <terminal>false</terminal>
       <autocompile>true</autocompile>
       <envvars>
@@ -39,7 +39,7 @@
       </envvars>
       <autoinstall>false</autoinstall>
       <autokdesu>false</autokdesu>
-      <globaldebugarguments></globaldebugarguments>
+      <globaldebugarguments/>
       <globalcwd>/home/kde/trunk/KDE/build/kdewebdev/klinkstatus</globalcwd>
       <useglobalprogram>false</useglobalprogram>
     </run>
@@ -52,9 +52,9 @@
       <numberofjobs>2</numberofjobs>
       <prio>0</prio>
       <dontact>false</dontact>
-      <makebin></makebin>
-      <defaulttarget></defaulttarget>
-      <makeoptions></makeoptions>
+      <makebin/>
+      <defaulttarget/>
+      <makeoptions/>
       <selectedenvironment>default</selectedenvironment>
       <environments>
         <default>
@@ -79,12 +79,12 @@
   </kdevcustomproject>
   <kdevdebugger>
     <general>
-      <dbgshell></dbgshell>
+      <dbgshell/>
       <programargs/>
-      <gdbpath></gdbpath>
-      <configGdbScript></configGdbScript>
-      <runShellScript></runShellScript>
-      <runGdbScript></runGdbScript>
+      <gdbpath/>
+      <configGdbScript/>
+      <runShellScript/>
+      <runGdbScript/>
       <breakonloadinglibs>true</breakonloadinglibs>
       <separatetty>false</separatetty>
       <floatingtoolbar>false</floatingtoolbar>
@@ -194,7 +194,7 @@
       <includePaths>.;</includePaths>
     </codecompletion>
     <creategettersetter>
-      <prefixGet></prefixGet>
+      <prefixGet/>
       <prefixSet>set</prefixSet>
       <prefixVariable>m_,_</prefixVariable>
       <parameterName>theValue</parameterName>
