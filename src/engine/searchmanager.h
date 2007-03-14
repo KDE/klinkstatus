@@ -60,12 +60,6 @@ public:
     QString toXML() const;
     void save(QDomElement& element) const;
 
-    KHTMLPartMap const& htmlParts() const { return html_parts_; }
-
-    KHTMLPart* htmlPart(QString const& key_url) const;
-    void addHtmlPart(QString const& key_url, KHTMLPart* html_part);
-    void removeHtmlParts();
-
     void startSearch(KUrl const& root);
     void startSearch(KUrl const& root, SearchMode const& mode);
     void resume();
@@ -74,6 +68,8 @@ public:
     bool hasDocumentRoot() const;
     KUrl const& documentRoot() const;
     void setDocumentRoot(KUrl const& url);
+
+    QString searchProtocol() const { return root_.absoluteUrl().protocol(); };
 
     void setSearchMode(SearchMode modo);
     void setDepth(int depth);
@@ -106,6 +102,12 @@ public:
     bool sendIdentification() const { return send_identification_; }
     QString const& userAgent() const { return user_agent_; }
 
+    KHTMLPartMap const& htmlParts() const { return html_parts_; }
+
+    KHTMLPart* htmlPart(QString const& key_url) const;
+    void addHtmlPart(QString const& key_url, KHTMLPart* html_part);
+    void removeHtmlParts();
+
 private:
 
     void checkRoot();
@@ -134,10 +136,9 @@ private:
 
 private slots:
 
-    void slotRootChecked(const LinkStatus * link, LinkChecker * checker);
-    void slotLinkChecked(const LinkStatus * link, LinkChecker * checker);
+    void slotRootChecked(LinkStatus* link, LinkChecker* checker);
+    void slotLinkChecked(LinkStatus* link, LinkChecker* checker);
     void slotSearchFinished();
-    void slotLinkCheckerFinnished(LinkChecker * checker);
 
 signals:
 

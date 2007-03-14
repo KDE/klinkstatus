@@ -27,6 +27,41 @@
 #include "../parser/node.h"
 #include "../ui/treeview.h"
 
+    
+LinkStatus::LinkStatus()
+    : depth_(-1), external_domain_depth_(-1), is_root_(false),
+        error_occurred_(false), is_redirection_(false), parent_(0), redirection_(0), checked_(false),
+        only_check_header_(true), malformed_(false),
+        node_(0), has_base_URI_(false), has_html_doc_title_(false), ignored_(false),
+        mimetype_(""), is_error_page_(false), tree_view_item_(0), 
+        tidy_info_(new TidyInfo)
+{
+}
+
+LinkStatus::LinkStatus(KUrl const& absolute_url)
+    : depth_(-1), external_domain_depth_(-1), is_root_(false),
+        error_occurred_(false), is_redirection_(false), parent_(0), redirection_(0), checked_(false),
+        only_check_header_(true), malformed_(false),
+        node_(0), has_base_URI_(false), has_html_doc_title_(false), ignored_(false),
+        mimetype_(""), is_error_page_(false), tree_view_item_(0)
+{
+    setAbsoluteUrl(absolute_url);
+}
+
+LinkStatus::LinkStatus(Node* node, LinkStatus* parent)
+    : depth_(-1), external_domain_depth_(-1), is_root_(false),
+        error_occurred_(false), is_redirection_(false), parent_(0), redirection_(0), checked_(false),
+        only_check_header_(true), malformed_(false),
+        node_(node), has_base_URI_(false), has_html_doc_title_(false), ignored_(false),
+        mimetype_(""), is_error_page_(false), tree_view_item_(0), 
+        tidy_info_(new TidyInfo)
+{
+    loadNode();
+
+    setDepth(parent->depth() + 1);
+    setParent(parent);
+    setRootUrl(parent->rootUrl());
+}
 
 LinkStatus::~LinkStatus()
 {
@@ -51,6 +86,9 @@ LinkStatus::~LinkStatus()
             redirection_ = 0;
         }
     }
+
+    delete tidy_info_;
+    tidy_info_ = 0;
 }
 
 void LinkStatus::reset()
@@ -143,40 +181,18 @@ void LinkStatus::setMalformed(bool flag)
     }
 }
 
-void LinkStatus::save(QDomElement& element) const
+bool LinkStatus::hasHtmlErrors() const
 {
-    QDomElement child_element = element.ownerDocument().createElement("link");
-
-    // <url>
-    QDomElement tmp_1 = element.ownerDocument().createElement("url");
-    tmp_1.appendChild(element.ownerDocument().createTextNode(absoluteUrl().prettyUrl()));
-    child_element.appendChild(tmp_1);
+  if(!isHtmlDocument())
+    return false;
     
-    // <status>
-    tmp_1 = element.ownerDocument().createElement("status");
-    tmp_1.setAttribute("broken", 
-                       ResultView::displayableWithStatus(this, ResultView::bad) ? 
-                               "true" : "false");
-    tmp_1.appendChild(element.ownerDocument().createTextNode(statusText()));
-    child_element.appendChild(tmp_1);
+  return tidy_info_->has_errors;
+}
 
-    // <label>
-    tmp_1 = element.ownerDocument().createElement("label");
-    tmp_1.appendChild(element.ownerDocument().createTextNode(KCharsets::resolveEntities(label())));
-    child_element.appendChild(tmp_1);
-
-    // <referers>
-    tmp_1 = element.ownerDocument().createElement("referrers");
+bool LinkStatus::hasHtmlWarnings() const
+{
+  if(!isHtmlDocument())
+    return false;
     
-    for(Q3ValueVector<KUrl>::const_iterator it = referrers_.begin(); it != referrers_.end(); ++it)
-    {
-        QDomElement tmp_2 = element.ownerDocument().createElement("url");
-        tmp_2.appendChild(element.ownerDocument().createTextNode(it->prettyUrl()));
-    
-        tmp_1.appendChild(tmp_2);
-    }
-    Q_ASSERT(!referrers_.isEmpty());
-    child_element.appendChild(tmp_1);
-
-    element.appendChild(child_element);
+  return tidy_info_->has_warnings;
 }

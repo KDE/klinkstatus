@@ -21,12 +21,6 @@
             <Action name="reset_search_bar"/>
             <Separator/>
             <Action name="follow_last_link_checked"/>
-<!--            <Separator/>
-            <Action name="display_all_links"/>
-            <Action name="display_good_links"/>
-            <Action name="display_bad_links"/>
-            <Action name="display_malformed_links"/>
-            <Action name="display_undetermined_links"/>-->
         </Menu>
         
         <Menu name="search"><text>S&amp;earch</text>
@@ -34,6 +28,18 @@
             <Action name="pause_search"/>
             <Action name="stop_search"/>
             <Separator/>
+        </Menu>
+
+        <Menu name="validate"><text>&amp;Validate</text>
+            <Action name="html_fix_all"/>
+<!--            <Separator/>
+            <Action name="html_fix"/>
+            <Separator/>
+            <Menu name="manual_validation"><text>Manual Fix</text>
+                <Action name="guided_editing"/>
+                <Action name="compare_and_apply"/>
+            </Menu>
+            <Action name="edit_document"/>-->
         </Menu>
 
         <Menu name="help"><text>&amp;Help</text>
@@ -54,5 +60,7 @@
         <Action name="reset_search_bar"/>
         <Separator/>
         <Action name="follow_last_link_checked"/>
+        <Separator/>
+        <Action name="html_fix_all"/>
     </ToolBar>
 </kpartgui>

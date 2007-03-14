@@ -102,8 +102,8 @@ void ActionManager::initPart(KLinkStatusPart* part)
 
 
     action = d->actionCollection->addAction( "close_tab" );
-    action->setText( i18n("Close Tab") );
-    action->setIcon( KIcon("window-close") );
+    action->setText(i18n("Close Tab"));
+    action->setIcon(KIcon("tab-remove") );
 
     connect(action, SIGNAL(triggered(bool) ), d->part, SLOT(slotClose()));
     action->setEnabled(false);
@@ -152,7 +152,7 @@ void ActionManager::initTabWidget(TabWidgetSession* tabWidgetSession)
     // *************** View menu *********************
 
 	//     this action must be in the tabwidget because the slot can't be connected to a particular sessionWidget
-    KToggleAction *toggle_action  = new KToggleAction(KIcon("make_kdevelop"), i18n("&Follow last Link checked"), this);
+    KToggleAction *toggle_action  = new KToggleAction(KIcon("goto-page"), i18n("&Follow last Link checked"), this);
     actionCollection()->addAction("follow_last_link_checked", toggle_action );
     connect(toggle_action, SIGNAL(triggered(bool)), d->tabWidgetSession, SLOT(slotFollowLastLinkChecked()));
     toggle_action->setShortcut(KShortcut("Ctrl+f"));
@@ -190,6 +190,14 @@ void ActionManager::initTabWidget(TabWidgetSession* tabWidgetSession)
     connect(action, SIGNAL(triggered(bool) ), d->tabWidgetSession, SLOT(slotStopSearch()));
     action->setShortcut(KShortcut("Ctrl+c"));
     action->setEnabled(false);
+        
+    // *************** Validate menu *********************
+        
+    action = new KAction(KIcon("validators"), i18n("&Fix All..."), this);
+    actionCollection()->addAction("html_fix_all", action);
+    connect(action, SIGNAL(triggered(bool) ), d->tabWidgetSession, SLOT(slotValidateAll()));
+    action->setShortcut(KShortcut());
+    action->setEnabled(true);
 }
 
 void ActionManager::initSessionWidget(SessionWidget* sessionWidget)
@@ -219,6 +227,16 @@ QAction* ActionManager::action(const QString & name)
 }
 
 void ActionManager::slotUpdateSessionWidgetActions(SessionWidget* page)
+{
+    updatePlayActions(page);
+    updateFollowLinkAction(page);
+      
+      // One liners
+    action("file_export_html")->setEnabled(!page->isEmpty());
+    action("html_fix_all")->setEnabled(!page->isEmpty() && page->stopped());
+}
+
+void ActionManager::updatePlayActions(SessionWidget* page)
 {
     KToggleAction* start_search_action_ = static_cast<KToggleAction*> (action("start_search"));
     KToggleAction* pause_search_action_ = static_cast<KToggleAction*> (action("pause_search"));
@@ -261,9 +279,10 @@ void ActionManager::slotUpdateSessionWidgetActions(SessionWidget* page)
 
         stop_search_action_->setEnabled(false);
     }
+}
 
-//     ____________________________________________________________________
-
+void ActionManager::updateFollowLinkAction(SessionWidget* page)
+{
     KToggleAction* toggleAction = static_cast<KToggleAction*> (action("follow_last_link_checked"));
 
     if(!toggleAction) // the first sessionWidget is created before initSessionWidget is called

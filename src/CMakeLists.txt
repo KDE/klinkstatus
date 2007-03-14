@@ -5,6 +5,7 @@ set(libutils_SRCS
 )
 
 include_directories( ${CMAKE_SOURCE_DIR}/src/cfg ${CMAKE_SOURCE_DIR}/src/ui )
+    
 set(libparser_SRCS 
     ${CMAKE_SOURCE_DIR}/klinkstatus/src/parser/htmlparser.cpp 
     ${CMAKE_SOURCE_DIR}/klinkstatus/src/parser/http.cpp 
@@ -21,6 +22,10 @@ set(libengine_SRCS
     ${CMAKE_SOURCE_DIR}/klinkstatus/src/engine/searchmanager.cpp 
 )
 
+set(libtidy_SRCS
+    ${CMAKE_SOURCE_DIR}/klinkstatus/src/tidy/markupvalidator.cpp
+)
+    
 set(libui_SRCS 
 	${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/documentrootdialog.cpp 
 	${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/klshistorycombo.cpp
@@ -35,13 +40,13 @@ set(libuisettings_SRCS
     ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/settings/configidentificationdialog.cpp 
 )
 
-
 include_directories( 
     ${CMAKE_SOURCE_DIR}/klinkstatus/src 
-    ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui 
+    ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui
     ${CMAKE_BINARY_DIR}/klinkstatus/src 
     ${LIBXML2_INCLUDE_DIR}
     ${LIBXSLT_INCLUDE_DIR}
+    ${LIBTIDY_INCLUDE_DIR}
     ${KDE4_INCLUDE_DIR} 
     ${QT_INCLUDES}  
 )
@@ -52,7 +57,8 @@ include_directories(
 set(klinkstatuspart_PART_SRCS 
     ${libutils_SRCS} 
     ${libparser_SRCS} 
-    ${libengine_SRCS} 
+    ${libengine_SRCS}
+    ${libtidy_SRCS}
     ${libuisettings_SRCS}
     ${libui_SRCS} 
     global.cpp 
@@ -79,6 +85,7 @@ kde4_add_plugin(klinkstatuspart WITH_PREFIX ${klinkstatuspart_PART_SRCS})
 target_link_libraries(klinkstatuspart  
     ${LIBXML2_LIBRARIES}
     ${LIBXSLT_LIBRARIES}
+    ${LIBTIDY_LIBRARIES}
     ${KDE4_KDECORE_LIBS} 
     ${KDE4_KPARTS_LIBS} 
     ${KDE4_KIO_LIBS}

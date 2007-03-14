@@ -56,7 +56,7 @@ public:
 
 signals:
 
-    void transactionFinished(const LinkStatus * linkstatus,
+    void transactionFinished(LinkStatus * linkstatus,
                              LinkChecker * checker);
     void jobFinnished(LinkChecker * checker);
 

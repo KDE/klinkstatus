@@ -12,7 +12,7 @@
 #ifndef RESULTVIEW_H
 #define RESULTVIEW_H
 
-#include <q3valuevector.h>
+#include <q3valuelist.h>
 #include <QMenu>
 #include <QStringList>
 
@@ -21,7 +21,7 @@ class KUrl;
 #include "../engine/linkstatushelper.h"
 class LinkStatus;
 class CellToolTip;
-
+class LinkMatcher;
 
 /**
 @author Paulo Moura Guedes
@@ -48,7 +48,7 @@ public:
 
     //virtual void insertResult(LinkStatus const* linkstatus) = 0;
     virtual void clear() = 0;
-    virtual void show(LinkStatusHelper::Status const& status) = 0;
+    virtual void show(LinkMatcher const& link_matcher) = 0;
     virtual void showAll() = 0;
     //virtual void ensureCellVisible(int row, int col) = 0;
 
@@ -65,7 +65,7 @@ public:
 protected:
     //virtual bool textFitsInCell(int row, int col) const = 0;
     virtual bool isEmpty() const = 0;
-    virtual void loadContextTableMenu(Q3ValueVector<KUrl> const& referrers, bool is_root = false) = 0;
+    virtual void loadContextTableMenu(Q3ValueList<KUrl> const& referrers, bool is_root = false) = 0;
 
 protected slots:
 

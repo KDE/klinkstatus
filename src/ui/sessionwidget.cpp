@@ -33,6 +33,7 @@
 #include <ktemporaryfile.h>
 #include <ksavefile.h>
 #include <kstandarddirs.h>
+#include <ktoggleaction.h>
 #include <kio/netaccess.h>
 
 #include <QEvent>
@@ -47,13 +48,13 @@
 #include <q3buttongroup.h>
 #include <QToolButton>
 #include <QRegExp>
-#include <ktoggleaction.h>
 //Added by qt3to4:
 #include <QPixmap>
 #include <QKeyEvent>
 //Added by qt3to4:
 #include <QTextStream>
-
+#include <QTreeWidget>
+    
 #include "sessionwidget.h"
 #include "treeview.h"
 #include "documentrootdialog.h"
@@ -94,8 +95,8 @@ SessionWidget::SessionWidget(int max_simultaneous_connections, int time_out,
     connect(combobox_url, SIGNAL( textChanged ( const QString & ) ),
             this, SLOT( slotEnableCheckButton( const QString & ) ) );
 
-    connect(tree_view, SIGNAL( clicked ( Q3ListViewItem * ) ),
-            this, SLOT( showBottomStatusLabel( Q3ListViewItem * ) ) );
+    connect(tree_view, SIGNAL(itemClicked(QTreeWidgetItem*,int)),
+            this, SLOT(showBottomStatusLabel(QTreeWidgetItem*,int)));
 
     connect(&bottom_status_timer_, SIGNAL(timeout()), this, SLOT(clearBottomStatusLabel()) );
 }
@@ -112,7 +113,7 @@ void SessionWidget::init()
 {
     combobox_url->init();
 
-    toolButton_clear_combo->setIcon(KIcon("locationbar_erase"));
+    toolButton_clear_combo->setIcon(KIcon("locationbar-erase"));
 
     pushbutton_url->setIcon(KIcon("document-open"));
     const int pixmapSize = style()->pixelMetric(QStyle::PM_SmallIconSize);
@@ -378,7 +379,7 @@ void SessionWidget::slotRootChecked(LinkStatus const* linkstatus, LinkChecker * 
     progressbar_checker->setValue(1);
 
     //table_linkstatus->insertResult(linkstatus);
-    TreeViewItem* tree_view_item = new TreeViewItem(tree_view, tree_view->lastItem(), linkstatus);
+    TreeViewItem* tree_view_item = new TreeViewItem(tree_view, tree_view->invisibleRootItem(), linkstatus);
     LinkStatus* ls = const_cast<LinkStatus*> (linkstatus);
     ls->setTreeViewItem(tree_view_item);
 
@@ -412,16 +413,16 @@ void SessionWidget::slotLinkChecked(LinkStatus const* linkstatus, LinkChecker * 
             if(follow_last_link_checked_)
                 tree_view->ensureRowVisible(tree_view_item, tree_display_);
 
-            tree_view_item->setEnabled(match);
+            tree_view_item->setHidden(!match);
         }
         else
         {
             //kDebug(23100) << "FLAT!!!!!" << endl;
-            tree_view_item = new TreeViewItem(tree_view, tree_view->lastItem(), linkstatus);
+            tree_view_item = new TreeViewItem(tree_view, linkstatus);
             if(follow_last_link_checked_)
                 tree_view->ensureRowVisible(tree_view_item, tree_display_);
 
-            tree_view_item->setVisible(match);
+            tree_view_item->setHidden(!match);
         }
 
         LinkStatus* ls = const_cast<LinkStatus*> (linkstatus);
@@ -502,7 +503,7 @@ void SessionWidget::insertUrlAtCombobox(QString const& url)
     combobox_url->addToHistory(url);
 }
 
-void SessionWidget::showBottomStatusLabel(Q3ListViewItem* item)
+void SessionWidget::showBottomStatusLabel(QTreeWidgetItem* item, int)
 {
     kDebug(23100) << "SessionWidget::showBottomStatusLabel" << endl;
 
@@ -716,7 +717,9 @@ void SessionWidget::slotExportAsHTML( )
 
         QString xslt_doc = FileManager::read(KStandardDirs::locate("appdata", "styles/results_stylesheet.xsl"));
         XSLT xslt(xslt_doc);
-//         kDebug(23100) << search_manager_->toXML() << endl;
+
+        kDebug(23100) << "\n\nXML document represention: \n\n" << search_manager_->toXML() << endl;
+
         QString html_ouptut = xslt.transform(search_manager_->toXML());
         outputStream << html_ouptut << endl;
         outputStream.flush();
@@ -730,5 +733,15 @@ void SessionWidget::slotExportAsHTML( )
     KIO::NetAccess::upload(filename, url, 0);
 }
 
+void SessionWidget::slotValidateAll( )
+{
+  if(search_manager_->searchProtocol().startsWith("http"))
+  {
+    KMessageBox::sorry(this, i18n("Use a protocol different than HTTP, e.g., file, ftp, sftp, fish, etc, so the files can be saved."));
+  }
+
+/*    QWizard* wizard = new ValidateAllWizard();
+  wizard->show();*/
+}
 
 #include "sessionwidget.moc"

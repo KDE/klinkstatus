@@ -24,7 +24,7 @@
 #include <QString>
 class QDomElement;
 
-class LinkStatus;
+#include "engine/linkstatus.h"
 
 /**
 	@author Paulo Moura Guedes <moura@kdewebdev.org>
@@ -35,7 +35,7 @@ class LinkStatus;
 class LinkStatusHelper
 {
 public:
-    
+
     enum Status {
         none = 0,
         good,
@@ -44,23 +44,22 @@ public:
         undetermined // timeouts and refs
     };
 
-    explicit LinkStatusHelper(LinkStatus const* linkstatus);
-    ~LinkStatusHelper();
+    static QString const toString(LinkStatus const* linkstatus);
 
-    QString const toString() const;
-
-    void save(QDomElement& element) const;
+    static void save(LinkStatus const* linkstatus, QDomElement& element);
     
     static LinkStatus* lastRedirection(LinkStatus* ls);
 
-    bool hasStatus(Status state) const;
-    bool isGood() const;
-    bool isBroken() const;
-    bool isMalformed() const;
-    bool isUndetermined() const;
-    
+    static bool hasStatus(LinkStatus const* linkstatus, LinkStatusHelper::Status state);
+    static bool isGood(LinkStatus const* linkstatus);
+    static bool isBroken(LinkStatus const* linkstatus);
+    static bool isMalformed(LinkStatus const* linkstatus);
+    static bool isUndetermined(LinkStatus const* linkstatus);
+
+    static void validateMarkup(LinkStatus const* linkstatus);
+
 private:
-    LinkStatus const* linkstatus_;
+    LinkStatusHelper();
 };
 
 #endif

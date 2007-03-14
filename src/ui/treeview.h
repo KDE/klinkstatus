@@ -12,11 +12,11 @@
 #ifndef TREEVIEW_H
 #define TREEVIEW_H
 
-#include <k3listview.h>
 
 #include "resultview.h"
 #include "../engine/linkstatushelper.h"
-//Added by qt3to4:
+
+#include <QTreeWidget>
 #include <QPixmap>
 #include <QResizeEvent>
 class TreeViewItem;
@@ -30,7 +30,7 @@ because of ResultView. ResultView class was to be the base interface to
 a QTable and a QListView, but the APIs are a little diferent... then I realize 
 that a QTable view isn't needed at all so some day I will clean this up.
 */
-class TreeView : public K3ListView, public ResultView
+class TreeView : public QTreeWidget, public ResultView
 {
     Q_OBJECT
 public:
@@ -41,8 +41,7 @@ public:
     virtual void setColumns(QStringList const& columns);
     virtual void clear();
     void removeColunas();
-    virtual void show(LinkStatusHelper::Status const& status);
-    void show(LinkMatcher link_matcher);
+    void show(LinkMatcher const& link_matcher);
     virtual void showAll();
     
     void setTreeDisplay(bool tree_display);
@@ -52,17 +51,19 @@ public:
     except if the user scrolls the view up (like Konsole).
     If tree_view, it follows always the last link inserted.
      */
-    void ensureRowVisible(const Q3ListViewItem * i, bool tree_display);
+    void ensureRowVisible(const QTreeWidgetItem * i, bool tree_display);
     virtual bool isEmpty() const;
 
-    TreeViewItem* myItem(Q3ListViewItem* item) const;
-    
+    TreeViewItem* myItem(QTreeWidgetItem* item) const;
+      
 protected:
     virtual void resizeEvent(QResizeEvent *e);
 
 private slots:
 
-    void slotPopupContextMenu(Q3ListViewItem *, const QPoint &, int);    
+    void slotItemClicked(QTreeWidgetItem*, int column);
+    void slotCustomContextMenuRequested(const QPoint&);
+    void slotPopupContextMenu(QTreeWidgetItem*, QPoint const&);
     virtual void slotCopyUrlToClipboard() const;
     virtual void slotCopyParentUrlToClipboard() const;
     virtual void slotCopyCellTextToClipboard() const;
@@ -71,11 +72,14 @@ private slots:
     virtual void slotEditReferrerWithQuanta(KUrl const& url);
     virtual void slotViewUrlInBrowser();
     virtual void slotViewParentUrlInBrowser();
-    virtual void loadContextTableMenu(Q3ValueVector<KUrl> const& referrers, bool is_root = false);
+    virtual void loadContextTableMenu(Q3ValueList<KUrl> const& referrers, bool is_root = false);
 
 private:
     void resetColumns();
     double columnsWidth() const;
+    bool isVisible(QTreeWidgetItem* item, LinkMatcher const& link_matcher) const;
+    void setItemVisibleRecursively(QTreeWidgetItem* item, LinkMatcher const& link_matcher);
+    void setItemVisibleRecursively(QTreeWidgetItem* item, bool hidden);
 
 private:
     int current_column_; // apparently it's impossible to know what is the current column
@@ -90,31 +94,29 @@ inline void TreeView::setTreeDisplay(bool tree_display) {
 
 /* ******************************* TreeViewItem ******************************* */
 
-class TreeViewItem: public K3ListViewItem
+class TreeViewItem: public QTreeWidgetItem
 {
 public:
 
-    TreeViewItem(TreeView* parent, Q3ListViewItem* after,
+    TreeViewItem(TreeView* parent, LinkStatus const* linkstatus);
+    TreeViewItem(TreeView* parent, QTreeWidgetItem* after,
                  LinkStatus const* linkstatus);
-    TreeViewItem(TreeView* root, Q3ListViewItem* parent_item, Q3ListViewItem* after,
+    TreeViewItem(TreeView* root, QTreeWidgetItem* parent_item, QTreeWidgetItem* after,
                  LinkStatus const* linkstatus);
     virtual ~TreeViewItem();
 
-    void setLastChild(Q3ListViewItem* last_child);
-    Q3ListViewItem* lastChild() const;
+    void setLastChild(QTreeWidgetItem* last_child);
+    QTreeWidgetItem* lastChild() const;
     
     QString key(int column, bool) const;
     LinkStatus const* linkStatus() const;
 
-protected:
-    virtual void paintCell(QPainter * p, const QColorGroup & cg, int column, int width, int align);
-
-private:
+  private:
     void init(LinkStatus const* linkstatus);
 
 private:
-    Q3ValueVector<TreeColumnViewItem> column_items_;
-    Q3ListViewItem* last_child_;
+    Q3ValueList<TreeColumnViewItem> column_items_;
+    QTreeWidgetItem* last_child_;
     TreeView* root_;
 };
 

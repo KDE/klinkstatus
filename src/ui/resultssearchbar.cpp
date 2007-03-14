@@ -65,7 +65,8 @@ ResultsSearchBar::ResultsSearchBar(QWidget* parent)
     d->layout->setSpacing(5);
     
     QToolButton* clearButton = new QToolButton(this);
-    clearButton->setIcon(SmallIconSet(QApplication::layoutDirection() == Qt::RightToLeft ? "clear_left" : "locationbar_erase"));
+    clearButton->setIcon(SmallIconSet(QApplication::layoutDirection() == Qt::RightToLeft ?
+        "locationbar-erase" : "locationbar_erase"));
     clearButton->setAutoRaise(true);
     d->layout->addWidget(clearButton);
 
