@@ -161,9 +161,9 @@ void KLinkStatusPart::slotConfigureKLinkStatus()
     results_ui.setupUi(results_widget);
 
     dialog->addPage(search_widget, i18n("Check"), "zoom-original");
-    dialog->addPage(results_widget, i18n("Results"), "player_playlist");
+    dialog->addPage(results_widget, i18n("Results"), "fileview-detailed");
     dialog->addPage(new ConfigIdentificationDialog(), i18n("Identification"),
-                    "agent", i18n("Configure the way KLinkstatus reports itself"));
+                    "identity", i18n("Configure the way KLinkstatus reports itself"));
 
     // FIXME check this connection - mismatched arguments between slot and signal
     connect(dialog, SIGNAL(settingsChanged(const QString&)), tabwidget_, SLOT(slotLoadSettings()));

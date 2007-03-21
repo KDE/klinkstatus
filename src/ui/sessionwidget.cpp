@@ -94,6 +94,8 @@ SessionWidget::SessionWidget(int max_simultaneous_connections, int time_out,
     
     connect(combobox_url, SIGNAL( textChanged ( const QString & ) ),
             this, SLOT( slotEnableCheckButton( const QString & ) ) );
+    connect(combobox_url, SIGNAL(returnPressed()),
+            this, SLOT(slotStartSearch()));
 
     connect(tree_view, SIGNAL(itemClicked(QTreeWidgetItem*,int)),
             this, SLOT(showBottomStatusLabel(QTreeWidgetItem*,int)));
@@ -188,7 +190,7 @@ void SessionWidget::setColumns(QStringList const& colunas)
 
 void SessionWidget::setUrl(KUrl const& url)
 {
-  combobox_url->setItemText(combobox_url->currentIndex(), url.prettyUrl());
+    combobox_url->setItemText(combobox_url->currentIndex(), url.prettyUrl());
     combobox_url->setFocus();
 }
 
@@ -246,8 +248,8 @@ void SessionWidget::slotCheck()
     // WORKAROUND addToHistory breaks currentText()
     QString current_text = combobox_url->currentText();
     insertUrlAtCombobox(current_text);
-
-    combobox_url->saveItems();
+    
+    combobox_url->saveItems(); // save on disk
     progressbar_checker->reset();
     progressbar_checker->setTextVisible(true);
     progressbar_checker->setRange(0, 1); // check root page
