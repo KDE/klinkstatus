@@ -61,9 +61,6 @@ public:
     LinkStatus(Node* node, LinkStatus* parent);
     ~LinkStatus();
     
-    void save(QDomElement& element) const;
-
-    void reset();
     void setRootUrl(KUrl const& url);
     void setStatus(Status status);
     void setDepth(uint depth);

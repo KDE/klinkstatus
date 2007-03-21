@@ -44,6 +44,7 @@ public:
         undetermined // timeouts and refs
     };
 
+    static void reset(LinkStatus* ls);
     static QString const toString(LinkStatus const* linkstatus);
 
     static void save(LinkStatus const* linkstatus, QDomElement& element);

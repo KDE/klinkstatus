@@ -58,7 +58,7 @@ void SearchManager::reset()
 
     //Q_ASSERT(not links_being_checked_);
 
-    root_.reset();
+    LinkStatusHelper::reset(&root_);
     cleanItems();
     depth_ = -1;
     current_depth_ = 0;

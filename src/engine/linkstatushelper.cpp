@@ -25,6 +25,47 @@
 #include <qdom.h>
 
 
+void LinkStatusHelper::reset(LinkStatus* ls)
+{
+    ls->depth_ = -1;
+    ls->external_domain_depth_ = -1;
+    ls->is_root_ = false;
+    ls->error_occurred_ = false;
+    ls->is_redirection_ = false;
+    ls->checked_ = false;
+    ls->only_check_header_ = true;
+    ls->malformed_ = false;
+    Q_ASSERT(!ls->node_);
+    ls->has_base_URI_ = false;
+    ls->label_ = "";
+    ls->absolute_url_ = "";
+    ls->doc_html_ = "";
+    ls->http_header_ = HttpResponseHeader();
+    ls->error_ = "";
+
+    for(uint i = 0; i != ls->children_nodes_.size(); ++i)
+    {
+        if(ls->children_nodes_[i])
+        {
+            delete ls->children_nodes_[i];
+            ls->children_nodes_[i] = 0;
+        }
+    }
+
+    ls->children_nodes_.clear();
+
+    if(ls->isRedirection())
+    {
+        if(ls->redirection_)
+        {
+            delete ls->redirection_;
+            ls->redirection_ = 0;
+        }
+    }
+    Q_ASSERT(!ls->parent_);
+    ls->base_URI_ = "";
+}
+
 void LinkStatusHelper::save(LinkStatus const* linkstatus, QDomElement& element)
 {
     QDomElement child_element = element.ownerDocument().createElement("link");

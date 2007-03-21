@@ -91,47 +91,6 @@ LinkStatus::~LinkStatus()
     tidy_info_ = 0;
 }
 
-void LinkStatus::reset()
-{
-    depth_ = -1;
-    external_domain_depth_ = -1;
-    is_root_ = false;
-    error_occurred_ = false;
-    is_redirection_ = false;
-    checked_ = false;
-    only_check_header_ = true;
-    malformed_ = false;
-    Q_ASSERT(!node_);
-    has_base_URI_ = false;
-    label_ = "";
-    absolute_url_ = "";
-    doc_html_ = "";
-    http_header_ = HttpResponseHeader();
-    error_ = "";
-
-    for(uint i = 0; i != children_nodes_.size(); ++i)
-    {
-        if(children_nodes_[i])
-        {
-            delete children_nodes_[i];
-            children_nodes_[i] = 0;
-        }
-    }
-
-    children_nodes_.clear();
-
-    if(isRedirection())
-    {
-        if(redirection_)
-        {
-            delete redirection_;
-            redirection_ = 0;
-        }
-    }
-    Q_ASSERT(!parent_);
-    base_URI_ = "";
-}
-
 void LinkStatus::loadNode()
 {
     Q_ASSERT(node_);

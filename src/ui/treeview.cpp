@@ -576,7 +576,7 @@ QPixmap TreeColumnViewItem::pixmap(int column) const
         else if(linkStatus()->status() == LinkStatus::HTTP_REDIRECTION)
         {
             if(linkStatus()->statusText() == "304")
-                return SmallIcon("flag-green");
+                return SmallIcon("ok");
             else
                 return SmallIcon("edit-redo");
         }
@@ -588,7 +588,7 @@ QPixmap TreeColumnViewItem::pixmap(int column) const
         else if(linkStatus()->status() == LinkStatus::NOT_SUPPORTED)
             return SmallIcon("help-contents");
         else if(linkStatus()->status() == LinkStatus::SUCCESSFULL)
-            return SmallIcon("flag-green");
+            return SmallIcon("ok");
         else if(linkStatus()->status() == LinkStatus::TIMEOUT)
             // return SmallIcon("history-clear"); 
             return SmallIcon("chronometer");

@@ -54,21 +54,23 @@
 //Added by qt3to4:
 #include <QTextStream>
 #include <QTreeWidget>
+#include <QProcess>
     
-#include "sessionwidget.h"
-#include "treeview.h"
-#include "documentrootdialog.h"
-#include "klshistorycombo.h"
+#include "ui/sessionwidget.h"
+#include "ui/treeview.h"
+#include "ui/documentrootdialog.h"
+#include "ui/klshistorycombo.h"
+#include "ui/resultssearchbar.h"
+#include "ui/resultview.h"
 #include "klsconfig.h"
-#include "resultview.h"
-#include "../global.h"
-#include "../engine/linkstatus.h"
-#include "../engine/linkchecker.h"
-#include "../engine/searchmanager.h"
-#include "resultssearchbar.h"
-#include "../actionmanager.h"
-#include "../utils/utils.h"
-#include "../utils/xsl.h"
+#include "global.h"
+#include "engine/linkstatus.h"
+#include "engine/linkchecker.h"
+#include "engine/searchmanager.h"
+#include "actionmanager.h"
+#include "utils/utils.h"
+// #include "utils/xsl.h"
+// #include <kdoctools/xslt.h>
 
 
 SessionWidget::SessionWidget(int max_simultaneous_connections, int time_out,
@@ -711,25 +713,49 @@ void SessionWidget::slotExportAsHTML( )
         filename = tmp.fileName();
     }
 
-    KSaveFile *savefile = new KSaveFile(filename);
-    if(savefile->open()) // ok
-    {
-        QTextStream outputStream ( savefile );
-        outputStream.setCodec(QTextCodec::codecForName("UTF-8"));
+    KSaveFile savefile(filename);
+    if(!savefile.open())
+       return;
+        
+    QTextStream outputStream(&savefile);
+    outputStream.setCodec(QTextCodec::codecForName("UTF-8"));
 
-        QString xslt_doc = FileManager::read(KStandardDirs::locate("appdata", "styles/results_stylesheet.xsl"));
-        XSLT xslt(xslt_doc);
+    kDebug(23100) << "\n\nXML document represention: \n\n" << search_manager_->toXML() << endl;
 
-        kDebug(23100) << "\n\nXML document represention: \n\n" << search_manager_->toXML() << endl;
+    // Create the XML file
+    KTemporaryFile tmpXml;
+    tmpXml.setSuffix(".xml");
+    if(!tmpXml.open())
+        return;
 
-        QString html_ouptut = xslt.transform(search_manager_->toXML());
-        outputStream << html_ouptut << endl;
-        outputStream.flush();
-    }
+    QTextStream tmpXmlOutputStream(&tmpXml);
+    tmpXmlOutputStream.setCodec(QTextCodec::codecForName("UTF-8"));
+    tmpXmlOutputStream << search_manager_->toXML() << endl;
+    tmpXmlOutputStream.flush();
 
-    delete savefile;
+      // Run meinproc process
+    QStringList arguments;
+    arguments << "--stylesheet" << KStandardDirs::locate("appdata", "styles/results_stylesheet.xsl")
+        << "--stdout" << tmpXml.fileName();
 
-    if (url.isLocalFile())
+    QProcess meinproc(this);
+    meinproc.start(KStandardDirs::locate("exe", QLatin1String("meinproc")),
+                    arguments, QIODevice::ReadOnly);
+
+    if(!meinproc.waitForStarted())
+        return;
+
+    if(!meinproc.waitForFinished())
+        return;
+
+    QString html(meinproc.readAllStandardOutput());
+//     kDebug(23100) << "HTML: " << html << endl;
+
+    // Insert the output in the file
+    outputStream << html << endl;
+    outputStream.flush();
+
+    if(url.isLocalFile())
         return;
 
     KIO::NetAccess::upload(filename, url, 0);

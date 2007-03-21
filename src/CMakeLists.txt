@@ -1,7 +1,6 @@
 
 set(libutils_SRCS 
     ${CMAKE_SOURCE_DIR}/klinkstatus/src/utils/utils.cpp 
-    ${CMAKE_SOURCE_DIR}/klinkstatus/src/utils/xsl.cpp
 )
 
 include_directories( ${CMAKE_SOURCE_DIR}/src/cfg ${CMAKE_SOURCE_DIR}/src/ui )
