@@ -189,7 +189,7 @@ void SessionWidget::setColumns(QStringList const& colunas)
 
 void SessionWidget::setUrl(KUrl const& url)
 {
-    combobox_url->setItemText(combobox_url->currentIndex(), url.prettyUrl());
+    combobox_url->addCurrentItem(url.prettyUrl());
     combobox_url->setFocus();
 }
 
@@ -331,15 +331,13 @@ void SessionWidget::slotCheck()
     }
 
     kDebug(23100) <<  "URI: " << url.prettyUrl() << endl;
-    combobox_url->setItemText(combobox_url->currentIndex(), url.prettyUrl());
+    combobox_url->setEditText(url.prettyUrl());
     search_manager_->startSearch(url);
     slotSetTimeElapsed();
 }
 
 void SessionWidget::keyPressEvent(QKeyEvent* e)
 {
-//     QWidget::keyPressEvent(e);
-    
     if( (e->key() == Qt::Key_Return || e->key() == Qt::Key_Enter)
          &&
         ( combobox_url->hasFocus()
@@ -355,7 +353,7 @@ void SessionWidget::keyPressEvent(QKeyEvent* e)
         combobox_url->lineEdit()->selectAll();
     }
     
-//     QWidget::keyPressEvent(e);
+    QWidget::keyPressEvent(e);
 }
 
 bool SessionWidget::validFields()
@@ -561,7 +559,8 @@ void SessionWidget::slotLinksToCheckTotalSteps(uint steps)
 
 void SessionWidget::slotClearComboUrl()
 {
-    combobox_url->setItemText(combobox_url->currentIndex(), "");
+    combobox_url->clearEditText();
+    combobox_url->setFocus();
 }
 
 void SessionWidget::slotChooseUrlDialog()
@@ -758,7 +757,7 @@ void SessionWidget::slotExportAsHTML( )
     KIO::NetAccess::upload(filename, url, 0);
 }
 
-void SessionWidget::slotValidateAll( )
+void SessionWidget::slotValidateAll()
 {
   if(search_manager_->searchProtocol().startsWith("http"))
   {
@@ -768,5 +767,6 @@ void SessionWidget::slotValidateAll( )
 /*    QWizard* wizard = new ValidateAllWizard();
   wizard->show();*/
 }
+
 
 #include "sessionwidget.moc"

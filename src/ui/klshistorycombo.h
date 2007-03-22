@@ -30,6 +30,8 @@ public:
     explicit KLSHistoryCombo(QWidget* parent);
     ~KLSHistoryCombo();
 
+    void addCurrentItem(QString const& text);
+    
     void init();
     void loadItems();
     void saveItems();

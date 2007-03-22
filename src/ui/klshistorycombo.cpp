@@ -28,15 +28,14 @@ bool KLSHistoryCombo::items_saved_ = false;
 
 
 KLSHistoryCombo::KLSHistoryCombo(QWidget *parent)
-        : KHistoryCombo(parent)
+        : KHistoryCombo(true, parent)
 {
     setMaxCount(KLSConfig::maxCountComboUrl());
     
     setDuplicatesEnabled(false);
-    setAutoCompletion(false);
-
-    connect(this, SIGNAL(activated(const QString& )),
-            this, SLOT(addToHistory(const QString& )));
+    
+    connect(this, SIGNAL(activated(const QString&)),
+            this, SLOT(addToHistory(const QString&)));
 }
 
 KLSHistoryCombo::~KLSHistoryCombo()
@@ -45,6 +44,14 @@ KLSHistoryCombo::~KLSHistoryCombo()
 void KLSHistoryCombo::init()
 {
     loadItems();
+}
+
+void KLSHistoryCombo::addCurrentItem(QString const & text)
+{
+    int previous_count = count();
+    addToHistory(text);
+    if(previous_count != count())
+        setCurrentIndex(0);
 }
 
 void KLSHistoryCombo::saveItems()
@@ -68,13 +75,12 @@ void KLSHistoryCombo::loadItems()
 
     bool block = signalsBlocked();
     blockSignals( true );
+    
+    setHistoryItems(items, true);
 
-    setHistoryItems(items);
     blockSignals(block);
 
-    completionObject()->setItems(items);
-
-    setCompletionMode(KGlobalSettings::completionMode());
+//     setCompletionMode(KGlobalSettings::completionMode());
 }
 
 bool KLSHistoryCombo::eventFilter( QObject *o, QEvent *ev )
@@ -118,7 +124,7 @@ bool KLSHistoryCombo::eventFilter( QObject *o, QEvent *ev )
 /*
    Handle Ctrl+Cursor etc better than the Qt widget, which always
    jumps to the next whitespace. This code additionally jumps to
-   the next [/#?:], which makes more sense for URLs. The list of 
+   the next [/#?:], which makes more sense for URLs. The list of
    chars that will stop the cursor are '/', '.', '?', '#', ':'.
 */
 void KLSHistoryCombo::selectWord(QKeyEvent *e)
@@ -182,5 +188,6 @@ void KLSHistoryCombo::selectWord(QKeyEvent *e)
         }
     }
 }
+
 
 #include "klshistorycombo.moc"

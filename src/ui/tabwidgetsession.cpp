@@ -247,7 +247,8 @@ void TabWidgetSession::slotNewSession(KUrl const& url)
     else
     {
         SessionWidget* sessionwidget = getEmptySession();
-        sessionwidget->setUrl(url);
+        if(url.isValid())
+            sessionwidget->setUrl(url);
         setCurrentIndex(indexOf(sessionwidget));
     }
 
