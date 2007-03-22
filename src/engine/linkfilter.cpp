@@ -33,12 +33,10 @@ LinkMatcher::~LinkMatcher()
 
 bool LinkMatcher::matches(LinkStatus const& link ) const
 {
-/*    kDebug() << link.absoluteUrl().url() << endl;
-    kDebug() << link.label() << endl;
-    kDebug() << link.absoluteUrl().url().contains(m_text) << endl;
-    kDebug() << link.label().contains(m_text) << endl;
-    */
-  return
+    if(!hasCriteria())
+        return true;
+
+    return
       (link.absoluteUrl().url().contains(m_text, Qt::CaseInsensitive)
         || link.label().contains(m_text, Qt::CaseInsensitive))
       && LinkStatusHelper::hasStatus(&link, m_status);

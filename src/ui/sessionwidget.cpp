@@ -688,6 +688,11 @@ void SessionWidget::resetPendingActions()
 
 void SessionWidget::slotApplyFilter(LinkMatcher link_matcher)
 {
+    if(link_matcher.hasCriteria())
+        resultsSearchBar->setBackgroundRole(QPalette::Highlight);
+    else
+        resultsSearchBar->setBackgroundRole(QPalette::Window);
+
     tree_view->show(link_matcher);
 }
 

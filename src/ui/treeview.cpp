@@ -48,7 +48,7 @@ TreeView::TreeView(QWidget *parent)
 //     setShowSortIndicator(true);
 //     setFocusPolicy( WheelFocus );
     setRootIsDecorated(KLSConfig::displayTreeView());
-//     setResizeMode(QListView::LastColumn);
+    setAlternatingRowColors(true);
 
     connect(this, SIGNAL(itemClicked(QTreeWidgetItem*,int)),
             this, SLOT(slotItemClicked(QTreeWidgetItem*,int)));

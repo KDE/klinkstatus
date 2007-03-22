@@ -34,6 +34,7 @@ public:
     ~LinkMatcher();
 
     bool matches(LinkStatus const& link) const;
+    bool hasCriteria() const { return !(m_text.isEmpty() && m_status == LinkStatusHelper::none); }
 
     void setText(const QString& text) { m_text = text; }
     QString text() const { return m_text; }

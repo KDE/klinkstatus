@@ -36,15 +36,15 @@ static const char description[] =
 static const char version[] = "0.3.80";
 
 static KCmdLineOptions options[] =
-    {
-        { "+[URL]", I18N_NOOP( "Document to open" ), 0 },
-        KCmdLineLastOption
-    };
+{
+    { "+[URL]", I18N_NOOP( "Document to open" ), 0 },
+    KCmdLineLastOption
+};
 
 int main(int argc, char *argv[])
 {
     KAboutData about("klinkstatus", I18N_NOOP("KLinkStatus"), version, description,
-                     KAboutData::License_GPL_V2, "(C) 2004-2006 Paulo Moura Guedes", 0,
+                     KAboutData::License_GPL_V2, "(C) 2004-2007 Paulo Moura Guedes", 0,
                      "http://klinkstatus.kdewebdev.org");
 
     about.addAuthor("Paulo Moura Guedes", 0, "moura@kdewebdev.org");
