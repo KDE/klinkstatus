@@ -94,21 +94,18 @@ SessionWidget::SessionWidget(int max_simultaneous_connections, int time_out,
     connect(toolButton_clear_combo, SIGNAL(clicked()),
             this, SLOT(slotClearComboUrl()));
     
-    connect(combobox_url, SIGNAL( textChanged ( const QString & ) ),
-            this, SLOT( slotEnableCheckButton( const QString & ) ) );
-    connect(combobox_url, SIGNAL(returnPressed()),
-            this, SLOT(slotStartSearch()));
+    connect(combobox_url, SIGNAL(textChanged(const QString&)),
+            this, SLOT(slotEnableCheckButton(const QString&)));
 
     connect(tree_view, SIGNAL(itemClicked(QTreeWidgetItem*,int)),
             this, SLOT(showBottomStatusLabel(QTreeWidgetItem*,int)));
 
-    connect(&bottom_status_timer_, SIGNAL(timeout()), this, SLOT(clearBottomStatusLabel()) );
+    connect(&bottom_status_timer_, SIGNAL(timeout()),
+             this, SLOT(clearBottomStatusLabel()) );
 }
 
 SessionWidget::~SessionWidget()
 {
-    //combobox_url->saveItems(); This is done every time a URL is checked
-
     if(KLSConfig::rememberCheckSettings())
         saveCurrentCheckSettings();
 }
@@ -121,7 +118,7 @@ void SessionWidget::init()
 
     pushbutton_url->setIcon(KIcon("document-open"));
     const int pixmapSize = style()->pixelMetric(QStyle::PM_SmallIconSize);
-    pushbutton_url->setFixedSize( pixmapSize+8, pixmapSize+8 );
+    pushbutton_url->setFixedSize(pixmapSize + 8, pixmapSize + 8);
     connect(pushbutton_url, SIGNAL(clicked()), this, SLOT(slotChooseUrlDialog()));
 
     resultsSearchBar->hide();
@@ -339,26 +336,26 @@ void SessionWidget::slotCheck()
     slotSetTimeElapsed();
 }
 
-void SessionWidget::keyPressEvent ( QKeyEvent* e )
+void SessionWidget::keyPressEvent(QKeyEvent* e)
 {
-    if( e->key() == Qt::Key_Return &&
-        ( combobox_url->hasFocus() ||
-              //lineedit_domain->hasFocus() ||
-              //checkbox_depth->hasFocus()  ||
-        spinbox_depth->hasFocus()  ||
-              //checkbox_domain->hasFocus()  ||
-              //spinbox_external_domain->hasFocus()
-        checkbox_recursively->hasFocus() ||
-        checkbox_external_links->hasFocus() ||
-        checkbox_subdirs_only->hasFocus() ) )
+//     QWidget::keyPressEvent(e);
+    
+    if( (e->key() == Qt::Key_Return || e->key() == Qt::Key_Enter)
+         &&
+        ( combobox_url->hasFocus()
+         || spinbox_depth->hasFocus()
+         || checkbox_recursively->hasFocus()
+         || checkbox_external_links->hasFocus()
+         || checkbox_subdirs_only->hasFocus() ) )
     {
         slotStartSearch();
     }
-
     else if(e->key() == Qt::Key_F6)
     {
         combobox_url->lineEdit()->selectAll();
     }
+    
+//     QWidget::keyPressEvent(e);
 }
 
 bool SessionWidget::validFields()

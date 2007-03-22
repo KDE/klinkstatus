@@ -43,7 +43,8 @@ LinkStatus::LinkStatus(KUrl const& absolute_url)
         error_occurred_(false), is_redirection_(false), parent_(0), redirection_(0), checked_(false),
         only_check_header_(true), malformed_(false),
         node_(0), has_base_URI_(false), has_html_doc_title_(false), ignored_(false),
-        mimetype_(""), is_error_page_(false), tree_view_item_(0)
+        mimetype_(""), is_error_page_(false), tree_view_item_(0), 
+        tidy_info_(new TidyInfo)
 {
     setAbsoluteUrl(absolute_url);
 }
