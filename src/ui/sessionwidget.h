@@ -99,6 +99,7 @@ private slots:
     virtual void slotCancel() {} // FIXME hack
     //virtual void slotSuggestDomain(bool toogle);
 
+    void slotSearchStarted();
     void slotEnableCheckButton(const QString &);
     void slotRootChecked(LinkStatus const* linkstatus, LinkChecker * anal);
     void slotLinkChecked(LinkStatus const* linkstatus, LinkChecker * anal);
@@ -141,6 +142,7 @@ private:
     bool stopped_;
 
     QTimer bottom_status_timer_;
+    QTimer elapsed_time_timer_;
     int max_simultaneous_connections_;
     int time_out_;
     bool tree_display_; // tree/flat result display

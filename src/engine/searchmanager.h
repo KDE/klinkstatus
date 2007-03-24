@@ -92,7 +92,6 @@ public:
     bool existUrl(KUrl const& url, KUrl const& url_parent) const;
     LinkStatus const* linkStatus(QString const& s_url) const;
     int checkedLinks() const;
-    QTime timeElapsed() const;
     bool checkParentDirs() const;
     bool checkExternalLinks() const;
     LinkStatus const* linkStatusRoot() const;
@@ -178,7 +177,6 @@ private:
     bool canceled_;
     bool searching_;
     int checked_links_;
-    QTime time_;
     int ignored_links_;
     bool check_parent_dirs_;
     bool check_external_links_;

@@ -79,7 +79,7 @@ SessionWidget::SessionWidget(int max_simultaneous_connections, int time_out,
         action_manager_(ActionManager::getInstance()),
         ready_(true), to_start_(false), to_pause_(false), to_stop_(false),
         in_progress_(false), paused_(false), stopped_(true),
-        bottom_status_timer_(this),
+        bottom_status_timer_(this), elapsed_time_timer_(this), 
         max_simultaneous_connections_(max_simultaneous_connections),
         time_out_(time_out), tree_display_(false), follow_last_link_checked_(KLSConfig::followLastLinkChecked()),
         start_search_action_(0)
@@ -90,6 +90,9 @@ SessionWidget::SessionWidget(int max_simultaneous_connections, int time_out,
 
     init();
     slotLoadSettings();
+
+    connect(this, SIGNAL(signalSearchStarted()),
+            this, SLOT(slotSearchStarted()));
 
     connect(toolButton_clear_combo, SIGNAL(clicked()),
             this, SLOT(slotClearComboUrl()));
@@ -102,6 +105,9 @@ SessionWidget::SessionWidget(int max_simultaneous_connections, int time_out,
 
     connect(&bottom_status_timer_, SIGNAL(timeout()),
              this, SLOT(clearBottomStatusLabel()) );
+    
+    connect(&elapsed_time_timer_, SIGNAL(timeout()),
+             this, SLOT(slotSetTimeElapsed()));
 }
 
 SessionWidget::~SessionWidget()
@@ -127,6 +133,8 @@ void SessionWidget::init()
 
     connect(resultsSearchBar, SIGNAL(signalSearch(LinkMatcher)),
             this, SLOT(slotApplyFilter(LinkMatcher)));
+
+    elapsed_time_timer_.setInterval(1000);
 }
 
 void SessionWidget::slotLoadSettings(bool modify_current_widget_settings)
@@ -256,7 +264,6 @@ void SessionWidget::slotCheck()
     textlabel_progressbar->setText(i18n( "Checking..." ));
 
     textlabel_elapsed_time->setEnabled(true);
-    //textlabel_elapsed_time_value->setText("");
     textlabel_elapsed_time_value->setEnabled(true);
 
     //table_linkstatus->clear();
@@ -333,7 +340,6 @@ void SessionWidget::slotCheck()
     kDebug(23100) <<  "URI: " << url.prettyUrl() << endl;
     combobox_url->setEditText(url.prettyUrl());
     search_manager_->startSearch(url);
-    slotSetTimeElapsed();
 }
 
 void SessionWidget::keyPressEvent(QKeyEvent* e)
@@ -370,7 +376,6 @@ bool SessionWidget::validFields()
 
 void SessionWidget::slotRootChecked(LinkStatus const* linkstatus, LinkChecker * anal)
 {
-    slotSetTimeElapsed();
     emit signalUpdateTabLabel(search_manager_->linkStatusRoot(), this);
 
     Q_ASSERT(textlabel_progressbar->text() == i18n("Checking...") ||
@@ -391,8 +396,6 @@ void SessionWidget::slotRootChecked(LinkStatus const* linkstatus, LinkChecker * 
 
 void SessionWidget::slotLinkChecked(LinkStatus const* linkstatus, LinkChecker * anal)
 {
-    slotSetTimeElapsed();
-
     kDebug(23100) << textlabel_progressbar->text() << endl;
     Q_ASSERT(textlabel_progressbar->text() == i18n("Checking...") ||
             textlabel_progressbar->text() == i18n("Stopped"));
@@ -450,7 +453,8 @@ void SessionWidget::slotSearchFinished()
 
     textlabel_elapsed_time->setEnabled(true);
     textlabel_elapsed_time_value->setEnabled(true);
-    textlabel_elapsed_time_value->setText(search_manager_->timeElapsed().toString("hh:mm:ss"));
+    elapsed_time_timer_.stop();
+//     textlabel_elapsed_time_value->setText(search_manager_->timeElapsed().toString("hh:mm:ss"));
 
     in_progress_ = false;
     paused_ = false;
@@ -488,7 +492,8 @@ void SessionWidget::slotSearchPaused()
 
     textlabel_elapsed_time->setEnabled(true);
     textlabel_elapsed_time_value->setEnabled(true);
-    textlabel_elapsed_time_value->setText(search_manager_->timeElapsed().toString("hh:mm:ss"));
+    elapsed_time_timer_.stop();
+//     textlabel_elapsed_time_value->setText(search_manager_->timeElapsed().toString("hh:mm:ss"));
 
     resetPendingActions();
     action_manager_->slotUpdateSessionWidgetActions(this);
@@ -532,7 +537,9 @@ void SessionWidget::clearBottomStatusLabel()
 
 void SessionWidget::slotSetTimeElapsed()
 {
-    textlabel_elapsed_time_value->setText(search_manager_->timeElapsed().toString("hh:mm:ss"));
+    QTime time = QTime::fromString(textlabel_elapsed_time_value->text(), "hh:mm:ss");
+    time = time.addMSecs(elapsed_time_timer_.interval());
+    textlabel_elapsed_time_value->setText(time.toString("hh:mm:ss"));
 }
 
 void SessionWidget::slotAddingLevelTotalSteps(uint steps)
@@ -639,8 +646,9 @@ void SessionWidget::slotPauseSearch()
         textlabel_progressbar->setText(i18n("Checking..."));
         ready_ = false;
         search_manager_->resume();
+        elapsed_time_timer_.start();
 
-        emit signalSearchStarted();
+//         emit signalSearchStarted();
         slotLoadSettings(isEmpty()); // it seems that KConfigDialogManager is not trigering this slot
 
         resetPendingActions();
@@ -773,5 +781,10 @@ void SessionWidget::slotValidateAll()
   wizard->show();*/
 }
 
+void SessionWidget::slotSearchStarted()
+{
+    textlabel_elapsed_time_value->setText(QTime(0, 0).toString("hh:mm:ss"));
+    elapsed_time_timer_.start();
+}
 
 #include "sessionwidget.moc"

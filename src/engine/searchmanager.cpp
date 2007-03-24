@@ -115,9 +115,6 @@ void SearchManager::startSearch(KUrl const& root, SearchMode const& modo)
 {
     canceled_ = false;
 
-    //time_.restart();
-    time_.start();
-
     Q_ASSERT(root.isValid());
 
     if(root.hasHost() && (domain_.isNull() || domain_.isEmpty()))

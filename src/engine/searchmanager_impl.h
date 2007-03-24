@@ -38,13 +38,6 @@ inline int SearchManager::checkedLinks() const
     return checked_links_;
 }
 
-inline QTime SearchManager::timeElapsed() const
-{
-    int ms = time_.elapsed();
-    //kDebug(23100) <<  "Time elapsed (ms): " << ms << endl;
-    return QTime(0, 0).addMSecs(ms);
-}
-
 inline void SearchManager::startSearch(KUrl const& root)
 {
     startSearch(root, search_mode_);
