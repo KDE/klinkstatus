@@ -67,9 +67,8 @@ private slots:
     virtual void slotCopyUrlToClipboard() const;
     virtual void slotCopyParentUrlToClipboard() const;
     virtual void slotCopyCellTextToClipboard() const;
-    virtual void slotEditReferrersWithQuanta();
-    virtual void slotEditReferrerWithQuanta(QAction* action);
-    virtual void slotEditReferrerWithQuanta(KUrl const& url);
+    virtual void slotEditReferrers();
+    virtual void slotEditReferrer(QAction* action);
     virtual void slotViewUrlInBrowser();
     virtual void slotViewParentUrlInBrowser();
     virtual void loadContextTableMenu(Q3ValueList<KUrl> const& referrers, bool is_root = false);

@@ -79,7 +79,7 @@ SessionWidget::SessionWidget(int max_simultaneous_connections, int time_out,
         action_manager_(ActionManager::getInstance()),
         ready_(true), to_start_(false), to_pause_(false), to_stop_(false),
         in_progress_(false), paused_(false), stopped_(true),
-        bottom_status_timer_(this), elapsed_time_timer_(this), 
+        elapsed_time_timer_(this), 
         max_simultaneous_connections_(max_simultaneous_connections),
         time_out_(time_out), tree_display_(false), follow_last_link_checked_(KLSConfig::followLastLinkChecked()),
         start_search_action_(0)
@@ -100,12 +100,6 @@ SessionWidget::SessionWidget(int max_simultaneous_connections, int time_out,
     connect(combobox_url, SIGNAL(textChanged(const QString&)),
             this, SLOT(slotEnableCheckButton(const QString&)));
 
-    connect(tree_view, SIGNAL(itemClicked(QTreeWidgetItem*,int)),
-            this, SLOT(showBottomStatusLabel(QTreeWidgetItem*,int)));
-
-    connect(&bottom_status_timer_, SIGNAL(timeout()),
-             this, SLOT(clearBottomStatusLabel()) );
-    
     connect(&elapsed_time_timer_, SIGNAL(timeout()),
              this, SLOT(slotSetTimeElapsed()));
 }
@@ -278,13 +272,6 @@ void SessionWidget::slotCheck()
         DocumentRootDialog dialog(this, dir);
         dialog.exec();
         search_manager_->setDocumentRoot(dialog.url());
-    }
-
-    if(KLSConfig::useQuantaUrlPreviewPrefix() && Global::isKLinkStatusEmbeddedInQuanta())
-    {
-        KUrl url_aux = Global::urlWithQuantaPreviewPrefix(url);
-        if(url_aux.isValid() && !url_aux.isEmpty())
-            url = url_aux;
     }
 
     if(!checkbox_recursively->isChecked())
@@ -507,34 +494,6 @@ void SessionWidget::insertUrlAtCombobox(QString const& url)
     combobox_url->addToHistory(url);
 }
 
-void SessionWidget::showBottomStatusLabel(QTreeWidgetItem* item, int)
-{
-    kDebug(23100) << "SessionWidget::showBottomStatusLabel" << endl;
-
-    if(!item)
-        return;
-    
-    TreeViewItem* _item = tree_view->myItem(item);
-    if(_item)
-    {
-        QString status = _item->linkStatus()->statusText();
-        textlabel_status->setText(status);
-
-        if(textlabel_status->sizeHint().width() > textlabel_status->maximumWidth())
-            textlabel_status->setToolTip(status);
-        else
-            textlabel_status->setToolTip(QString());
-
-        bottom_status_timer_.stop();
-        bottom_status_timer_.start(5 * 1000);
-    }
-}
-
-void SessionWidget::clearBottomStatusLabel()
-{
-    textlabel_status->clear();
-}
-
 void SessionWidget::slotSetTimeElapsed()
 {
     QTime time = QTime::fromString(textlabel_elapsed_time_value->text(), "hh:mm:ss");
@@ -706,7 +665,7 @@ void SessionWidget::slotApplyFilter(LinkMatcher link_matcher)
 
 void SessionWidget::slotExportAsHTML( )
 {
-    KUrl url = KFileDialog::getSaveUrl(KUrl(),"text/html", 0, i18n("Export Results as HTML"));
+    KUrl url = KFileDialog::getSaveUrl(KUrl(), "text/html", 0, i18n("Export Results as HTML"));
 
     if(url.isEmpty())
         return;

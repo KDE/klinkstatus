@@ -106,18 +106,7 @@ void KLinkStatusPart::setModified(bool modified)
 
 bool KLinkStatusPart::openURL(KUrl const& url)
 {
-    KUrl url_aux = url;
-
-    if(KLSConfig::useQuantaUrlPreviewPrefix() && Global::isKLinkStatusEmbeddedInQuanta())
-    {
-        url_aux = Global::urlWithQuantaPreviewPrefix(url);
-        if(!url_aux.isValid() || url_aux.isEmpty())
-            url_aux = url;
-    }
-    else
-        url_aux = url;
-
-    tabwidget_->slotNewSession(url_aux);
+    tabwidget_->slotNewSession(url);
 
     return true;
 }

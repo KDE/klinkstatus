@@ -276,21 +276,21 @@ void TableLinkstatus::loadContextTableMenu(Q3ValueVector<KUrl> const& referrers,
 
     if(!is_root)
     {
-        sub_menu_->insertItem(i18n("All"), this, SLOT(slotEditReferrersWithQuanta()));
+        sub_menu_->insertItem(i18n("All"), this, SLOT(slotEditReferrers()));
         sub_menu_->insertSeparator();
 
         for(uint i = 0; i != referrers.size(); ++i)
         {
             sub_menu_->insertItem(referrers[i].prettyUrl());
         }
-        connect(sub_menu_, SIGNAL(activated(int)), this, SLOT(slotEditReferrerWithQuanta(int)));
+        connect(sub_menu_, SIGNAL(activated(int)), this, SLOT(slotEditReferrer(int)));
 
-        context_table_menu_.insertItem(SmallIconSet("document-open"), i18n("Edit Referrer with Quanta"),
+        context_table_menu_.insertItem(SmallIconSet("document-open"), i18n("Edit Referrer"),
                                        sub_menu_);
     }
     else
     {
-        int id = context_table_menu_.insertItem(SmallIconSet("document-open"), i18n("Edit Referrer with Quanta"));
+        int id = context_table_menu_.insertItem(SmallIconSet("document-open"), i18n("Edit Referrer"));
         context_table_menu_.setItemEnabled(id, false);
     }
 

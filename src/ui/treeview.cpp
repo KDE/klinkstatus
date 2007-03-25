@@ -49,7 +49,9 @@ TreeView::TreeView(QWidget *parent)
 //     setFocusPolicy( WheelFocus );
     setRootIsDecorated(KLSConfig::displayTreeView());
     setAlternatingRowColors(true);
-
+    setMouseTracking(true);
+    setContextMenuPolicy(Qt::CustomContextMenu);
+    
     connect(this, SIGNAL(itemClicked(QTreeWidgetItem*,int)),
             this, SLOT(slotItemClicked(QTreeWidgetItem*,int)));
     connect(this, SIGNAL(customContextMenuRequested(const QPoint&)),
@@ -181,8 +183,6 @@ void TreeView::resizeEvent(QResizeEvent *e)
 {
     QTreeWidget::resizeEvent(e);
     resetColumns();
-//    clipper()->repaint();
-    repaint();
 }
 
 void TreeView::slotPopupContextMenu(QTreeWidgetItem* item, QPoint const& point)
@@ -192,7 +192,7 @@ void TreeView::slotPopupContextMenu(QTreeWidgetItem* item, QPoint const& point)
     {
         Q3ValueList<KUrl> referrers = tree_item->linkStatus()->referrers();
         loadContextTableMenu(referrers, tree_item->linkStatus()->isRoot());
-        context_table_menu_.popup(point);
+        context_table_menu_.popup(viewport()->mapToGlobal(point));
     }
 }
 
@@ -224,58 +224,20 @@ void TreeView::slotCopyCellTextToClipboard() const
     cb->setText(cell_text);
 }
 
-void TreeView::slotEditReferrersWithQuanta()
+void TreeView::slotEditReferrers()
 {
     TreeViewItem* _item = myItem(currentItem());
     if(!_item) return;
     Q3ValueList<KUrl> referrers = _item->linkStatus()->referrers();
 
-    if(Global::isQuantaAvailableViaDBUS())
-    {
-        for(int i = 0; i != referrers.size(); ++i)
-            slotEditReferrerWithQuanta(referrers[i]);
-    }
-    else
-    {
-        QStringList list_urls;
-
-        for(int i = 0; i != referrers.size(); ++i)
-            list_urls.append(referrers[i].url());
-
-        Global::openQuanta(list_urls);
+    for(int i = 0; i != referrers.size(); ++i) {
+        (void) KRun::runUrl(referrers[i], QString("text/plain"), 0, false);
     }
 }
 
-void TreeView::slotEditReferrerWithQuanta(QAction* action)
+void TreeView::slotEditReferrer(QAction* action)
 {
-    slotEditReferrerWithQuanta(KUrl(action->text()));
-}
-
-void TreeView::slotEditReferrerWithQuanta(KUrl const& url)
-{
-    QString filePath = url.url();
-
-    if(Global::isQuantaAvailableViaDBUS())
-    {
-#ifdef _GNUC
-    #warning "kde4: port it"
-#endif
-#if 0
-        DCOPRef quanta(Global::quantaDCOPAppId(),"WindowManagerIf");
-        bool success = quanta.send("openFile", filePath, 0, 0);
-
-        if(!success)
-        {
-            QString message = i18n("<qt>File <b>%1</b> cannot be opened. Might be a DCOP problem.</qt>", filePath);
-            KMessageBox::error(parentWidget(), message);
-        }
-#endif
-    }
-    else
-    {
-        QStringList args(url.url());
-        Global::openQuanta(args);
-    }
+    (void) KRun::runUrl(KUrl(action->text()), QString("text/plain"), 0, false);
 }
 
 void TreeView::slotViewUrlInBrowser()
@@ -286,7 +248,7 @@ void TreeView::slotViewUrlInBrowser()
 
     if(url.isValid())
     {
-        (void) new KRun (url, 0, url.isLocalFile(), true);
+        (void) new KRun(url, 0, url.isLocalFile(), true);
     }
     else
         KMessageBox::sorry(this, i18n("Invalid URL."));
@@ -319,22 +281,22 @@ void TreeView::loadContextTableMenu(Q3ValueList<KUrl> const& referrers, bool is_
     context_table_menu_.clear();
     delete(sub_menu_);
 
-    sub_menu_ = context_table_menu_.addMenu(SmallIconSet("edit"), i18n("Edit Referrer with Quanta"));
+    sub_menu_ = context_table_menu_.addMenu(SmallIconSet("edit"), i18n("Edit Referrer"));
 
     if(!is_root)
     {
-        sub_menu_->addAction(i18n("All"), this, SLOT(slotEditReferrersWithQuanta()));
+        sub_menu_->addAction(i18n("All"), this, SLOT(slotEditReferrers()));
         sub_menu_->addSeparator();
 
         for(int i = 0; i != referrers.size(); ++i)
         {
             sub_menu_->addAction(referrers[i].prettyUrl());
         }
-        connect(sub_menu_, SIGNAL(triggered(QAction*)), this, SLOT(slotEditReferrerWithQuanta(QAction*)));
+        connect(sub_menu_, SIGNAL(triggered(QAction*)), this, SLOT(slotEditReferrer(QAction*)));
     }
     else
     {
-        QMenu* sub_menu = context_table_menu_.addMenu(SmallIconSet("document-open"), i18n("Edit Referrer with Quanta"));
+        QMenu* sub_menu = context_table_menu_.addMenu(SmallIconSet("document-open"), i18n("Edit Referrer"));
         sub_menu->setEnabled(false);
     }
     context_table_menu_.addSeparator();
@@ -411,13 +373,16 @@ void TreeViewItem::init(LinkStatus const* linkstatus)
         QString text(KCharsets::resolveEntities(item.text(i + 1)));
 
         if(i + 1 == root_->urlColumnIndex()) {
-            setText(item.columnIndex() - 1, QUrl::fromPercentEncoding(text.toAscii()));
+            setText(item.columnIndex() - 1, QUrl::fromPercentEncoding(text.toUtf8()));
+            setStatusTip(i, QTreeWidgetItem::text(i));
         }
         else if(i + 1 == root_->statusColumnIndex()) {
             setText(item.columnIndex() - 1, i18n(text.toUtf8()));
+            setStatusTip(i, linkstatus->statusText());
         }
         else {
             setText(item.columnIndex() - 1, text);
+            setStatusTip(i, QTreeWidgetItem::text(i));
         }
 
         setIcon(item.columnIndex() - 1, item.pixmap(i + 1));

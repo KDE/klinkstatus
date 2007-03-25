@@ -50,7 +50,7 @@ KLinkStatus::KLinkStatus()
     setupActions();
 
     // and a status bar
-    //statusBar()->show();
+    statusBar()->show();
 
     // this routine will find and load our Part.  it finds the Part by
     // name which is a bad idea usually.. but it's alright in this
@@ -167,8 +167,8 @@ void KLinkStatus::optionsShowStatusbar()
     // statusbar
     if (m_statusbarAction->isChecked())
         statusBar()->show();
-    else
-        statusBar()->hide();
+/*    else
+        statusBar()->hide();*/
 }
 
 void KLinkStatus::optionsConfigureKeys()

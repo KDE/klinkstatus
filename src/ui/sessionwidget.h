@@ -105,9 +105,6 @@ private slots:
     void slotLinkChecked(LinkStatus const* linkstatus, LinkChecker * anal);
     void slotSearchFinished();
     void slotSearchPaused();
-    /** Shows the status of the clicked URL (row) for 5 seconds */
-    void showBottomStatusLabel(QTreeWidgetItem* item, int);
-    void clearBottomStatusLabel();
     void slotSetTimeElapsed();
     void newSearchManager();
 
@@ -141,7 +138,6 @@ private:
     bool paused_;
     bool stopped_;
 
-    QTimer bottom_status_timer_;
     QTimer elapsed_time_timer_;
     int max_simultaneous_connections_;
     int time_out_;

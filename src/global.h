@@ -1,24 +1,27 @@
-//
-// C++ Interface: global
-//
-// Description:
-//
-//
-// Author: Paulo Moura Guedes <moura@kdewebdev.org>, (C) 2004
-//
-// Copyright: See COPYING file that comes with this distribution
-//
-//
+/***************************************************************************
+ *   Copyright (C) 2004 by Paulo Moura Guedes                              *
+ *   moura@kdewebdev.org                                                   *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the                         *
+ *   Free Software Foundation, Inc.,                                       *
+ *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
+ ***************************************************************************/
+
 #ifndef GLOBAL_H
 #define GLOBAL_H
 
 #include <QObject>
-//Added by qt3to4:
-#include <Q3CString>
-class Q3CString;
-
-class KUrl;
-class KProcess;
 
 /**
 @author Paulo Moura Guedes
@@ -29,32 +32,13 @@ class Global : public QObject
 public:
     static Global* self();
     ~Global();
-
-    static bool isKLinkStatusEmbeddedInQuanta();
-    static bool isQuantaRunningAsUnique();
-    static bool isQuantaAvailableViaDBUS();
-    static QString quantaDBUSAppId();
-    static KUrl urlWithQuantaPreviewPrefix(KUrl const& url);
-    
-    //static void setLoopStarted(bool flag);
-    static void openQuanta(QStringList const& args);
     
 private:
     Global(QObject *parent = 0);
     static void execCommand(QString const& command);
 
-private slots:
-    void slotGetScriptOutput(KProcess* process, char* buffer, int buflen);
-    void slotGetScriptError(KProcess* process, char* buffer, int buflen);
-    void slotProcessExited(KProcess* process);
-    void slotProcessTimeout();
-
 private:
     static Global* m_self_;
-
-    bool loop_started_;
-    QString script_output_;
-    KProcess* process_PS_;
 };
 
 #endif
