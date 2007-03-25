@@ -67,6 +67,8 @@ KLinkStatusPart::KLinkStatusPart(QWidget *parentWidget,
     action_manager_ = new ActionManager(this);
     ActionManager::setInstance(action_manager_);
     initGUI();
+    
+    Global::setKLinkStatusPart(this);
 
     tabwidget_ = new TabWidgetSession(parentWidget);
     setWidget(tabwidget_);

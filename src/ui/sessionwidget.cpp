@@ -449,6 +449,9 @@ void SessionWidget::slotSearchFinished()
     resetPendingActions();
     action_manager_->slotUpdateSessionWidgetActions(this);
 
+    Global::self()->setStatusBarText(i18n("Finished checking") + " "
+        + combobox_url->currentText(), false);
+
     emit signalSearchFinnished();
 }
 
@@ -484,6 +487,8 @@ void SessionWidget::slotSearchPaused()
 
     resetPendingActions();
     action_manager_->slotUpdateSessionWidgetActions(this);
+
+    Global::self()->setStatusBarText(i18n("Paused"), false);
 
     emit signalSearchPaused();
 }
@@ -611,6 +616,8 @@ void SessionWidget::slotPauseSearch()
         slotLoadSettings(isEmpty()); // it seems that KConfigDialogManager is not trigering this slot
 
         resetPendingActions();
+
+        Global::self()->setStatusBarText(i18n("Resuming"), false);
     }
 }
 
@@ -744,6 +751,8 @@ void SessionWidget::slotSearchStarted()
 {
     textlabel_elapsed_time_value->setText(QTime(0, 0).toString("hh:mm:ss"));
     elapsed_time_timer_.start();
+
+    Global::self()->setStatusBarText(i18n("Checking") + " " + combobox_url->currentText(), false);
 }
 
 #include "sessionwidget.moc"

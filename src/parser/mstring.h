@@ -131,7 +131,7 @@ inline bool notEqual(QChar c1, QChar c2)
 inline void removeLastCharIfExists(QString& s, QChar caractere)
 {
 	int index = s.length() - 1;
-	if(s[index] == caractere)
+	if(index >= 0 && s[index] == caractere)
 		s.remove(index);
 }
 
