@@ -193,7 +193,7 @@ void ActionManager::initTabWidget(TabWidgetSession* tabWidgetSession)
         
     // *************** Validate menu *********************
         
-    action = new KAction(KIcon("validators"), i18n("&Fix All..."), this);
+    action = new KAction(KIcon("ok"), i18n("&Fix All..."), this);
     actionCollection()->addAction("html_fix_all", action);
     connect(action, SIGNAL(triggered(bool) ), d->tabWidgetSession, SLOT(slotValidateAll()));
     action->setShortcut(KShortcut());
