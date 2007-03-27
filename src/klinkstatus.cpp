@@ -175,10 +175,10 @@ void KLinkStatus::optionsConfigureKeys()
 {
     //KKeyDialog::configure(actionCollection());
 
-    KKeyDialog dlg( KKeyChooser::AllActions, KKeyChooser::LetterShortcutsDisallowed, this );
+    KKeyDialog dlg(KKeyChooser::AllActions, KKeyChooser::LetterShortcutsDisallowed, this);
     QList<KXMLGUIClient*> clients = guiFactory()->clients();
 	foreach(KXMLGUIClient *client, clients)
-		dlg.insert ( client->actionCollection()/*, client->componentData().aboutData()->programName() */);
+		dlg.addCollection(client->actionCollection()/*, client->componentData().aboutData()->programName() */);
 
     dlg.configure();
 }
