@@ -26,7 +26,7 @@
                 </xsl:if>               
                 <br/>            
                 
-                <table border="1">
+                <table border="1" width="100%">
                     <thead>
                         <tr>
                             <th>URL</th>
