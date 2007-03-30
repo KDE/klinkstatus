@@ -47,7 +47,7 @@ SearchManager::SearchManager(int max_simultaneous_connections, int time_out,
         checked_general_domain_(false), time_out_(time_out), current_connections_(0),
         send_identification_(true), canceled_(false), searching_(false), checked_links_(0), ignored_links_(0),
         check_parent_dirs_(true), check_external_links_(true), check_regular_expressions_(false),
-        number_of_level_links_(0), number_of_links_to_check_(0)
+        number_of_current_level_links_(0), number_of_new_links_to_check_(0)
 {
     root_.setIsRoot(true);
 }
@@ -208,7 +208,8 @@ void SearchManager::slotRootChecked(LinkStatus * link, LinkChecker * checker)
     {
         current_depth_ = 1;
 
-        vector<LinkStatus*> node = children(LinkStatusHelper::lastRedirection(&root_));
+        vector<LinkStatus*> node;
+        fillWithChildren(LinkStatusHelper::lastRedirection(&root_), node);
 
         emit signalLinksToCheckTotalSteps(node.size());
 
@@ -246,14 +247,13 @@ void SearchManager::slotRootChecked(LinkStatus * link, LinkChecker * checker)
     checker = 0;
 }
 
-vector<LinkStatus*> SearchManager::children(LinkStatus* link)
+void SearchManager::fillWithChildren(LinkStatus* link, vector<LinkStatus*>& children)
 {
-    vector<LinkStatus*> children;
-
     if(!link || link->absoluteUrl().hasRef())
-        return children;
+        return;
 
     vector<Node*> const& nodes = link->childrenNodes();
+    children.reserve(nodes.size());
 
     int count = 0;
     for(uint i = 0; i != nodes.size(); ++i)
@@ -311,8 +311,6 @@ vector<LinkStatus*> SearchManager::children(LinkStatus* link)
             count = 0;
         }
     }
-
-    return children;
 }
 
 bool SearchManager::existUrl(KUrl const& url, KUrl const& url_parent) const
@@ -552,43 +550,57 @@ void SearchManager::slotLinkChecked(LinkStatus* link, LinkChecker * checker)
 
 void SearchManager::addLevel()
 {
+    // add the new empty level
     search_results_.push_back(vector< vector <LinkStatus*> >());
-    vector< vector <LinkStatus*> >& ultimo_nivel(search_results_[search_results_.size() - 2]);
+    // keep the reference to it
+    vector< vector <LinkStatus*> >& new_level(search_results_[search_results_.size() - 1]);
 
-    number_of_level_links_ = 0;
-    number_of_links_to_check_ = 0;
-    uint end = ultimo_nivel.size();
+    // keep the reference to the current level
+    vector< vector <LinkStatus*> >& current_level(search_results_[search_results_.size() - 2]);
 
-    for(uint i = 0; i != end; ++i) // nodes
+    // To signal the progress of add level task. For each link, all children have to be find
+    number_of_current_level_links_ = 0;
+    // number of new link to check in the new level
+    number_of_new_links_to_check_ = 0;
+    uint current_level_number_of_nodes = current_level.size();
+
+    // Count all the links in the level before, so progress can be signalized
+    for(uint i = 0; i != current_level_number_of_nodes; ++i) // nodes
     {
-        uint end_sub1 = ultimo_nivel[i].size();
-        for(uint j = 0; j != end_sub1; ++j) // links
-            ++number_of_level_links_;
+        uint node_size = current_level[i].size();
+        for(uint j = 0; j != node_size; ++j) // links
+            ++number_of_current_level_links_;
     }
+    new_level.reserve(number_of_current_level_links_);
 
-    if(number_of_level_links_)
-        emit signalAddingLevelTotalSteps(number_of_level_links_);
+    if(number_of_current_level_links_ != 0)
+        emit signalAddingLevelTotalSteps(number_of_current_level_links_);
 
-    for(uint i = 0; i != end; ++i) // nodes
+    for(uint i = 0; i != current_level_number_of_nodes; ++i) // nodes
     {
-        uint end_sub1 = ultimo_nivel[i].size();
-        for(uint j = 0; j != end_sub1; ++j) // links
+        uint node_size = current_level[i].size();
+        for(uint j = 0; j != node_size; ++j) // links
         {
-            vector <LinkStatus*> f(children( LinkStatusHelper::lastRedirection(((ultimo_nivel[i])[j])) ));
-            if(f.size() != 0)
+            vector<LinkStatus*>& node = current_level[i];
+            LinkStatus* linkstatus = node[j];
+            linkstatus = LinkStatusHelper::lastRedirection(linkstatus);
+            vector <LinkStatus*> new_node;
+            fillWithChildren(linkstatus, new_node);
+            if(new_node.size() != 0)
             {
-                search_results_[search_results_.size() - 1].push_back(f);
-                number_of_links_to_check_ += f.size();
+                // Push node
+                new_level.push_back(new_node);
+                number_of_new_links_to_check_ += new_node.size();
             }
 
             emit signalAddingLevelProgress();
 //             kapp->processEvents();
         }
     }
-    if( (search_results_[search_results_.size() - 1]).size() == 0 )
+    if(new_level.size() == 0)
         search_results_.pop_back();
     else
-        emit signalLinksToCheckTotalSteps(number_of_links_to_check_);
+        emit signalLinksToCheckTotalSteps(number_of_new_links_to_check_);
 }
 
 bool SearchManager::checkable(KUrl const& url, LinkStatus const& link_parent) const

@@ -111,7 +111,7 @@ private:
 
     void checkRoot();
     void checkVectorLinks(vector<LinkStatus*> const& links); // corresponde a um no de um nivel de depth
-    vector<LinkStatus*> children(LinkStatus* link);
+    void fillWithChildren(LinkStatus* link, vector<LinkStatus*>& children);
     void startSearch();
     void continueSearch();
     void finnish();
@@ -181,8 +181,8 @@ private:
     bool check_parent_dirs_;
     bool check_external_links_;
     bool check_regular_expressions_;
-    uint number_of_level_links_;
-    uint number_of_links_to_check_;
+    uint number_of_current_level_links_;
+    uint number_of_new_links_to_check_;
     vector< vector< vector <LinkStatus*> > > search_results_;
     KHTMLPartMap html_parts_;
 };
