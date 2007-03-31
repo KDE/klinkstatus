@@ -21,9 +21,9 @@
 #include "sessionwidget.h"
 #include "klsconfig.h"
 #include "treeview.h"
-#include "../engine/searchmanager.h"
-#include "../actionmanager.h"
-
+#include "engine/searchmanager.h"
+#include "actionmanager.h"
+    
 #include <QToolButton>
 #include <QCursor>
 #include <QToolTip>

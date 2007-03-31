@@ -41,8 +41,6 @@
 #include <dom/dom_string.h>
 
 
-int LinkChecker::count_ = 0;
-
 LinkChecker::LinkChecker(LinkStatus* linkstatus, int time_out,
                          QObject *parent)
         : QObject(parent), search_manager_(0),
@@ -53,7 +51,7 @@ LinkChecker::LinkChecker(LinkStatus* linkstatus, int time_out,
     Q_ASSERT(linkstatus_);
     Q_ASSERT(!linkstatus_->checked());
 
-    kDebug(23100) << endl << ++count_ << ": " << "Checking " << linkstatus_->absoluteUrl().url() << endl;
+    kDebug(23100) << endl << "Checking " << linkstatus_->absoluteUrl().url() << endl;
 }
 
 LinkChecker::~LinkChecker()

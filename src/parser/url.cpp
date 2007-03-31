@@ -37,7 +37,7 @@ Node::LinkType Url::resolveLinkType(QString const& url)
 
     if(findWord(url, "FILE:") != -1)
         return Node::file_href;
-    else if(findWord(url, "MAILTO:") != -1)
+    else if(findWord(KCharsets::resolveEntities(url), "MAILTO:") != -1)
         return Node::mailto;
     else if( url.indexOf(":/") != -1)
         return Node::href;
@@ -157,8 +157,7 @@ bool Url::equalHost(QString const& host1, QString const& host2, bool restrict)
 
     QString host1_(KNetwork::KResolver::normalizeDomain(host1));
     QString host2_(KNetwork::KResolver::normalizeDomain(host2));
-        kDebug(23100) <<  "host1: " << host1_ << endl;
-        kDebug(23100) <<  "host2: " << host2_ << endl;
+    
     removeLastCharIfExists(host1_, '/');
     removeLastCharIfExists(host2_, '/');
 

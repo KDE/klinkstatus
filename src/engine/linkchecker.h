@@ -46,7 +46,6 @@ public:
                 QObject *parent = 0);
     ~LinkChecker();
 
-    //virtual void run();
     void check();
     void setSearchManager(SearchManager* search_manager);
 
@@ -116,8 +115,6 @@ private:
      * it first check the server response and then the info in the html meta element.
      */
     bool has_defined_charset_;
-    
-    static int count_; // debug attribute that counts how many links were checked
 };
 
 inline LinkStatus const* LinkChecker::linkStatus() const

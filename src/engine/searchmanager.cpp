@@ -48,7 +48,7 @@ SearchManager::SearchManager(int max_simultaneous_connections, int time_out,
         checked_general_domain_(false), time_out_(time_out), current_connections_(0),
         send_identification_(true), canceled_(false), searching_(false), checked_links_(0), ignored_links_(0),
         check_parent_dirs_(true), check_external_links_(true), check_regular_expressions_(false),
-        number_of_current_level_links_(0), number_of_new_links_to_check_(0)
+        number_of_current_level_links_(0), number_of_new_links_to_check_(0), m_addLevelJob(0)
 {
     root_.setIsRoot(true);
 
@@ -360,6 +360,7 @@ LinkStatus const* SearchManager::linkStatus(QString const& s_url) const
                 if(count == 50)
                 {
                     count = 0;
+                    // this function is only called in LinkChecker::checkRef...
 //                     kapp->processEvents();
                 }
 
@@ -367,7 +368,6 @@ LinkStatus const* SearchManager::linkStatus(QString const& s_url) const
 
     return 0;
 }
-
 
 void SearchManager::startSearch()
 {
@@ -420,8 +420,8 @@ void SearchManager::continueSearch()
                 current_node_ = 0;
                 ++current_depth_;
 
-                AddLevelJob* job = new AddLevelJob(*this);
-                Weaver::instance()->enqueue(job);
+                m_addLevelJob = new AddLevelJob(*this);
+                Weaver::instance()->enqueue(m_addLevelJob);
             }
             else
             {
@@ -512,7 +512,7 @@ void SearchManager::checkLinksSimultaneously(vector<LinkStatus*> const& links)
 
 void SearchManager::slotLinkChecked(LinkStatus* link, LinkChecker * checker)
 {
-    kDebug(23100) <<  "SearchManager::slotLinkChecked:" << endl;
+    kDebug(23100) <<  "SearchManager::slotLinkChecked: " << checked_links_ << endl;
 //     kDebug(23100) <<  link->absoluteUrl().url() << " -> " << 
 //             LinkStatus::lastRedirection((const_cast<LinkStatus*> (link)))->absoluteUrl().url() << endl;
 
@@ -598,7 +598,7 @@ void SearchManager::addLevel()
     }
     if(new_level.size() == 0)
         search_results_.pop_back();
-    else
+    else 
         emit signalLinksToCheckTotalSteps(number_of_new_links_to_check_);
 }
 
@@ -896,14 +896,13 @@ QString SearchManager::toXML() const
     return doc.toString(4);
 }
 
-void SearchManager::slotJobDone(Job* _job)
+// WARNING If there are several SearchManagers, they receive job done from all of them
+void SearchManager::slotJobDone(Job* job)
 {
-    AddLevelJob* job = dynamic_cast<AddLevelJob*> (_job);
+    if(job != m_addLevelJob)
+        return;  
 
-    if (job)
-    {
-        slotLevelAdded();
-    }
+    slotLevelAdded();
 }
 
 

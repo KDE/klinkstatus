@@ -46,7 +46,8 @@ include_directories(
     ${LIBXML2_INCLUDE_DIR}
     ${LIBXSLT_INCLUDE_DIR}
     ${LIBTIDY_INCLUDE_DIR}
-    ${KDE4_INCLUDE_DIR} 
+    ${KDE4_INCLUDE_DIR}
+    ${KDE4_INCLUDE_DIR}/threadweaver
     ${QT_INCLUDES}
 )
 
@@ -90,6 +91,7 @@ target_link_libraries(klinkstatuspart
     ${KDE4_KIO_LIBS}
     ${KDE4_KHTML_LIBS}
     ${KDE4_THREADWEAVER_LIBRARY}
+    ThreadWeaverGui
 )
 
 install(TARGETS klinkstatuspart  DESTINATION ${PLUGIN_INSTALL_DIR})
@@ -103,6 +105,7 @@ kde4_automoc(${klinkstatus_SRCS})
 
 kde4_add_executable(klinkstatus ${klinkstatus_SRCS})
 
+# FIXME Add ThreadWeaverGui to FindKDE4Internal.cmake
 target_link_libraries(klinkstatus  ${KDE4_KPARTS_LIBS})
 
 install(TARGETS klinkstatus  DESTINATION ${BIN_INSTALL_DIR} )

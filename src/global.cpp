@@ -22,7 +22,8 @@
 #include <QtDBus>
 #include <QString>
 #include <QTimer>
-
+#include <QLabel>
+    
 #include <kdebug.h>
 #include <kapplication.h>
 #include <kstaticdeleter.h>
@@ -53,14 +54,14 @@ Global* Global::self()
 }
 
 Global::Global(QObject *parent)
-        : QObject(parent)
+        : QObject(parent), m_statusBarLabel(0)
 {
     m_self_ = this;
 
     connect(&m_statusBarTimer, SIGNAL(timeout()),
             this, SLOT(slotStatusBarTimeout()));
 
-    m_statusBarTimer.start(500);
+    m_statusBarTimer.start(1000);
 }
 
 Global::~Global()
@@ -77,6 +78,16 @@ void Global::setKLinkStatusPart(ReadOnlyPart* part)
 
     if(part)
         m_statusBarExtension = new StatusBarExtension(part);
+
+    m_statusBarLabel = new QLabel(statusBar());
+}
+
+KStatusBar* Global::statusBar() const
+{
+    if(!m_statusBarExtension)
+        return 0;
+
+    return m_statusBarExtension->statusBar();
 }
 
 void Global::setStatusBarText(QString const& text, bool permanent)
@@ -84,17 +95,26 @@ void Global::setStatusBarText(QString const& text, bool permanent)
     if(!m_statusBarExtension)
         return;
 
-    m_statusBarLabel.setText(text);
-    m_statusBarExtension->addStatusBarItem(&m_statusBarLabel, 0, permanent);
+    m_statusBarLabel->setText(text);
+    m_statusBarExtension->addStatusBarItem(m_statusBarLabel, 0, permanent);
 
     // This is a hack for removing the added messages from the status bar.
     // Permanent seems to don't have any effect
-    QTimer::singleShot(1000 * 3, this, SLOT(slotRemoveStatusBarLabel()));
+    if(!permanent)
+      QTimer::singleShot(1000 * 3, this, SLOT(slotRemoveStatusBarLabel()));
+}
+
+void Global::addStatusBarPermanentItem(QWidget* widget)
+{
+    if(!m_statusBarExtension)
+        return;
+
+    m_statusBarExtension->addStatusBarItem(widget, 0, true);
 }
 
 void Global::slotRemoveStatusBarLabel()
 {
-    m_statusBarExtension->removeStatusBarItem(&m_statusBarLabel);
+    m_statusBarExtension->removeStatusBarItem(m_statusBarLabel);
 }
 
 void Global::slotStatusBarTimeout()

@@ -22,54 +22,67 @@
    </size>
   </property>
   <layout class="QVBoxLayout" >
-   <property name="margin" >
-    <number>9</number>
-   </property>
-   <property name="spacing" >
-    <number>6</number>
-   </property>
    <item>
     <layout class="QVBoxLayout" >
-     <property name="margin" >
-      <number>0</number>
-     </property>
-     <property name="spacing" >
-      <number>6</number>
-     </property>
      <item>
       <widget class="QGroupBox" name="searchGroupBox" >
        <property name="title" >
         <string>Search</string>
        </property>
        <layout class="QHBoxLayout" >
-        <property name="margin" >
-         <number>4</number>
-        </property>
         <property name="spacing" >
          <number>0</number>
         </property>
+        <property name="leftMargin" >
+         <number>4</number>
+        </property>
+        <property name="topMargin" >
+         <number>4</number>
+        </property>
+        <property name="rightMargin" >
+         <number>4</number>
+        </property>
+        <property name="bottomMargin" >
+         <number>4</number>
+        </property>
         <item>
          <layout class="QVBoxLayout" >
-          <property name="margin" >
-           <number>0</number>
-          </property>
           <property name="spacing" >
            <number>1</number>
           </property>
+          <property name="leftMargin" >
+           <number>0</number>
+          </property>
+          <property name="topMargin" >
+           <number>0</number>
+          </property>
+          <property name="rightMargin" >
+           <number>0</number>
+          </property>
+          <property name="bottomMargin" >
+           <number>0</number>
+          </property>
           <item>
            <layout class="QHBoxLayout" >
-            <property name="margin" >
-             <number>0</number>
-            </property>
             <property name="spacing" >
              <number>6</number>
+            </property>
+            <property name="leftMargin" >
+             <number>0</number>
+            </property>
+            <property name="topMargin" >
+             <number>0</number>
+            </property>
+            <property name="rightMargin" >
+             <number>0</number>
+            </property>
+            <property name="bottomMargin" >
+             <number>0</number>
             </property>
             <item>
              <widget class="QToolButton" name="toolButton_clear_combo" >
               <property name="sizePolicy" >
-               <sizepolicy>
-                <hsizetype>0</hsizetype>
-                <vsizetype>0</vsizetype>
+               <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
@@ -97,9 +110,7 @@
             <item>
              <widget class="QLabel" name="textlabel_url" >
               <property name="sizePolicy" >
-               <sizepolicy>
-                <hsizetype>4</hsizetype>
-                <vsizetype>5</vsizetype>
+               <sizepolicy vsizetype="Preferred" hsizetype="Maximum" >
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
@@ -108,7 +119,7 @@
                <string>URL: </string>
               </property>
               <property name="alignment" >
-               <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+               <set>Qt::AlignAbsolute|Qt::AlignBottom|Qt::AlignCenter|Qt::AlignHCenter|Qt::AlignHorizontal_Mask|Qt::AlignJustify|Qt::AlignLeading|Qt::AlignLeft|Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing|Qt::AlignVCenter|Qt::AlignVertical_Mask</set>
               </property>
               <property name="wordWrap" >
                <bool>false</bool>
@@ -118,9 +129,7 @@
             <item>
              <widget class="KLSHistoryCombo" native="1" name="combobox_url" >
               <property name="sizePolicy" >
-               <sizepolicy>
-                <hsizetype>7</hsizetype>
-                <vsizetype>13</vsizetype>
+               <sizepolicy vsizetype="Ignored" hsizetype="Expanding" >
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
@@ -136,9 +145,7 @@
             <item>
              <widget class="KPushButton" name="pushbutton_url" >
               <property name="sizePolicy" >
-               <sizepolicy>
-                <hsizetype>4</hsizetype>
-                <vsizetype>1</vsizetype>
+               <sizepolicy vsizetype="Minimum" hsizetype="Maximum" >
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
@@ -165,11 +172,20 @@
           </item>
           <item>
            <layout class="QHBoxLayout" >
-            <property name="margin" >
-             <number>0</number>
-            </property>
             <property name="spacing" >
              <number>6</number>
+            </property>
+            <property name="leftMargin" >
+             <number>0</number>
+            </property>
+            <property name="topMargin" >
+             <number>0</number>
+            </property>
+            <property name="rightMargin" >
+             <number>0</number>
+            </property>
+            <property name="bottomMargin" >
+             <number>0</number>
             </property>
             <item>
              <widget class="QCheckBox" name="checkbox_recursively" >
@@ -195,11 +211,11 @@
               <property name="specialValueText" >
                <string>Unlimited</string>
               </property>
-              <property name="maximum" >
-               <number>15</number>
-              </property>
               <property name="minimum" >
                <number>0</number>
+              </property>
+              <property name="maximum" >
+               <number>15</number>
               </property>
               <property name="value" >
                <number>0</number>
@@ -236,11 +252,20 @@
           </item>
           <item>
            <layout class="QHBoxLayout" >
-            <property name="margin" >
-             <number>0</number>
-            </property>
             <property name="spacing" >
              <number>6</number>
+            </property>
+            <property name="leftMargin" >
+             <number>0</number>
+            </property>
+            <property name="topMargin" >
+             <number>0</number>
+            </property>
+            <property name="rightMargin" >
+             <number>0</number>
+            </property>
+            <property name="bottomMargin" >
+             <number>0</number>
             </property>
             <item>
              <widget class="QCheckBox" name="checkbox_external_links" >
@@ -275,11 +300,20 @@
           </item>
           <item>
            <layout class="QHBoxLayout" >
-            <property name="margin" >
-             <number>0</number>
-            </property>
             <property name="spacing" >
              <number>6</number>
+            </property>
+            <property name="leftMargin" >
+             <number>0</number>
+            </property>
+            <property name="topMargin" >
+             <number>0</number>
+            </property>
+            <property name="rightMargin" >
+             <number>0</number>
+            </property>
+            <property name="bottomMargin" >
+             <number>0</number>
             </property>
             <item>
              <widget class="QLabel" name="textLabel1" >
@@ -294,9 +328,7 @@
             <item>
              <widget class="QLineEdit" name="lineedit_reg_exp" >
               <property name="sizePolicy" >
-               <sizepolicy>
-                <hsizetype>7</hsizetype>
-                <vsizetype>0</vsizetype>
+               <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
@@ -329,9 +361,7 @@
      <item>
       <widget class="ResultsSearchBar" native="1" name="resultsSearchBar" >
        <property name="sizePolicy" >
-        <sizepolicy>
-         <hsizetype>7</hsizetype>
-         <vsizetype>0</vsizetype>
+        <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
@@ -347,9 +377,7 @@
      <item>
       <widget class="TreeView" native="1" name="tree_view" >
        <property name="sizePolicy" >
-        <sizepolicy>
-         <hsizetype>7</hsizetype>
-         <vsizetype>7</vsizetype>
+        <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
@@ -358,12 +386,6 @@
      </item>
      <item>
       <layout class="QHBoxLayout" >
-       <property name="margin" >
-        <number>0</number>
-       </property>
-       <property name="spacing" >
-        <number>0</number>
-       </property>
        <item>
         <widget class="QLabel" name="textlabel_progressbar" >
          <property name="minimumSize" >
@@ -383,9 +405,7 @@
        <item>
         <widget class="QProgressBar" name="progressbar_checker" >
          <property name="sizePolicy" >
-          <sizepolicy>
-           <hsizetype>7</hsizetype>
-           <vsizetype>0</vsizetype>
+          <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
@@ -400,10 +420,22 @@
        </item>
        <item>
         <layout class="QGridLayout" >
-         <property name="margin" >
+         <property name="leftMargin" >
           <number>1</number>
          </property>
-         <property name="spacing" >
+         <property name="topMargin" >
+          <number>1</number>
+         </property>
+         <property name="rightMargin" >
+          <number>1</number>
+         </property>
+         <property name="bottomMargin" >
+          <number>1</number>
+         </property>
+         <property name="horizontalSpacing" >
+          <number>0</number>
+         </property>
+         <property name="verticalSpacing" >
           <number>0</number>
          </property>
          <item row="1" column="0" >
@@ -412,9 +444,7 @@
             <bool>false</bool>
            </property>
            <property name="sizePolicy" >
-            <sizepolicy>
-             <hsizetype>4</hsizetype>
-             <vsizetype>5</vsizetype>
+            <sizepolicy vsizetype="Preferred" hsizetype="Maximum" >
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
@@ -439,9 +469,7 @@
             <bool>true</bool>
            </property>
            <property name="sizePolicy" >
-            <sizepolicy>
-             <hsizetype>4</hsizetype>
-             <vsizetype>5</vsizetype>
+            <sizepolicy vsizetype="Preferred" hsizetype="Maximum" >
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
@@ -477,14 +505,14 @@
  <layoutdefault spacing="6" margin="11" />
  <customwidgets>
   <customwidget>
-   <class>KLSHistoryCombo</class>
-   <extends>QWidget</extends>
-   <header>klshistorycombo.h</header>
-  </customwidget>
-  <customwidget>
    <class>KPushButton</class>
    <extends>QPushButton</extends>
    <header>kpushbutton.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KLSHistoryCombo</class>
+   <extends>QWidget</extends>
+   <header>klshistorycombo.h</header>
   </customwidget>
   <customwidget>
    <class>TreeView</class>

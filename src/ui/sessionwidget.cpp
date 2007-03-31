@@ -48,14 +48,12 @@
 #include <q3buttongroup.h>
 #include <QToolButton>
 #include <QRegExp>
-//Added by qt3to4:
 #include <QPixmap>
 #include <QKeyEvent>
-//Added by qt3to4:
 #include <QTextStream>
 #include <QTreeWidget>
 #include <QProcess>
-    
+
 #include "ui/sessionwidget.h"
 #include "ui/treeview.h"
 #include "ui/documentrootdialog.h"
@@ -69,8 +67,6 @@
 #include "engine/searchmanager.h"
 #include "actionmanager.h"
 #include "utils/utils.h"
-// #include "utils/xsl.h"
-// #include <kdoctools/xslt.h>
 
 
 SessionWidget::SessionWidget(int max_simultaneous_connections, int time_out,

@@ -22,13 +22,15 @@
 #define GLOBAL_H
 
 #include <QObject>
-#include <QLabel>
+class QLabel;
 #include <QTimer>
 
 namespace KParts {
     class ReadOnlyPart;
     class StatusBarExtension;
 }
+class KStatusBar;
+
 using namespace KParts;
     
 /**
@@ -41,12 +43,14 @@ public:
     static Global* self();
     ~Global();
     
-    static void setKLinkStatusPart(ReadOnlyPart* part);
+    void setKLinkStatusPart(ReadOnlyPart* part);
+    KStatusBar* statusBar() const;
 //     static ReadOnlyPart* getKLinkStatusPart();
     
 //     static StatusBarExtension* getStatusBarExtension();
 
     void setStatusBarText(QString const& text, bool permanent = false);
+    void addStatusBarPermanentItem(QWidget* widget);
 
 private slots:
     void slotRemoveStatusBarLabel();
@@ -59,7 +63,7 @@ private:
     static Global* m_self_;
     static ReadOnlyPart* m_klinkStatusPart;
     static StatusBarExtension* m_statusBarExtension;
-    QLabel m_statusBarLabel;
+    QLabel* m_statusBarLabel;
     // This timer is a workaround for cleaning the temporary messages of tree items (statusTip)
     // which sometimes don't get hidden
     QTimer m_statusBarTimer;

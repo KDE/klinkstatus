@@ -193,6 +193,9 @@ private:
     uint number_of_new_links_to_check_;
     vector< vector< vector <LinkStatus*> > > search_results_;
     KHTMLPartMap html_parts_;
+
+    // thread stuff
+    AddLevelJob* m_addLevelJob;
 };
 
 class AddLevelJob : public Job

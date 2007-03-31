@@ -26,6 +26,8 @@
 #include <QString>
 
 #include <kdebug.h>
+#include <kcharsets.h>
+
 
 using namespace std;
 
