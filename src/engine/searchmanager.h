@@ -22,6 +22,7 @@
 #define GESTOR_PESQUISA_H
 
 #include <kurl.h>
+#include <threadweaver/Job.h>
 
 #include <QObject>
 #include <QString>
@@ -32,12 +33,15 @@ class QDomElement;
 
 #include <vector>
 
-#include "linkstatus.h"
-#include "linkchecker.h"
-#include "../parser/node.h"
-#include "../parser/url.h"
-
+#include "engine/linkstatus.h"
+#include "engine/linkchecker.h"
+#include "parser/node.h"
+#include "parser/url.h"
+class AddLevelJob;
+         
 using namespace std;
+using namespace ThreadWeaver;
+
 
 typedef QMap<QString, KHTMLPart*> KHTMLPartMap;
 
@@ -46,6 +50,8 @@ class SearchManager: public QObject
     Q_OBJECT
 
 public:
+
+    friend class AddLevelJob;
 
     enum SearchMode {
         depth,
@@ -138,6 +144,8 @@ private slots:
     void slotRootChecked(LinkStatus* link, LinkChecker* checker);
     void slotLinkChecked(LinkStatus* link, LinkChecker* checker);
     void slotSearchFinished();
+    void slotLevelAdded();
+    void slotJobDone(Job*);
 
 signals:
 
@@ -186,6 +194,21 @@ private:
     vector< vector< vector <LinkStatus*> > > search_results_;
     KHTMLPartMap html_parts_;
 };
+
+class AddLevelJob : public Job
+{
+    Q_OBJECT
+public:
+    AddLevelJob(SearchManager& manager);
+    ~AddLevelJob();
+    
+protected:
+    void run();
+
+private:
+    SearchManager& m_searchManager;
+};
+
 
 #include "searchmanager_impl.h"
 

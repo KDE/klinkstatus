@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2004 by Paulo Moura Guedes                              *
- *   moura@kdewebdev.org                                                        *
+ *   moura@kdewebdev.org                                                   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -15,8 +15,8 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
- *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.             *
- ***************************************************************************/
+ *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
+ **************************************************************************/
 
 #ifndef SESSION_WIDGET_H
 #define SESSION_WIDGET_H
@@ -24,13 +24,12 @@
 #include "ui_sessionwidgetbase.h"
 #include "../engine/linkchecker.h"
 #include "../engine/linkstatus.h"
-//Added by qt3to4:
-#include <QKeyEvent>
 class SearchManager;
 class TableItem;
 class ActionManager;
 class LinkMatcher;
 
+#include <QKeyEvent>
 #include <QTimer>
 #include <QString>
 class QStringList;

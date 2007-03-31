@@ -31,7 +31,7 @@ set(libui_SRCS
 	${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/resultssearchbar.cpp 
 	${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/resultview.cpp 
 	${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/sessionwidget.cpp 
-	${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/tabwidgetsession.cpp 
+    ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/tabwidgetsession.cpp  
 	${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/treeview.cpp
 )
 
@@ -39,7 +39,7 @@ set(libuisettings_SRCS
     ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/settings/configidentificationdialog.cpp 
 )
 
-include_directories( 
+include_directories(
     ${CMAKE_SOURCE_DIR}/klinkstatus/src 
     ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui
     ${CMAKE_BINARY_DIR}/klinkstatus/src 
@@ -47,7 +47,7 @@ include_directories(
     ${LIBXSLT_INCLUDE_DIR}
     ${LIBTIDY_INCLUDE_DIR}
     ${KDE4_INCLUDE_DIR} 
-    ${QT_INCLUDES}  
+    ${QT_INCLUDES}
 )
 
 
@@ -62,7 +62,7 @@ set(klinkstatuspart_PART_SRCS
     ${libui_SRCS} 
     global.cpp 
     actionmanager.cpp  
-    klinkstatus_part.cpp 
+    klinkstatus_part.cpp
 )
 
 kde4_add_ui_files(klinkstatuspart_PART_SRCS
@@ -89,6 +89,7 @@ target_link_libraries(klinkstatuspart
     ${KDE4_KPARTS_LIBS} 
     ${KDE4_KIO_LIBS}
     ${KDE4_KHTML_LIBS}
+    ${KDE4_THREADWEAVER_LIBRARY}
 )
 
 install(TARGETS klinkstatuspart  DESTINATION ${PLUGIN_INSTALL_DIR})

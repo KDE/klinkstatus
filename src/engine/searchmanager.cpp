@@ -26,6 +26,7 @@
 #include <QString>
 #include <q3valuelist.h>
 #include <qdom.h>
+#include <threadweaver/ThreadWeaver.h>
 
 #include <iostream>
 #include <unistd.h>
@@ -50,6 +51,8 @@ SearchManager::SearchManager(int max_simultaneous_connections, int time_out,
         number_of_current_level_links_(0), number_of_new_links_to_check_(0)
 {
     root_.setIsRoot(true);
+
+    connect(Weaver::instance(), SIGNAL(jobDone(Job*)), SLOT(slotJobDone(Job*)));
 }
 
 void SearchManager::reset()
@@ -255,11 +258,8 @@ void SearchManager::fillWithChildren(LinkStatus* link, vector<LinkStatus*>& chil
     vector<Node*> const& nodes = link->childrenNodes();
     children.reserve(nodes.size());
 
-    int count = 0;
     for(uint i = 0; i != nodes.size(); ++i)
     {
-        ++count;
-
         Node* node = nodes[i];
         KUrl url;
         if(node->url().isEmpty())
@@ -304,11 +304,6 @@ void SearchManager::fillWithChildren(LinkStatus* link, vector<LinkStatus*>& chil
 //             Q_ASSERT(link->externalDomainDepth() <= external_domain_depth_);
 
             children.push_back(ls);
-        }
-        if(count == 50)
-        {
-            kapp->processEvents();
-            count = 0;
         }
     }
 }
@@ -365,7 +360,7 @@ LinkStatus const* SearchManager::linkStatus(QString const& s_url) const
                 if(count == 50)
                 {
                     count = 0;
-                    kapp->processEvents();
+//                     kapp->processEvents();
                 }
 
             }
@@ -385,6 +380,17 @@ void SearchManager::startSearch()
     else
     {
         kDebug(23100) <<  "Search Finished! (SearchManager::comecaPesquisa)" << endl;
+        finnish();
+    }
+}
+
+void SearchManager::slotLevelAdded()
+{
+    if( (uint)current_depth_ == search_results_.size() )
+        checkVectorLinks(nodeToAnalize());
+    else
+    {
+        kDebug(23100) <<  "Search Finished! (SearchManager::continueSearch#1)" << endl;
         finnish();
     }
 }
@@ -414,15 +420,8 @@ void SearchManager::continueSearch()
                 current_node_ = 0;
                 ++current_depth_;
 
-                addLevel();
-
-                if( (uint)current_depth_ == search_results_.size() )
-                    checkVectorLinks(nodeToAnalize());
-                else
-                {
-                    kDebug(23100) <<  "Search Finished! (SearchManager::continueSearch#1)" << endl;
-                    finnish();
-                }
+                AddLevelJob* job = new AddLevelJob(*this);
+                Weaver::instance()->enqueue(job);
             }
             else
             {
@@ -895,6 +894,31 @@ QString SearchManager::toXML() const
     save(root);
     
     return doc.toString(4);
+}
+
+void SearchManager::slotJobDone(Job* _job)
+{
+    AddLevelJob* job = dynamic_cast<AddLevelJob*> (_job);
+
+    if (job)
+    {
+        slotLevelAdded();
+    }
+}
+
+
+AddLevelJob::AddLevelJob(SearchManager& manager)
+  : m_searchManager(manager)
+{
+}
+
+AddLevelJob::~AddLevelJob()
+{
+}
+    
+void AddLevelJob::run()
+{
+    m_searchManager.addLevel();
 }
 
 #include "searchmanager.moc"
