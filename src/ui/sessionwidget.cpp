@@ -346,8 +346,6 @@ void SessionWidget::keyPressEvent ( QKeyEvent* e )
 
 bool SessionWidget::validFields()
 {
-    KURL url = Url::normalizeUrl(combobox_url->currentText());
-
     if(combobox_url->currentText().isEmpty())
     {
         KMessageBox::sorry(this, i18n("Cowardly refusing to check an empty URL."));

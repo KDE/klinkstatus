@@ -37,7 +37,7 @@ Node::LinkType Url::resolveLinkType(QString const& url)
 
     if(findWord(url, "FILE:") != -1)
         return Node::file_href;
-    else if(findWord(url, "MAILTO:") != -1)
+    else if(findWord(KCharsets::resolveEntities(url), "MAILTO:") != -1)
         return Node::mailto;
     else if( (int)url.find(":/") != -1)
         return Node::href;

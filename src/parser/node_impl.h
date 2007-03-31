@@ -103,10 +103,12 @@ inline QString NodeLink::mailto() const
 {
     Q_ASSERT(linktype_ == Node::mailto);
 
-    int inicio = findWord(attribute_href_, "MAILTO:");
+    QString href = KCharsets::resolveEntities(attribute_href_);
+
+    int inicio = findWord(href, "MAILTO:");
     Q_ASSERT(inicio != -1);
 
-    return attribute_href_.mid(inicio);
+    return href.mid(inicio);
 }
 
 inline bool NodeLink::isLink() const

@@ -108,10 +108,14 @@ void LinkChecker::slotTimeOut()
 {
     if(!finnished_ && !parsing_)
     {
-        kdDebug(23100) << "timeout: " << linkstatus_->absoluteUrl().url() << " - " 
-                << t_job_->slave() << "/" <<  t_job_->slave()->slave_pid() << endl;
+        kdDebug(23100) << "timeout: " << linkstatus_->absoluteUrl().url() << endl;
+        if(t_job_ && t_job_->slave())
+            kdDebug(23100) << " - " << t_job_->slave() << "/" <<  t_job_->slave()->slave_pid() << endl;
+        else
+            kdDebug(23100) << endl;
+
         
-        Q_ASSERT(t_job_);
+//         Q_ASSERT(t_job_); // can happen: e.g. bad result signal
         if(t_job_->error() != KIO::ERR_USER_CANCELED)
         {
             linkstatus_->setErrorOccurred(true);
@@ -321,6 +325,7 @@ void LinkChecker::slotResult(KIO::Job* /*job*/)
 
     if(job->error() == KIO::ERR_USER_CANCELED)
     {
+        // FIXME This can happen! If the job is non interactive...
         kdWarning(23100) << endl << "Job killed quietly, yet signal result was emited..." << endl;
         kdDebug(23100) << linkstatus_->toString() << endl;
         finnish();
@@ -663,6 +668,9 @@ bool LinkChecker::hasAnchor(KHTMLPart* html_part, QString const& anchor)
 
 void LinkChecker::killJob()
 {
+    if(!t_job_)
+        return;
+
     KIO::TransferJob* aux = t_job_;
     t_job_ = 0;
     aux->disconnect(this);
