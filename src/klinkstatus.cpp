@@ -20,7 +20,7 @@
 
 #include "klinkstatus.h"
 
-#include <kkeydialog.h>
+#include <kshortcutsdialog.h>
 #include <kfiledialog.h>
 #include <kconfig.h>
 #include <kurl.h>
@@ -173,9 +173,9 @@ void KLinkStatus::optionsShowStatusbar()
 
 void KLinkStatus::optionsConfigureKeys()
 {
-    //KKeyDialog::configure(actionCollection());
+    //KShortcutsDialog::configure(actionCollection());
 
-    KKeyDialog dlg(KKeyChooser::AllActions, KKeyChooser::LetterShortcutsDisallowed, this);
+    KShortcutsDialog dlg(KShortcutsEditor::AllActions, KShortcutsEditor::LetterShortcutsDisallowed, this);
     QList<KXMLGUIClient*> clients = guiFactory()->clients();
 	foreach(KXMLGUIClient *client, clients)
 		dlg.addCollection(client->actionCollection()/*, client->componentData().aboutData()->programName() */);
