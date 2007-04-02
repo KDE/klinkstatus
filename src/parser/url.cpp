@@ -124,18 +124,6 @@ KUrl Url::normalizeUrl(QString const& string_url)
     }
 }
 
-bool Url::existUrl(KUrl const& url, vector<LinkStatus*> const& v)
-{
-    if(url.prettyUrl().isEmpty())
-        return true;
-
-    for(uint i = 0; i != v.size(); ++i)
-        if(v[i]->absoluteUrl() == url)
-            return true;
-
-    return false;
-}
-
 /**
    www.iscte.pt, iscte.pt => true;
    iscte.pt, www.iscte.pt => true;

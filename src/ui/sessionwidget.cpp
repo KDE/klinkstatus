@@ -63,7 +63,6 @@
 #include "klsconfig.h"
 #include "global.h"
 #include "engine/linkstatus.h"
-#include "engine/linkchecker.h"
 #include "engine/searchmanager.h"
 #include "actionmanager.h"
 #include "utils/utils.h"
@@ -82,8 +81,6 @@ SessionWidget::SessionWidget(int max_simultaneous_connections, int time_out,
 {
     setupUi(this);
     
-    newSearchManager();
-
     init();
     slotLoadSettings();
 
@@ -139,7 +136,8 @@ void SessionWidget::slotLoadSettings(bool modify_current_widget_settings)
         tree_view->setTreeDisplay(tree_display_);
     }
 
-    search_manager_->setTimeOut(KLSConfig::timeOut());
+    if(search_manager_)
+        search_manager_->setTimeOut(KLSConfig::timeOut());
 
     //kDebug(23100) << "tree_display_: " << tree_display_ << endl;
 }
@@ -164,10 +162,10 @@ void SessionWidget::newSearchManager()
                                         this);
     Q_ASSERT(search_manager_);
 
-    connect(search_manager_, SIGNAL(signalRootChecked(const LinkStatus *, LinkChecker *)),
-            this, SLOT(slotRootChecked(const LinkStatus *, LinkChecker *)));
-    connect(search_manager_, SIGNAL(signalLinkChecked(const LinkStatus *, LinkChecker *)),
-            this, SLOT(slotLinkChecked(const LinkStatus *, LinkChecker *)));
+    connect(search_manager_, SIGNAL(signalRootChecked(const LinkStatus*)),
+            this, SLOT(slotRootChecked(const LinkStatus*)));
+    connect(search_manager_, SIGNAL(signalLinkChecked(const LinkStatus*)),
+            this, SLOT(slotLinkChecked(const LinkStatus*)));
     connect(search_manager_, SIGNAL(signalSearchFinished()),
             this, SLOT(slotSearchFinished()));
     connect(search_manager_, SIGNAL(signalSearchPaused()),
@@ -207,7 +205,7 @@ void SessionWidget::slotEnableCheckButton(const QString & s)
     if(!(stopped_ && !pendingActions()))
         return;
 
-    if(!s.isEmpty() && !search_manager_->searching())
+    if(!s.isEmpty() && (!search_manager_ || !search_manager_->searching()))
     {
         start_search_action_->setEnabled(true);
     }
@@ -238,9 +236,8 @@ void SessionWidget::slotCheck()
     paused_ = false;
     stopped_ = false;
 
-    slotLoadSettings(false); // it seems that KConfigDialogManager is not trigering this slot
-
     newSearchManager();
+    slotLoadSettings(false); // it seems that KConfigDialogManager is not trigering this slot
 
     // WORKAROUND addToHistory breaks currentText()
     QString current_text = combobox_url->currentText();
@@ -357,7 +354,7 @@ bool SessionWidget::validFields()
     return true;
 }
 
-void SessionWidget::slotRootChecked(LinkStatus const* linkstatus, LinkChecker * anal)
+void SessionWidget::slotRootChecked(LinkStatus const* linkstatus)
 {
     emit signalUpdateTabLabel(search_manager_->linkStatusRoot(), this);
 
@@ -365,19 +362,15 @@ void SessionWidget::slotRootChecked(LinkStatus const* linkstatus, LinkChecker * 
             textlabel_progressbar->text() == i18n("Stopped"));
     progressbar_checker->setValue(1);
 
-    //table_linkstatus->insertResult(linkstatus);
     TreeViewItem* tree_view_item = new TreeViewItem(tree_view, tree_view->invisibleRootItem(), linkstatus);
     LinkStatus* ls = const_cast<LinkStatus*> (linkstatus);
     ls->setTreeViewItem(tree_view_item);
-
-    if(linkstatus->isRedirection() && linkstatus->redirection())
-        slotLinkChecked(linkstatus->redirection(), anal);
 
     resultsSearchBar->show();
     ActionManager::getInstance()->action("file_export_html")->setEnabled(!isEmpty());
 }
 
-void SessionWidget::slotLinkChecked(LinkStatus const* linkstatus, LinkChecker * anal)
+void SessionWidget::slotLinkChecked(LinkStatus const* linkstatus)
 {
     kDebug(23100) << textlabel_progressbar->text() << endl;
     Q_ASSERT(textlabel_progressbar->text() == i18n("Checking...") ||
@@ -392,7 +385,6 @@ void SessionWidget::slotLinkChecked(LinkStatus const* linkstatus, LinkChecker * 
 
         if(tree_display_)
         {
-            //kDebug(23100) << "TREE!!!!!" << endl;
             tree_view_item = new TreeViewItem(tree_view, parent_item, parent_item->lastChild(), linkstatus);
             parent_item->setLastChild(tree_view_item);
             if(follow_last_link_checked_)
@@ -402,7 +394,6 @@ void SessionWidget::slotLinkChecked(LinkStatus const* linkstatus, LinkChecker * 
         }
         else
         {
-            //kDebug(23100) << "FLAT!!!!!" << endl;
             tree_view_item = new TreeViewItem(tree_view, linkstatus);
             if(follow_last_link_checked_)
                 tree_view->ensureRowVisible(tree_view_item, tree_display_);
@@ -412,9 +403,6 @@ void SessionWidget::slotLinkChecked(LinkStatus const* linkstatus, LinkChecker * 
 
         LinkStatus* ls = const_cast<LinkStatus*> (linkstatus);
         ls->setTreeViewItem(tree_view_item);
-
-        if(linkstatus->isRedirection() && linkstatus->redirection())
-            slotLinkChecked(linkstatus->redirection(), anal);
     }
 }
 
@@ -437,7 +425,6 @@ void SessionWidget::slotSearchFinished()
     textlabel_elapsed_time->setEnabled(true);
     textlabel_elapsed_time_value->setEnabled(true);
     elapsed_time_timer_.stop();
-//     textlabel_elapsed_time_value->setText(search_manager_->timeElapsed().toString("hh:mm:ss"));
 
     in_progress_ = false;
     paused_ = false;
@@ -479,7 +466,6 @@ void SessionWidget::slotSearchPaused()
     textlabel_elapsed_time->setEnabled(true);
     textlabel_elapsed_time_value->setEnabled(true);
     elapsed_time_timer_.stop();
-//     textlabel_elapsed_time_value->setText(search_manager_->timeElapsed().toString("hh:mm:ss"));
 
     resetPendingActions();
     action_manager_->slotUpdateSessionWidgetActions(this);
@@ -491,7 +477,6 @@ void SessionWidget::slotSearchPaused()
 
 void SessionWidget::insertUrlAtCombobox(QString const& url)
 {
-//     kDebug() << "SessionWidget::insertUrlAtCombobox: " << url << endl;
     combobox_url->addToHistory(url);
 }
 

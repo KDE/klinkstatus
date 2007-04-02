@@ -132,6 +132,8 @@ void SearchManager::startSearch(KUrl const& root, SearchMode const& modo)
     root_.setOnlyCheckHeader(false);
     root_.setRootUrl(root);
 
+    search_results_hash_.insert(root_.absoluteUrl(), &root_);
+
     search_mode_ = modo;
     if(modo == depth)
         Q_ASSERT(depth_ != -1);
@@ -191,7 +193,7 @@ void SearchManager::checkRoot()
     checker->check();
 }
 
-void SearchManager::slotRootChecked(LinkStatus * link, LinkChecker * checker)
+void SearchManager::slotRootChecked(LinkStatus* link, LinkChecker* checker)
 {
     kDebug(23100) <<  "SearchManager::slotRootChecked:" << endl;
     kDebug(23100) <<  link->absoluteUrl().url() << " -> " << 
@@ -205,7 +207,10 @@ void SearchManager::slotRootChecked(LinkStatus * link, LinkChecker * checker)
     
     ++checked_links_;
     //kDebug(23100) <<  "++checked_links_: SearchManager::slotRootChecked" << endl;
-    emit signalRootChecked(link, checker);
+    emit signalRootChecked(link);
+    if(link->isRedirection() && link->redirection())
+        linkRedirectionChecked(link->redirection());
+
 
     if(search_mode_ != depth || depth_ > 0)
     {
@@ -258,6 +263,9 @@ void SearchManager::fillWithChildren(LinkStatus* link, vector<LinkStatus*>& chil
     vector<Node*> const& nodes = link->childrenNodes();
     children.reserve(nodes.size());
 
+    QHash<KUrl, LinkStatus*> children_hash;
+    children_hash.reserve(nodes.size());
+    
     for(uint i = 0; i != nodes.size(); ++i)
     {
         Node* node = nodes[i];
@@ -269,12 +277,13 @@ void SearchManager::fillWithChildren(LinkStatus* link, vector<LinkStatus*>& chil
 
         if( (node->isLink() &&
                 checkable(url, *link) &&
-                !Url::existUrl(url, children) &&
+                !children_hash.contains(url) &&
                 !node->url().isEmpty())
                 ||
                 node->malformed() )
         {
             LinkStatus* ls = new LinkStatus(node, link);
+            
             ls->setAbsoluteUrl(url);
 
             if(localDomain(ls->absoluteUrl()))
@@ -304,8 +313,11 @@ void SearchManager::fillWithChildren(LinkStatus* link, vector<LinkStatus*>& chil
 //             Q_ASSERT(link->externalDomainDepth() <= external_domain_depth_);
 
             children.push_back(ls);
+            children_hash.insert(url, ls);
         }
     }
+            
+    search_results_hash_ = search_results_hash_.unite(children_hash);
 }
 
 bool SearchManager::existUrl(KUrl const& url, KUrl const& url_parent) const
@@ -313,29 +325,23 @@ bool SearchManager::existUrl(KUrl const& url, KUrl const& url_parent) const
     if(url.prettyUrl().isEmpty() || root_.originalUrl() == url.prettyUrl())
         return true;
 
-    for(uint i = 0; i != search_results_.size(); ++i)
-        for(uint j = 0; j != search_results_[i].size(); ++j)
-            for(uint l = 0; l != (search_results_[i])[j].size(); ++l)
-            {
-                LinkStatus* tmp = search_results_[i][j][l];
-                Q_ASSERT(tmp);                
-                if(tmp->absoluteUrl() == url)
-                { // URL exists
-                    Q3ValueList<KUrl> referrers(tmp->referrers());
+    LinkStatus* ls = search_results_hash_.value(url, 0);
+    if(ls) {      
+        // Add new referrer
+        Q3ValueList<KUrl> const& referrers(ls->referrers());
 
-                    // Add new referrer
-                    for(int i = 0; i != referrers.size(); ++i)
-                    {
-                        if(referrers[i] == url_parent)
-                            return true;
-                    }
-                    tmp->addReferrer(url_parent);
-                    
-                    return true;
-                }
-            }
+        for(int i = 0; i != referrers.size(); ++i)
+        {
+            if(referrers[i] == url_parent)
+                return true;
+        }
+        ls->addReferrer(url_parent);
 
-    return false;
+        return true;
+    }
+    else {
+      return false;
+    }
 }
 
 LinkStatus const* SearchManager::linkStatus(QString const& s_url) const
@@ -345,28 +351,7 @@ LinkStatus const* SearchManager::linkStatus(QString const& s_url) const
     if(root_.absoluteUrl().url() == s_url)
         return &root_;
 
-    int count = 0;
-    for(uint i = 0; i != search_results_.size(); ++i)
-        for(uint j = 0; j != search_results_[i].size(); ++j)
-            for(uint l = 0; l != (search_results_[i])[j].size(); ++l)
-            {
-                ++count;
-
-                LinkStatus* ls = search_results_[i][j][l];
-                Q_ASSERT(ls);
-                if(ls->absoluteUrl().url() == s_url && ls->checked())
-                    return ls;
-
-                if(count == 50)
-                {
-                    count = 0;
-                    // this function is only called in LinkChecker::checkRef...
-//                     kapp->processEvents();
-                }
-
-            }
-
-    return 0;
+    return search_results_hash_.value(KUrl(s_url), 0);
 }
 
 void SearchManager::startSearch()
@@ -510,7 +495,14 @@ void SearchManager::checkLinksSimultaneously(vector<LinkStatus*> const& links)
     }
 }
 
-void SearchManager::slotLinkChecked(LinkStatus* link, LinkChecker * checker)
+void SearchManager::linkRedirectionChecked(LinkStatus* link)
+{
+    emit signalLinkChecked(link);
+    if(link->isRedirection() && link->redirection())
+        linkRedirectionChecked(link->redirection());
+}
+
+void SearchManager::slotLinkChecked(LinkStatus* link, LinkChecker* checker)
 {
     kDebug(23100) <<  "SearchManager::slotLinkChecked: " << checked_links_ << endl;
 //     kDebug(23100) <<  link->absoluteUrl().url() << " -> " << 
@@ -521,7 +513,10 @@ void SearchManager::slotLinkChecked(LinkStatus* link, LinkChecker * checker)
     if(KLSConfig::showMarkupStatus() && link->isHtmlDocument())
       LinkStatusHelper::validateMarkup(link);
 
-    emit signalLinkChecked(link, checker);
+    emit signalLinkChecked(link);
+    if(link->isRedirection() && link->redirection())
+        linkRedirectionChecked(link->redirection());
+    
     ++checked_links_;
     ++finished_connections_;
     --links_being_checked_;
@@ -647,90 +642,7 @@ bool SearchManager::checkableByDomain(KUrl const& url, LinkStatus const& link_pa
     */
     return result;
 }
-/*
-bool SearchManager::localDomain(KUrl const& url) const
-    {
-    KUrl url_root = root_.absoluteUrl();
- 
-    if(url_root.protocol() != url.protocol())
-        return false;
- 
-    if(url_root.hasHost())
-    {
-        if(generalDomain())
-        {
-            return equalHost(domain_, url.host());
-        }
-        else
-        {
-            vector<QString> referencia = tokenizeWordsSeparatedBy(domain_, QChar('/'));
-            vector<QString> a_comparar = tokenizeWordsSeparatedBy(url.host() + url.directory(), QChar('/'));
- 
-            if(a_comparar.size() < referencia.size())
-                return false;
-            else
-            {
-                for(uint i = 0; i != referencia.size(); ++i)
-                {
-                    if(i == 0)
-                    { // host, deal with specific function
-                        if(!equalHost(referencia[i], a_comparar[i], !check_parent_dirs_))
-                            return false;
-                    }
-                    else if(referencia[i] != a_comparar[i])
-                        return false;
-                }
-            }
-            return true;
-        }
-    }
-    else if(checkParentDirs())
-        return true;
-    else
-        return url_root.isParentOf(url);
-    }
-*/
 
-/**
-    The same as SearchManager::localDomain(), but only for http or https.
-    http://linkstatus.paradigma.co.pt != http://paradigma.co.pt
-*/
-/*
-bool SearchManager::isLocalRestrict(KUrl const& url) const
-    {
-    Q_ASSERT(url.protocol() == "http" || url.protocol() == "https");
- 
-    KUrl url_root = root_.absoluteUrl();
- 
-    if(url_root.protocol() != url.protocol())
-        return false;
- 
-    if(url_root.hasHost())
-    {
-        vector<QString> referencia = tokenizeWordsSeparatedBy(domain_, QChar('/'));
-        vector<QString> a_comparar = tokenizeWordsSeparatedBy(url.host() + url.directory(), QChar('/'));
- 
-        if(a_comparar.size() < referencia.size())
-            return false;
-        else
-        {
-            for(uint i = 0; i != referencia.size(); ++i)
-            {
-                if(i == 0)
-                { // host, deal with specific function
-                    if(!equalHost(referencia[i], a_comparar[i], true))
-                        return false;
-                }
-                else if(referencia[i] != a_comparar[i])
-                    return false;
-            }
-        }
-        return true;
-    }
-    else
-        return false;
-    }
-*/
 bool SearchManager::generalDomain() const
 {
     if(checked_general_domain_)

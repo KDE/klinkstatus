@@ -40,7 +40,6 @@ Node::LinkType resolveLinkType(QString const& url);
 KUrl normalizeUrl(QString const& string_url, LinkStatus const& link_parent, QString const& document_root);
 KUrl normalizeUrl(QString const& string_url);
 bool validUrl(KUrl const& url);
-bool existUrl(KUrl const& url, vector<LinkStatus*> const& v);
 bool equalHost(QString const& host1, QString const& host2, bool restrict = false);
 bool hasProtocol(QString const& url);
 QString convertToLocal(LinkStatus const* ls);

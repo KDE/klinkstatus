@@ -28,7 +28,7 @@
 #include <QString>
 #include <QDateTime>
 #include <QRegExp>
-#include <qmap.h>
+#include <QHash>
 class QDomElement;
 
 #include <vector>
@@ -43,7 +43,7 @@ using namespace std;
 using namespace ThreadWeaver;
 
 
-typedef QMap<QString, KHTMLPart*> KHTMLPartMap;
+typedef QHash<QString, KHTMLPart*> KHTMLPartMap;
 
 class SearchManager: public QObject
 {
@@ -130,6 +130,7 @@ private:
     bool checkable(KUrl const& url, LinkStatus const& link_parent) const;
     int maximumCurrentConnections() const;
     bool onlyCheckHeader(LinkStatus* ls) const;
+    void linkRedirectionChecked(LinkStatus* link);
 
     /*
       Entende-se por domain vago um domain do tipo www.google.pt ou google.pt, pelo que,
@@ -149,8 +150,8 @@ private slots:
 
 signals:
 
-    void signalRootChecked(const LinkStatus * link, LinkChecker * checker);
-    void signalLinkChecked(const LinkStatus * link, LinkChecker * checker);
+    void signalRootChecked(LinkStatus const* link);
+    void signalLinkChecked(LinkStatus const* link);
     void signalSearchFinished();
     void signalSearchPaused();
     void signalAddingLevelTotalSteps(uint number_of_links);
@@ -192,6 +193,7 @@ private:
     uint number_of_current_level_links_;
     uint number_of_new_links_to_check_;
     vector< vector< vector <LinkStatus*> > > search_results_;
+    QHash<KUrl, LinkStatus*> search_results_hash_;
     KHTMLPartMap html_parts_;
 
     // thread stuff

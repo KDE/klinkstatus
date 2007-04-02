@@ -27,7 +27,6 @@
 class SearchManager;
 class TableItem;
 class ActionManager;
-class LinkMatcher;
 
 #include <QKeyEvent>
 #include <QTimer>
@@ -38,8 +37,6 @@ class QTreeWidgetItem;
 class KUrl;
 class KConfig;
 class KToggleAction;
-
-#include <vector>
 
 using namespace std;
 
@@ -100,8 +97,8 @@ private slots:
 
     void slotSearchStarted();
     void slotEnableCheckButton(const QString &);
-    void slotRootChecked(LinkStatus const* linkstatus, LinkChecker * anal);
-    void slotLinkChecked(LinkStatus const* linkstatus, LinkChecker * anal);
+    void slotRootChecked(LinkStatus const* linkstatus);
+    void slotLinkChecked(LinkStatus const* linkstatus);
     void slotSearchFinished();
     void slotSearchPaused();
     void slotSetTimeElapsed();
