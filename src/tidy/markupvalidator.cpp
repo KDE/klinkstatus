@@ -71,7 +71,7 @@ void MarkupValidator::validate(bool superficial)
     setErrorBuffer(errorBuffer);
         
     // FIXME encoding!
-    ParseString(markup_.ascii());
+    ParseString(markup_.toAscii());
     CleanAndRepair();
     RunDiagnostics();
     

@@ -285,30 +285,30 @@ void TableLinkstatus::loadContextTableMenu(Q3ValueVector<KUrl> const& referrers,
         }
         connect(sub_menu_, SIGNAL(activated(int)), this, SLOT(slotEditReferrer(int)));
 
-        context_table_menu_.insertItem(SmallIconSet("document-open"), i18n("Edit Referrer"),
+        context_table_menu_.insertItem(KIcon("document-open"), i18n("Edit Referrer"),
                                        sub_menu_);
     }
     else
     {
-        int id = context_table_menu_.insertItem(SmallIconSet("document-open"), i18n("Edit Referrer"));
+        int id = context_table_menu_.insertItem(KIcon("document-open"), i18n("Edit Referrer"));
         context_table_menu_.setItemEnabled(id, false);
     }
 
-    context_table_menu_.insertItem(SmallIconSet("document-open"), i18n("Open URL"),
+    context_table_menu_.insertItem(KIcon("document-open"), i18n("Open URL"),
                                    this, SLOT(slotViewUrlInBrowser()));
 
-    context_table_menu_.insertItem(SmallIconSet("document-open"), i18n("Open Referrer URL"),
+    context_table_menu_.insertItem(KIcon("document-open"), i18n("Open Referrer URL"),
                                    this, SLOT(slotViewParentUrlInBrowser()));
 
     context_table_menu_.insertSeparator();
 
-    context_table_menu_.insertItem(SmallIconSet("edit-copy"), i18n("Copy URL"),
+    context_table_menu_.insertItem(KIcon("edit-copy"), i18n("Copy URL"),
                                    this, SLOT(slotCopyUrlToClipboard()));
 
-    context_table_menu_.insertItem(SmallIconSet("edit-copy"), i18n("Copy Referrer URL"),
+    context_table_menu_.insertItem(KIcon("edit-copy"), i18n("Copy Referrer URL"),
                                    this, SLOT(slotCopyParentUrlToClipboard()));
 
-    context_table_menu_.insertItem(SmallIconSet("edit-copy"), i18n("Copy Cell Text"),
+    context_table_menu_.insertItem(KIcon("edit-copy"), i18n("Copy Cell Text"),
                                    this, SLOT(slotCopyCellTextToClipboard()));
 }
 

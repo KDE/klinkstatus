@@ -26,6 +26,7 @@
 #include <klocale.h>
 #include <kstandarddirs.h>
 #include <kdebug.h>
+#include <KIcon>
 
 #include <QApplication>
 #include <q3hbox.h>
@@ -67,7 +68,7 @@ ResultsSearchBar::ResultsSearchBar(QWidget* parent)
     d->layout->setSpacing(5);
     
     QToolButton* clearButton = new QToolButton(this);
-    clearButton->setIcon(SmallIconSet(QApplication::layoutDirection() == Qt::RightToLeft ?
+    clearButton->setIcon(KIcon(QApplication::layoutDirection() == Qt::RightToLeft ?
         "locationbar-erase" : "locationbar-erase"));
     clearButton->setAutoRaise(true);
     d->layout->addWidget(clearButton);

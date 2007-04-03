@@ -55,7 +55,7 @@ TabWidgetSession::TabWidgetSession(QWidget* parent, Qt::WFlags f)
     QToolButton* tabs_new = new QToolButton(this);
     tabs_new->setShortcut(QKeySequence("Ctrl+N"));
     connect(tabs_new, SIGNAL(clicked()), this, SLOT(slotNewSession()));
-    tabs_new->setIcon(SmallIconSet("tab-new"));
+    tabs_new->setIcon(KIcon("tab-new"));
     tabs_new->adjustSize();
     tabs_new->setToolTip(i18n("Open new tab"));
     setCornerWidget(tabs_new, Qt::TopLeftCorner);
@@ -63,7 +63,7 @@ TabWidgetSession::TabWidgetSession(QWidget* parent, Qt::WFlags f)
     tabs_close_ = new QToolButton(this);
     tabs_close_->setShortcut(QKeySequence("Ctrl+W"));
     connect(tabs_close_, SIGNAL(clicked()), this, SLOT(closeSession()));
-    tabs_close_->setIcon(SmallIconSet("tab-remove"));
+    tabs_close_->setIcon(KIcon("tab-remove"));
     tabs_close_->adjustSize();
     tabs_close_->setToolTip(i18n("Close the current tab"));
     setCornerWidget(tabs_close_, Qt::TopRightCorner);

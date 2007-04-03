@@ -286,7 +286,7 @@ void TreeView::loadContextTableMenu(QSet<KUrl> const& referrers, bool is_root)
     
     delete(sub_menu_);
 
-    sub_menu_ = context_table_menu_.addMenu(SmallIconSet("edit"), i18n("Edit Referrer"));
+    sub_menu_ = context_table_menu_.addMenu(KIcon("edit"), i18n("Edit Referrer"));
 
     if(!is_root)
     {
@@ -301,23 +301,23 @@ void TreeView::loadContextTableMenu(QSet<KUrl> const& referrers, bool is_root)
     }
     else
     {
-        QMenu* sub_menu = context_table_menu_.addMenu(SmallIconSet("document-open"), i18n("Edit Referrer"));
+        QMenu* sub_menu = context_table_menu_.addMenu(KIcon("document-open"), i18n("Edit Referrer"));
         sub_menu->setEnabled(false);
     }
     context_table_menu_.addSeparator();
 
-    context_table_menu_.addAction(SmallIconSet("document-open"), i18n("Open URL"),
+    context_table_menu_.addAction(KIcon("document-open"), i18n("Open URL"),
                                   this, SLOT(slotViewUrlInBrowser()));
-    context_table_menu_.addAction(/*SmallIconSet("document-open"), */i18n("Open Referrer URL"),
+    context_table_menu_.addAction(/*KIcon("document-open"), */i18n("Open Referrer URL"),
                                   this, SLOT(slotViewParentUrlInBrowser()));
 
     context_table_menu_.addSeparator();
 
-    context_table_menu_.addAction(SmallIconSet("edit-copy"), i18n("Copy URL"),
+    context_table_menu_.addAction(KIcon("edit-copy"), i18n("Copy URL"),
                                   this, SLOT(slotCopyUrlToClipboard()));
-    context_table_menu_.addAction(/*SmallIconSet("edit-copy"), */i18n("Copy Referrer URL"),
+    context_table_menu_.addAction(/*KIcon("edit-copy"), */i18n("Copy Referrer URL"),
                                   this, SLOT(slotCopyParentUrlToClipboard()));
-    context_table_menu_.addAction(/*SmallIconSet("edit-copy"), */i18n("Copy Cell Text"),
+    context_table_menu_.addAction(/*KIcon("edit-copy"), */i18n("Copy Cell Text"),
                                   this, SLOT(slotCopyCellTextToClipboard()));
 }
 
