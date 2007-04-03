@@ -93,12 +93,14 @@ private slots:
 
     virtual void slotCheck();
     virtual void slotCancel() {} // FIXME hack
+    void slotUrlRecheck(KUrl const&);
     //virtual void slotSuggestDomain(bool toogle);
 
     void slotSearchStarted();
     void slotEnableCheckButton(const QString &);
     void slotRootChecked(LinkStatus const* linkstatus);
     void slotLinkChecked(LinkStatus const* linkstatus);
+    void slotLinkRechecked(LinkStatus const* linkstatus);
     void slotSearchFinished();
     void slotSearchPaused();
     void slotSetTimeElapsed();

@@ -198,10 +198,8 @@ inline void LinkStatus::addReferrer(KUrl const& url)
 {
     Q_ASSERT(url.isValid());
 
-    referrers_.push_back(url);
+    referrers_.insert(url);
 }
-
-
 
 
 inline KUrl const& LinkStatus::rootUrl() const
@@ -378,7 +376,7 @@ inline TreeViewItem* LinkStatus::treeViewItem() const
     return tree_view_item_;
 }
 
-inline Q3ValueList<KUrl> const& LinkStatus::referrers() const
+inline QSet<KUrl> const& LinkStatus::referrers() const
 {
     return referrers_;
 }

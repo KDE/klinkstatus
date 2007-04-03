@@ -190,7 +190,7 @@ void TreeView::slotPopupContextMenu(QTreeWidgetItem* item, QPoint const& point)
     TreeViewItem* tree_item = myItem(item);
     if(tree_item)
     {
-        Q3ValueList<KUrl> referrers = tree_item->linkStatus()->referrers();
+        QSet<KUrl> const& referrers = tree_item->linkStatus()->referrers();
         loadContextTableMenu(referrers, tree_item->linkStatus()->isRoot());
         context_table_menu_.popup(viewport()->mapToGlobal(point));
     }
@@ -228,10 +228,10 @@ void TreeView::slotEditReferrers()
 {
     TreeViewItem* _item = myItem(currentItem());
     if(!_item) return;
-    Q3ValueList<KUrl> referrers = _item->linkStatus()->referrers();
+    QSet<KUrl> const& referrers = _item->linkStatus()->referrers();
 
-    for(int i = 0; i != referrers.size(); ++i) {
-        (void) KRun::runUrl(referrers[i], QString("text/plain"), 0, false);
+    foreach(KUrl url, referrers) {
+        (void) KRun::runUrl(url, QString("text/plain"), 0, false);
     }
 }
 
@@ -276,9 +276,14 @@ void TreeView::slotViewParentUrlInBrowser()
     }
 }
 
-void TreeView::loadContextTableMenu(Q3ValueList<KUrl> const& referrers, bool is_root)
+void TreeView::loadContextTableMenu(QSet<KUrl> const& referrers, bool is_root)
 {
     context_table_menu_.clear();
+
+    context_table_menu_.addAction(KIcon("view-refresh"), i18n("Recheck"),
+                                  this, SLOT(slotRecheckUrl()));
+    context_table_menu_.addSeparator();
+    
     delete(sub_menu_);
 
     sub_menu_ = context_table_menu_.addMenu(SmallIconSet("edit"), i18n("Edit Referrer"));
@@ -288,9 +293,9 @@ void TreeView::loadContextTableMenu(Q3ValueList<KUrl> const& referrers, bool is_
         sub_menu_->addAction(i18n("All"), this, SLOT(slotEditReferrers()));
         sub_menu_->addSeparator();
 
-        for(int i = 0; i != referrers.size(); ++i)
+        foreach(KUrl url, referrers)
         {
-            sub_menu_->addAction(referrers[i].prettyUrl());
+            sub_menu_->addAction(url.prettyUrl());
         }
         connect(sub_menu_, SIGNAL(triggered(QAction*)), this, SLOT(slotEditReferrer(QAction*)));
     }
@@ -314,6 +319,15 @@ void TreeView::loadContextTableMenu(Q3ValueList<KUrl> const& referrers, bool is_
                                   this, SLOT(slotCopyParentUrlToClipboard()));
     context_table_menu_.addAction(/*SmallIconSet("edit-copy"), */i18n("Copy Cell Text"),
                                   this, SLOT(slotCopyCellTextToClipboard()));
+}
+
+void TreeView::slotRecheckUrl()
+{
+    TreeViewItem* item = myItem(currentItem());
+    if(!item)
+        return;
+    
+    emit signalUrlRecheck(item->linkStatus()->absoluteUrl());
 }
 
 TreeViewItem* TreeView::myItem(QTreeWidgetItem* item) const
@@ -390,6 +404,12 @@ void TreeViewItem::init(LinkStatus const* linkstatus)
     }
 }
 
+void TreeViewItem::refresh(LinkStatus const* linkstatus)
+{
+    column_items_.clear();
+    init(linkstatus);
+}
+
 void TreeViewItem::setLastChild(QTreeWidgetItem* last_child)
 {
     Q_ASSERT(last_child);
@@ -417,21 +437,6 @@ LinkStatus const* TreeViewItem::linkStatus() const
 {
     return column_items_[0].linkStatus();
 }
-/*
-void TreeViewItem::paintCell(QPainter * p, const QColorGroup & cg, int column, int width, int align)
-{
-    TreeColumnViewItem item = column_items_[column];
-
-    // Get a color to draw the text
-    QColorGroup m_cg(cg);
-    QColor color(item.textStatusColor());
-    m_cg.setColor(QPalette::Text, color);
-
-    QTreeWidgetItem::paintCell(p, m_cg, column, width, align);
-
-    setHeight(22);
-}
-*/
 
 /* ******************************* TreeColumnViewItem ******************************* */
 

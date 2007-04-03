@@ -66,8 +66,6 @@ Global::Global(QObject *parent)
 
 Global::~Global()
 {
-    delete m_statusBarExtension;
-    
     if(m_self_ == this)
         staticDeleter.setObject(m_self_, 0, false);
 }

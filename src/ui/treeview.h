@@ -55,7 +55,10 @@ public:
     virtual bool isEmpty() const;
 
     TreeViewItem* myItem(QTreeWidgetItem* item) const;
-      
+
+signals:
+    void signalUrlRecheck(KUrl const&);
+  
 protected:
     virtual void resizeEvent(QResizeEvent *e);
 
@@ -71,7 +74,8 @@ private slots:
     virtual void slotEditReferrer(QAction* action);
     virtual void slotViewUrlInBrowser();
     virtual void slotViewParentUrlInBrowser();
-    virtual void loadContextTableMenu(Q3ValueList<KUrl> const& referrers, bool is_root = false);
+    virtual void loadContextTableMenu(QSet<KUrl> const& referrers, bool is_root = false);
+    virtual void slotRecheckUrl();
 
 private:
     void resetColumns();
@@ -103,6 +107,8 @@ public:
     TreeViewItem(TreeView* root, QTreeWidgetItem* parent_item, QTreeWidgetItem* after,
                  LinkStatus const* linkstatus);
     virtual ~TreeViewItem();
+
+    void refresh(LinkStatus const*);
 
     void setLastChild(QTreeWidgetItem* last_child);
     QTreeWidgetItem* lastChild() const;

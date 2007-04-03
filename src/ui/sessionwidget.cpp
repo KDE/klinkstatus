@@ -118,6 +118,9 @@ void SessionWidget::init()
 
     start_search_action_ = static_cast<KToggleAction*> (action_manager_->action("start_search"));
 
+    connect(tree_view, SIGNAL(signalUrlRecheck(KUrl const&)),
+            this, SLOT(slotUrlRecheck(KUrl const&)));
+    
     connect(resultsSearchBar, SIGNAL(signalSearch(LinkMatcher)),
             this, SLOT(slotApplyFilter(LinkMatcher)));
 
@@ -176,6 +179,8 @@ void SessionWidget::newSearchManager()
             this, SLOT(slotAddingLevelProgress()));
     connect(search_manager_, SIGNAL(signalLinksToCheckTotalSteps(uint)),
             this, SLOT(slotLinksToCheckTotalSteps(uint)));
+    connect(search_manager_, SIGNAL(signalLinkRechecked(LinkStatus const*)),
+            this, SLOT(slotLinkRechecked(LinkStatus const*)));
 }
 
 void SessionWidget::setColumns(QStringList const& colunas)
@@ -734,6 +739,16 @@ void SessionWidget::slotSearchStarted()
     elapsed_time_timer_.start();
 
     Global::self()->setStatusBarText(i18n("Checking") + " " + combobox_url->currentText(), false);
+}
+
+void SessionWidget::slotUrlRecheck(KUrl const& url)
+{
+    search_manager_->recheckLink(url);
+}
+
+void SessionWidget::slotLinkRechecked(LinkStatus const* ls)
+{
+    ls->treeViewItem()->refresh(ls);
 }
 
 #include "sessionwidget.moc"

@@ -34,7 +34,7 @@ LinkStatus::LinkStatus()
         only_check_header_(true), malformed_(false),
         node_(0), has_base_URI_(false), has_html_doc_title_(false), ignored_(false),
         mimetype_(""), is_error_page_(false), tree_view_item_(0), 
-        tidy_info_(new TidyInfo)
+        tidy_info_()
 {
 }
 
@@ -44,7 +44,7 @@ LinkStatus::LinkStatus(KUrl const& absolute_url)
         only_check_header_(true), malformed_(false),
         node_(0), has_base_URI_(false), has_html_doc_title_(false), ignored_(false),
         mimetype_(""), is_error_page_(false), tree_view_item_(0), 
-        tidy_info_(new TidyInfo)
+        tidy_info_()
 {
     setAbsoluteUrl(absolute_url);
 }
@@ -55,7 +55,7 @@ LinkStatus::LinkStatus(Node* node, LinkStatus* parent)
         only_check_header_(true), malformed_(false),
         node_(node), has_base_URI_(false), has_html_doc_title_(false), ignored_(false),
         mimetype_(""), is_error_page_(false), tree_view_item_(0), 
-        tidy_info_(new TidyInfo)
+        tidy_info_()
 {
     loadNode();
 
@@ -66,8 +66,6 @@ LinkStatus::LinkStatus(Node* node, LinkStatus* parent)
 
 LinkStatus::~LinkStatus()
 {
-    //kDebug(23100) <<  "|";
-
     for(uint i = 0; i != children_nodes_.size(); ++i)
     {
         if(children_nodes_[i])
@@ -87,9 +85,6 @@ LinkStatus::~LinkStatus()
             redirection_ = 0;
         }
     }
-
-    delete tidy_info_;
-    tidy_info_ = 0;
 }
 
 void LinkStatus::loadNode()
@@ -146,7 +141,7 @@ bool LinkStatus::hasHtmlErrors() const
   if(!isHtmlDocument())
     return false;
     
-  return tidy_info_->has_errors;
+  return tidy_info_.has_errors;
 }
 
 bool LinkStatus::hasHtmlWarnings() const
@@ -154,5 +149,5 @@ bool LinkStatus::hasHtmlWarnings() const
   if(!isHtmlDocument())
     return false;
     
-  return tidy_info_->has_warnings;
+  return tidy_info_.has_warnings;
 }

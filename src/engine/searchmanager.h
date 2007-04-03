@@ -62,14 +62,16 @@ public:
     SearchManager(int max_simultaneous_connections = 3, int time_out = 50,
                   QObject *parent = 0);
     ~SearchManager();
-    
+
+    /** Returns the the results in XML format */
     QString toXML() const;
-    void save(QDomElement& element) const;
 
     void startSearch(KUrl const& root);
     void startSearch(KUrl const& root, SearchMode const& mode);
     void resume();
     void cancelSearch();
+
+    void recheckLink(KUrl const& url);
 
     bool hasDocumentRoot() const;
     KUrl const& documentRoot() const;
@@ -87,34 +89,53 @@ public:
     void setRegularExpression(QString const& reg_exp, bool case_sensitive);
     void setTimeOut(int time_out);
 
-    void cleanItems();
-    void reset();
-
     bool searching() const;
     bool localDomain(KUrl const& url, bool restrict = true) const;
     //bool isLocalRestrict(KUrl const& url) const;
-    SearchMode const& searchMode() const;
-    bool checkRegularExpressions() const { return check_regular_expressions_; }
     bool existUrl(KUrl const& url, KUrl const& url_parent) const;
     LinkStatus const* linkStatus(QString const& s_url) const;
-    int checkedLinks() const;
-    bool checkParentDirs() const;
-    bool checkExternalLinks() const;
     LinkStatus const* linkStatusRoot() const;
-    int maxSimultaneousConnections() const;
-    int timeOut() const;
-    
+
     bool sendIdentification() const { return send_identification_; }
     QString const& userAgent() const { return user_agent_; }
 
-    KHTMLPartMap const& htmlParts() const { return html_parts_; }
-
     KHTMLPart* htmlPart(QString const& key_url) const;
     void addHtmlPart(QString const& key_url, KHTMLPart* html_part);
-    void removeHtmlParts();
+
+
+signals:
+
+    void signalRootChecked(LinkStatus const* link);
+    void signalLinkChecked(LinkStatus const* link);
+    void signalLinkRechecked(LinkStatus const* link);
+    void signalSearchFinished();
+    void signalSearchPaused();
+    void signalAddingLevelTotalSteps(uint number_of_links);
+    void signalAddingLevelProgress();
+    void signalLinksToCheckTotalSteps(uint links_to_check);
+
+private slots:
+
+    void slotRootChecked(LinkStatus* link, LinkChecker* checker);
+    void slotLinkChecked(LinkStatus* link, LinkChecker* checker);
+    void slotLinkRechecked(LinkStatus* link, LinkChecker* checker);
+    void slotSearchFinished();
+    void slotLevelAdded();
+    void slotJobDone(Job*);
 
 private:
 
+    void save(QDomElement& element) const;
+    void cleanItems();
+    void reset();
+    SearchMode const& searchMode() const;
+    bool checkRegularExpressions() const { return check_regular_expressions_; }
+    int checkedLinks() const;
+    bool checkParentDirs() const;
+    bool checkExternalLinks() const;
+    int maxSimultaneousConnections() const;
+    int timeOut() const;
+    void removeHtmlParts();
     void checkRoot();
     void checkVectorLinks(vector<LinkStatus*> const& links); // corresponde a um no de um nivel de depth
     void fillWithChildren(LinkStatus* link, vector<LinkStatus*>& children);
@@ -139,25 +160,6 @@ private:
     */
     bool generalDomain() const;
     bool generalDomainChecked() const; // Para garantir que o procedimento generalDomain() so e chamado uma vez
-
-private slots:
-
-    void slotRootChecked(LinkStatus* link, LinkChecker* checker);
-    void slotLinkChecked(LinkStatus* link, LinkChecker* checker);
-    void slotSearchFinished();
-    void slotLevelAdded();
-    void slotJobDone(Job*);
-
-signals:
-
-    void signalRootChecked(LinkStatus const* link);
-    void signalLinkChecked(LinkStatus const* link);
-    void signalSearchFinished();
-    void signalSearchPaused();
-    void signalAddingLevelTotalSteps(uint number_of_links);
-    void signalAddingLevelProgress();
-    void signalLinksToCheckTotalSteps(uint links_to_check);
-    //void signalLinksToCheckProgress();
 
 private:
 

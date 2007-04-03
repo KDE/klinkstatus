@@ -251,8 +251,7 @@ void SearchManager::slotRootChecked(LinkStatus* link, LinkChecker* checker)
         finnish();
     }
 
-    delete checker;
-    checker = 0;
+    checker->deleteLater();
 }
 
 void SearchManager::fillWithChildren(LinkStatus* link, vector<LinkStatus*>& children)
@@ -328,14 +327,8 @@ bool SearchManager::existUrl(KUrl const& url, KUrl const& url_parent) const
     LinkStatus* ls = search_results_hash_.value(url, 0);
     if(ls) {      
         // Add new referrer
-        Q3ValueList<KUrl> const& referrers(ls->referrers());
-
-        for(int i = 0; i != referrers.size(); ++i)
-        {
-            if(referrers[i] == url_parent)
-                return true;
-        }
-        ls->addReferrer(url_parent);
+        if(!ls->referrers().contains(url_parent))
+            ls->addReferrer(url_parent);
 
         return true;
     }
@@ -495,6 +488,22 @@ void SearchManager::checkLinksSimultaneously(vector<LinkStatus*> const& links)
     }
 }
 
+void SearchManager::recheckLink(KUrl const& url)
+{
+    LinkStatus* ls = search_results_hash_.value(url, 0);
+    Q_ASSERT(ls);
+
+    LinkStatusHelper::resetResults(ls);
+    
+    LinkChecker* checker = new LinkChecker(ls, time_out_, this);
+    checker->setSearchManager(this);
+
+    connect(checker, SIGNAL(transactionFinished(LinkStatus*, LinkChecker*)),
+            this, SLOT(slotLinkRechecked(LinkStatus*, LinkChecker*)));
+
+    checker->check();
+}
+
 void SearchManager::linkRedirectionChecked(LinkStatus* link)
 {
     emit signalLinkChecked(link);
@@ -535,11 +544,23 @@ void SearchManager::slotLinkChecked(LinkStatus* link, LinkChecker* checker)
         continueSearch();
         return;
     }
-    // FIXME
-    /*
-            delete checker;
-            checker = 0;
-    */
+    checker->deleteLater();
+}
+
+void SearchManager::slotLinkRechecked(LinkStatus* link, LinkChecker* checker)
+{
+    kDebug(23100) <<  "SearchManager::slotLinkRechecked" << endl;
+//     kDebug(23100) <<  link->absoluteUrl().url() << " -> " << 
+//             LinkStatus::lastRedirection((const_cast<LinkStatus*> (link)))->absoluteUrl().url() << endl;
+
+    Q_ASSERT(link);
+
+    if(KLSConfig::showMarkupStatus() && link->isHtmlDocument())
+      LinkStatusHelper::validateMarkup(link);
+
+    emit signalLinkRechecked(link);
+      
+    checker->deleteLater();
 }
 
 void SearchManager::addLevel()
@@ -588,7 +609,6 @@ void SearchManager::addLevel()
             }
 
             emit signalAddingLevelProgress();
-//             kapp->processEvents();
         }
     }
     if(new_level.size() == 0)

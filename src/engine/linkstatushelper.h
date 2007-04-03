@@ -45,6 +45,7 @@ public:
     };
 
     static void reset(LinkStatus* ls);
+    static void resetResults(LinkStatus* ls);
     static QString const toString(LinkStatus const* linkstatus);
 
     static void save(LinkStatus const* linkstatus, QDomElement& element);
@@ -57,7 +58,7 @@ public:
     static bool isMalformed(LinkStatus const* linkstatus);
     static bool isUndetermined(LinkStatus const* linkstatus);
 
-    static void validateMarkup(LinkStatus const* linkstatus);
+    static void validateMarkup(LinkStatus* linkstatus);
 
 private:
     LinkStatusHelper();

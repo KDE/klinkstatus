@@ -23,6 +23,7 @@
 #include <kcharsets.h>
 
 #include <qdom.h>
+#include <QSet>
 
 
 void LinkStatusHelper::reset(LinkStatus* ls)
@@ -66,6 +67,20 @@ void LinkStatusHelper::reset(LinkStatus* ls)
     ls->base_URI_ = "";
 }
 
+/**
+* Only reset the results not the initialization (absolute URL, etc)
+*/
+void LinkStatusHelper::resetResults(LinkStatus* ls)
+{
+    ls->error_occurred_ = false;
+    ls->is_redirection_ = false;
+    ls->checked_ = false;
+    ls->only_check_header_ = true;
+    ls->malformed_ = false;
+    ls->http_header_ = HttpResponseHeader();
+    ls->error_ = "";
+}
+
 void LinkStatusHelper::save(LinkStatus const* linkstatus, QDomElement& element)
 {
     QDomElement child_element = element.ownerDocument().createElement("link");
@@ -89,11 +104,11 @@ void LinkStatusHelper::save(LinkStatus const* linkstatus, QDomElement& element)
     // <referrers>
     tmp_1 = element.ownerDocument().createElement("referrers");
     
-    Q3ValueList<KUrl> referrers = linkstatus->referrers();
-    for(Q3ValueList<KUrl>::const_iterator it = referrers.begin(); it != referrers.end(); ++it)
+    QSet<KUrl> referrers = linkstatus->referrers();
+    foreach(KUrl url, referrers)
     {
         QDomElement tmp_2 = element.ownerDocument().createElement("url");
-        tmp_2.appendChild(element.ownerDocument().createTextNode(it->prettyUrl()));
+        tmp_2.appendChild(element.ownerDocument().createTextNode(url.prettyUrl()));
     
         tmp_1.appendChild(tmp_2);
     }
@@ -182,12 +197,12 @@ QString const LinkStatusHelper::toString(LinkStatus const* linkstatus)
     return aux;
 }
 
-void LinkStatusHelper::validateMarkup(LinkStatus const* linkstatus)
+void LinkStatusHelper::validateMarkup(LinkStatus* linkstatus)
 {
     Tidy::MarkupValidator markup_validator(linkstatus->absoluteUrl(), linkstatus->docHtml());
     markup_validator.validate();
     
-    linkstatus->tidy_info_->has_errors = markup_validator.hasErrors();
-    linkstatus->tidy_info_->has_warnings = markup_validator.hasWarnings();
+    (linkstatus->tidy_info_).has_errors = markup_validator.hasErrors();
+    (linkstatus->tidy_info_).has_warnings = markup_validator.hasWarnings();
 //     tidy_messages_ = markup_validator.messages();
 }

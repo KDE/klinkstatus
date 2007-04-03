@@ -32,7 +32,9 @@ using namespace std;
 
 typedef unsigned int uint;
 
-
+/**
+ * Represents a tag. Sorry for the bad choosen name.
+ */
 class Node
 {
 public:

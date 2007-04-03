@@ -65,7 +65,7 @@ public:
 protected:
     //virtual bool textFitsInCell(int row, int col) const = 0;
     virtual bool isEmpty() const = 0;
-    virtual void loadContextTableMenu(Q3ValueList<KUrl> const& referrers, bool is_root = false) = 0;
+    virtual void loadContextTableMenu(QSet<KUrl> const& referrers, bool is_root = false) = 0;
 
 protected slots:
 
@@ -77,6 +77,7 @@ protected slots:
     virtual void slotEditReferrer(QAction* action) = 0;
     virtual void slotViewUrlInBrowser() = 0;
     virtual void slotViewParentUrlInBrowser() = 0;
+    virtual void slotRecheckUrl() = 0;
 
 protected:
     QStringList columns_;

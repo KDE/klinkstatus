@@ -27,16 +27,17 @@ class TreeView;
 class TreeViewItem;
 
 #include <QString>
-#include <q3valuelist.h>
+#include <QSet>
 class QDomElement;
 
 #include <vector>
 #include <iostream>
 
 #include "parser/http.h"
-#include "utils/mvector.h"
 #include "tidy/markupvalidator.h"
 class Node;
+
+using namespace std;
 
 class LinkStatus
 {
@@ -128,7 +129,7 @@ public:
     QString mimeType() const;
     bool isErrorPage() const;
     TreeViewItem* treeViewItem() const;
-    Q3ValueList<KUrl> const& referrers() const;
+    QSet<KUrl> const& referrers() const;
     bool isHtmlDocument() const { return !doc_html_.isEmpty(); }
     bool hasHtmlErrors() const;
     bool hasHtmlWarnings() const;
@@ -162,6 +163,7 @@ private:
     bool checked_;
     bool only_check_header_;
     bool malformed_;
+    // this is a strange name for the content of the tag
     Node* node_;
     bool has_base_URI_;
     bool has_html_doc_title_;
@@ -172,7 +174,7 @@ private:
     bool is_error_page_;
     bool is_local_restrict_;
     TreeViewItem* tree_view_item_;
-    Q3ValueList<KUrl> referrers_;
+    QSet<KUrl> referrers_;
     
     class TidyInfo
     {
@@ -185,7 +187,7 @@ private:
         bool has_errors;
         bool has_warnings;
     };
-    TidyInfo* tidy_info_;
+    TidyInfo tidy_info_;
 };
 
 #include "../parser/url.h"
