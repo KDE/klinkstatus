@@ -94,6 +94,7 @@ public:
     void setIsErrorPage(bool flag);
     void setIsLocalRestrict(bool flag);
     void setTreeViewItem(TreeViewItem* tree_view_item);
+    // If exists, do nothing (QSet)
     void addReferrer(KUrl const& url);
 
     KUrl const& rootUrl() const;

@@ -107,7 +107,7 @@ void LinkStatus::loadNode()
 
 bool LinkStatus::malformed() const // don't inline please (#include "node.h")
 {
-    return (malformed_ || node_->malformed());
+    return (malformed_ || (node_ && node_->malformed()));
 }
 
 void LinkStatus::setChildrenNodes(vector<Node*> const& nodes) // don't inline please (#include "node.h")

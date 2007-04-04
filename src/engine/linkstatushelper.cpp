@@ -43,6 +43,7 @@ void LinkStatusHelper::reset(LinkStatus* ls)
     ls->doc_html_ = "";
     ls->http_header_ = HttpResponseHeader();
     ls->error_ = "";
+    ls->tree_view_item_ = 0;
 
     for(uint i = 0; i != ls->children_nodes_.size(); ++i)
     {

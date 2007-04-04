@@ -270,6 +270,11 @@ void TabWidgetSession::slotStopSearch()
     currentSession()->slotStopSearch();
 }
 
+void TabWidgetSession::slotRecheckVisibleItems()
+{
+    currentSession()->slotRecheckVisibleItems();
+}
+
 void TabWidgetSession::slotExportAsHTML()
 {
     currentSession()->slotExportAsHTML();

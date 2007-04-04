@@ -69,6 +69,8 @@ public slots:
     void slotPauseSearch();
     void slotStopSearch();
 
+    void slotRecheckVisibleItems();
+
     void slotExportAsHTML();
 
     // Tidy all the HTML documents present in the current session

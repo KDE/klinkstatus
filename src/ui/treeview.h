@@ -38,6 +38,8 @@ public:
     TreeView(QWidget *parent = 0);
     ~TreeView();
 
+    QList<LinkStatus*> getVisibleItems() const;
+
     virtual void setColumns(QStringList const& columns);
     virtual void clear();
     void removeColunas();
@@ -53,8 +55,6 @@ public:
      */
     void ensureRowVisible(const QTreeWidgetItem * i, bool tree_display);
     virtual bool isEmpty() const;
-
-    TreeViewItem* myItem(QTreeWidgetItem* item) const;
 
 signals:
     void signalUrlRecheck(KUrl const&);
@@ -84,6 +84,9 @@ private:
     void setItemVisibleRecursively(QTreeWidgetItem* item, LinkMatcher const& link_matcher);
     void setItemVisibleRecursively(QTreeWidgetItem* item, bool hidden);
 
+    static TreeViewItem* myItem(QTreeWidgetItem* item);
+    static void addVisibleItemsRecursively(QList<LinkStatus*>& items, TreeViewItem* item);
+
 private:
     int current_column_; // apparently it's impossible to know what is the current column
     bool tree_display_;
@@ -101,23 +104,23 @@ class TreeViewItem: public QTreeWidgetItem
 {
 public:
 
-    TreeViewItem(TreeView* parent, LinkStatus const* linkstatus);
+    TreeViewItem(TreeView* parent, LinkStatus* linkstatus);
     TreeViewItem(TreeView* parent, QTreeWidgetItem* after,
-                 LinkStatus const* linkstatus);
+                 LinkStatus* linkstatus);
     TreeViewItem(TreeView* root, QTreeWidgetItem* parent_item, QTreeWidgetItem* after,
-                 LinkStatus const* linkstatus);
+                 LinkStatus* linkstatus);
     virtual ~TreeViewItem();
 
-    void refresh(LinkStatus const*);
+    void refresh(LinkStatus*);
 
     void setLastChild(QTreeWidgetItem* last_child);
     QTreeWidgetItem* lastChild() const;
     
     QString key(int column, bool) const;
-    LinkStatus const* linkStatus() const;
+    LinkStatus* linkStatus() const;
 
   private:
-    void init(LinkStatus const* linkstatus);
+    void init(LinkStatus* linkstatus);
 
 private:
     Q3ValueList<TreeColumnViewItem> column_items_;
@@ -134,19 +137,19 @@ public:
     TreeColumnViewItem()
     {}
     ;
-    TreeColumnViewItem(TreeView* root, LinkStatus const* linkstatus, int column_index);
+    TreeColumnViewItem(TreeView* root, LinkStatus* linkstatus, int column_index);
     ~TreeColumnViewItem();
 
     //void setColumnIndex(int i);
     int columnIndex() const;
-    LinkStatus const* linkStatus() const;
+    LinkStatus* linkStatus() const;
     QColor const textStatusColor() const;
     QString text(int column) const;
     QPixmap pixmap(int column) const;
 
 private:
     TreeView* root_;
-    LinkStatus const* ls_;
+    LinkStatus* ls_;
     int column_index_;
 };
 

@@ -59,7 +59,7 @@ public:
         depth_and_domain
     };
 
-    SearchManager(int max_simultaneous_connections = 3, int time_out = 50,
+    SearchManager(int max_simultaneous_connections = 5, int time_out = 50,
                   QObject *parent = 0);
     ~SearchManager();
 
@@ -71,7 +71,8 @@ public:
     void resume();
     void cancelSearch();
 
-    void recheckLink(KUrl const& url);
+    void recheckLink(LinkStatus* linkStatus);
+    void recheckLinks(QList<LinkStatus*> const& linkstatus_list);
 
     bool hasDocumentRoot() const;
     KUrl const& documentRoot() const;
@@ -105,14 +106,15 @@ public:
 
 signals:
 
-    void signalRootChecked(LinkStatus const* link);
-    void signalLinkChecked(LinkStatus const* link);
-    void signalLinkRechecked(LinkStatus const* link);
+    void signalRootChecked(LinkStatus* link);
+    void signalLinkChecked(LinkStatus* link);
+    void signalLinkRechecked(LinkStatus* link);
     void signalSearchFinished();
     void signalSearchPaused();
     void signalAddingLevelTotalSteps(uint number_of_links);
     void signalAddingLevelProgress();
     void signalLinksToCheckTotalSteps(uint links_to_check);
+    void signalRedirection();
 
 private slots:
 
@@ -137,21 +139,26 @@ private:
     int timeOut() const;
     void removeHtmlParts();
     void checkRoot();
-    void checkVectorLinks(vector<LinkStatus*> const& links); // corresponde a um no de um nivel de depth
+    // Used to search a node of a level, but not necesseraly
+    void checkVectorLinks(vector<LinkStatus*> const& links);
+    void checkVectorLinksToRecheck(vector<LinkStatus*> const& links);
     void fillWithChildren(LinkStatus* link, vector<LinkStatus*>& children);
     void startSearch();
     void continueSearch();
+    void continueRecheck();
     void finnish();
     void pause();
     vector<LinkStatus*> const& nodeToAnalize() const;
+    void checkLink(LinkStatus* ls, bool recheck = false);
     vector<LinkStatus*> chooseLinks(vector<LinkStatus*> const& links);
-    void checkLinksSimultaneously(vector<LinkStatus*> const& links);
+    vector<LinkStatus*> chooseLinksToRecheck(vector<LinkStatus*> const& links);
+    void checkLinksSimultaneously(vector<LinkStatus*> const& links, bool recheck);
     void addLevel();
     bool checkableByDomain(KUrl const& url, LinkStatus const& link_parent) const;
     bool checkable(KUrl const& url, LinkStatus const& link_parent) const;
     int maximumCurrentConnections() const;
     bool onlyCheckHeader(LinkStatus* ls) const;
-    void linkRedirectionChecked(LinkStatus* link);
+    void linkRedirectionChecked(LinkStatus* link, bool recheck = false);
 
     /*
       Entende-se por domain vago um domain do tipo www.google.pt ou google.pt, pelo que,
@@ -163,11 +170,14 @@ private:
 
 private:
 
+    // whether it is a new search or refreshing previously checked links
+    bool recheck_mode_;
     int max_simultaneous_connections_;
     SearchMode search_mode_;
     LinkStatus root_;
     bool has_document_root_;
-    KUrl document_root_url_; // in case of non http protocols the document root must be explicitly given
+    // in case of non http protocols the document root must be explicitly given
+    KUrl document_root_url_; 
     int depth_;
     int current_depth_;
     int external_domain_depth_;
@@ -196,6 +206,11 @@ private:
     uint number_of_new_links_to_check_;
     vector< vector< vector <LinkStatus*> > > search_results_;
     QHash<KUrl, LinkStatus*> search_results_hash_;
+    
+    vector<LinkStatus*> recheck_links_;
+    int links_rechecked_;
+    int recheck_current_index_;
+
     KHTMLPartMap html_parts_;
 
     // thread stuff

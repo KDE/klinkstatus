@@ -159,6 +159,35 @@ void TreeView::showAll()
     }
 }
 
+QList<LinkStatus*> TreeView::getVisibleItems() const
+{
+    QList<LinkStatus*> items;
+    for(int i = 0; i != topLevelItemCount(); ++i) {
+        QTreeWidgetItem* item = topLevelItem(i);
+        if(!item->isHidden()) {
+            TreeViewItem* my_item = myItem(item);
+            items.push_back(my_item->linkStatus());
+        
+            addVisibleItemsRecursively(items, my_item);
+        }
+    }
+    return items;
+}
+
+void TreeView::addVisibleItemsRecursively(QList<LinkStatus*>& items, TreeViewItem* item)
+{
+    for(int i = 0; i != item->childCount(); ++i) {
+        QTreeWidgetItem* child = item->child(i);
+        
+        if(!child->isHidden()) {
+              TreeViewItem* my_item = myItem(child);
+              items.push_back(my_item->linkStatus());
+          
+              addVisibleItemsRecursively(items, my_item);
+          }
+    }
+}
+
 void TreeView::setItemVisibleRecursively(QTreeWidgetItem* item, bool hidden)
 {
     setHidden(hidden);
@@ -330,10 +359,9 @@ void TreeView::slotRecheckUrl()
     emit signalUrlRecheck(item->linkStatus()->absoluteUrl());
 }
 
-TreeViewItem* TreeView::myItem(QTreeWidgetItem* item) const
+TreeViewItem* TreeView::myItem(QTreeWidgetItem* item)
 {
-    TreeViewItem* _item = static_cast<TreeViewItem*> (item);
-    return _item;
+    return static_cast<TreeViewItem*> (item);
 }
 
 void TreeView::slotItemClicked(QTreeWidgetItem*, int column)
@@ -349,7 +377,7 @@ void TreeView::slotCustomContextMenuRequested(const QPoint& point)
 
 /* ******************************* TreeViewItem ******************************* */
 
-TreeViewItem::TreeViewItem(TreeView* parent, LinkStatus const* linkstatus)
+TreeViewItem::TreeViewItem(TreeView* parent, LinkStatus* linkstatus)
         : QTreeWidgetItem(parent),
         last_child_(0), root_(parent)
 {
@@ -357,7 +385,7 @@ TreeViewItem::TreeViewItem(TreeView* parent, LinkStatus const* linkstatus)
 }
 
 TreeViewItem::TreeViewItem(TreeView* parent, QTreeWidgetItem* after,
-                           LinkStatus const* linkstatus)
+                           LinkStatus* linkstatus)
         : QTreeWidgetItem(parent, after),
         last_child_(0), root_(parent)
 {
@@ -365,7 +393,7 @@ TreeViewItem::TreeViewItem(TreeView* parent, QTreeWidgetItem* after,
 }
 
 TreeViewItem::TreeViewItem(TreeView* root, QTreeWidgetItem* listview_item, QTreeWidgetItem* after,
-                           LinkStatus const* linkstatus)
+                           LinkStatus* linkstatus)
         : QTreeWidgetItem(listview_item, after),
         last_child_(0), root_(root)
 {
@@ -375,7 +403,7 @@ TreeViewItem::TreeViewItem(TreeView* root, QTreeWidgetItem* listview_item, QTree
 TreeViewItem::~TreeViewItem()
 {}
 
-void TreeViewItem::init(LinkStatus const* linkstatus)
+void TreeViewItem::init(LinkStatus* linkstatus)
 {
     setExpanded(true);
 
@@ -404,7 +432,7 @@ void TreeViewItem::init(LinkStatus const* linkstatus)
     }
 }
 
-void TreeViewItem::refresh(LinkStatus const* linkstatus)
+void TreeViewItem::refresh(LinkStatus* linkstatus)
 {
     column_items_.clear();
     init(linkstatus);
@@ -433,14 +461,14 @@ QString TreeViewItem::key(int column, bool) const
     return text(column);
 }
 
-LinkStatus const* TreeViewItem::linkStatus() const
+LinkStatus* TreeViewItem::linkStatus() const
 {
     return column_items_[0].linkStatus();
 }
 
 /* ******************************* TreeColumnViewItem ******************************* */
 
-TreeColumnViewItem::TreeColumnViewItem(TreeView* root, LinkStatus const* linkstatus, int column_index)
+TreeColumnViewItem::TreeColumnViewItem(TreeView* root, LinkStatus* linkstatus, int column_index)
     : root_(root), ls_(linkstatus), column_index_(column_index)
 {
     Q_ASSERT(ls_);
@@ -463,7 +491,7 @@ int TreeColumnViewItem::columnIndex() const
     return column_index_;
 }
 
-LinkStatus const* TreeColumnViewItem::linkStatus() const
+LinkStatus* TreeColumnViewItem::linkStatus() const
 {
     Q_ASSERT(ls_);
     return ls_;

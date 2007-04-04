@@ -165,10 +165,10 @@ void SessionWidget::newSearchManager()
                                         this);
     Q_ASSERT(search_manager_);
 
-    connect(search_manager_, SIGNAL(signalRootChecked(const LinkStatus*)),
-            this, SLOT(slotRootChecked(const LinkStatus*)));
-    connect(search_manager_, SIGNAL(signalLinkChecked(const LinkStatus*)),
-            this, SLOT(slotLinkChecked(const LinkStatus*)));
+    connect(search_manager_, SIGNAL(signalRootChecked(LinkStatus*)),
+            this, SLOT(slotRootChecked(LinkStatus*)));
+    connect(search_manager_, SIGNAL(signalLinkChecked(LinkStatus*)),
+            this, SLOT(slotLinkChecked(LinkStatus*)));
     connect(search_manager_, SIGNAL(signalSearchFinished()),
             this, SLOT(slotSearchFinished()));
     connect(search_manager_, SIGNAL(signalSearchPaused()),
@@ -179,8 +179,10 @@ void SessionWidget::newSearchManager()
             this, SLOT(slotAddingLevelProgress()));
     connect(search_manager_, SIGNAL(signalLinksToCheckTotalSteps(uint)),
             this, SLOT(slotLinksToCheckTotalSteps(uint)));
-    connect(search_manager_, SIGNAL(signalLinkRechecked(LinkStatus const*)),
-            this, SLOT(slotLinkRechecked(LinkStatus const*)));
+    connect(search_manager_, SIGNAL(signalLinkRechecked(LinkStatus*)),
+            this, SLOT(slotLinkRechecked(LinkStatus*)));
+    connect(search_manager_, SIGNAL(signalRedirection()),
+            this, SLOT(slotIncrementLinksToCheckTotalSteps()));
 }
 
 void SessionWidget::setColumns(QStringList const& colunas)
@@ -359,8 +361,11 @@ bool SessionWidget::validFields()
     return true;
 }
 
-void SessionWidget::slotRootChecked(LinkStatus const* linkstatus)
+void SessionWidget::slotRootChecked(LinkStatus* linkstatus)
 {
+    resultsSearchBar->show();
+    ActionManager::getInstance()->action("file_export_html")->setEnabled(!isEmpty());
+    
     emit signalUpdateTabLabel(search_manager_->linkStatusRoot(), this);
 
     Q_ASSERT(textlabel_progressbar->text() == i18n("Checking...") ||
@@ -368,47 +373,43 @@ void SessionWidget::slotRootChecked(LinkStatus const* linkstatus)
     progressbar_checker->setValue(1);
 
     TreeViewItem* tree_view_item = new TreeViewItem(tree_view, tree_view->invisibleRootItem(), linkstatus);
-    LinkStatus* ls = const_cast<LinkStatus*> (linkstatus);
-    ls->setTreeViewItem(tree_view_item);
-
-    resultsSearchBar->show();
-    ActionManager::getInstance()->action("file_export_html")->setEnabled(!isEmpty());
+    linkstatus->setTreeViewItem(tree_view_item);
 }
 
-void SessionWidget::slotLinkChecked(LinkStatus const* linkstatus)
+void SessionWidget::slotLinkChecked(LinkStatus* linkstatus)
 {
     kDebug(23100) << textlabel_progressbar->text() << endl;
     Q_ASSERT(textlabel_progressbar->text() == i18n("Checking...") ||
             textlabel_progressbar->text() == i18n("Stopped"));
     progressbar_checker->setValue(progressbar_checker->value() + 1);
 
-    if(linkstatus->checked())
+    if(!linkstatus->checked())
+        return;
+        
+    TreeViewItem* tree_view_item = 0;
+    TreeViewItem* parent_item = linkstatus->parent()->treeViewItem();
+    bool match = resultsSearchBar->currentLinkMatcher().matches(*linkstatus);
+
+    if(tree_display_)
     {
-        TreeViewItem* tree_view_item = 0;
-        TreeViewItem* parent_item = linkstatus->parent()->treeViewItem();
-        bool match = resultsSearchBar->currentLinkMatcher().matches(*linkstatus);
+        tree_view_item = new TreeViewItem(tree_view, parent_item, parent_item->lastChild(), linkstatus);
+        parent_item->setLastChild(tree_view_item);
+        if(follow_last_link_checked_)
+            tree_view->ensureRowVisible(tree_view_item, tree_display_);
 
-        if(tree_display_)
-        {
-            tree_view_item = new TreeViewItem(tree_view, parent_item, parent_item->lastChild(), linkstatus);
-            parent_item->setLastChild(tree_view_item);
-            if(follow_last_link_checked_)
-                tree_view->ensureRowVisible(tree_view_item, tree_display_);
-
-            tree_view_item->setHidden(!match);
-        }
-        else
-        {
-            tree_view_item = new TreeViewItem(tree_view, linkstatus);
-            if(follow_last_link_checked_)
-                tree_view->ensureRowVisible(tree_view_item, tree_display_);
-
-            tree_view_item->setHidden(!match);
-        }
-
-        LinkStatus* ls = const_cast<LinkStatus*> (linkstatus);
-        ls->setTreeViewItem(tree_view_item);
+        tree_view_item->setHidden(!match);
     }
+    else
+    {
+        tree_view_item = new TreeViewItem(tree_view, linkstatus);
+        if(follow_last_link_checked_)
+            tree_view->ensureRowVisible(tree_view_item, tree_display_);
+
+        tree_view_item->setHidden(!match);
+    }
+    Q_ASSERT(tree_view_item);
+    
+    linkstatus->setTreeViewItem(tree_view_item);
 }
 
 void SessionWidget::slotSearchFinished()
@@ -514,6 +515,11 @@ void SessionWidget::slotLinksToCheckTotalSteps(uint steps)
     progressbar_checker->setValue(0);
 }
 
+void SessionWidget::slotIncrementLinksToCheckTotalSteps()
+{
+    progressbar_checker->setMaximum(progressbar_checker->maximum() + 1);
+}
+
 void SessionWidget::slotClearComboUrl()
 {
     combobox_url->clearEditText();
@@ -550,6 +556,33 @@ void SessionWidget::slotResetSearchOptions()
 
     combobox_url->clear();
     lineedit_reg_exp->clear();
+}
+
+void SessionWidget::slotRecheckVisibleItems()
+{
+    if(in_progress_)
+    {
+        start_search_action_->setChecked(true); // do not toggle
+        Q_ASSERT(!stopped_);
+        KApplication::beep();
+        return;
+    }
+
+    to_start_ = true;
+    slotLoadSettings(false);
+    resetPendingActions();
+    ready_ = false;
+
+//     emit signalSearchStarted();
+
+    in_progress_ = true;
+    paused_ = false;
+    stopped_ = false;
+
+    action_manager_->slotUpdateSessionWidgetActions(this);
+
+    QList<LinkStatus*> items = tree_view->getVisibleItems();
+    search_manager_->recheckLinks(items);
 }
 
 void SessionWidget::slotStartSearch()
@@ -741,14 +774,32 @@ void SessionWidget::slotSearchStarted()
     Global::self()->setStatusBarText(i18n("Checking") + " " + combobox_url->currentText(), false);
 }
 
-void SessionWidget::slotUrlRecheck(KUrl const& url)
+void SessionWidget::slotUrlRecheck(LinkStatus* ls)
 {
-    search_manager_->recheckLink(url);
+    search_manager_->recheckLink(ls);
 }
 
-void SessionWidget::slotLinkRechecked(LinkStatus const* ls)
+void SessionWidget::slotLinkRechecked(LinkStatus* ls)
 {
-    ls->treeViewItem()->refresh(ls);
+    if(in_progress_) {
+        Q_ASSERT(textlabel_progressbar->text() == i18n("Checking...") ||
+                textlabel_progressbar->text() == i18n("Stopped"));
+        progressbar_checker->setValue(progressbar_checker->value() + 1);
+    }
+    
+    if(!ls->checked())
+        return;
+
+    if(ls->treeViewItem()) {        
+        ls->treeViewItem()->refresh(ls);
+        tree_view->setCurrentItem(ls->treeViewItem());
+    }
+    else {
+        kError(23100) << "LinkStatus does not have tree view item: " << ls->absoluteUrl() << endl;
+        kError(23100) << "Is redirection: " << ls->isRedirection() << endl;
+    }
+    if(!in_progress_)
+        Global::self()->setStatusBarText(i18n("Done rechecking ") + ls->absoluteUrl().prettyUrl());
 }
 
 #include "sessionwidget.moc"

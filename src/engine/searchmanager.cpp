@@ -39,7 +39,7 @@
 
 SearchManager::SearchManager(int max_simultaneous_connections, int time_out,
                              QObject *parent)
-        : QObject(parent), 
+        : QObject(parent), recheck_mode_(false), 
         max_simultaneous_connections_(max_simultaneous_connections), has_document_root_(false), 
         depth_(-1), current_depth_(0), external_domain_depth_(0),
         current_node_(0), current_index_(0), links_being_checked_(0),
@@ -48,7 +48,8 @@ SearchManager::SearchManager(int max_simultaneous_connections, int time_out,
         checked_general_domain_(false), time_out_(time_out), current_connections_(0),
         send_identification_(true), canceled_(false), searching_(false), checked_links_(0), ignored_links_(0),
         check_parent_dirs_(true), check_external_links_(true), check_regular_expressions_(false),
-        number_of_current_level_links_(0), number_of_new_links_to_check_(0), m_addLevelJob(0)
+        number_of_current_level_links_(0), number_of_new_links_to_check_(0),
+        links_rechecked_(0), recheck_current_index_(0), m_addLevelJob(0)
 {
     root_.setIsRoot(true);
 
@@ -63,6 +64,11 @@ void SearchManager::reset()
 
     LinkStatusHelper::reset(&root_);
     cleanItems();
+    recheck_mode_ = false;
+    recheck_links_.clear();
+    links_rechecked_ = 0;
+    recheck_current_index_ = 0;
+    search_results_hash_.clear();
     depth_ = -1;
     current_depth_ = 0;
     current_node_ = 0;
@@ -114,6 +120,41 @@ void SearchManager::cleanItems()
     kDebug(23100) <<  endl;
 }
 
+void SearchManager::recheckLinks(QList<LinkStatus*> const& linkstatus_list)
+{
+    kDebug(23100) << "SearchManager::recheckLinks: " << linkstatus_list.size() << endl;
+  
+    Q_ASSERT(!searching_);
+    Q_ASSERT(checked_links_ >= linkstatus_list.size());
+    Q_ASSERT(search_results_.size() != 0);
+
+    recheck_mode_ = true;
+    canceled_ = false;
+    searching_ = true;
+    links_rechecked_ = 0;
+    recheck_current_index_ = 0;
+    
+    recheck_links_.clear();
+    recheck_links_.reserve(linkstatus_list.size());
+
+    for(int i = 0; i != linkstatus_list.size(); ++i) {
+        LinkStatus* ls = linkstatus_list[i];
+        Q_ASSERT(ls);
+        LinkStatusHelper::resetResults(ls);
+
+        recheck_links_.push_back(ls);
+    }
+
+    if(recheck_links_.size() == 0) {
+        finnish();
+        return;
+    }
+    
+    emit signalLinksToCheckTotalSteps(recheck_links_.size());
+
+    checkVectorLinksToRecheck(recheck_links_);
+}
+
 void SearchManager::startSearch(KUrl const& root, SearchMode const& modo)
 {
     canceled_ = false;
@@ -152,16 +193,25 @@ void SearchManager::resume()
 {
     searching_ = true;
     canceled_ = false;
-    continueSearch();
+    if(recheck_mode_)
+        continueRecheck();
+    else
+        continueSearch();
 }
 
 void SearchManager::finnish()
 {
     while(links_being_checked_)
     {
-        kDebug(23100) <<  "links_being_checked_: " << links_being_checked_ << endl;
+        kDebug(23100) << "Waiting for links being checked: " << links_being_checked_ << endl;
         sleep(1);
     }
+    kDebug(23100) << "SearchManager::finnish" << endl;
+    if(!recheck_mode_)
+        kDebug(23100) << "Links Checked: " << checked_links_ << endl;
+    else
+        kDebug(23100) << "Links Rechecked: " << links_rechecked_ << endl;
+
     searching_ = false;
     emit signalSearchFinished();
 }
@@ -170,7 +220,9 @@ void SearchManager::pause()
 {
     while(links_being_checked_)
     {
-        kDebug(23100) <<  "links_being_checked_: " << links_being_checked_ << endl;
+        kDebug(23100) <<  "SearchManager::pause()" << endl
+            << "waiting for links being checked: "
+            << links_being_checked_ << endl;
         sleep(1);
     }
     searching_ = false;
@@ -326,10 +378,8 @@ bool SearchManager::existUrl(KUrl const& url, KUrl const& url_parent) const
 
     LinkStatus* ls = search_results_hash_.value(url, 0);
     if(ls) {      
-        // Add new referrer
-        if(!ls->referrers().contains(url_parent))
-            ls->addReferrer(url_parent);
-
+        // Add new referrer. If exists, do nothing (QSet)
+        ls->addReferrer(url_parent);
         return true;
     }
     else {
@@ -373,6 +423,11 @@ void SearchManager::slotLevelAdded()
     }
 }
 
+void SearchManager::continueRecheck()
+{
+    checkVectorLinksToRecheck(recheck_links_);
+}
+
 void SearchManager::continueSearch()
 {
     Q_ASSERT(!links_being_checked_);
@@ -403,7 +458,6 @@ void SearchManager::continueSearch()
             }
             else
             {
-                kDebug(23100) <<  "Search Finished! (SearchManager::continueSearch#2)" << endl;
                 finnish();
             }
         }
@@ -420,7 +474,12 @@ vector<LinkStatus*> const& SearchManager::nodeToAnalize() const
 
 void SearchManager::checkVectorLinks(vector<LinkStatus*> const& links)
 {
-    checkLinksSimultaneously(chooseLinks(links));
+    checkLinksSimultaneously(chooseLinks(links), false);
+}
+
+void SearchManager::checkVectorLinksToRecheck(vector<LinkStatus*> const& links)
+{
+    checkLinksSimultaneously(chooseLinksToRecheck(links), true);
 }
 
 vector<LinkStatus*> SearchManager::chooseLinks(vector<LinkStatus*> const& links)
@@ -434,7 +493,18 @@ vector<LinkStatus*> SearchManager::chooseLinks(vector<LinkStatus*> const& links)
     return escolha;
 }
 
-void SearchManager::checkLinksSimultaneously(vector<LinkStatus*> const& links)
+vector<LinkStatus*> SearchManager::chooseLinksToRecheck(vector<LinkStatus*> const& links)
+{
+    vector<LinkStatus*> sample;
+    for(int i = 0; i != max_simultaneous_connections_; ++i)
+    {
+        if((uint)recheck_current_index_ < links.size())
+            sample.push_back(links[recheck_current_index_++]);
+    }
+    return sample;
+}
+
+void SearchManager::checkLinksSimultaneously(vector<LinkStatus*> const& links, bool recheck)
 {
     Q_ASSERT(finished_connections_ <= max_simultaneous_connections_);
     finished_connections_ = 0;
@@ -449,66 +519,74 @@ void SearchManager::checkLinksSimultaneously(vector<LinkStatus*> const& links)
     for(uint i = 0; i != links.size(); ++i)
     {
         LinkStatus* ls(links[i]);
-        Q_ASSERT(ls);
-
-        QString protocol = ls->absoluteUrl().protocol();
-
-        ++links_being_checked_;
-        Q_ASSERT(links_being_checked_ <= max_simultaneous_connections_);
-
-        if(ls->malformed())
-        {
-            Q_ASSERT(ls->errorOccurred());
-            Q_ASSERT(ls->status() == LinkStatus::MALFORMED);
-
-            ls->setChecked(true);
-            slotLinkChecked(ls, 0);
-        }
-
-        else if(ls->absoluteUrl().prettyUrl().contains("javascript:", Qt::CaseInsensitive))
-        {
-            ++ignored_links_;
-            ls->setIgnored(true);
-            ls->setErrorOccurred(true);
-            ls->setError("Javascript not supported");
-            ls->setStatus(LinkStatus::NOT_SUPPORTED);
-            ls->setChecked(true);
-            slotLinkChecked(ls, 0);
-        }
-        else
-        {
-            LinkChecker* checker = new LinkChecker(ls, time_out_, this);
-            checker->setSearchManager(this);
-
-            connect(checker, SIGNAL(transactionFinished(LinkStatus*, LinkChecker*)),
-                    this, SLOT(slotLinkChecked(LinkStatus*, LinkChecker*)));
-
-            checker->check();
-        }
+        checkLink(ls, recheck);
     }
 }
 
-void SearchManager::recheckLink(KUrl const& url)
+void SearchManager::checkLink(LinkStatus* ls, bool recheck)
 {
-    LinkStatus* ls = search_results_hash_.value(url, 0);
     Q_ASSERT(ls);
 
-    LinkStatusHelper::resetResults(ls);
-    
-    LinkChecker* checker = new LinkChecker(ls, time_out_, this);
-    checker->setSearchManager(this);
+    QString protocol = ls->absoluteUrl().protocol();
 
-    connect(checker, SIGNAL(transactionFinished(LinkStatus*, LinkChecker*)),
-            this, SLOT(slotLinkRechecked(LinkStatus*, LinkChecker*)));
+    ++links_being_checked_;
+    Q_ASSERT(links_being_checked_ <= max_simultaneous_connections_);
 
-    checker->check();
+    if(ls->malformed())
+    {
+        Q_ASSERT(ls->errorOccurred());
+        Q_ASSERT(ls->status() == LinkStatus::MALFORMED);
+
+        ls->setChecked(true);
+        recheck ? slotLinkRechecked(ls, 0) : slotLinkChecked(ls, 0);
+    }
+
+    else if(ls->absoluteUrl().prettyUrl().contains("javascript:", Qt::CaseInsensitive))
+    {
+        ++ignored_links_;
+        ls->setIgnored(true);
+        ls->setErrorOccurred(true);
+        ls->setError("Javascript not supported");
+        ls->setStatus(LinkStatus::NOT_SUPPORTED);
+        ls->setChecked(true);
+        recheck ? slotLinkRechecked(ls, 0) : slotLinkChecked(ls, 0);
+    }
+    else
+    {
+        LinkChecker* checker = new LinkChecker(ls, time_out_, this);
+        checker->setSearchManager(this);
+
+        if(recheck) {
+            connect(checker, SIGNAL(transactionFinished(LinkStatus*, LinkChecker*)),
+                    this, SLOT(slotLinkRechecked(LinkStatus*, LinkChecker*)));
+        }
+        else {
+            connect(checker, SIGNAL(transactionFinished(LinkStatus*, LinkChecker*)),
+                    this, SLOT(slotLinkChecked(LinkStatus*, LinkChecker*)));
+        }
+        checker->check();
+    }
 }
 
-void SearchManager::linkRedirectionChecked(LinkStatus* link)
+void SearchManager::recheckLink(LinkStatus* ls)
 {
-    emit signalLinkChecked(link);
+    checkLink(ls, true);
+}
+
+void SearchManager::linkRedirectionChecked(LinkStatus* link, bool recheck)
+{
+    emit signalRedirection();
+    recheck ? emit signalLinkRechecked(link) : emit signalLinkChecked(link);
+  
+    if(!recheck) {
+        ++checked_links_;
+        search_results_hash_.insert(link->absoluteUrl(), link);
+    } else {
+        ++links_rechecked_;
+    }
+    
     if(link->isRedirection() && link->redirection())
-        linkRedirectionChecked(link->redirection());
+        linkRedirectionChecked(link->redirection(), recheck);
 }
 
 void SearchManager::slotLinkChecked(LinkStatus* link, LinkChecker* checker)
@@ -517,12 +595,15 @@ void SearchManager::slotLinkChecked(LinkStatus* link, LinkChecker* checker)
 //     kDebug(23100) <<  link->absoluteUrl().url() << " -> " << 
 //             LinkStatus::lastRedirection((const_cast<LinkStatus*> (link)))->absoluteUrl().url() << endl;
 
+    checker->deleteLater();
+
     Q_ASSERT(link);
 
     if(KLSConfig::showMarkupStatus() && link->isHtmlDocument())
       LinkStatusHelper::validateMarkup(link);
 
     emit signalLinkChecked(link);
+    
     if(link->isRedirection() && link->redirection())
         linkRedirectionChecked(link->redirection());
     
@@ -530,8 +611,6 @@ void SearchManager::slotLinkChecked(LinkStatus* link, LinkChecker* checker)
     ++finished_connections_;
     --links_being_checked_;
   
-    if(links_being_checked_ < 0)
-        kDebug(23100) <<  LinkStatusHelper::toString(link) << endl;
     Q_ASSERT(links_being_checked_ >= 0);
 
     if(canceled_ && searching_ && !links_being_checked_)
@@ -544,7 +623,6 @@ void SearchManager::slotLinkChecked(LinkStatus* link, LinkChecker* checker)
         continueSearch();
         return;
     }
-    checker->deleteLater();
 }
 
 void SearchManager::slotLinkRechecked(LinkStatus* link, LinkChecker* checker)
@@ -553,14 +631,36 @@ void SearchManager::slotLinkRechecked(LinkStatus* link, LinkChecker* checker)
 //     kDebug(23100) <<  link->absoluteUrl().url() << " -> " << 
 //             LinkStatus::lastRedirection((const_cast<LinkStatus*> (link)))->absoluteUrl().url() << endl;
 
+    checker->deleteLater();
+
+    ++links_rechecked_;
+    ++finished_connections_;
+    --links_being_checked_;
+    
     Q_ASSERT(link);
 
     if(KLSConfig::showMarkupStatus() && link->isHtmlDocument())
-      LinkStatusHelper::validateMarkup(link);
+        LinkStatusHelper::validateMarkup(link);
 
     emit signalLinkRechecked(link);
-      
-    checker->deleteLater();
+
+    // Nope, ignore redirections as they were already passed to the links to recheck
+//     if(link->isRedirection() && link->redirection())
+//         linkRedirectionChecked(link->redirection(), true);
+
+    Q_ASSERT(links_being_checked_ >= 0);
+
+    if(canceled_ && searching_ && !links_being_checked_)
+    {
+        pause();
+    }
+    else if(!canceled_ && finished_connections_ == maximumCurrentConnections() )
+    {
+        if((uint)recheck_current_index_ < recheck_links_.size())
+            continueRecheck();
+        else
+            finnish();
+    }
 }
 
 void SearchManager::addLevel()

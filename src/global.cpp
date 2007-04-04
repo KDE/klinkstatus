@@ -99,7 +99,7 @@ void Global::setStatusBarText(QString const& text, bool permanent)
     // This is a hack for removing the added messages from the status bar.
     // Permanent seems to don't have any effect
     if(!permanent)
-      QTimer::singleShot(1000 * 3, this, SLOT(slotRemoveStatusBarLabel()));
+        QTimer::singleShot(1000 * 3, this, SLOT(slotRemoveStatusBarLabel()));
 }
 
 void Global::addStatusBarPermanentItem(QWidget* widget)

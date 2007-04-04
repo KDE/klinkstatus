@@ -81,6 +81,8 @@ public slots:
     void slotPauseSearch();
     void slotStopSearch();
 
+    void slotRecheckVisibleItems();
+
     void slotHideSearchPanel();
     void slotResetSearchOptions();
     void slotFollowLastLinkChecked();
@@ -93,14 +95,14 @@ private slots:
 
     virtual void slotCheck();
     virtual void slotCancel() {} // FIXME hack
-    void slotUrlRecheck(KUrl const&);
+    void slotUrlRecheck(LinkStatus*);
     //virtual void slotSuggestDomain(bool toogle);
 
     void slotSearchStarted();
     void slotEnableCheckButton(const QString &);
-    void slotRootChecked(LinkStatus const* linkstatus);
-    void slotLinkChecked(LinkStatus const* linkstatus);
-    void slotLinkRechecked(LinkStatus const* linkstatus);
+    void slotRootChecked(LinkStatus* linkstatus);
+    void slotLinkChecked(LinkStatus* linkstatus);
+    void slotLinkRechecked(LinkStatus* linkstatus);
     void slotSearchFinished();
     void slotSearchPaused();
     void slotSetTimeElapsed();
@@ -109,6 +111,8 @@ private slots:
     void slotAddingLevelTotalSteps(uint steps);
     void slotAddingLevelProgress();
     void slotLinksToCheckTotalSteps(uint steps);
+    // Happens when there is a redirection
+    void slotIncrementLinksToCheckTotalSteps();
 
     void slotChooseUrlDialog();
 

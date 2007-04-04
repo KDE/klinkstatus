@@ -28,6 +28,7 @@
             <Action name="pause_search"/>
             <Action name="stop_search"/>
             <Separator/>
+            <Action name="recheck_visible_items"/>
         </Menu>
 
         <Menu name="validate"><text>&amp;Validate</text>
