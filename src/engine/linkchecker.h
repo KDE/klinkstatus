@@ -32,9 +32,6 @@ class KHTMLPart;
 #include "linkstatus.h"
 class SearchManager;
 
-#include <iostream>
-using namespace std;
-
 /**
 @author Paulo Moura Guedes
 */

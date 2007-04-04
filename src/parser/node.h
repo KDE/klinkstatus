@@ -28,8 +28,6 @@
 #include <kdebug.h>
 #include <kcharsets.h>
 
-using namespace std;
-
 typedef unsigned int uint;
 
 /**

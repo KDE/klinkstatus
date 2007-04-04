@@ -38,7 +38,6 @@ class KUrl;
 class KConfig;
 class KToggleAction;
 
-using namespace std;
 
 class SessionWidget: public QWidget, public Ui_SessionWidgetBase
 {
@@ -96,7 +95,7 @@ private slots:
 
     virtual void slotCheck();
     virtual void slotCancel() {} // FIXME hack
-    void slotUrlRecheck(LinkStatus*);
+    void slotLinkRecheck(LinkStatus*);
     //virtual void slotSuggestDomain(bool toogle);
 
     void slotSearchStarted();
@@ -109,9 +108,9 @@ private slots:
     void slotSetTimeElapsed();
     void newSearchManager();
 
-    void slotAddingLevelTotalSteps(uint steps);
+    void slotAddingLevelTotalSteps(int steps);
     void slotAddingLevelProgress();
-    void slotLinksToCheckTotalSteps(uint steps);
+    void slotLinksToCheckTotalSteps(int steps);
     // Happens when there is a redirection
     void slotIncrementLinksToCheckTotalSteps();
 

@@ -26,9 +26,6 @@
 #include <klocale.h>
 #include <kdebug.h>
 
-#include <iostream>
-using namespace std;
-
 
 static const char description[] =
     I18N_NOOP("A Link Checker.\n\nKLinkStatus belongs to the kdewebdev module from KDE.");

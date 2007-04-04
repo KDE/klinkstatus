@@ -20,11 +20,6 @@
 
 #include "mstring.h"
 
-#include <iostream>
-
-
-using namespace std;
-
 
 int findWord(QString const& s, QString const& palavra, int a_partir_do_indice)
 {
@@ -130,10 +125,10 @@ int nextCharDifferentThan(QChar c, QString const& s, int i)
         return -1;
 }
 
-vector<QString> tokenize(QString s)
+QList<QString> tokenize(QString s)
 {
     Q_ASSERT(!s.isEmpty());
-    vector<QString> v;
+    QList<QString> v;
 
     while(true)
     {
@@ -159,9 +154,9 @@ vector<QString> tokenize(QString s)
     }	
 }
 
-vector<QString> tokenizeWordsSeparatedByDots(QString s)
+QList<QString> tokenizeWordsSeparatedByDots(QString s)
 {
-    vector<QString> v;
+    QList<QString> v;
 
     while(true)
     {
@@ -186,9 +181,9 @@ vector<QString> tokenizeWordsSeparatedByDots(QString s)
     }	
 }
 
-vector<QString> tokenizeWordsSeparatedBy(QString s, const QChar & criteria)
+QList<QString> tokenizeWordsSeparatedBy(QString s, const QChar & criteria)
 {
-    vector<QString> v;
+    QList<QString> v;
 
     while(true)
     {
@@ -212,65 +207,3 @@ vector<QString> tokenizeWordsSeparatedBy(QString s, const QChar & criteria)
         }
     }	
 }
-
-
-
-#ifdef STRING
-//c++ -g -o teste_string mstring.cpp -DSTRING
-#include <fstream>
-
-int main(int argc, char* argv[])
-{
-    string s;
-    s = "S";
-    s = "Afazer";
-    s = "O MeU S    sdadsadd              ";
-    s = "www.trolltech.com/search/qt-interest/bla bla%20Bla";
-    s = "...http://w.ww..go.o.gle.p.t.......";
-
-    /*
-      ifstream stream("testeparser.html");
-      string content;
-      while(stream) {
-        char c;
-        stream.get(c);
-        content += c;
-      }
-    */
-    //  kDebug(23100) << simplified(content) << endl;
-    kDebug(23100) << simplified(s) << endl;
-
-    /*
-      vector<string> v(tokenize(s));
-      for(int i = 0; i != v.size(); ++i)
-        kDebug(23100) << v[i] << endl;
-    */
-
-    /*
-      int i = nextSpaceChar(s, 0);
-      i = nextNonSpaceChar(s, i);
-      kDebug(23100) << s.substr(i) << endl;
-    */
-
-
-    vector<string> v(tokenizeWordsSeparatedByDots(s));
-    for(int i = 0; i != v.size(); ++i)
-        kDebug(23100) << v[i] << endl;
-
-    removeLastCharIfExists(s, '/');
-    kDebug(23100) << s << endl;
-
-    /*
-      kDebug(23100) << findChar(s, 'T') << endl;
-      kDebug(23100) << findWord(s, "trolltech") << endl;
-      kDebug(23100) << findWord(s, "TROLLTECH") << endl;
-      kDebug(23100) << findWord(s, "TROLLTECH", 2) << endl;
-    */
-    /*
-      trimmed(s);
-      kDebug(23100) << s << endl;
-    */
-}
-
-
-#endif

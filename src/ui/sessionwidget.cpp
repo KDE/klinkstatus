@@ -118,8 +118,8 @@ void SessionWidget::init()
 
     start_search_action_ = static_cast<KToggleAction*> (action_manager_->action("start_search"));
 
-    connect(tree_view, SIGNAL(signalUrlRecheck(KUrl const&)),
-            this, SLOT(slotUrlRecheck(KUrl const&)));
+    connect(tree_view, SIGNAL(signalLinkRecheck(LinkStatus*)),
+            this, SLOT(slotLinkRecheck(LinkStatus*)));
     
     connect(resultsSearchBar, SIGNAL(signalSearch(LinkMatcher)),
             this, SLOT(slotApplyFilter(LinkMatcher)));
@@ -173,12 +173,12 @@ void SessionWidget::newSearchManager()
             this, SLOT(slotSearchFinished()));
     connect(search_manager_, SIGNAL(signalSearchPaused()),
             this, SLOT(slotSearchPaused()));
-    connect(search_manager_, SIGNAL(signalAddingLevelTotalSteps(uint)),
-            this, SLOT(slotAddingLevelTotalSteps(uint)));
+    connect(search_manager_, SIGNAL(signalAddingLevelTotalSteps(int)),
+            this, SLOT(slotAddingLevelTotalSteps(int)));
     connect(search_manager_, SIGNAL(signalAddingLevelProgress()),
             this, SLOT(slotAddingLevelProgress()));
-    connect(search_manager_, SIGNAL(signalLinksToCheckTotalSteps(uint)),
-            this, SLOT(slotLinksToCheckTotalSteps(uint)));
+    connect(search_manager_, SIGNAL(signalLinksToCheckTotalSteps(int)),
+            this, SLOT(slotLinksToCheckTotalSteps(int)));
     connect(search_manager_, SIGNAL(signalLinkRechecked(LinkStatus*)),
             this, SLOT(slotLinkRechecked(LinkStatus*)));
     connect(search_manager_, SIGNAL(signalRedirection()),
@@ -493,7 +493,7 @@ void SessionWidget::slotSetTimeElapsed()
     textlabel_elapsed_time_value->setText(time.toString("hh:mm:ss"));
 }
 
-void SessionWidget::slotAddingLevelTotalSteps(uint steps)
+void SessionWidget::slotAddingLevelTotalSteps(int steps)
 {
     textlabel_progressbar->setText(i18n( "Adding level..." ));
     progressbar_checker->reset();
@@ -507,7 +507,7 @@ void SessionWidget::slotAddingLevelProgress()
     progressbar_checker->setValue(progressbar_checker->value() + 1);
 }
 
-void SessionWidget::slotLinksToCheckTotalSteps(uint steps)
+void SessionWidget::slotLinksToCheckTotalSteps(int steps)
 {
     textlabel_progressbar->setText(i18n( "Checking..." ));
     progressbar_checker->reset();
@@ -801,7 +801,7 @@ void SessionWidget::slotSearchStarted()
     Global::self()->setStatusBarText(i18n("Checking") + " " + combobox_url->currentText(), false);
 }
 
-void SessionWidget::slotUrlRecheck(LinkStatus* ls)
+void SessionWidget::slotLinkRecheck(LinkStatus* ls)
 {
     search_manager_->recheckLink(ls);
 }

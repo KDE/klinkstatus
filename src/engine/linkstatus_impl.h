@@ -107,12 +107,6 @@ inline void LinkStatus::addChildNode(Node* node)
     children_nodes_.push_back(node);
 }
 
-inline void LinkStatus::reserveMemoryForChildrenNodes(int n)
-{
-    Q_ASSERT(n > 0);
-    children_nodes_.reserve(n);
-}
-
 inline void LinkStatus::setChecked(bool flag)
 {
     checked_ = flag;
@@ -313,7 +307,7 @@ inline Node* LinkStatus::node() const
     return node_;
 }
 
-inline vector<Node*> const& LinkStatus::childrenNodes() const
+inline QList<Node*> const& LinkStatus::childrenNodes() const
 {
     return children_nodes_;
 }

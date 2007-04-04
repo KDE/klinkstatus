@@ -386,7 +386,7 @@ void TreeView::slotRecheckUrl()
     if(!item)
         return;
     
-    emit signalUrlRecheck(item->linkStatus()->absoluteUrl());
+    emit signalLinkRecheck(item->linkStatus());
 }
 
 TreeViewItem* TreeView::myItem(QTreeWidgetItem* item)

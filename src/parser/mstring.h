@@ -23,7 +23,7 @@
 
 #include <QString>
 
-#include <vector>
+#include <QList>
 #include <cctype>
 
 class QString;
@@ -73,9 +73,9 @@ int nextSpaceChar(QString const& s, int i);
 int nextCharDifferentThan(QChar c, QString const& s, int i);
 
 /** Return a vector with the words */
-std::vector<QString> tokenize(QString s);
-std::vector<QString> tokenizeWordsSeparatedByDots(QString s);
-std::vector<QString> tokenizeWordsSeparatedBy(QString s, const QChar & criteria);
+QList<QString> tokenize(QString s);
+QList<QString> tokenizeWordsSeparatedByDots(QString s);
+QList<QString> tokenizeWordsSeparatedBy(QString s, const QChar & criteria);
 
 /**
    If char 'caractere' is the last in the string 's' it is removed

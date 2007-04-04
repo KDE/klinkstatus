@@ -191,13 +191,13 @@ void ActionManager::initTabWidget(TabWidgetSession* tabWidgetSession)
     action->setShortcut(KShortcut("Ctrl+c"));
     action->setEnabled(false);
         
-    action  = new KAction(KIcon("view-refresh"), i18n("&Recheck Broken Items"), this);
+    action  = new KAction(KIcon("view-refresh"), i18n("&Recheck Broken Links"), this);
     actionCollection()->addAction("recheck_broken_items", action);
     connect(action, SIGNAL(triggered(bool) ),
             d->tabWidgetSession, SLOT(slotRecheckBrokenItems()));
     action->setEnabled(false);
         
-    action  = new KAction(KIcon("view-refresh"), i18n("&Recheck Visible Items"), this);
+    action  = new KAction(KIcon("view-refresh"), i18n("Recheck &Displayed Links"), this);
     actionCollection()->addAction("recheck_visible_items", action);
     connect(action, SIGNAL(triggered(bool) ),
             d->tabWidgetSession, SLOT(slotRecheckVisibleItems()));

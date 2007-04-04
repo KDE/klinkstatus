@@ -30,9 +30,7 @@ HtmlParser::HtmlParser(QString const& documento)
     Q_ASSERT(!documento.isEmpty());
 
     stripScriptContent();
-    stripComments(); // after removing the script because comments in scripts have diferent sintaxe
-
-    nodes_.reserve(estimativaLinks(documento.length() * 2)); // ÃÂÃÂ  confianÃÂÃÂ§a ;)
+    stripComments(); // after removing the script because comments in scripts have diferent sintax
 
     parseNodesOfTypeA();
     parseNodesOfTypeAREA();
@@ -75,21 +73,19 @@ NodeTITLE const& HtmlParser::title() const
     return node_TITLE_;
 }
 
-vector<QString> const& HtmlParser::parseNodesOfType(QString const& element)
+QList<QString> const& HtmlParser::parseNodesOfType(QString const& element)
 {
     HtmlParser::parseNodesOfType(element, document_, aux_);
     return aux_;
 }
 
-void HtmlParser::parseNodesOfType(QString const& tipo, QString const& document, vector<QString>& nodes)
+void HtmlParser::parseNodesOfType(QString const& tipo, QString const& document, QList<QString>& nodes)
 {
     QString node;
     QString doc(document);
     int inicio = 0, fim = 0;
 
     nodes.clear();
-    if(tipo.toUpper() == "A")
-        nodes.reserve(estimativaLinks(doc.length() * 2));
 
     while(true)
     {
@@ -159,7 +155,7 @@ int HtmlParser::endOfTag(QString const& s, int index, QChar end_of_tag)
     }
 }
 
-vector<Node*> const& HtmlParser::nodes() const
+QList<Node*> const& HtmlParser::nodes() const
 {
     return nodes_;
 }
@@ -167,9 +163,9 @@ vector<Node*> const& HtmlParser::nodes() const
 
 void HtmlParser::parseNodesOfTypeA()
 {
-    vector<QString> const& aux = parseNodesOfType("A");
+    QList<QString> const& aux = parseNodesOfType("A");
 
-    for(vector<QString>::size_type i = 0; i != aux.size(); ++i)
+    for(QList<QString>::size_type i = 0; i != aux.size(); ++i)
     {
         nodes_.push_back( new NodeA(aux[i]) );
     }
@@ -177,9 +173,9 @@ void HtmlParser::parseNodesOfTypeA()
 
 void HtmlParser::parseNodesOfTypeAREA()
 {
-    vector<QString> const& aux = parseNodesOfType("AREA");
+    QList<QString> const& aux = parseNodesOfType("AREA");
                 
-    for(vector<QString>::size_type i = 0; i != aux.size(); ++i)
+    for(QList<QString>::size_type i = 0; i != aux.size(); ++i)
     {
         nodes_.push_back( new NodeAREA(aux[i]) );
     }
@@ -187,17 +183,17 @@ void HtmlParser::parseNodesOfTypeAREA()
 
 void HtmlParser::parseNodesOfTypeLINK()
 {
-    vector<QString> const& aux = parseNodesOfType("LINK");
+    QList<QString> const& aux = parseNodesOfType("LINK");
 
-    for(vector<QString>::size_type i = 0; i != aux.size(); ++i)
+    for(QList<QString>::size_type i = 0; i != aux.size(); ++i)
         nodes_.push_back( new NodeLINK(aux[i]) );
 }
 
 void HtmlParser::parseNodesOfTypeMETA()
 {
-    vector<QString> const& aux = parseNodesOfType("META");
+    QList<QString> const& aux = parseNodesOfType("META");
 
-    for(vector<QString>::size_type i = 0; i != aux.size(); ++i)
+    for(QList<QString>::size_type i = 0; i != aux.size(); ++i)
     {
         NodeMETA* node = new NodeMETA(aux[i]);
         nodes_.push_back(node);
@@ -211,10 +207,10 @@ void HtmlParser::parseNodesOfTypeMETA()
 
 QString HtmlParser::findCharsetInMetaElement(QString const& html)
 {
-    vector<QString> metaTags;
+    QList<QString> metaTags;
     parseNodesOfType("META", html, metaTags);
     
-    for(vector<QString>::size_type i = 0; i != metaTags.size(); ++i)
+    for(QList<QString>::size_type i = 0; i != metaTags.size(); ++i)
     {
         NodeMETA node(metaTags[i]);
         
@@ -227,25 +223,25 @@ QString HtmlParser::findCharsetInMetaElement(QString const& html)
 
 void HtmlParser::parseNodesOfTypeIMG()
 {
-    vector<QString> const& aux = parseNodesOfType("IMG");
+    QList<QString> const& aux = parseNodesOfType("IMG");
 
-    for(vector<QString>::size_type i = 0; i != aux.size(); ++i)
+    for(QList<QString>::size_type i = 0; i != aux.size(); ++i)
         nodes_.push_back( new NodeIMG(aux[i]) );
 }
 
 void HtmlParser::parseNodesOfTypeFRAME()
 {
-    vector<QString> const& aux = parseNodesOfType("FRAME");
+    QList<QString> const& aux = parseNodesOfType("FRAME");
 
-    for(vector<QString>::size_type i = 0; i != aux.size(); ++i)
+    for(QList<QString>::size_type i = 0; i != aux.size(); ++i)
         nodes_.push_back( new NodeFRAME(aux[i]) );
 }
 
 void HtmlParser::parseNodesOfTypeIFRAME()
 {
-    vector<QString> const& aux = parseNodesOfType("IFRAME");
+    QList<QString> const& aux = parseNodesOfType("IFRAME");
 
-    for(vector<QString>::size_type i = 0; i != aux.size(); ++i)
+    for(QList<QString>::size_type i = 0; i != aux.size(); ++i)
         nodes_.push_back( new NodeFRAME(aux[i]) );
 }
 
@@ -347,109 +343,3 @@ void HtmlParser::stripScriptContent()
     }
     while(inicio != -1);
 }
-
-
-
-
-#include <iostream>
-void HtmlParser::mostra() const
-{
-    kDebug(23100) << "\nA:\n\n";
-    for(unsigned int i = 0; i != nodes_.size(); ++i)
-    {
-        if(nodes_[i]->element() == Node::A)
-            kDebug(23100) << nodes_[i]->url() << "\t" << nodes_[i]->linkLabel() << endl;
-    }
-    kDebug(23100) << "____________________________________________________________________" << endl;
-
-    kDebug(23100) << "\nLINK:\n\n";
-    for(unsigned int i = 0; i != nodes_.size(); ++i)
-    {
-        if(nodes_[i]->element() == Node::LINK)
-            kDebug(23100) << nodes_[i]->url() << "\t" << nodes_[i]->linkLabel() << endl;
-    }
-    kDebug(23100) << "____________________________________________________________________" << endl;
-
-    kDebug(23100) << "\nMETA:\n";
-    for(unsigned int i = 0; i != nodes_.size(); ++i)
-    {
-        if(nodes_[i]->element() == Node::META)
-        {
-#if defined Q_WS_WIN
-            NodeMETA* nm = (NodeMETA*)nodes_[i];
-#else
-
-            NodeMETA* nm = dynamic_cast<NodeMETA*>(nodes_[i]);
-#endif
-
-            kDebug(23100) << nm->url() << endl
-            << nm->atributoHTTP_EQUIV() << endl
-            << nm->atributoNAME() << endl
-            << nm->atributoCONTENT() << endl;
-        }
-    }
-    kDebug(23100) << "____________________________________________________________________" << endl;
-
-    kDebug(23100) << "\nIMG:\n\n";
-    for(unsigned int i = 0; i != nodes_.size(); ++i)
-    {
-        if(nodes_[i]->element() == Node::IMG)
-            kDebug(23100) << nodes_[i]->url() << "\t"
-            << nodes_[i]->linkLabel() << endl;
-    }
-    kDebug(23100) << "____________________________________________________________________" << endl;
-
-    kDebug(23100) << "\nFRAME:\n\n";
-    for(unsigned int i = 0; i != nodes_.size(); ++i)
-    {
-        if(nodes_[i]->element() == Node::FRAME)
-            kDebug(23100) << nodes_[i]->url() << endl;
-    }
-    kDebug(23100) << "____________________________________________________________________" << endl;
-
-    kDebug(23100) << "\nBASE:\n\n";
-    kDebug(23100) << node_BASE_.url() << endl;
-
-    kDebug(23100) << "____________________________________________________________________" << endl;
-
-}
-
-#ifdef HTMLPARSER
-
-#include <fstream>
-
-int main()
-{
-    //ifstream stream("aterraprometida.html");
-    //ifstream stream("/var/www/html/STL/standard_library.html");
-    //ifstream stream("/var/www/html/qt-doc/functions.html");
-    ifstream stream("/var/www/html/index.html");
-
-    QString content;
-    while(stream)
-    {
-        char c;
-        stream.get(c);
-        content += c;
-    }
-    //  kDebug(23100) << content << endl;
-    kDebug(23100) <<  "__________________________________________________________" << endl;
-    HtmlParser parser(content);
-    parser.mostra();
-    kDebug(23100) <<  "__________________________________________________________\n\n\n" << endl;
-    vector<Node*> nods = parser.nodes();
-    for(int i = 0; i != nods.size(); ++i)
-    {
-        if(nods[i]->element() == Node::META)
-        {
-            NodeMETA* nod_meta = (NodeMETA*)(nods[i]);
-            //Node* nod_meta = nods[i];
-
-            kDebug(23100) << nod_meta->atributoCONTENT() << endl;
-        }
-
-    }
-}
-
-
-#endif

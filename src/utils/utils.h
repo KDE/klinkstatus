@@ -24,11 +24,6 @@
 #include <kurl.h>
 #include <QString>
 
-//#include <string>
-
-
-using namespace std;
-
 
 int const NUMBER_OF_HTML_CODES = 92;
 extern QString htmlDocCharset[NUMBER_OF_HTML_CODES][2];

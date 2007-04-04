@@ -23,15 +23,11 @@
 
 #include <QString>
 
-#include <vector>
+#include <QList>
 
 
 #include "mstring.h"
 #include "node.h"
-
-#include <iostream>
-
-using namespace std;
 
 typedef unsigned int uint;
 
@@ -45,7 +41,7 @@ public:
   HtmlParser(QString const& documento);
   ~HtmlParser();
 
-  vector<Node*> const& nodes() const;
+  QList<Node*> const& nodes() const;
   bool hasBaseUrl() const;
   bool hasTitle() const;
   bool hasContentType() const;
@@ -53,7 +49,6 @@ public:
   NodeTITLE const& title() const;
   NodeMETA const& contentTypeMetaNode() const;
 
-  static uint estimativaLinks(uint doc_size);
   /**
    * Convenience function for performance as it only parse in order 
    * to get the charset.
@@ -65,11 +60,11 @@ public:
 
 private:
 
-  vector<QString> const& parseNodesOfType(QString const& element);
+  QList<QString> const& parseNodesOfType(QString const& element);
   /**
    * Vector nodes passed for performance.
    */
-  static void parseNodesOfType(QString const& element, QString const& doc, vector<QString>& nodes);
+  static void parseNodesOfType(QString const& element, QString const& doc, QList<QString>& nodes);
 
   void parseNodesOfTypeA();
   void parseNodesOfTypeAREA();
@@ -93,8 +88,8 @@ private:
 
 private:
 
-  vector<QString> aux_; // for what the hell is this? looks ugly... maybe I was drunk, can't remember
-  vector<Node*> nodes_;
+  QList<QString> aux_; // for what the hell is this? looks ugly... maybe I was drunk, can't remember
+  QList<Node*> nodes_;
   NodeBASE node_BASE_;
   NodeTITLE node_TITLE_;
   NodeMETA node_META_content_type_;
@@ -111,12 +106,7 @@ inline HtmlParser::~HtmlParser()
   //kDebug(23100) <<  "*";
 }
 
-inline uint HtmlParser::estimativaLinks(uint doc_size)
-{
-  return doc_size / 100; // valor estimado...
-}
-
-inline bool HtmlParser::hasContentType() const 
+inline bool HtmlParser::hasContentType() const
 {
     return is_content_type_set_;
 }

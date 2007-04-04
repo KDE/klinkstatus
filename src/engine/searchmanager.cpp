@@ -98,11 +98,11 @@ SearchManager::~SearchManager()
 
 void SearchManager::cleanItems()
 {
-    for(uint i = 0; i != search_results_.size(); ++i)
+    for(int i = 0; i != search_results_.size(); ++i)
     {
-        for(uint j = 0; j != search_results_[i].size() ; ++j)
+        for(int j = 0; j != search_results_[i].size() ; ++j)
         {
-            for(uint l = 0; l != (search_results_[i])[j].size(); ++l)
+            for(int l = 0; l != (search_results_[i])[j].size(); ++l)
             {
                 if(((search_results_[i])[j])[l] != 0)
                 {
@@ -135,21 +135,20 @@ void SearchManager::recheckLinks(QList<LinkStatus*> const& linkstatus_list)
     recheck_current_index_ = 0;
     
     recheck_links_.clear();
-    recheck_links_.reserve(linkstatus_list.size());
-
-    for(int i = 0; i != linkstatus_list.size(); ++i) {
-        LinkStatus* ls = linkstatus_list[i];
-        Q_ASSERT(ls);
-        LinkStatusHelper::resetResults(ls);
-
-        recheck_links_.push_back(ls);
-    }
+//     recheck_links_.reserve(linkstatus_list.size());
+    recheck_links_ = linkstatus_list;
 
     if(recheck_links_.size() == 0) {
         finnish();
         return;
     }
     
+    for(int i = 0; i != recheck_links_.size(); ++i) {
+        LinkStatus* ls = recheck_links_[i];
+        Q_ASSERT(ls);
+        LinkStatusHelper::resetResults(ls);
+    }
+
     emit signalLinksToCheckTotalSteps(recheck_links_.size());
 
     checkVectorLinksToRecheck(recheck_links_);
@@ -268,12 +267,12 @@ void SearchManager::slotRootChecked(LinkStatus* link, LinkChecker* checker)
     {
         current_depth_ = 1;
 
-        vector<LinkStatus*> node;
+        QList<LinkStatus*> node;
         fillWithChildren(LinkStatusHelper::lastRedirection(&root_), node);
 
         emit signalLinksToCheckTotalSteps(node.size());
 
-        vector< vector<LinkStatus*> > nivel;
+        QList< QList<LinkStatus*> > nivel;
         nivel.push_back(node);
 
         search_results_.push_back(nivel);
@@ -306,18 +305,18 @@ void SearchManager::slotRootChecked(LinkStatus* link, LinkChecker* checker)
     checker->deleteLater();
 }
 
-void SearchManager::fillWithChildren(LinkStatus* link, vector<LinkStatus*>& children)
+void SearchManager::fillWithChildren(LinkStatus* link, QList<LinkStatus*>& children)
 {
     if(!link || link->absoluteUrl().hasRef())
         return;
 
-    vector<Node*> const& nodes = link->childrenNodes();
-    children.reserve(nodes.size());
+    QList<Node*> const& nodes = link->childrenNodes();
+//     children.reserve(nodes.size());
 
     QHash<KUrl, LinkStatus*> children_hash;
     children_hash.reserve(nodes.size());
     
-    for(uint i = 0; i != nodes.size(); ++i)
+    for(int i = 0; i != nodes.size(); ++i)
     {
         Node* node = nodes[i];
         KUrl url;
@@ -414,7 +413,7 @@ void SearchManager::startSearch()
 
 void SearchManager::slotLevelAdded()
 {
-    if( (uint)current_depth_ == search_results_.size() )
+    if(current_depth_ == search_results_.size() )
         checkVectorLinks(nodeToAnalize());
     else
     {
@@ -432,9 +431,9 @@ void SearchManager::continueSearch()
 {
     Q_ASSERT(!links_being_checked_);
 
-    vector<LinkStatus*> const& node = nodeToAnalize();
+    QList<LinkStatus*> const& node = nodeToAnalize();
 
-    if((uint)current_index_ < node.size())
+    if(current_index_ < node.size())
         checkVectorLinks(node);
 
     else
@@ -442,7 +441,7 @@ void SearchManager::continueSearch()
         current_index_ = 0;
         kDebug(23100) <<  "Next node_____________________\n\n";
         ++current_node_;
-        if( (uint)current_node_ < (search_results_[current_depth_ - 1]).size() )
+        if(current_node_ < (search_results_[current_depth_ - 1]).size() )
             checkVectorLinks(nodeToAnalize());
         else
         {
@@ -464,59 +463,59 @@ void SearchManager::continueSearch()
     }
 }
 
-vector<LinkStatus*> const& SearchManager::nodeToAnalize() const
+QList<LinkStatus*> const& SearchManager::nodeToAnalize() const
 {
-    Q_ASSERT( (uint)current_depth_ == search_results_.size() );
-    Q_ASSERT( (uint)current_node_ < (search_results_[current_depth_ - 1]).size() );
+    Q_ASSERT(current_depth_ == search_results_.size());
+    Q_ASSERT(current_node_ < (search_results_[current_depth_ - 1]).size());
 
     return (search_results_[current_depth_ - 1])[current_node_];
 }
 
-void SearchManager::checkVectorLinks(vector<LinkStatus*> const& links)
+void SearchManager::checkVectorLinks(QList<LinkStatus*> const& links)
 {
     checkLinksSimultaneously(chooseLinks(links), false);
 }
 
-void SearchManager::checkVectorLinksToRecheck(vector<LinkStatus*> const& links)
+void SearchManager::checkVectorLinksToRecheck(QList<LinkStatus*> const& links)
 {
     checkLinksSimultaneously(chooseLinksToRecheck(links), true);
 }
 
-vector<LinkStatus*> SearchManager::chooseLinks(vector<LinkStatus*> const& links)
+QList<LinkStatus*> SearchManager::chooseLinks(QList<LinkStatus*> const& links)
 {
-    vector<LinkStatus*> escolha;
+    QList<LinkStatus*> escolha;
     for(int i = 0; i != max_simultaneous_connections_; ++i)
     {
-        if((uint)current_index_ < links.size())
+        if(current_index_ < links.size())
             escolha.push_back(links[current_index_++]);
     }
     return escolha;
 }
 
-vector<LinkStatus*> SearchManager::chooseLinksToRecheck(vector<LinkStatus*> const& links)
+QList<LinkStatus*> SearchManager::chooseLinksToRecheck(QList<LinkStatus*> const& links)
 {
-    vector<LinkStatus*> sample;
+    QList<LinkStatus*> sample;
     for(int i = 0; i != max_simultaneous_connections_; ++i)
     {
-        if((uint)recheck_current_index_ < links.size())
+        if(recheck_current_index_ < links.size())
             sample.push_back(links[recheck_current_index_++]);
     }
     return sample;
 }
 
-void SearchManager::checkLinksSimultaneously(vector<LinkStatus*> const& links, bool recheck)
+void SearchManager::checkLinksSimultaneously(QList<LinkStatus*> const& links, bool recheck)
 {
     Q_ASSERT(finished_connections_ <= max_simultaneous_connections_);
     finished_connections_ = 0;
     links_being_checked_ = 0;
     maximum_current_connections_ = -1;
 
-    if(links.size() < (uint)max_simultaneous_connections_)
+    if(links.size() < max_simultaneous_connections_)
         maximum_current_connections_ = links.size();
     else
         maximum_current_connections_ = max_simultaneous_connections_;
 
-    for(uint i = 0; i != links.size(); ++i)
+    for(int i = 0; i != links.size(); ++i)
     {
         LinkStatus* ls(links[i]);
         checkLink(ls, recheck);
@@ -656,7 +655,7 @@ void SearchManager::slotLinkRechecked(LinkStatus* link, LinkChecker* checker)
     }
     else if(!canceled_ && finished_connections_ == maximumCurrentConnections() )
     {
-        if((uint)recheck_current_index_ < recheck_links_.size())
+        if(recheck_current_index_ < recheck_links_.size())
             continueRecheck();
         else
             finnish();
@@ -666,40 +665,40 @@ void SearchManager::slotLinkRechecked(LinkStatus* link, LinkChecker* checker)
 void SearchManager::addLevel()
 {
     // add the new empty level
-    search_results_.push_back(vector< vector <LinkStatus*> >());
+    search_results_.push_back(QList< QList <LinkStatus*> >());
     // keep the reference to it
-    vector< vector <LinkStatus*> >& new_level(search_results_[search_results_.size() - 1]);
+    QList< QList <LinkStatus*> >& new_level(search_results_[search_results_.size() - 1]);
 
     // keep the reference to the current level
-    vector< vector <LinkStatus*> >& current_level(search_results_[search_results_.size() - 2]);
+    QList< QList <LinkStatus*> >& current_level(search_results_[search_results_.size() - 2]);
 
     // To signal the progress of add level task. For each link, all children have to be find
     number_of_current_level_links_ = 0;
     // number of new link to check in the new level
     number_of_new_links_to_check_ = 0;
-    uint current_level_number_of_nodes = current_level.size();
+    int current_level_number_of_nodes = current_level.size();
 
     // Count all the links in the level before, so progress can be signalized
-    for(uint i = 0; i != current_level_number_of_nodes; ++i) // nodes
+    for(int i = 0; i != current_level_number_of_nodes; ++i) // nodes
     {
-        uint node_size = current_level[i].size();
-        for(uint j = 0; j != node_size; ++j) // links
+        int node_size = current_level[i].size();
+        for(int j = 0; j != node_size; ++j) // links
             ++number_of_current_level_links_;
     }
-    new_level.reserve(number_of_current_level_links_);
+//     new_level.reserve(number_of_current_level_links_);
 
     if(number_of_current_level_links_ != 0)
         emit signalAddingLevelTotalSteps(number_of_current_level_links_);
 
-    for(uint i = 0; i != current_level_number_of_nodes; ++i) // nodes
+    for(int i = 0; i != current_level_number_of_nodes; ++i) // nodes
     {
-        uint node_size = current_level[i].size();
-        for(uint j = 0; j != node_size; ++j) // links
+        int node_size = current_level[i].size();
+        for(int j = 0; j != node_size; ++j) // links
         {
-            vector<LinkStatus*>& node = current_level[i];
+            QList<LinkStatus*>& node = current_level[i];
             LinkStatus* linkstatus = node[j];
             linkstatus = LinkStatusHelper::lastRedirection(linkstatus);
-            vector <LinkStatus*> new_node;
+            QList <LinkStatus*> new_node;
             fillWithChildren(linkstatus, new_node);
             if(new_node.size() != 0)
             {
@@ -783,7 +782,7 @@ bool SearchManager::generalDomain() const
         }
         else
         {
-            vector<QString> palavras = tokenizeWordsSeparatedByDots(domain_);
+            QList<QString> palavras = tokenizeWordsSeparatedByDots(domain_);
             Q_ASSERT(palavras.size() >= 1); // host might be localhost
 
             QString primeira_palavra = palavras[0];
@@ -900,11 +899,11 @@ void SearchManager::save(QDomElement& element) const
     child_element = element.ownerDocument().createElement("link_list");
     element.appendChild(child_element);
     
-    for(uint i = 0; i != search_results_.size(); ++i)
+    for(int i = 0; i != search_results_.size(); ++i)
     {
-        for(uint j = 0; j != search_results_[i].size() ; ++j)
+        for(int j = 0; j != search_results_[i].size() ; ++j)
         {
-            for(uint l = 0; l != (search_results_[i])[j].size(); ++l)
+            for(int l = 0; l != (search_results_[i])[j].size(); ++l)
             {
                 LinkStatus* ls = ((search_results_[i])[j])[l];
                 if(ls->checked())

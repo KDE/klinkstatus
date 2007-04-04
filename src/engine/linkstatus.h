@@ -30,14 +30,11 @@ class TreeViewItem;
 #include <QSet>
 class QDomElement;
 
-#include <vector>
-#include <iostream>
+#include <QList>
 
 #include "parser/http.h"
 #include "tidy/markupvalidator.h"
 class Node;
-
-using namespace std;
 
 class LinkStatus
 {
@@ -78,9 +75,8 @@ public:
     void setIsRedirection(bool e_redirection);
     void setRedirection(LinkStatus* redirection);
     void setNode(Node* node);
-    void setChildrenNodes(vector<Node*> const& nodes);
+    void setChildrenNodes(QList<Node*> const& nodes);
     void addChildNode(Node* node);
-    void reserveMemoryForChildrenNodes(int n);
     void setChecked(bool flag);
     void setExternalDomainDepth(int p);
     void setOnlyCheckHeader(bool flag);
@@ -116,7 +112,7 @@ public:
     bool isRedirection() const;
     LinkStatus* redirection() const;
     Node* node() const;
-    vector<Node*> const& childrenNodes() const;
+    QList<Node*> const& childrenNodes() const;
     bool checked() const;
     int externalDomainDepth() const;
     bool onlyCheckHeader() const;
@@ -158,7 +154,7 @@ private:
     bool is_root_;
     bool error_occurred_;
     bool is_redirection_;
-    vector<Node*> children_nodes_;
+    QList<Node*> children_nodes_;
     LinkStatus* parent_;
     LinkStatus* redirection_;
     bool checked_;

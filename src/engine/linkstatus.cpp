@@ -66,7 +66,7 @@ LinkStatus::LinkStatus(Node* node, LinkStatus* parent)
 
 LinkStatus::~LinkStatus()
 {
-    for(uint i = 0; i != children_nodes_.size(); ++i)
+    for(int i = 0; i != children_nodes_.size(); ++i)
     {
         if(children_nodes_[i])
         {
@@ -110,9 +110,9 @@ bool LinkStatus::malformed() const // don't inline please (#include "node.h")
     return (malformed_ || (node_ && node_->malformed()));
 }
 
-void LinkStatus::setChildrenNodes(vector<Node*> const& nodes) // don't inline please (#include "node.h")
+// don't inline please (#include "node.h")
+void LinkStatus::setChildrenNodes(QList<Node*> const& nodes) 
 {
-    children_nodes_.reserve(nodes.size());
     children_nodes_ = nodes;
 }
 

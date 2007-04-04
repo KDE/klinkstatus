@@ -27,9 +27,7 @@
 #include <kurl.h>
 #include <QString>
 
-#include <vector>
-
-using namespace std;
+#include <QList>
 
 
 class LinkStatus;

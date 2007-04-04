@@ -31,7 +31,7 @@
 #include <QHash>
 class QDomElement;
 
-#include <vector>
+#include <QList>
 
 #include "engine/linkstatus.h"
 #include "engine/linkchecker.h"
@@ -39,7 +39,6 @@ class QDomElement;
 #include "parser/url.h"
 class AddLevelJob;
          
-using namespace std;
 using namespace ThreadWeaver;
 
 
@@ -111,9 +110,9 @@ signals:
     void signalLinkRechecked(LinkStatus* link);
     void signalSearchFinished();
     void signalSearchPaused();
-    void signalAddingLevelTotalSteps(uint number_of_links);
+    void signalAddingLevelTotalSteps(int number_of_links);
     void signalAddingLevelProgress();
-    void signalLinksToCheckTotalSteps(uint links_to_check);
+    void signalLinksToCheckTotalSteps(int links_to_check);
     void signalRedirection();
 
 private slots:
@@ -140,19 +139,19 @@ private:
     void removeHtmlParts();
     void checkRoot();
     // Used to search a node of a level, but not necesseraly
-    void checkVectorLinks(vector<LinkStatus*> const& links);
-    void checkVectorLinksToRecheck(vector<LinkStatus*> const& links);
-    void fillWithChildren(LinkStatus* link, vector<LinkStatus*>& children);
+    void checkVectorLinks(QList<LinkStatus*> const& links);
+    void checkVectorLinksToRecheck(QList<LinkStatus*> const& links);
+    void fillWithChildren(LinkStatus* link, QList<LinkStatus*>& children);
     void startSearch();
     void continueSearch();
     void continueRecheck();
     void finnish();
     void pause();
-    vector<LinkStatus*> const& nodeToAnalize() const;
+    QList<LinkStatus*> const& nodeToAnalize() const;
     void checkLink(LinkStatus* ls, bool recheck = false);
-    vector<LinkStatus*> chooseLinks(vector<LinkStatus*> const& links);
-    vector<LinkStatus*> chooseLinksToRecheck(vector<LinkStatus*> const& links);
-    void checkLinksSimultaneously(vector<LinkStatus*> const& links, bool recheck);
+    QList<LinkStatus*> chooseLinks(QList<LinkStatus*> const& links);
+    QList<LinkStatus*> chooseLinksToRecheck(QList<LinkStatus*> const& links);
+    void checkLinksSimultaneously(QList<LinkStatus*> const& links, bool recheck);
     void addLevel();
     bool checkableByDomain(KUrl const& url, LinkStatus const& link_parent) const;
     bool checkable(KUrl const& url, LinkStatus const& link_parent) const;
@@ -202,12 +201,12 @@ private:
     bool check_parent_dirs_;
     bool check_external_links_;
     bool check_regular_expressions_;
-    uint number_of_current_level_links_;
-    uint number_of_new_links_to_check_;
-    vector< vector< vector <LinkStatus*> > > search_results_;
+    int number_of_current_level_links_;
+    int number_of_new_links_to_check_;
+    QList< QList< QList <LinkStatus*> > > search_results_;
     QHash<KUrl, LinkStatus*> search_results_hash_;
     
-    vector<LinkStatus*> recheck_links_;
+    QList<LinkStatus*> recheck_links_;
     int links_rechecked_;
     int recheck_current_index_;
 

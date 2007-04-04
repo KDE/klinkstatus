@@ -58,7 +58,7 @@ public:
     virtual bool isEmpty() const;
 
 signals:
-    void signalUrlRecheck(KUrl const&);
+    void signalLinkRecheck(LinkStatus* ls);
   
 protected:
     virtual void resizeEvent(QResizeEvent *e);

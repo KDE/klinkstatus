@@ -149,8 +149,8 @@ bool Url::equalHost(QString const& host1, QString const& host2, bool restrict)
     removeLastCharIfExists(host1_, '/');
     removeLastCharIfExists(host2_, '/');
 
-    vector<QString> v1 = tokenizeWordsSeparatedByDots(host1_);
-    vector<QString> v2 = tokenizeWordsSeparatedByDots(host2_);
+    QList<QString> v1 = tokenizeWordsSeparatedByDots(host1_);
+    QList<QString> v2 = tokenizeWordsSeparatedByDots(host2_);
     uint const size1 = v1.size();
     uint const size2 = v2.size();
 
@@ -161,8 +161,8 @@ bool Url::equalHost(QString const& host1, QString const& host2, bool restrict)
         return false;
     }
 
-    vector<QString>::size_type aux = 0;
-    vector<QString>::size_type aux2 = 0;
+    QList<QString>::size_type aux = 0;
+    QList<QString>::size_type aux2 = 0;
     if(v1[0] == "www")
         aux = 1;
     if(v2[0] == "www")
@@ -298,9 +298,9 @@ bool Url::parentDir(KUrl const& url1, KUrl const& url2)
         if(!equalHost(url1.host(), url2.host()))
             return false;
 		
-        vector<QString> tokens_1 = tokenizeWordsSeparatedBy(
+        QList<QString> tokens_1 = tokenizeWordsSeparatedBy(
             url1.directory(KUrl::AppendTrailingSlash | KUrl::ObeyTrailingSlash), QChar('/'));
-        vector<QString> tokens_2 = tokenizeWordsSeparatedBy(
+        QList<QString> tokens_2 = tokenizeWordsSeparatedBy(
             url2.directory(KUrl::AppendTrailingSlash | KUrl::ObeyTrailingSlash), QChar('/'));
 		
 		if(tokens_1.size() == 0)
@@ -308,13 +308,13 @@ bool Url::parentDir(KUrl const& url1, KUrl const& url2)
 
         //if(tokens_2.size() > tokens_1.size() or tokens_2.size() == 0)
             //return true;
-		vector<QString>::size_type size = 0;
+		QList<QString>::size_type size = 0;
 		if(tokens_1.size() < tokens_2.size())
 			size = tokens_1.size();
 		else
 			size = tokens_2.size();
 
-        for(vector<QString>::size_type i = 0; i != size; ++i)
+        for(QList<QString>::size_type i = 0; i != size; ++i)
         {
             if(tokens_2[i] != tokens_1[i])
                 return true;
