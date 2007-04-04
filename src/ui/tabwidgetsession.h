@@ -70,6 +70,7 @@ public slots:
     void slotStopSearch();
 
     void slotRecheckVisibleItems();
+    void slotRecheckBrokenItems();
 
     void slotExportAsHTML();
 

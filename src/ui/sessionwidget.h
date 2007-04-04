@@ -82,6 +82,7 @@ public slots:
     void slotStopSearch();
 
     void slotRecheckVisibleItems();
+    void slotRecheckBrokenItems();
 
     void slotHideSearchPanel();
     void slotResetSearchOptions();

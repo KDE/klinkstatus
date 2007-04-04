@@ -191,6 +191,12 @@ void ActionManager::initTabWidget(TabWidgetSession* tabWidgetSession)
     action->setShortcut(KShortcut("Ctrl+c"));
     action->setEnabled(false);
         
+    action  = new KAction(KIcon("view-refresh"), i18n("&Recheck Broken Items"), this);
+    actionCollection()->addAction("recheck_broken_items", action);
+    connect(action, SIGNAL(triggered(bool) ),
+            d->tabWidgetSession, SLOT(slotRecheckBrokenItems()));
+    action->setEnabled(false);
+        
     action  = new KAction(KIcon("view-refresh"), i18n("&Recheck Visible Items"), this);
     actionCollection()->addAction("recheck_visible_items", action);
     connect(action, SIGNAL(triggered(bool) ),
@@ -248,6 +254,7 @@ void ActionManager::updatePlayActions(SessionWidget* page)
     KToggleAction* pause_search_action_ = static_cast<KToggleAction*> (action("pause_search"));
     QAction* stop_search_action_ = action("stop_search");
     QAction* recheck_visible_items = action("recheck_visible_items");
+    QAction* recheck_broken_items = action("recheck_broken_items");
 
     if(page->inProgress())
     {
@@ -261,6 +268,7 @@ void ActionManager::updatePlayActions(SessionWidget* page)
         stop_search_action_->setEnabled(true);
 
         recheck_visible_items->setEnabled(false);
+        recheck_broken_items->setEnabled(false);
     }
     if(page->paused())
     {
@@ -276,6 +284,7 @@ void ActionManager::updatePlayActions(SessionWidget* page)
         stop_search_action_->setEnabled(true);
 
         recheck_visible_items->setEnabled(true);
+        recheck_broken_items->setEnabled(true);
     }
     if(page->stopped())
     {
@@ -291,6 +300,7 @@ void ActionManager::updatePlayActions(SessionWidget* page)
         stop_search_action_->setEnabled(false);
     
         recheck_visible_items->setEnabled(true);
+        recheck_broken_items->setEnabled(true);
     }
 }
 

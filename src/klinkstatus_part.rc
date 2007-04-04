@@ -28,7 +28,10 @@
             <Action name="pause_search"/>
             <Action name="stop_search"/>
             <Separator/>
-            <Action name="recheck_visible_items"/>
+            <Menu name="recheck"><text>Recheck</text>
+                <Action name="recheck_broken_items"/>
+                <Action name="recheck_visible_items"/>
+            </Menu>
         </Menu>
 
         <Menu name="validate"><text>&amp;Validate</text>
@@ -54,6 +57,8 @@
         <Action name="start_search"/>
         <Action name="pause_search"/>
         <Action name="stop_search"/>
+        <Separator/>
+        <Action name="recheck_broken_items"/>
         <Separator/>
         <Action name="file_export_html"/>
         <Separator/>

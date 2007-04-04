@@ -275,6 +275,11 @@ void TabWidgetSession::slotRecheckVisibleItems()
     currentSession()->slotRecheckVisibleItems();
 }
 
+void TabWidgetSession::slotRecheckBrokenItems()
+{
+    currentSession()->slotRecheckBrokenItems();
+}
+
 void TabWidgetSession::slotExportAsHTML()
 {
     currentSession()->slotExportAsHTML();

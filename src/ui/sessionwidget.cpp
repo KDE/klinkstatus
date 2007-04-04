@@ -581,7 +581,34 @@ void SessionWidget::slotRecheckVisibleItems()
 
     action_manager_->slotUpdateSessionWidgetActions(this);
 
-    QList<LinkStatus*> items = tree_view->getVisibleItems();
+    QList<LinkStatus*> items = tree_view->getVisibleLinks();
+    search_manager_->recheckLinks(items);
+}
+
+void SessionWidget::slotRecheckBrokenItems()
+{
+    if(in_progress_)
+    {
+        start_search_action_->setChecked(true); // do not toggle
+        Q_ASSERT(!stopped_);
+        KApplication::beep();
+        return;
+    }
+
+    to_start_ = true;
+    slotLoadSettings(false);
+    resetPendingActions();
+    ready_ = false;
+
+//     emit signalSearchStarted();
+
+    in_progress_ = true;
+    paused_ = false;
+    stopped_ = false;
+
+    action_manager_->slotUpdateSessionWidgetActions(this);
+
+    QList<LinkStatus*> items = tree_view->getBrokenLinks();
     search_manager_->recheckLinks(items);
 }
 

@@ -159,7 +159,13 @@ void TreeView::showAll()
     }
 }
 
-QList<LinkStatus*> TreeView::getVisibleItems() const
+QList<LinkStatus*> TreeView::getBrokenLinks() const
+{
+    LinkMatcher matcher(QString(), LinkStatusHelper::bad);
+    return getLinksWithCriteria(matcher);
+}
+
+QList<LinkStatus*> TreeView::getVisibleLinks() const
 {
     QList<LinkStatus*> items;
     for(int i = 0; i != topLevelItemCount(); ++i) {
@@ -174,7 +180,7 @@ QList<LinkStatus*> TreeView::getVisibleItems() const
     return items;
 }
 
-void TreeView::addVisibleItemsRecursively(QList<LinkStatus*>& items, TreeViewItem* item)
+void TreeView::addVisibleItemsRecursively(QList<LinkStatus*>& items, TreeViewItem* item) const
 {
     for(int i = 0; i != item->childCount(); ++i) {
         QTreeWidgetItem* child = item->child(i);
@@ -185,6 +191,30 @@ void TreeView::addVisibleItemsRecursively(QList<LinkStatus*>& items, TreeViewIte
           
               addVisibleItemsRecursively(items, my_item);
           }
+    }
+}
+
+QList<LinkStatus*> TreeView::getLinksWithCriteria(LinkMatcher const& link_matcher) const
+{
+    QList<LinkStatus*> items;
+    for(int i = 0; i != topLevelItemCount(); ++i) {
+        TreeViewItem* my_item = myItem(topLevelItem(i));
+        if(link_matcher.matches(*(my_item->linkStatus()))) {
+            items.push_back(my_item->linkStatus());
+        }
+        addLinksWithCriteriaRecursively(items, my_item, link_matcher);
+    }
+    return items;
+}
+
+void TreeView::addLinksWithCriteriaRecursively(QList<LinkStatus*>& items, TreeViewItem* item, LinkMatcher const& link_matcher) const
+{
+    for(int i = 0; i != item->childCount(); ++i) {
+        TreeViewItem* my_item = myItem(item->child(i));
+        if(link_matcher.matches(*(my_item->linkStatus()))) {
+            items.push_back(my_item->linkStatus());          
+        }
+        addLinksWithCriteriaRecursively(items, my_item, link_matcher);
     }
 }
 

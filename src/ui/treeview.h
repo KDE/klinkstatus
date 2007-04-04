@@ -38,7 +38,8 @@ public:
     TreeView(QWidget *parent = 0);
     ~TreeView();
 
-    QList<LinkStatus*> getVisibleItems() const;
+    QList<LinkStatus*> getVisibleLinks() const;
+    QList<LinkStatus*> getBrokenLinks() const;
 
     virtual void setColumns(QStringList const& columns);
     virtual void clear();
@@ -85,7 +86,9 @@ private:
     void setItemVisibleRecursively(QTreeWidgetItem* item, bool hidden);
 
     static TreeViewItem* myItem(QTreeWidgetItem* item);
-    static void addVisibleItemsRecursively(QList<LinkStatus*>& items, TreeViewItem* item);
+    QList<LinkStatus*> getLinksWithCriteria(LinkMatcher const& link_matcher) const;
+    void addLinksWithCriteriaRecursively(QList<LinkStatus*>& items, TreeViewItem* item, LinkMatcher const& link_matcher) const;
+    void addVisibleItemsRecursively(QList<LinkStatus*>& items, TreeViewItem* item) const;
 
 private:
     int current_column_; // apparently it's impossible to know what is the current column
