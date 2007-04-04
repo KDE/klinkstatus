@@ -33,7 +33,6 @@
 #include <kconfigdialog.h>
 #include <kglobalsettings.h>
 #include <kshortcut.h>
-#include <kkeydialog.h>
 #include <KStatusBar>
 #include <threadweaver/WeaverThreadGrid.h>
 

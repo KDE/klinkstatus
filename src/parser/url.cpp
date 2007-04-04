@@ -18,7 +18,7 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.             *
  ***************************************************************************/
 
-#include <kresolver.h>
+#include <k3resolver.h>
 
 #include "url.h"
 #include "mstring.h"
