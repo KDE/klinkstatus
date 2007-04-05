@@ -91,7 +91,7 @@ target_link_libraries(klinkstatuspart
     ${KDE4_KIO_LIBS}
     ${KDE4_KHTML_LIBS}
     ${KDE4_THREADWEAVER_LIBRARY}
-    ThreadWeaverGui 
+    #    ThreadWeaverGui 
 )
 
 install(TARGETS klinkstatuspart  DESTINATION ${PLUGIN_INSTALL_DIR})
