@@ -438,7 +438,7 @@ void SessionWidget::slotSearchFinished()
     resetPendingActions();
     action_manager_->slotUpdateSessionWidgetActions(this);
 
-    Global::self()->setStatusBarText(i18n("Finished checking") + " "
+    Global::self()->setStatusBarText(i18n("Finished checking") + ' '
         + combobox_url->currentText(), false);
 
     emit signalSearchFinnished();
@@ -798,7 +798,7 @@ void SessionWidget::slotSearchStarted()
     textlabel_elapsed_time_value->setText(QTime(0, 0).toString("hh:mm:ss"));
     elapsed_time_timer_.start();
 
-    Global::self()->setStatusBarText(i18n("Checking") + " " + combobox_url->currentText(), false);
+    Global::self()->setStatusBarText(i18n("Checking") + ' ' + combobox_url->currentText(), false);
 }
 
 void SessionWidget::slotLinkRecheck(LinkStatus* ls)

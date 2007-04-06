@@ -529,7 +529,7 @@ void LinkChecker::checkRef()
     Q_ASSERT(url.hasRef());
     
     QString ref = url.ref();
-    if(ref == "" || ref == "top") {
+    if(ref.isEmpty() || ref == "top") {
         linkstatus_->setStatusText("OK");
         linkstatus_->setStatus(LinkStatus::SUCCESSFULL);
         finnish();
