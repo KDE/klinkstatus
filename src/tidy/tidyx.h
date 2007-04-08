@@ -103,7 +103,7 @@ public:
     getByte    = get;
     ungetByte  = unget;
     eof        = end;
-    sourceData = this;
+    sourceData = (ulong) this;
   }
   virtual ~Source() {}
 
@@ -112,18 +112,18 @@ public:
   virtual Bool IsEOF() = 0;
 
 protected:
-  static int get( void* data )
+  static int get( ulong data )
   {
     Source* source = (Source*) data;
     return ( source ? source->GetByte() : EOF );
   }
-  static void unget( void* data, byte bv )
+  static void unget( ulong data, byte bv )
   {
     Source* source = (Source*) data;
     if ( source )
       source->UngetByte( bv );
   }
-  static Bool end( void* data )
+  static Bool end( ulong data )
   {
     Source* source = (Source*) data;
     return ( source ? source->IsEOF() : yes );
@@ -141,13 +141,13 @@ public:
   Sink()
   {
     putByte  = put;
-    sinkData = this;
+    sinkData = (ulong) this;
   }
   virtual ~Sink() {}
   virtual void PutByte( byte bv ) = 0;
 
 protected:
-  static void put( void* data, byte bv )
+  static void put( ulong data, byte bv )
   {
     Sink* sink = (Sink*) data;
     if ( sink )
@@ -513,7 +513,7 @@ public:
         Release();
         if ( (_tdoc = tidyCreate()) )
         {
-            tidySetAppData( _tdoc, this );
+            tidySetAppData( _tdoc, (ulong) this );
             tidySetReportFilter( _tdoc, ReportFilter );
             return 0;
         }
@@ -528,8 +528,8 @@ public:
     /* Let application store a chunk of data w/ each Tidy instance.
     ** Useful for callbacks.
     */
-    void  SetAppData( void* data ) { tidySetAppData( _tdoc, data ); }
-    void* GetAppData()             { return tidyGetAppData( _tdoc ); }
+    void  SetAppData( ulong data ) { tidySetAppData( _tdoc, data ); }
+    ulong GetAppData()             { return tidyGetAppData( _tdoc ); }
 
     static ctmbstr ReleaseDate()  { return tidyReleaseDate(); }
 
