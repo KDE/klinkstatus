@@ -28,7 +28,7 @@ bool KLSHistoryCombo::items_saved_ = false;
 
 
 KLSHistoryCombo::KLSHistoryCombo(QWidget *parent)
-        : KHistoryCombo(true, parent)
+        : KHistoryComboBox(true, parent)
 {
     setMaxCount(KLSConfig::maxCountComboUrl());
     

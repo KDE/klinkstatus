@@ -12,17 +12,15 @@
 #ifndef KLSHISTORYCOMBO_H
 #define KLSHISTORYCOMBO_H
 
-#include <kcombobox.h>
-//Added by qt3to4:
-#include <QKeyEvent>
-#include <QEvent>
+#include <khistorycombobox.h>
+class QKeyEvent;
 class KConfig;
 
 /**
 @author Paulo Moura Guedes
 Based on KonqCombo
 */
-class KLSHistoryCombo : public KHistoryCombo
+class KLSHistoryCombo : public KHistoryComboBox
 {
     Q_OBJECT
 
