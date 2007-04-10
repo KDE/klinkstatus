@@ -51,6 +51,8 @@
 #include <tidy/tidy.h>
 #include <tidy/buffio.h>
 
+#include <config-tidy.h>
+    
 #ifdef __cplusplus
 
 namespace Tidy
@@ -103,7 +105,11 @@ public:
     getByte    = get;
     ungetByte  = unget;
     eof        = end;
+#ifdef HAVE_TIDY_ULONG_VERSION
     sourceData = (ulong) this;
+#else
+    sourceData = this;
+#endif
   }
   virtual ~Source() {}
 
@@ -112,18 +118,30 @@ public:
   virtual Bool IsEOF() = 0;
 
 protected:
+#ifdef HAVE_TIDY_ULONG_VERSION
   static int get( ulong data )
+#else
+  static int get( void* data )
+#endif
   {
     Source* source = (Source*) data;
     return ( source ? source->GetByte() : EOF );
   }
+#ifdef HAVE_TIDY_ULONG_VERSION
   static void unget( ulong data, byte bv )
+#else
+  static void unget( void* data, byte bv )
+#endif
   {
     Source* source = (Source*) data;
     if ( source )
       source->UngetByte( bv );
   }
+#ifdef HAVE_TIDY_ULONG_VERSION
   static Bool end( ulong data )
+#else
+  static Bool end( void* data )
+#endif
   {
     Source* source = (Source*) data;
     return ( source ? source->IsEOF() : yes );
@@ -141,13 +159,21 @@ public:
   Sink()
   {
     putByte  = put;
+#ifdef HAVE_TIDY_ULONG_VERSION
     sinkData = (ulong) this;
+#else
+    sinkData = this;
+#endif
   }
   virtual ~Sink() {}
   virtual void PutByte( byte bv ) = 0;
 
 protected:
+#ifdef HAVE_TIDY_ULONG_VERSION
   static void put( ulong data, byte bv )
+#else
+  static void put( void* data, byte bv )
+#endif
   {
     Sink* sink = (Sink*) data;
     if ( sink )
@@ -513,7 +539,11 @@ public:
         Release();
         if ( (_tdoc = tidyCreate()) )
         {
+#ifdef HAVE_TIDY_ULONG_VERSION
             tidySetAppData( _tdoc, (ulong) this );
+#else
+            tidySetAppData( _tdoc, this );
+#endif
             tidySetReportFilter( _tdoc, ReportFilter );
             return 0;
         }
@@ -528,8 +558,13 @@ public:
     /* Let application store a chunk of data w/ each Tidy instance.
     ** Useful for callbacks.
     */
+#ifdef HAVE_TIDY_ULONG_VERSION
     void  SetAppData( ulong data ) { tidySetAppData( _tdoc, data ); }
     ulong GetAppData()             { return tidyGetAppData( _tdoc ); }
+#else
+    void  SetAppData( void* data ) { tidySetAppData( _tdoc, data ); }
+    void* GetAppData()             { return tidyGetAppData( _tdoc ); }
+#endif
 
     static ctmbstr ReleaseDate()  { return tidyReleaseDate(); }
 
