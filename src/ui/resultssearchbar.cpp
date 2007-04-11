@@ -60,10 +60,9 @@ ResultsSearchBar::ResultsSearchBar(QWidget* parent)
         : QWidget(parent), d(new ResultsSearchBar::ResultsSearchBarPrivate)
 {
     setSizePolicy(QSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed));
-
     setAutoFillBackground(true);
     
-    d->layout = new Q3HBoxLayout(this);    
+    d->layout = new Q3HBoxLayout(this);
     d->layout->setMargin(2);
     d->layout->setSpacing(5);
     

@@ -334,18 +334,19 @@ void LinkChecker::slotResult(KJob* /*job*/)
         ls = linkstatus_;
     Q_ASSERT(ls);
 
-    if(!(!ls->onlyCheckHeader() ||
-          job->error() ||
-          !header_checked_))
-        kWarning(23100) << LinkStatusHelper::toString(ls) << endl;
+//     if(!((!ls->onlyCheckHeader() || (ls->onlyCheckHeader()
+//            && KLSConfig::showMarkupStatus()))
+//         || job->error()
+//         || !header_checked_))
+//         kWarning(23100) << LinkStatusHelper::toString(ls) << endl;
 
     Q_ASSERT(
         (!ls->onlyCheckHeader() || (ls->onlyCheckHeader() && KLSConfig::showMarkupStatus()))
         || job->error()
         || !header_checked_);
 
-    if(ls->isErrorPage())
-        kWarning(23100) << "\n\n" << LinkStatusHelper::toString(ls) << endl << endl;
+//     if(ls->isErrorPage())
+//         kWarning(23100) << "\n\n" << LinkStatusHelper::toString(ls) << endl << endl;
 
     Q_ASSERT(!job->isErrorPage());
 

@@ -73,6 +73,9 @@ public:
     void recheckLink(LinkStatus* linkStatus);
     void recheckLinks(QList<LinkStatus*> const& linkstatus_list);
 
+    /** Checks if each document in the list is referred at least once in the search results */
+    QStringList findUnreferredDocuments(KUrl const& baseDir, QStringList const& documentList) const;
+
     bool hasDocumentRoot() const;
     KUrl const& documentRoot() const;
     void setDocumentRoot(KUrl const& url);

@@ -827,10 +827,7 @@ void SearchManager::slotSearchFinished()
 
 KHTMLPart* SearchManager::htmlPart(QString const& key_url) const
 {
-    if(!html_parts_.contains(key_url))
-        return 0;
-
-    return html_parts_[key_url];
+    return html_parts_.value(key_url, 0);
 }
 
 void SearchManager::addHtmlPart(QString const& key_url, KHTMLPart* html_part)
@@ -839,7 +836,7 @@ void SearchManager::addHtmlPart(QString const& key_url, KHTMLPart* html_part)
     Q_ASSERT(html_part);
 
     // FIXME configurable
-    if(html_parts_.count() > 150)
+    if(html_parts_.count() > 300)
         removeHtmlParts();
 
     html_parts_.insert(key_url, html_part);
@@ -847,8 +844,7 @@ void SearchManager::addHtmlPart(QString const& key_url, KHTMLPart* html_part)
 
 void SearchManager::removeHtmlParts()
 {
-    KHTMLPartMap::Iterator it;
-    for(it = html_parts_.begin(); it != html_parts_.end(); ++it) 
+    for(KHTMLPartMap::iterator it = html_parts_.begin(); it != html_parts_.end(); ++it)
     {
         delete it.value();
         it.value() = 0;
@@ -935,6 +931,38 @@ void SearchManager::slotJobDone(Job* job)
 
     slotLevelAdded();
 }
+
+QStringList SearchManager::findUnreferredDocuments(KUrl const& baseDir, QStringList const& documentList) const
+{
+    Q_ASSERT(search_results_hash_.size() != 0);
+
+    QStringList unreferredDocuments;
+    
+    for(int i = 0; i != documentList.size(); ++i)
+    {
+        QString document = documentList[i];
+        KUrl documentUrl(baseDir);    
+        documentUrl.addPath(document);
+
+        bool found = false;
+
+        QHash<KUrl, LinkStatus*>::const_iterator it = search_results_hash_.constBegin();
+        for(it = search_results_hash_.constBegin(); it != search_results_hash_.constEnd(); ++it)
+        {
+            KUrl const& url(it.key());
+            
+            if(url == documentUrl) {
+                found = true;
+                break;
+            }
+        }
+        if(!found)
+            unreferredDocuments.append(document);
+    }
+
+    return unreferredDocuments;
+}
+
 
 
 AddLevelJob::AddLevelJob(SearchManager& manager)
