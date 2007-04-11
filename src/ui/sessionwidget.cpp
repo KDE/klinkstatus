@@ -87,9 +87,6 @@ SessionWidget::SessionWidget(int max_simultaneous_connections, int time_out,
     connect(this, SIGNAL(signalSearchStarted()),
             this, SLOT(slotSearchStarted()));
 
-    connect(toolButton_clear_combo, SIGNAL(clicked()),
-            this, SLOT(slotClearComboUrl()));
-    
     connect(combobox_url, SIGNAL(textChanged(const QString&)),
             this, SLOT(slotEnableCheckButton(const QString&)));
 
@@ -106,8 +103,6 @@ SessionWidget::~SessionWidget()
 void SessionWidget::init()
 {
     combobox_url->init();
-
-    toolButton_clear_combo->setIcon(KIcon("locationbar-erase"));
 
     pushbutton_url->setIcon(KIcon("document-open"));
     const int pixmapSize = style()->pixelMetric(QStyle::PM_SmallIconSize);
@@ -518,12 +513,6 @@ void SessionWidget::slotLinksToCheckTotalSteps(int steps)
 void SessionWidget::slotIncrementLinksToCheckTotalSteps()
 {
     progressbar_checker->setMaximum(progressbar_checker->maximum() + 1);
-}
-
-void SessionWidget::slotClearComboUrl()
-{
-    combobox_url->clearEditText();
-    combobox_url->setFocus();
 }
 
 void SessionWidget::slotChooseUrlDialog()
