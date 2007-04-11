@@ -32,7 +32,8 @@ set(libui_SRCS
 	${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/resultview.cpp 
 	${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/sessionwidget.cpp 
     ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/tabwidgetsession.cpp  
-	${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/treeview.cpp
+    ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/treeview.cpp
+    ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/WeaverThreadGrid.cpp
 )
 
 set(libuisettings_SRCS 

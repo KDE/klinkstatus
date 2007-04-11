@@ -34,7 +34,6 @@
 #include <kglobalsettings.h>
 #include <kshortcut.h>
 #include <KStatusBar>
-//#include <threadweaver/WeaverThreadGrid.h>
 
 #include <q3buttongroup.h>
 
@@ -46,6 +45,7 @@
 #include "ui_configsearchdialog.h"
 #include "ui_configresultsdialog.h"
 #include "ui/settings/configidentificationdialog.h"
+#include "ui/WeaverThreadGrid.h"
 #include "actionmanager.h"
 
 
@@ -79,7 +79,6 @@ KLinkStatusPart::KLinkStatusPart(QWidget *parentWidget,
     
     Global::self()->setKLinkStatusPart(this);
 
-/*
     // Set thread weaver activity monitor in the status bar
     ThreadWeaver::WeaverThreadGrid* threadGrid = new ThreadWeaver::WeaverThreadGrid(Global::self()->statusBar());
     threadGrid->attach(ThreadWeaver::Weaver::instance());
@@ -89,7 +88,6 @@ KLinkStatusPart::KLinkStatusPart(QWidget *parentWidget,
     threadGrid->setToolTip(i18n("Displays Thread Activity"));
     
     Global::self()->addStatusBarPermanentItem(threadGrid);
-*/
 }
 
 KLinkStatusPart::~KLinkStatusPart()
