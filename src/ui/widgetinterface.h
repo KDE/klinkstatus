@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004 by Paulo Moura Guedes                              *
+ *   Copyright (C) 2007 by Paulo Moura Guedes                              *
  *   moura@kdewebdev.org                                                   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,55 +18,57 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
-#ifndef _KLINKSTATUSPART_H_
-#define _KLINKSTATUSPART_H_
+#ifndef SESSION_INTERFACE_H
+#define SESSION_INTERFACE_H
 
-#include <kparts/part.h>
+#include <QWidget>
 
-class TabWidgetSession;
-class ActionManager;
-
-class QWidget;
-class QPainter;
-
-class KUrl;
-class KAboutData;
-class KAboutApplicationDialog;
-class KAction;
-
-class KLinkStatusPart: public KParts::ReadOnlyPart
-{
-    Q_OBJECT
-public:
-    KLinkStatusPart(QWidget *parentWidget, QObject *parent, const QStringList& args);
-    virtual ~KLinkStatusPart();
-
-    static KAboutData* createAboutData();
-
-protected:
-    /** This must be implemented by each part */
-    virtual bool openFile();
-    virtual bool openURL (const KUrl &url);
-
-protected slots:
-    void slotNewLinkCheck();
-    void slotOpenLink();
-    void slotClose();
-    void slotConfigureKLinkStatus();
-    void slotAbout();
-    void slotReportBug();
     
-private:
-    void initGUI();
-
-private:
-    static const char description_[];
-    static const char version_[];
-
-    ActionManager* action_manager_;
-
-    TabWidgetSession* tabwidget_;
-    KAboutApplicationDialog* m_dlgAbout;
+class WidgetInterface : public QWidget
+{
+public:
+    WidgetInterface(QWidget* parent);
 };
 
-#endif // _KLINKSTATUSPART_H_
+inline WidgetInterface::WidgetInterface(QWidget* parent)
+    : QWidget(parent)
+{
+}
+    
+class PlayableWidgetInterface : public WidgetInterface
+{
+public:
+    PlayableWidgetInterface(QWidget* parent);
+    virtual ~PlayableWidgetInterface() = 0;
+  
+    bool inProgress() { return in_progress_; }
+    bool stopped() { return stopped_; }
+    bool paused() { return paused_; }
+
+    virtual void slotStartSearch() = 0;
+    virtual void slotPauseSearch() = 0;
+    virtual void slotStopSearch() = 0;
+    
+protected:
+    bool ready_;
+    bool to_start_;
+    bool to_pause_;
+    bool to_stop_;
+    bool in_progress_;
+    bool paused_;
+    bool stopped_;
+};
+
+inline PlayableWidgetInterface::PlayableWidgetInterface(QWidget* parent)
+    : WidgetInterface(parent),
+      ready_(true), to_start_(false), to_pause_(false), to_stop_(false),
+      in_progress_(false), paused_(false), stopped_(true)
+{
+}
+
+inline PlayableWidgetInterface::~PlayableWidgetInterface()
+{
+}
+
+#endif
+

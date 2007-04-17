@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004 by Paulo Moura Guedes                              *
+ *   Copyright (C) 2007 by Paulo Moura Guedes                              *
  *   moura@kdewebdev.org                                                   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,55 +18,41 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
-#ifndef _KLINKSTATUSPART_H_
-#define _KLINKSTATUSPART_H_
-
-#include <kparts/part.h>
-
-class TabWidgetSession;
-class ActionManager;
-
-class QWidget;
-class QPainter;
+#ifndef UNREFERRED_DOCUMENTS_WIDGET_H
+#define UNREFERRED_DOCUMENTS_WIDGET_H
 
 class KUrl;
-class KAboutData;
-class KAboutApplicationDialog;
-class KAction;
 
-class KLinkStatusPart: public KParts::ReadOnlyPart
+#include <QWidget>
+#include <QStringListModel>
+#include <QSortFilterProxyModel>
+#include <QTimer>
+        
+#include "ui_unreferreddocumentswidget.h"
+    
+
+class UnreferredDocumentsWidget : public QWidget
 {
     Q_OBJECT
 public:
-    KLinkStatusPart(QWidget *parentWidget, QObject *parent, const QStringList& args);
-    virtual ~KLinkStatusPart();
+    UnreferredDocumentsWidget(QString const& baseDirectory, QWidget* parent = 0);
+    ~UnreferredDocumentsWidget();
 
-    static KAboutData* createAboutData();
+    void setBaseDirectory(KUrl const& url);
 
-protected:
-    /** This must be implemented by each part */
-    virtual bool openFile();
-    virtual bool openURL (const KUrl &url);
-
-protected slots:
-    void slotNewLinkCheck();
-    void slotOpenLink();
-    void slotClose();
-    void slotConfigureKLinkStatus();
-    void slotAbout();
-    void slotReportBug();
+private Q_SLOTS:
+    void slotChooseUrlDialog();
     
 private:
-    void initGUI();
-
+    void init();
+    
 private:
-    static const char description_[];
-    static const char version_[];
+    Ui::UnreferredDocumentsWidget m_ui;
+    QString m_baseDirectory;
+    QTimer m_elapsedTimeTimer;
 
-    ActionManager* action_manager_;
-
-    TabWidgetSession* tabwidget_;
-    KAboutApplicationDialog* m_dlgAbout;
+    QStringListModel m_listModel;
+    QSortFilterProxyModel m_proxyModel;
 };
-
-#endif // _KLINKSTATUSPART_H_
+    
+#endif

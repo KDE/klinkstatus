@@ -72,9 +72,6 @@ KLinkStatusPart::KLinkStatusPart(QWidget *parentWidget,
     setWidget(tabwidget_);
     action_manager_->initTabWidget(tabwidget_);
 
-    // we are not modified since we haven't done anything yet
-    setModified(false);
-
     openURL(KUrl(""));
     
     Global::self()->setKLinkStatusPart(this);
@@ -99,21 +96,6 @@ void KLinkStatusPart::initGUI()
 
     // initialize the part actions
     action_manager_->initPart(this);
-}
-
-void KLinkStatusPart::setModified(bool modified)
-{
-    // get a handle on our Save action and make sure it is valid
-    QAction *save = actionCollection()->action(KStandardAction::stdName(KStandardAction::Save));
-    if (!save)
-        return;
-
-    // if so, we either enable or disable it based on the current
-    // state
-    if (modified)
-        save->setEnabled(true);
-    else
-        save->setEnabled(false);
 }
 
 bool KLinkStatusPart::openURL(KUrl const& url)

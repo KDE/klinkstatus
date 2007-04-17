@@ -29,11 +29,13 @@ set(libui_SRCS
 	${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/documentrootdialog.cpp 
 	${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/klshistorycombo.cpp
 	${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/resultssearchbar.cpp 
-	${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/resultview.cpp 
-	${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/sessionwidget.cpp 
+    ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/resultview.cpp 
+	${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/sessionwidget.cpp
     ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/tabwidgetsession.cpp  
     ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/treeview.cpp
     ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/WeaverThreadGrid.cpp
+    ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/unreferreddocumentswidget.cpp
+    ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/sessionstackedwidget.cpp
 )
 
 set(libuisettings_SRCS 
@@ -63,12 +65,14 @@ set(klinkstatuspart_PART_SRCS
     ${libuisettings_SRCS}
     ${libui_SRCS} 
     global.cpp 
-    actionmanager.cpp  
+    actionmanager.cpp
+    klsfactory.cpp
     klinkstatus_part.cpp
 )
 
 kde4_add_ui_files(klinkstatuspart_PART_SRCS
    ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/sessionwidgetbase.ui
+   ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/unreferreddocumentswidget.ui
    ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/settings/configsearchdialog.ui
    ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/settings/configresultsdialog.ui
    ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/settings/configidentificationdialogui.ui

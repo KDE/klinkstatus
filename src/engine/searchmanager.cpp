@@ -934,7 +934,13 @@ void SearchManager::slotJobDone(Job* job)
 
 QStringList SearchManager::findUnreferredDocuments(KUrl const& baseDir, QStringList const& documentList) const
 {
-    Q_ASSERT(search_results_hash_.size() != 0);
+    m_mutex.lock();
+    // The hash can be modified elsewhere, so make a copy
+    // (which is very fast because QList is implicitely shared
+    QHash<KUrl, LinkStatus*> search_results_hash(search_results_hash_);
+    m_mutex.unlock();
+    
+    Q_ASSERT(search_results_hash.size() != 0);
 
     QStringList unreferredDocuments;
     
@@ -946,8 +952,8 @@ QStringList SearchManager::findUnreferredDocuments(KUrl const& baseDir, QStringL
 
         bool found = false;
 
-        QHash<KUrl, LinkStatus*>::const_iterator it = search_results_hash_.constBegin();
-        for(it = search_results_hash_.constBegin(); it != search_results_hash_.constEnd(); ++it)
+        QHash<KUrl, LinkStatus*>::const_iterator it = search_results_hash.constBegin();
+        for(it = search_results_hash.constBegin(); it != search_results_hash.constEnd(); ++it)
         {
             KUrl const& url(it.key());
             
@@ -961,6 +967,28 @@ QStringList SearchManager::findUnreferredDocuments(KUrl const& baseDir, QStringL
     }
 
     return unreferredDocuments;
+}
+
+QList<LinkStatus*> SearchManager::getLinksWithHtmlProblems() const
+{
+    m_mutex.lock();
+    // The hash can be modified elsewhere, so make a copy
+    // (which is very fast because QList is implicitely shared
+    QHash<KUrl, LinkStatus*> search_results_hash(search_results_hash_);
+    m_mutex.unlock();
+    
+    Q_ASSERT(search_results_hash.size() != 0);
+
+    QList<LinkStatus*> links;
+    QHash<KUrl, LinkStatus*>::const_iterator it = search_results_hash.constBegin();
+    for(it = search_results_hash.constBegin(); it != search_results_hash.constEnd(); ++it)
+    {
+        LinkStatus* ls = it.value();
+        if(ls->hasHtmlProblems())
+            links.push_back(ls);
+    }
+
+    return links;
 }
 
 

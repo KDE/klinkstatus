@@ -25,13 +25,16 @@
 #include <kaction.h>
 #include <ktoggleaction.h>
 #include <kguiitem.h>
+#include <kstandardshortcut.h>
+#include <kicon.h>
 
 #include <q3buttongroup.h>
-#include <kicon.h>
 
 #include "klinkstatus_part.h"
 #include "ui/sessionwidget.h"
+#include "ui/sessionstackedwidget.h"    
 #include "ui/tabwidgetsession.h"
+#include "ui/widgetinterface.h"
 #include "klsconfig.h"
 
 
@@ -55,14 +58,13 @@ class ActionManager::ActionManagerPrivate
 {
 public:
     ActionManagerPrivate()
-            : part(0), tabWidgetSession(0), sessionWidget(0)
+        : part(0), tabWidgetSession(0)
     {}
 
     KActionCollection* actionCollection;
 
     KLinkStatusPart* part;
     TabWidgetSession* tabWidgetSession;
-    SessionWidget* sessionWidget;
 };
 
 ActionManager::ActionManager(QObject *parent)
@@ -92,19 +94,20 @@ void ActionManager::initPart(KLinkStatusPart* part)
     action = d->actionCollection->addAction( "new_link_check" );
     action->setText( i18n("New Link Check") );
     action->setIcon( KIcon("document-new") );
+    action->setShortcuts(KStandardShortcut::shortcut(KStandardShortcut::New));
     connect(action, SIGNAL(triggered(bool) ), d->part, SLOT(slotNewLinkCheck()));
 
     action = d->actionCollection->addAction( "open_link" );
     action->setText( i18n("Open URL...") );
     action->setIcon( KIcon("document-open") );
-
+    action->setShortcuts(KStandardShortcut::shortcut(KStandardShortcut::Open));
     connect(action, SIGNAL(triggered(bool) ), d->part, SLOT(slotOpenLink()));
 
 
     action = d->actionCollection->addAction( "close_tab" );
     action->setText(i18n("Close Tab"));
     action->setIcon(KIcon("tab-remove") );
-
+    action->setShortcuts(KStandardShortcut::shortcut(KStandardShortcut::Close));
     connect(action, SIGNAL(triggered(bool) ), d->part, SLOT(slotClose()));
     action->setEnabled(false);
 
@@ -151,7 +154,7 @@ void ActionManager::initTabWidget(TabWidgetSession* tabWidgetSession)
 
     // *************** View menu *********************
 
-	//     this action must be in the tabwidget because the slot can't be connected to a particular sessionWidget
+    //     this action must be in the tabwidget because the slot can't be connected to a particular sessionWidget
     KToggleAction *toggle_action  = new KToggleAction(KIcon("goto-page"), i18n("&Follow last Link checked"), this);
     actionCollection()->addAction("follow_last_link_checked", toggle_action );
     connect(toggle_action, SIGNAL(triggered(bool)), d->tabWidgetSession, SLOT(slotFollowLastLinkChecked()));
@@ -215,12 +218,6 @@ void ActionManager::initTabWidget(TabWidgetSession* tabWidgetSession)
 void ActionManager::initSessionWidget(SessionWidget* sessionWidget)
 {
     Q_ASSERT(sessionWidget);
-
-    if (d->sessionWidget)
-        return;
-
-    d->sessionWidget = sessionWidget;
-
 }
 
 QWidget* ActionManager::container(const char* name)
@@ -238,17 +235,13 @@ QAction* ActionManager::action(const QString & name)
     return d->actionCollection != 0 ? d->actionCollection->action(name) : 0;
 }
 
-void ActionManager::slotUpdateSessionWidgetActions(SessionWidget* page)
+void ActionManager::slotUpdateActions(SessionStackedWidget* page)
 {
     updatePlayActions(page);
-    updateFollowLinkAction(page);
-      
-      // One liners
-    action("file_export_html")->setEnabled(!page->isEmpty());
-    action("html_fix_all")->setEnabled(!page->isEmpty() && page->stopped());
+    updateGeneralActions(page);
 }
 
-void ActionManager::updatePlayActions(SessionWidget* page)
+void ActionManager::updatePlayActions(SessionStackedWidget* page)
 {
     KToggleAction* start_search_action_ = static_cast<KToggleAction*> (action("start_search"));
     KToggleAction* pause_search_action_ = static_cast<KToggleAction*> (action("pause_search"));
@@ -256,73 +249,107 @@ void ActionManager::updatePlayActions(SessionWidget* page)
     QAction* recheck_visible_items = action("recheck_visible_items");
     QAction* recheck_broken_items = action("recheck_broken_items");
 
-    if(page->inProgress())
+    PlayableWidgetInterface* playable = dynamic_cast<PlayableWidgetInterface*> (page->currentWidget());
+
+    if(playable == 0)
     {
-        Q_ASSERT(!page->stopped());
-
-        start_search_action_->setEnabled(true);
-        start_search_action_->setChecked(true);
-
-        pause_search_action_->setEnabled(true);
-
-        stop_search_action_->setEnabled(true);
-
+        start_search_action_->setEnabled(false);
+        pause_search_action_->setEnabled(false);
+        stop_search_action_->setEnabled(false);
+        
         recheck_visible_items->setEnabled(false);
         recheck_broken_items->setEnabled(false);
     }
-    if(page->paused())
+    else
     {
-        Q_ASSERT(page->inProgress());
-        Q_ASSERT(!page->stopped());
+        if(!page->isSessionWidgetActive()) {
+            recheck_visible_items->setEnabled(false);
+            recheck_broken_items->setEnabled(false);
+        }
+        
+        if(playable->inProgress())
+        {
+            Q_ASSERT(!playable->stopped());
 
-        start_search_action_->setEnabled(true);
-        start_search_action_->setChecked(true);
+            start_search_action_->setEnabled(true);
+            start_search_action_->setChecked(true);
 
-        pause_search_action_->setEnabled(true);
-        pause_search_action_->setChecked(true);
+            pause_search_action_->setEnabled(true);
 
-        stop_search_action_->setEnabled(true);
+            stop_search_action_->setEnabled(true);
 
-        recheck_visible_items->setEnabled(true);
-        recheck_broken_items->setEnabled(true);
-    }
-    if(page->stopped())
-    {
-        Q_ASSERT(!page->inProgress());
-        Q_ASSERT(!page->paused());
+            if(page->isSessionWidgetActive()) {
+                recheck_visible_items->setEnabled(false);
+                recheck_broken_items->setEnabled(false);
+            }
+        }
+        if(playable->paused())
+        {
+            Q_ASSERT(playable->inProgress());
+            Q_ASSERT(!playable->stopped());
 
-        start_search_action_->setEnabled(true);
-        start_search_action_->setChecked(false);
+            start_search_action_->setEnabled(true);
+            start_search_action_->setChecked(true);
 
-        pause_search_action_->setEnabled(false);
-        pause_search_action_->setChecked(false);
+            pause_search_action_->setEnabled(true);
+            pause_search_action_->setChecked(true);
 
-        stop_search_action_->setEnabled(false);
-    
-        recheck_visible_items->setEnabled(true);
-        recheck_broken_items->setEnabled(true);
+            stop_search_action_->setEnabled(true);
+
+            if(page->isSessionWidgetActive()) {
+                recheck_visible_items->setEnabled(true);
+                recheck_broken_items->setEnabled(true);
+            }
+        }
+        if(playable->stopped())
+        {
+            Q_ASSERT(!playable->inProgress());
+            Q_ASSERT(!playable->paused());
+
+            start_search_action_->setEnabled(true);
+            start_search_action_->setChecked(false);
+
+            pause_search_action_->setEnabled(false);
+            pause_search_action_->setChecked(false);
+
+            stop_search_action_->setEnabled(false);
+        
+            if(page->isSessionWidgetActive()) {
+                recheck_visible_items->setEnabled(true);
+                recheck_broken_items->setEnabled(true);
+            }
+        }
     }
 }
 
-void ActionManager::updateFollowLinkAction(SessionWidget* page)
+void ActionManager::updateGeneralActions(SessionStackedWidget* page)
 {
-    KToggleAction* toggleAction = static_cast<KToggleAction*> (action("follow_last_link_checked"));
+    KToggleAction* followAction = static_cast<KToggleAction*> (action("follow_last_link_checked"));    
+    Q_ASSERT(followAction);
 
-    if(!toggleAction) // the first sessionWidget is created before initSessionWidget is called
-    {
-        initSessionWidget(page);
-        toggleAction = static_cast<KToggleAction*> (action("follow_last_link_checked"));
+    KToggleAction* hideAction = static_cast<KToggleAction*> (action("hide_search_bar"));
+    Q_ASSERT(hideAction);
+
+    SessionWidget* sw = page->sessionWidget();
+
+    if(page->isSessionWidgetActive()) {
+        followAction->setEnabled(true);
+        followAction->setChecked(sw->followLastLinkChecked());
+        
+        hideAction->setEnabled(true);
+        hideAction->setChecked(sw->searchGroupBox->isHidden());
     }
-    Q_ASSERT(toggleAction);
-    toggleAction->setChecked(page->followLastLinkChecked());
-
-    toggleAction = static_cast<KToggleAction*> (action("hide_search_bar"));
-    Q_ASSERT(toggleAction);
-    toggleAction->setChecked(page->searchGroupBox->isHidden());
-
+    else {
+        followAction->setChecked(false);
+        followAction->setEnabled(false);
+        
+        hideAction->setChecked(false);
+        hideAction->setEnabled(false);
+    }
     //     ____________________________________________________________________
 
-    action("file_export_html")->setEnabled(!page->isEmpty());
+    action("file_export_html")->setEnabled(!sw->isEmpty());
+    action("html_fix_all")->setEnabled(!sw->isEmpty() && sw->stopped());
 }
 
 

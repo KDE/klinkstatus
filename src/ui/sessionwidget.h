@@ -22,8 +22,9 @@
 #define SESSION_WIDGET_H
 
 #include "ui_sessionwidgetbase.h"
-#include "../engine/linkchecker.h"
-#include "../engine/linkstatus.h"
+#include "engine/linkchecker.h"
+#include "engine/linkstatus.h"
+#include "ui/widgetinterface.h"
 class SearchManager;
 class TableItem;
 class ActionManager;
@@ -39,19 +40,23 @@ class KConfig;
 class KToggleAction;
 
 
-class SessionWidget: public QWidget, public Ui_SessionWidgetBase
+class SessionWidget: public PlayableWidgetInterface, public Ui_SessionWidgetBase
 {
     Q_OBJECT
 
 public:
 
     SessionWidget(int max_simultaneous_connections = 3, int time_out = 50,
-                  QWidget* parent = 0, const char* name = 0, Qt::WFlags f = 0);
+                  QWidget* parent = 0);
 
-    ~SessionWidget();
+    virtual ~SessionWidget();
+
+    QString title() const;
 
     void setColumns(QStringList const& colunas);
     void setUrl(KUrl const& url);
+
+    KUrl const& urlToCheck() const;
     
     bool treeDisplay() const { return tree_display_; }
 
@@ -61,15 +66,12 @@ public:
     bool isEmpty() const;
     SearchManager const* getSearchManager() const;
 
-    bool inProgress() const { return in_progress_; }
-    bool paused() const { return paused_; }
-    bool stopped() const { return stopped_; }
-
 signals:
-    void signalUpdateTabLabel(const LinkStatus *, SessionWidget*);
+    void signalTitleChanged();
     void signalSearchStarted();
     void signalSearchPaused();
     void signalSearchFinnished();
+    void signalUpdateActions();
 
 public slots:
 
@@ -128,16 +130,9 @@ private:
     void resetPendingActions();
 
 private:
+    KUrl url_to_check_;
+  
     SearchManager* search_manager_;
-    ActionManager* action_manager_;
-
-    bool ready_;
-    bool to_start_;
-    bool to_pause_;
-    bool to_stop_;
-    bool in_progress_;
-    bool paused_;
-    bool stopped_;
 
     QTimer elapsed_time_timer_;
     int max_simultaneous_connections_;

@@ -136,10 +136,15 @@ void LinkStatus::setMalformed(bool flag)
     }
 }
 
+bool LinkStatus::hasHtmlProblems() const
+{
+    return hasHtmlWarnings() || hasHtmlErrors();
+}
+
 bool LinkStatus::hasHtmlErrors() const
 {
   if(!isHtmlDocument())
-    return false;
+      return false;
     
   return tidy_info_.has_errors;
 }

@@ -91,7 +91,7 @@
                <string>URL:</string>
               </property>
               <property name="alignment" >
-               <set>Qt::AlignAbsolute|Qt::AlignCenter|Qt::AlignHCenter|Qt::AlignHorizontal_Mask|Qt::AlignJustify|Qt::AlignLeading|Qt::AlignLeft|Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter|Qt::AlignVertical_Mask</set>
+               <set>Qt::AlignAbsolute|Qt::AlignBottom|Qt::AlignCenter|Qt::AlignHCenter|Qt::AlignHorizontal_Mask|Qt::AlignJustify|Qt::AlignLeading|Qt::AlignLeft|Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing|Qt::AlignVCenter|Qt::AlignVertical_Mask</set>
               </property>
               <property name="margin" >
                <number>3</number>
@@ -99,7 +99,7 @@
              </widget>
             </item>
             <item>
-             <widget class="KLSHistoryCombo" native="1" name="combobox_url" >
+             <widget class="KLSHistoryCombo" name="combobox_url" >
               <property name="sizePolicy" >
                <sizepolicy vsizetype="Ignored" hsizetype="Preferred" >
                 <horstretch>0</horstretch>
@@ -359,13 +359,18 @@
       </widget>
      </item>
      <item>
-      <widget class="TreeView" native="1" name="tree_view" >
+      <widget class="TreeView" name="tree_view" >
        <property name="sizePolicy" >
         <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
+       <column>
+        <property name="text" >
+         <string>1</string>
+        </property>
+       </column>
       </widget>
      </item>
      <item>
@@ -434,7 +439,7 @@
             </sizepolicy>
            </property>
            <property name="toolTip" >
-            <string>hh:mm:ss.zzz</string>
+            <string>hh:mm:ss</string>
            </property>
            <property name="text" >
             <string>Elapsed time: </string>
@@ -465,7 +470,7 @@
             </size>
            </property>
            <property name="toolTip" >
-            <string>hh:mm:ss.zzz</string>
+            <string>hh:mm:ss</string>
            </property>
            <property name="text" >
             <string/>
@@ -494,19 +499,19 @@
    <header>kpushbutton.h</header>
   </customwidget>
   <customwidget>
-   <class>KLSHistoryCombo</class>
+   <class>ResultsSearchBar</class>
    <extends>QWidget</extends>
+   <header>resultssearchbar.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KLSHistoryCombo</class>
+   <extends>KHistoryComboBox</extends>
    <header>klshistorycombo.h</header>
   </customwidget>
   <customwidget>
    <class>TreeView</class>
-   <extends>QWidget</extends>
+   <extends>QTreeWidget</extends>
    <header>treeview.h</header>
-  </customwidget>
-  <customwidget>
-   <class>ResultsSearchBar</class>
-   <extends>QWidget</extends>
-   <header>resultssearchbar.h</header>
   </customwidget>
  </customwidgets>
  <includes>

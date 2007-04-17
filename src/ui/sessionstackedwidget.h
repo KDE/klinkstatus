@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004 by Paulo Moura Guedes                              *
+ *   Copyright (C) 2007 by Paulo Moura Guedes                              *
  *   moura@kdewebdev.org                                                   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,55 +18,40 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
-#ifndef _KLINKSTATUSPART_H_
-#define _KLINKSTATUSPART_H_
+#ifndef SESSION_STACKED_WIDGET_H
+#define SESSION_STACKED_WIDGET_H
 
-#include <kparts/part.h>
+#include <QStackedWidget>
 
-class TabWidgetSession;
-class ActionManager;
-
-class QWidget;
-class QPainter;
+class SessionWidget;
+class UnreferredDocumentsWidget;
 
 class KUrl;
-class KAboutData;
-class KAboutApplicationDialog;
-class KAction;
 
-class KLinkStatusPart: public KParts::ReadOnlyPart
+    
+class SessionStackedWidget : public QStackedWidget
 {
     Q_OBJECT
 public:
-    KLinkStatusPart(QWidget *parentWidget, QObject *parent, const QStringList& args);
-    virtual ~KLinkStatusPart();
+    SessionStackedWidget(KUrl const& url, QWidget* parent = 0);
+    ~SessionStackedWidget();
 
-    static KAboutData* createAboutData();
+    SessionWidget* sessionWidget() const;
+    UnreferredDocumentsWidget* unreferredDocumentsWidget() const;
 
-protected:
-    /** This must be implemented by each part */
-    virtual bool openFile();
-    virtual bool openURL (const KUrl &url);
+    bool isSessionWidgetActive() const;
+    bool isUnreferredDocumentsWidgetActive() const;
 
-protected slots:
-    void slotNewLinkCheck();
-    void slotOpenLink();
-    void slotClose();
-    void slotConfigureKLinkStatus();
-    void slotAbout();
-    void slotReportBug();
+Q_SIGNALS:
+    void signalTitleChanged(SessionStackedWidget*);
+  
+private Q_SLOTS:
+    void slotChangeTitle();
+    void slotUpdateActions();
     
 private:
-    void initGUI();
-
-private:
-    static const char description_[];
-    static const char version_[];
-
-    ActionManager* action_manager_;
-
-    TabWidgetSession* tabwidget_;
-    KAboutApplicationDialog* m_dlgAbout;
+    SessionWidget* m_sessionWidget;
+    UnreferredDocumentsWidget* m_unreferredDocumentsWidget;
 };
 
-#endif // _KLINKSTATUSPART_H_
+#endif

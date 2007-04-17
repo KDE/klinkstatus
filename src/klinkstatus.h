@@ -58,7 +58,6 @@ private slots:
 private:
     void setupAccel();
     void setupActions();
-    void setupPartActions();
     void removeDuplicatedActions();
 
 private:

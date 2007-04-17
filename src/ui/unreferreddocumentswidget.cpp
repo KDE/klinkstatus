@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004 by Paulo Moura Guedes                              *
+ *   Copyright (C) 2007 by Paulo Moura Guedes                              *
  *   moura@kdewebdev.org                                                   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,55 +18,52 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
-#ifndef _KLINKSTATUSPART_H_
-#define _KLINKSTATUSPART_H_
+#include "unreferreddocumentswidget.h"
 
-#include <kparts/part.h>
+#include <KFileDialog>
 
-class TabWidgetSession;
-class ActionManager;
-
-class QWidget;
-class QPainter;
-
-class KUrl;
-class KAboutData;
-class KAboutApplicationDialog;
-class KAction;
-
-class KLinkStatusPart: public KParts::ReadOnlyPart
+UnreferredDocumentsWidget::UnreferredDocumentsWidget(QString const& baseDir, QWidget* parent)
+    : QWidget(parent), m_baseDirectory(baseDir)
 {
-    Q_OBJECT
-public:
-    KLinkStatusPart(QWidget *parentWidget, QObject *parent, const QStringList& args);
-    virtual ~KLinkStatusPart();
+    init();
+}
 
-    static KAboutData* createAboutData();
+UnreferredDocumentsWidget::~UnreferredDocumentsWidget()
+{
+}
 
-protected:
-    /** This must be implemented by each part */
-    virtual bool openFile();
-    virtual bool openURL (const KUrl &url);
+void UnreferredDocumentsWidget::init()
+{
+    m_ui.setupUi(this);
 
-protected slots:
-    void slotNewLinkCheck();
-    void slotOpenLink();
-    void slotClose();
-    void slotConfigureKLinkStatus();
-    void slotAbout();
-    void slotReportBug();
-    
-private:
-    void initGUI();
+    m_ui.baseDirCombo->init();
 
-private:
-    static const char description_[];
-    static const char version_[];
+    m_ui.pickUrlButton->setIcon(KIcon("document-open"));
+    const int pixmapSize = style()->pixelMetric(QStyle::PM_SmallIconSize);
+    m_ui.pickUrlButton->setFixedSize(pixmapSize + 8, pixmapSize + 8);
+    connect(m_ui.pickUrlButton, SIGNAL(clicked()), this, SLOT(slotChooseUrlDialog()));
 
-    ActionManager* action_manager_;
+    m_elapsedTimeTimer.setInterval(1000);
 
-    TabWidgetSession* tabwidget_;
-    KAboutApplicationDialog* m_dlgAbout;
-};
 
-#endif // _KLINKSTATUSPART_H_
+    m_proxyModel.setSourceModel(&m_listModel);
+    m_ui.listView->setModel(&m_proxyModel);
+
+    connect(m_ui.filterLineEdit, SIGNAL(textChanged(const QString&)),
+            &m_proxyModel, SLOT(slotFilterRegExp(const QString&)));
+}
+
+void UnreferredDocumentsWidget::slotChooseUrlDialog()
+{
+    setBaseDirectory(KFileDialog::getOpenUrl());
+}
+
+void UnreferredDocumentsWidget::setBaseDirectory(KUrl const& url)
+{
+    m_ui.baseDirCombo->addCurrentItem(url.prettyUrl());
+    m_ui.baseDirCombo->setFocus();
+}
+
+
+
+#include "unreferreddocumentswidget.moc"

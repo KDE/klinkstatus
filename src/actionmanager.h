@@ -26,6 +26,7 @@ class QAction;
 class KActionCollection;
 
 class SessionWidget;
+class SessionStackedWidget;
 class KLinkStatusPart;
 class TabWidgetSession;
 
@@ -52,15 +53,15 @@ public:
     void initTabWidget(TabWidgetSession* tabWidgetSession);
 
 public slots:
-    void slotUpdateSessionWidgetActions(SessionWidget*);
+    void slotUpdateActions(SessionStackedWidget*);
 
 protected:
     KActionCollection* actionCollection();
 
 private:
     // start, pause and stop
-    void updatePlayActions(SessionWidget* );
-    void updateFollowLinkAction(SessionWidget* );
+    void updatePlayActions(SessionStackedWidget*);
+    void updateGeneralActions(SessionStackedWidget*);
 
 private:
 

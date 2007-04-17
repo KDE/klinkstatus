@@ -64,7 +64,8 @@ MarkupValidator::~MarkupValidator()
 void MarkupValidator::validate(bool superficial)
 {
     superficialValidation_ = superficial;
-    
+
+    // TODO
 //     setTidyOptions();
 
     Buffer errorBuffer;

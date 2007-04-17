@@ -26,6 +26,7 @@
 #include <q3intdict.h>
 class QToolButton;
 
+class SessionStackedWidget;
 class SessionWidget;
 class LinkStatus;
 
@@ -46,7 +47,6 @@ public:
     /** Set the URL in the current session widget */
     void setUrl(KUrl const& url);
 
-    SessionWidget* currentSession() const;
     bool emptySessionsExist() const;
     /** Returns the first empty session it finds */
     SessionWidget* getEmptySession() const;
@@ -55,10 +55,8 @@ public:
 
 public slots:
     void slotNewSession(KUrl const& url = KUrl());
-    SessionWidget* newSession();
-    SessionWidget* newSession(KUrl const& url);
     void closeSession();
-    void updateTabLabel(LinkStatus const* linkstatus, SessionWidget*);
+    void updateTabLabel(SessionStackedWidget*);
     void slotLoadSettings();
     
     void slotHideSearchPanel();
@@ -81,7 +79,10 @@ private slots:
     void slotCurrentChanged(int);
     
 private:
-    SessionWidget* newSessionWidget();
+    void addNewSession(KUrl const& url);
+
+    SessionStackedWidget* currentWidget() const;
+    SessionStackedWidget* widget(int index) const;
 
 private:
     Q3IntDict<SessionWidget> tabs_;

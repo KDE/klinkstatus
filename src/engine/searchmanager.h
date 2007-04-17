@@ -29,6 +29,7 @@
 #include <QDateTime>
 #include <QRegExp>
 #include <QHash>
+#include <QMutex>
 class QDomElement;
 
 #include <QList>
@@ -76,6 +77,9 @@ public:
     /** Checks if each document in the list is referred at least once in the search results */
     QStringList findUnreferredDocuments(KUrl const& baseDir, QStringList const& documentList) const;
 
+    QList<LinkStatus*> getLinksWithHtmlProblems() const;
+
+    /** Document root is used when protocol is different that HTTP, in order to resolve absolute URLs */
     bool hasDocumentRoot() const;
     KUrl const& documentRoot() const;
     void setDocumentRoot(KUrl const& url);
@@ -216,6 +220,7 @@ private:
     KHTMLPartMap html_parts_;
 
     // thread stuff
+    mutable QMutex m_mutex;
     AddLevelJob* m_addLevelJob;
 };
 

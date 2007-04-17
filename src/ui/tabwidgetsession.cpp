@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2004 by Paulo Moura Guedes                              *
- *   moura@kdewebdev.org                                                        *
+ *   Copyright (C) 2004-2007 by Paulo Moura Guedes                              *
+ *   moura@kdewebdev.org                                                   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -15,14 +15,18 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
- *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.             *
+ *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
+    
 #include "tabwidgetsession.h"
-#include "sessionwidget.h"
-#include "klsconfig.h"
-#include "treeview.h"
+    
+#include "ui/sessionwidget.h"
+#include "ui/sessionstackedwidget.h"
+#include "ui/treeview.h"
 #include "engine/searchmanager.h"
+#include "klsconfig.h"
 #include "actionmanager.h"
+#include "klsfactory.h"
     
 #include <QToolButton>
 #include <QCursor>
@@ -35,9 +39,6 @@
 #include <kapplication.h>
 #include <kstandarddirs.h>
 #include <klocale.h>
-#include <kstringhandler.h> 
-#include <kcharsets.h>
-#include <kmimetype.h>
 #include <kaction.h>
 #include <kiconloader.h>
 
@@ -74,9 +75,14 @@ TabWidgetSession::TabWidgetSession(QWidget* parent, Qt::WFlags f)
 TabWidgetSession::~TabWidgetSession()
 {}
 
-SessionWidget* TabWidgetSession::currentSession() const
+SessionStackedWidget* TabWidgetSession::currentWidget() const
 {
-    return tabs_[currentIndex()];
+    return static_cast<SessionStackedWidget*> (QTabWidget::currentWidget());
+}
+
+SessionStackedWidget* TabWidgetSession::widget(int index) const
+{
+    return static_cast<SessionStackedWidget*> (QTabWidget::widget(index));
 }
 
 bool TabWidgetSession::emptySessionsExist() const
@@ -86,9 +92,11 @@ bool TabWidgetSession::emptySessionsExist() const
 
     for(int i = 0; i != count(); ++i)
     {
-        Q_ASSERT(tabs_[i]);
-        if(tabs_[i]->isEmpty() && !tabs_[i]->getSearchManager()->searching())
+        SessionWidget* sessionWidget = widget(i)->sessionWidget();
+        if(sessionWidget && sessionWidget->isEmpty()
+           && !sessionWidget->inProgress()) {
             return true;
+        }
     }
     return false;
 }
@@ -98,46 +106,28 @@ SessionWidget* TabWidgetSession::getEmptySession() const
     Q_ASSERT(emptySessionsExist());
     Q_ASSERT(count() != 0);
 
-    for(uint i = 0; i != tabs_.count(); ++i)
+    for(int i = 0; i != count(); ++i)
     {
-        if(tabs_[i]->isEmpty())
-            return tabs_[i];
+        SessionWidget* sessionWidget = widget(i)->sessionWidget();
+        if(sessionWidget && sessionWidget->isEmpty()
+          && !sessionWidget->inProgress()) {
+            return sessionWidget;
+        }
     }
     return 0;
 }
 
-// Remember to use count() and not size()
-Q3IntDict<SessionWidget> const& TabWidgetSession::sessions() const
+void TabWidgetSession::addNewSession(KUrl const& url)
 {
-    return tabs_;
-}
-
-SessionWidget* TabWidgetSession::newSession()
-{
-    // TODO: settings: number of connections, timeout
-    SessionWidget* session_widget = newSessionWidget();
-    connect(session_widget, SIGNAL(signalUpdateTabLabel(const LinkStatus *, SessionWidget*)),
-            this, SLOT(updateTabLabel(const LinkStatus *, SessionWidget*)));
-
-    addTab(session_widget, i18n("Session") + QString::number(count() + 1));
-#ifdef _GNUC
-    #warning The line above was originally like below, perhaps something should be changed in message extraction too?
-#endif
-	//insertTab(session_widget, i18n("Session") + i18n(QString::number(count() + 1).ascii()));
+    SessionStackedWidget* page = new SessionStackedWidget(url, this);
     
-    tabs_.insert(count() - 1, session_widget);
-    Q_ASSERT(tabs_[count() - 1]);
+    connect(page, SIGNAL(signalTitleChanged(SessionStackedWidget*)),
+            this, SLOT(updateTabLabel(SessionStackedWidget*)));
+
+    ActionManager::getInstance()->slotUpdateActions(page);
+
+    addTab(page, i18n("Session") + QString::number(count() + 1));
     setCurrentIndex(count() - 1);
-
-    return session_widget;
-}
-
-SessionWidget* TabWidgetSession::newSession(KUrl const& url)
-{
-    SessionWidget* sessionwidget = newSession();
-    currentSession()->setUrl(url);
-
-    return sessionwidget;
 }
 
 void TabWidgetSession::closeSession()
@@ -149,107 +139,72 @@ void TabWidgetSession::closeSession()
     ActionManager::getInstance()->action("close_tab")->setEnabled(count() > 1);
 }
 
-SessionWidget* TabWidgetSession::newSessionWidget()
+void TabWidgetSession::updateTabLabel(SessionStackedWidget* page)
 {
-    SessionWidget* session_widget = new SessionWidget(KLSConfig::maxConnectionsNumber(), 
-            KLSConfig::timeOut(), this);
-
-    QStringList columns;
-    
-    columns.push_back(TreeView::URL_LABEL);
-    columns.push_back(TreeView::STATUS_LABEL);
-    if(KLSConfig::showMarkupStatus())
-        columns.push_back(TreeView::MARKUP_LABEL);
-    columns.push_back(TreeView::LINK_LABEL_LABEL);
-    
-    session_widget->setColumns(columns);
-
-    // FIXME
-//     session_widget->tree_view->restoreLayout(KLSConfig::self()->config(), "klinkstatus");
-
-    return session_widget;
-}
-
-void TabWidgetSession::updateTabLabel(LinkStatus const* linkstatus, SessionWidget* page)
-{
-    QString label;
-    KUrl url = linkstatus->absoluteUrl();
-    
-    if(linkstatus->hasHtmlDocTitle())
-    {
-        label = linkstatus->htmlDocTitle();
-        label = KStringHandler::csqueeze(label, 30);
-    }
-    else
-    {
-        if(url.fileName(KUrl::ObeyTrailingSlash).isEmpty())
-            label = url.prettyUrl();
-        else
-            label = url.fileName(KUrl::ObeyTrailingSlash);
-        
-        label = KStringHandler::lsqueeze(label, 30);        
-    }
-    
-    setTabText(indexOf(page), KCharsets::resolveEntities(label));
-    setTabIcon(indexOf(page), QIconSet(KIO::pixmapForUrl(url)));
+    SessionWidget* sessionWidget = page->sessionWidget();
+    setTabText(indexOf(page), KCharsets::resolveEntities(sessionWidget->title()));
+    setTabIcon(indexOf(page), QIconSet(KIO::pixmapForUrl(sessionWidget->urlToCheck())));
 }
 
 void TabWidgetSession::slotLoadSettings()
 {
-    for(uint i = 0; i != tabs_.count(); ++i)
+    for(int i = 0; i != count(); ++i)
     {
-        if(tabs_[i]->isEmpty())
-        {
-            SessionWidget* session_widget = tabs_[i];
-            if(session_widget->isEmpty())
-                session_widget->slotLoadSettings(true);
-            else
-                session_widget->slotLoadSettings(false);
+        SessionWidget* sessionWidget = widget(i)->sessionWidget();
+
+        if(sessionWidget == 0)
+            return;
+
+        if(sessionWidget->isEmpty()
+            && !sessionWidget->inProgress()) {
+            sessionWidget->slotLoadSettings(true);
+        }
+        else {
+            sessionWidget->slotLoadSettings(false);
         }
     }
 }
 
 void TabWidgetSession::setUrl(KUrl const& url)
 {
-    currentSession()->setUrl(url);
+    currentWidget()->sessionWidget()->setUrl(url);
 }
 
-void TabWidgetSession::slotCurrentChanged(int)
+void TabWidgetSession::slotCurrentChanged(int index)
 {
     tabs_close_->setEnabled(count() > 1);
 
-    SessionWidget* session_widget = currentSession();
-    ActionManager::getInstance()->slotUpdateSessionWidgetActions(session_widget);
+    ActionManager::getInstance()->slotUpdateActions(widget(index));
 }
 
 void TabWidgetSession::slotHideSearchPanel()
 {
-    currentSession()->slotHideSearchPanel();
+    currentWidget()->sessionWidget()->slotHideSearchPanel();
 }
 
 void TabWidgetSession::slotFollowLastLinkChecked()
 {
-    currentSession()->slotFollowLastLinkChecked();
+    currentWidget()->sessionWidget()->slotFollowLastLinkChecked();
 }
 
 void TabWidgetSession::slotResetSearchOptions()
 {
-    currentSession()->slotResetSearchOptions();
+    currentWidget()->sessionWidget()->slotResetSearchOptions();
 }
 
 void TabWidgetSession::slotNewSession(KUrl const& url)
 {
     if(count() == 0 || !emptySessionsExist())
     {
-        SessionWidget* sessionwidget = newSession(url);
-        ActionManager::getInstance()->initSessionWidget(sessionwidget);        
+        addNewSession(url);
     }
     else
     {
         SessionWidget* sessionwidget = getEmptySession();
+        setCurrentIndex(indexOf(sessionwidget));
+        
         if(url.isValid())
             sessionwidget->setUrl(url);
-        setCurrentIndex(indexOf(sessionwidget));
     }
 
     ActionManager::getInstance()->action("close_tab")->setEnabled(count() > 1);
@@ -257,37 +212,41 @@ void TabWidgetSession::slotNewSession(KUrl const& url)
 
 void TabWidgetSession::slotStartSearch()
 {
-    currentSession()->slotStartSearch();
+    PlayableWidgetInterface* playable = static_cast<PlayableWidgetInterface*> (currentWidget()->currentWidget());
+    playable->slotStartSearch();
 }
 
 void TabWidgetSession::slotPauseSearch()
 {
-    currentSession()->slotPauseSearch();
+    PlayableWidgetInterface* playable = static_cast<PlayableWidgetInterface*> (currentWidget()->currentWidget());
+    playable->slotPauseSearch();
 }
 
 void TabWidgetSession::slotStopSearch()
 {
-    currentSession()->slotStopSearch();
+    PlayableWidgetInterface* playable = static_cast<PlayableWidgetInterface*> (currentWidget()->currentWidget());
+    playable->slotStopSearch();
 }
 
 void TabWidgetSession::slotRecheckVisibleItems()
 {
-    currentSession()->slotRecheckVisibleItems();
+    currentWidget()->sessionWidget()->slotRecheckVisibleItems();
 }
 
 void TabWidgetSession::slotRecheckBrokenItems()
 {
-    currentSession()->slotRecheckBrokenItems();
+    currentWidget()->sessionWidget()->slotRecheckBrokenItems();
 }
 
 void TabWidgetSession::slotExportAsHTML()
 {
-    currentSession()->slotExportAsHTML();
+    currentWidget()->sessionWidget()->slotExportAsHTML();
 }
 
 void TabWidgetSession::slotValidateAll( )
 {
-    currentSession()->slotValidateAll();
+    currentWidget()->sessionWidget()->slotValidateAll();
 }
+
 
 #include "tabwidgetsession.moc"

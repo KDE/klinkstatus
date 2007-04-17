@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004 by Paulo Moura Guedes                              *
+ *   Copyright (C) 2007 by Paulo Moura Guedes                              *
  *   moura@kdewebdev.org                                                   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,55 +18,33 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
-#ifndef _KLINKSTATUSPART_H_
-#define _KLINKSTATUSPART_H_
+#include "klsfactory.h"
 
-#include <kparts/part.h>
-
-class TabWidgetSession;
-class ActionManager;
-
-class QWidget;
-class QPainter;
-
-class KUrl;
-class KAboutData;
-class KAboutApplicationDialog;
-class KAction;
-
-class KLinkStatusPart: public KParts::ReadOnlyPart
-{
-    Q_OBJECT
-public:
-    KLinkStatusPart(QWidget *parentWidget, QObject *parent, const QStringList& args);
-    virtual ~KLinkStatusPart();
-
-    static KAboutData* createAboutData();
-
-protected:
-    /** This must be implemented by each part */
-    virtual bool openFile();
-    virtual bool openURL (const KUrl &url);
-
-protected slots:
-    void slotNewLinkCheck();
-    void slotOpenLink();
-    void slotClose();
-    void slotConfigureKLinkStatus();
-    void slotAbout();
-    void slotReportBug();
+#include "klsconfig.h"
+#include "ui/treeview.h"
+#include "ui/sessionwidget.h"
     
-private:
-    void initGUI();
+#include <QStringList>
+    
 
-private:
-    static const char description_[];
-    static const char version_[];
+SessionWidget* KLSFactory::createSessionWidget(QWidget* parent)
+{
+    SessionWidget* session_widget = new SessionWidget(KLSConfig::maxConnectionsNumber(), 
+            KLSConfig::timeOut(), parent);
 
-    ActionManager* action_manager_;
+    QStringList columns;
+    
+    columns.push_back(TreeView::URL_LABEL);
+    columns.push_back(TreeView::STATUS_LABEL);
+    if(KLSConfig::showMarkupStatus())
+        columns.push_back(TreeView::MARKUP_LABEL);
+    columns.push_back(TreeView::LINK_LABEL_LABEL);
+    
+    session_widget->setColumns(columns);
 
-    TabWidgetSession* tabwidget_;
-    KAboutApplicationDialog* m_dlgAbout;
-};
+    // FIXME
+//     session_widget->tree_view->restoreLayout(KLSConfig::self()->config(), "klinkstatus");
 
-#endif // _KLINKSTATUSPART_H_
+    return session_widget;
+}
+

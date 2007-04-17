@@ -58,15 +58,9 @@
         <Action name="pause_search"/>
         <Action name="stop_search"/>
         <Separator/>
-        <Action name="recheck_broken_items"/>
-        <Separator/>
-        <Action name="file_export_html"/>
-        <Separator/>
         <Action name="hide_search_bar"/>
         <Action name="reset_search_bar"/>
         <Separator/>
         <Action name="follow_last_link_checked"/>
-        <Separator/>
-        <Action name="html_fix_all"/>
     </ToolBar>
 </kpartgui>

@@ -128,6 +128,7 @@ public:
     TreeViewItem* treeViewItem() const;
     QSet<KUrl> const& referrers() const;
     bool isHtmlDocument() const { return !doc_html_.isEmpty(); }
+    bool hasHtmlProblems() const;
     bool hasHtmlErrors() const;
     bool hasHtmlWarnings() const;
 
@@ -180,7 +181,7 @@ private:
         : has_errors(false),
         has_warnings(false)
         {}
-    
+
         bool has_errors;
         bool has_warnings;
     };

@@ -29,11 +29,13 @@
 #include <kglobal.h>
 #include <kpushbutton.h>
 #include <kfiledialog.h>
-
 #include <ktemporaryfile.h>
 #include <ksavefile.h>
 #include <kstandarddirs.h>
 #include <ktoggleaction.h>
+#include <kstringhandler.h>
+#include <kcharsets.h>
+#include <kmimetype.h>
 #include <kio/netaccess.h>
 
 #include <QEvent>
@@ -69,11 +71,8 @@
 
 
 SessionWidget::SessionWidget(int max_simultaneous_connections, int time_out,
-                             QWidget* parent, const char* name, Qt::WFlags f)
-    : QWidget(parent, name, f), search_manager_(0),
-        action_manager_(ActionManager::getInstance()),
-        ready_(true), to_start_(false), to_pause_(false), to_stop_(false),
-        in_progress_(false), paused_(false), stopped_(true),
+                             QWidget* parent)
+    : PlayableWidgetInterface(parent), search_manager_(0),
         elapsed_time_timer_(this), 
         max_simultaneous_connections_(max_simultaneous_connections),
         time_out_(time_out), tree_display_(false), follow_last_link_checked_(KLSConfig::followLastLinkChecked()),
@@ -111,7 +110,7 @@ void SessionWidget::init()
 
     resultsSearchBar->hide();
 
-    start_search_action_ = static_cast<KToggleAction*> (action_manager_->action("start_search"));
+    start_search_action_ = static_cast<KToggleAction*> (ActionManager::getInstance()->action("start_search"));
 
     connect(tree_view, SIGNAL(signalLinkRecheck(LinkStatus*)),
             this, SLOT(slotLinkRecheck(LinkStatus*)));
@@ -319,8 +318,10 @@ void SessionWidget::slotCheck()
         search_manager_->setRegularExpression(lineedit_reg_exp->text(), false);
     }
 
-    kDebug(23100) <<  "URI: " << url.prettyUrl() << endl;
+    kDebug(23100) <<  "URI to check: " << url.prettyUrl() << endl;
+    
     combobox_url->setEditText(url.prettyUrl());
+    url_to_check_ = url;
     search_manager_->startSearch(url);
 }
 
@@ -356,12 +357,36 @@ bool SessionWidget::validFields()
     return true;
 }
 
+QString SessionWidget::title() const
+{
+    QString label;
+    LinkStatus const* linkstatus = search_manager_->linkStatusRoot();
+    KUrl url = linkstatus->absoluteUrl();
+    
+    if(linkstatus->hasHtmlDocTitle())
+    {
+        label = linkstatus->htmlDocTitle();
+        label = KStringHandler::csqueeze(label, 30);
+    }
+    else
+    {
+        if(url.fileName(KUrl::ObeyTrailingSlash).isEmpty())
+            label = url.prettyUrl();
+        else
+            label = url.fileName(KUrl::ObeyTrailingSlash);
+        
+        label = KStringHandler::lsqueeze(label, 30);        
+    }
+
+    return label;
+}
+
 void SessionWidget::slotRootChecked(LinkStatus* linkstatus)
 {
     resultsSearchBar->show();
     ActionManager::getInstance()->action("file_export_html")->setEnabled(!isEmpty());
-    
-    emit signalUpdateTabLabel(search_manager_->linkStatusRoot(), this);
+
+    emit signalTitleChanged();
 
     Q_ASSERT(textlabel_progressbar->text() == i18n("Checking...") ||
             textlabel_progressbar->text() == i18n("Stopped"));
@@ -431,7 +456,7 @@ void SessionWidget::slotSearchFinished()
     paused_ = false;
     stopped_ = true;
     resetPendingActions();
-    action_manager_->slotUpdateSessionWidgetActions(this);
+    emit signalUpdateActions();
 
     Global::self()->setStatusBarText(i18n("Finished checking") + ' '
         + combobox_url->currentText(), false);
@@ -469,7 +494,7 @@ void SessionWidget::slotSearchPaused()
     elapsed_time_timer_.stop();
 
     resetPendingActions();
-    action_manager_->slotUpdateSessionWidgetActions(this);
+    emit signalUpdateActions();
 
     Global::self()->setStatusBarText(i18n("Paused"), false);
 
@@ -568,7 +593,7 @@ void SessionWidget::slotRecheckVisibleItems()
     paused_ = false;
     stopped_ = false;
 
-    action_manager_->slotUpdateSessionWidgetActions(this);
+    emit signalUpdateActions();
 
     QList<LinkStatus*> items = tree_view->getVisibleLinks();
     search_manager_->recheckLinks(items);
@@ -595,7 +620,7 @@ void SessionWidget::slotRecheckBrokenItems()
     paused_ = false;
     stopped_ = false;
 
-    action_manager_->slotUpdateSessionWidgetActions(this);
+    emit signalUpdateActions();
 
     QList<LinkStatus*> items = tree_view->getBrokenLinks();
     search_manager_->recheckLinks(items);
@@ -616,7 +641,7 @@ void SessionWidget::slotStartSearch()
     slotCheck();
     resetPendingActions();
 
-    action_manager_->slotUpdateSessionWidgetActions(this);
+    emit signalUpdateActions();
 }
 
 void SessionWidget::slotPauseSearch()
@@ -679,7 +704,7 @@ void SessionWidget::slotStopSearch()
         paused_ = false;
         stopped_ = true;
 
-        action_manager_->slotUpdateSessionWidgetActions(this);
+        emit signalUpdateActions();
     }
 }
 
@@ -818,6 +843,11 @@ void SessionWidget::slotLinkRechecked(LinkStatus* ls)
     }
     if(!in_progress_)
         Global::self()->setStatusBarText(i18n("Done rechecking ") + ls->absoluteUrl().prettyUrl());
+}
+
+KUrl const& SessionWidget::urlToCheck() const
+{
+    return url_to_check_;
 }
 
 #include "sessionwidget.moc"
