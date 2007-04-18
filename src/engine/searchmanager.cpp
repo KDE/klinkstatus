@@ -26,7 +26,6 @@
 #include <QString>
 #include <q3valuelist.h>
 #include <qdom.h>
-#include <threadweaver/ThreadWeaver.h>
 
 #include <iostream>
 #include <unistd.h>
@@ -48,12 +47,13 @@ SearchManager::SearchManager(int max_simultaneous_connections, int time_out,
         checked_general_domain_(false), time_out_(time_out), current_connections_(0),
         send_identification_(true), canceled_(false), searching_(false), checked_links_(0), ignored_links_(0),
         check_parent_dirs_(true), check_external_links_(true), check_regular_expressions_(false),
-        number_of_current_level_links_(0), number_of_new_links_to_check_(0),
-        links_rechecked_(0), recheck_current_index_(0), m_addLevelJob(0)
+        number_of_current_level_links_(0), 
+        links_rechecked_(0), recheck_current_index_(0)
 {
     root_.setIsRoot(true);
 
-    connect(Weaver::instance(), SIGNAL(jobDone(Job*)), SLOT(slotJobDone(Job*)));
+    m_weaver.setMaximumNumberOfThreads(10);
+    connect(&m_weaver, SIGNAL(jobDone(Job*)), SLOT(slotJobDone(Job*)));
 }
 
 void SearchManager::reset()
@@ -69,6 +69,7 @@ void SearchManager::reset()
     links_rechecked_ = 0;
     recheck_current_index_ = 0;
     search_results_hash_.clear();
+    new_level_.clear();
     depth_ = -1;
     current_depth_ = 0;
     current_node_ = 0;
@@ -438,22 +439,26 @@ void SearchManager::continueSearch()
 
     else
     {
-        current_index_ = 0;
         kDebug(23100) <<  "Next node_____________________\n\n";
+        
+        current_index_ = 0;
         ++current_node_;
+
         if(current_node_ < (search_results_[current_depth_ - 1]).size() )
             checkVectorLinks(nodeToAnalize());
         else
         {
             kDebug(23100) <<  "Next Level_____________________________________________________________________________________\n\n\n";
+            
             if(search_mode_ == SearchManager::domain ||
                     current_depth_ < depth_)
             {
                 current_node_ = 0;
                 ++current_depth_;
 
-                m_addLevelJob = new AddLevelJob(*this);
-                Weaver::instance()->enqueue(m_addLevelJob);
+                emit signalAddingLevel(true);
+
+                m_weaver.enqueue(new AddLevelJob(*this));
             }
             else
             {
@@ -612,6 +617,10 @@ void SearchManager::slotLinkChecked(LinkStatus* link, LinkChecker* checker)
   
     Q_ASSERT(links_being_checked_ >= 0);
 
+    if(search_mode_ != depth || current_depth_ < depth_) {
+        m_weaver.enqueue(new BuildNodeJob(*this, link));
+    }
+
     if(canceled_ && searching_ && !links_being_checked_)
     {
         pause();
@@ -662,58 +671,32 @@ void SearchManager::slotLinkRechecked(LinkStatus* link, LinkChecker* checker)
     }
 }
 
+void SearchManager::buildNewNode(LinkStatus* linkstatus)
+{
+    QList<LinkStatus*> new_node;
+    fillWithChildren(linkstatus, new_node);
+    
+    if(new_node.size() == 0)
+        return;
+        
+    // Push node
+    m_mutex.lock();
+    new_level_.push_back(new_node);
+    m_mutex.unlock();
+
+    emit signalNewLinksToCheck(new_node.size());
+}
+
 void SearchManager::addLevel()
 {
-    // add the new empty level
-    search_results_.push_back(QList< QList <LinkStatus*> >());
-    // keep the reference to it
-    QList< QList <LinkStatus*> >& new_level(search_results_[search_results_.size() - 1]);
-
-    // keep the reference to the current level
-    QList< QList <LinkStatus*> >& current_level(search_results_[search_results_.size() - 2]);
-
-    // To signal the progress of add level task. For each link, all children have to be find
-    number_of_current_level_links_ = 0;
-    // number of new link to check in the new level
-    number_of_new_links_to_check_ = 0;
-    int current_level_number_of_nodes = current_level.size();
-
-    // Count all the links in the level before, so progress can be signalized
-    for(int i = 0; i != current_level_number_of_nodes; ++i) // nodes
-    {
-        int node_size = current_level[i].size();
-        for(int j = 0; j != node_size; ++j) // links
-            ++number_of_current_level_links_;
+    if(new_level_.size() != 0) {
+        m_mutex.lock();
+        search_results_.push_back(new_level_);
+        new_level_.clear();
+        m_mutex.unlock();
     }
-//     new_level.reserve(number_of_current_level_links_);
-
-    if(number_of_current_level_links_ != 0)
-        emit signalAddingLevelTotalSteps(number_of_current_level_links_);
-
-    for(int i = 0; i != current_level_number_of_nodes; ++i) // nodes
-    {
-        int node_size = current_level[i].size();
-        for(int j = 0; j != node_size; ++j) // links
-        {
-            QList<LinkStatus*>& node = current_level[i];
-            LinkStatus* linkstatus = node[j];
-            linkstatus = LinkStatusHelper::lastRedirection(linkstatus);
-            QList <LinkStatus*> new_node;
-            fillWithChildren(linkstatus, new_node);
-            if(new_node.size() != 0)
-            {
-                // Push node
-                new_level.push_back(new_node);
-                number_of_new_links_to_check_ += new_node.size();
-            }
-
-            emit signalAddingLevelProgress();
-        }
-    }
-    if(new_level.size() == 0)
-        search_results_.pop_back();
-    else 
-        emit signalLinksToCheckTotalSteps(number_of_new_links_to_check_);
+    
+    emit signalAddingLevel(false);
 }
 
 bool SearchManager::checkable(KUrl const& url, LinkStatus const& link_parent) const
@@ -926,10 +909,13 @@ QString SearchManager::toXML() const
 // WARNING If there are several SearchManagers, they receive job done from all of them
 void SearchManager::slotJobDone(Job* job)
 {
-    if(job != m_addLevelJob)
-        return;  
-
-    slotLevelAdded();
+    AddLevelJob* addLevelJob = dynamic_cast<AddLevelJob*> (job);
+    if(addLevelJob) {
+        slotLevelAdded();
+        return;
+    }
+    
+    kDebug(23100) << "Job not handled in SearchManager::slotJobDone: " << job << endl;
 }
 
 QStringList SearchManager::findUnreferredDocuments(KUrl const& baseDir, QStringList const& documentList) const
@@ -992,6 +978,27 @@ QList<LinkStatus*> SearchManager::getLinksWithHtmlProblems() const
 }
 
 
+// Jobs
+
+// BuildNodeJob
+
+BuildNodeJob::BuildNodeJob(SearchManager& manager, LinkStatus* linkstatus)
+  : m_searchManager(manager), m_linkStatus(linkstatus)
+{
+}
+
+BuildNodeJob::~BuildNodeJob()
+{
+}
+    
+void BuildNodeJob::run()
+{
+//     kDebug(23100) << "\n\n\nBuildNodeJob::run\n\n\n" << endl;
+    m_searchManager.buildNewNode(m_linkStatus);
+}
+
+
+// AddLevelJob
 
 AddLevelJob::AddLevelJob(SearchManager& manager)
   : m_searchManager(manager)
@@ -1004,6 +1011,7 @@ AddLevelJob::~AddLevelJob()
     
 void AddLevelJob::run()
 {
+//     kDebug(23100) << "\n\n\nAddLevelJob::run\n\n\n" << endl;
     m_searchManager.addLevel();
 }
 

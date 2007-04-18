@@ -23,6 +23,7 @@
 
 #include <kurl.h>
 #include <threadweaver/Job.h>
+#include <threadweaver/ThreadWeaver.h>
 
 #include <QObject>
 #include <QString>
@@ -51,6 +52,7 @@ class SearchManager: public QObject
 
 public:
 
+    friend class BuildNodeJob;
     friend class AddLevelJob;
 
     enum SearchMode {
@@ -98,7 +100,6 @@ public:
 
     bool searching() const;
     bool localDomain(KUrl const& url, bool restrict = true) const;
-    //bool isLocalRestrict(KUrl const& url) const;
     bool existUrl(KUrl const& url, KUrl const& url_parent) const;
     LinkStatus const* linkStatus(QString const& s_url) const;
     LinkStatus const* linkStatusRoot() const;
@@ -109,7 +110,8 @@ public:
     KHTMLPart* htmlPart(QString const& key_url) const;
     void addHtmlPart(QString const& key_url, KHTMLPart* html_part);
 
-
+    ThreadWeaver::Weaver* threadWeaver() const;
+    
 signals:
 
     void signalRootChecked(LinkStatus* link);
@@ -117,8 +119,8 @@ signals:
     void signalLinkRechecked(LinkStatus* link);
     void signalSearchFinished();
     void signalSearchPaused();
-    void signalAddingLevelTotalSteps(int number_of_links);
-    void signalAddingLevelProgress();
+    void signalNewLinksToCheck(int number_of_links);
+    void signalAddingLevel(bool adding);
     void signalLinksToCheckTotalSteps(int links_to_check);
     void signalRedirection();
 
@@ -159,6 +161,7 @@ private:
     QList<LinkStatus*> chooseLinks(QList<LinkStatus*> const& links);
     QList<LinkStatus*> chooseLinksToRecheck(QList<LinkStatus*> const& links);
     void checkLinksSimultaneously(QList<LinkStatus*> const& links, bool recheck);
+    void buildNewNode(LinkStatus* linkstatus);
     void addLevel();
     bool checkableByDomain(KUrl const& url, LinkStatus const& link_parent) const;
     bool checkable(KUrl const& url, LinkStatus const& link_parent) const;
@@ -209,10 +212,10 @@ private:
     bool check_external_links_;
     bool check_regular_expressions_;
     int number_of_current_level_links_;
-    int number_of_new_links_to_check_;
     QList< QList< QList <LinkStatus*> > > search_results_;
     QHash<KUrl, LinkStatus*> search_results_hash_;
-    
+    QList<QList<LinkStatus*> > new_level_;
+        
     QList<LinkStatus*> recheck_links_;
     int links_rechecked_;
     int recheck_current_index_;
@@ -220,8 +223,23 @@ private:
     KHTMLPartMap html_parts_;
 
     // thread stuff
+    mutable Weaver m_weaver;
     mutable QMutex m_mutex;
-    AddLevelJob* m_addLevelJob;
+};
+
+class BuildNodeJob : public Job
+{
+    Q_OBJECT
+public:
+    BuildNodeJob(SearchManager& manager, LinkStatus* linkstatus);
+    ~BuildNodeJob();
+    
+protected:
+    void run();
+
+private:
+    SearchManager& m_searchManager;
+    LinkStatus* m_linkStatus;
 };
 
 class AddLevelJob : public Job

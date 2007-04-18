@@ -167,10 +167,10 @@ void SessionWidget::newSearchManager()
             this, SLOT(slotSearchFinished()));
     connect(search_manager_, SIGNAL(signalSearchPaused()),
             this, SLOT(slotSearchPaused()));
-    connect(search_manager_, SIGNAL(signalAddingLevelTotalSteps(int)),
-            this, SLOT(slotAddingLevelTotalSteps(int)));
-    connect(search_manager_, SIGNAL(signalAddingLevelProgress()),
-            this, SLOT(slotAddingLevelProgress()));
+    connect(search_manager_, SIGNAL(signalAddingLevel(bool)),
+            this, SLOT(slotAddingLevel(bool)));
+    connect(search_manager_, SIGNAL(signalNewLinksToCheck(int)),
+            this, SLOT(slotNewLinksToCheck(int)));
     connect(search_manager_, SIGNAL(signalLinksToCheckTotalSteps(int)),
             this, SLOT(slotLinksToCheckTotalSteps(int)));
     connect(search_manager_, SIGNAL(signalLinkRechecked(LinkStatus*)),
@@ -401,6 +401,7 @@ void SessionWidget::slotLinkChecked(LinkStatus* linkstatus)
     kDebug(23100) << textlabel_progressbar->text() << endl;
     Q_ASSERT(textlabel_progressbar->text() == i18n("Checking...") ||
             textlabel_progressbar->text() == i18n("Stopped"));
+    
     progressbar_checker->setValue(progressbar_checker->value() + 1);
 
     if(!linkstatus->checked())
@@ -513,18 +514,16 @@ void SessionWidget::slotSetTimeElapsed()
     textlabel_elapsed_time_value->setText(time.toString("hh:mm:ss"));
 }
 
-void SessionWidget::slotAddingLevelTotalSteps(int steps)
+void SessionWidget::slotAddingLevel(bool adding)
 {
-    textlabel_progressbar->setText(i18n( "Adding level..." ));
-    progressbar_checker->reset();
-    progressbar_checker->setRange(0, steps);
-    progressbar_checker->setValue(0);
-}
-
-void SessionWidget::slotAddingLevelProgress()
-{
-    Q_ASSERT(textlabel_progressbar->text() == i18n( "Adding level..." ));
-    progressbar_checker->setValue(progressbar_checker->value() + 1);
+    if(adding) {
+        Q_ASSERT(textlabel_progressbar->text() == i18n("Checking..."));
+        textlabel_progressbar->setText(i18n("Adding level..."));
+    }
+    else {
+        Q_ASSERT(textlabel_progressbar->text() == i18n("Adding level..."));
+        textlabel_progressbar->setText(i18n("Checking..."));
+    }
 }
 
 void SessionWidget::slotLinksToCheckTotalSteps(int steps)
@@ -535,9 +534,15 @@ void SessionWidget::slotLinksToCheckTotalSteps(int steps)
     progressbar_checker->setValue(0);
 }
 
+void SessionWidget::slotNewLinksToCheck(int numberOfLinks)
+{
+    progressbar_checker->setMaximum(progressbar_checker->maximum()
+        + numberOfLinks);
+}
+
 void SessionWidget::slotIncrementLinksToCheckTotalSteps()
 {
-    progressbar_checker->setMaximum(progressbar_checker->maximum() + 1);
+    slotNewLinksToCheck(1);
 }
 
 void SessionWidget::slotChooseUrlDialog()

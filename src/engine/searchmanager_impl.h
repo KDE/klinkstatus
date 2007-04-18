@@ -149,4 +149,8 @@ inline void SearchManager::setDocumentRoot(KUrl const& url)
     has_document_root_ = true;
 }
 
+inline ThreadWeaver::Weaver* SearchManager::threadWeaver() const
+{
+    return &m_weaver;
+}
 

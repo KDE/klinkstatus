@@ -23,7 +23,6 @@
 #include <ktabwidget.h>
 #include <kurl.h>
 
-#include <q3intdict.h>
 class QToolButton;
 
 class SessionStackedWidget;
@@ -50,7 +49,6 @@ public:
     bool emptySessionsExist() const;
     /** Returns the first empty session it finds */
     SessionWidget* getEmptySession() const;
-    Q3IntDict<SessionWidget> const& sessions() const;
     
 
 public slots:
@@ -85,7 +83,6 @@ private:
     SessionStackedWidget* widget(int index) const;
 
 private:
-    Q3IntDict<SessionWidget> tabs_;
     QToolButton* tabs_close_;
 };
 

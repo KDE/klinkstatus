@@ -328,12 +328,12 @@ bool Url::externalLink(KUrl const& url1, KUrl const& url2, bool restrict)
 {
     if(url1.protocol() != url2.protocol())
     {
-        kDebug(23100) <<  "externalLink" << endl;
+//         kDebug(23100) <<  "externalLink" << endl;
         return true;
     }
     else if(!url1.hasHost() && !url2.hasHost())
     {
-        kDebug(23100) <<  "NOT externalLink" << endl;
+//         kDebug(23100) <<  "NOT externalLink" << endl;
         return false;
     }
     else

@@ -97,7 +97,6 @@ private slots:
     virtual void slotCheck();
     virtual void slotCancel() {} // FIXME hack
     void slotLinkRecheck(LinkStatus*);
-    //virtual void slotSuggestDomain(bool toogle);
 
     void slotSearchStarted();
     void slotEnableCheckButton(const QString &);
@@ -109,9 +108,9 @@ private slots:
     void slotSetTimeElapsed();
     void newSearchManager();
 
-    void slotAddingLevelTotalSteps(int steps);
-    void slotAddingLevelProgress();
+    void slotAddingLevel(bool adding);
     void slotLinksToCheckTotalSteps(int steps);
+    void slotNewLinksToCheck(int numberOfLinks);
     // Happens when there is a redirection
     void slotIncrementLinksToCheckTotalSteps();
 

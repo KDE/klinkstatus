@@ -50,9 +50,7 @@ TabWidgetSession::TabWidgetSession(QWidget* parent, Qt::WFlags f)
     setTabReorderingEnabled(true);
     setHoverCloseButton(true);
     setHoverCloseButtonDelayed(true);
-    
-    tabs_.setAutoDelete(false);
-    
+        
     QToolButton* tabs_new = new QToolButton(this);
     tabs_new->setShortcut(QKeySequence("Ctrl+N"));
     connect(tabs_new, SIGNAL(clicked()), this, SLOT(slotNewSession()));
