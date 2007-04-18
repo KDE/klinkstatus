@@ -117,7 +117,7 @@ SessionWidget* TabWidgetSession::getEmptySession() const
 
 void TabWidgetSession::addNewSession(KUrl const& url)
 {
-    SessionStackedWidget* page = new SessionStackedWidget(url, this);
+    SessionStackedWidget* page = new SessionStackedWidget(this);
     
     connect(page, SIGNAL(signalTitleChanged(SessionStackedWidget*)),
             this, SLOT(updateTabLabel(SessionStackedWidget*)));
@@ -126,6 +126,9 @@ void TabWidgetSession::addNewSession(KUrl const& url)
 
     addTab(page, i18n("Session") + QString::number(count() + 1));
     setCurrentIndex(count() - 1);
+
+    // After adding the tab, otherwise looses focus in the combo url
+    page->sessionWidget()->setUrl(url);
 }
 
 void TabWidgetSession::closeSession()

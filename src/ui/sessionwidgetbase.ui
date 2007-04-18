@@ -90,9 +90,6 @@
               <property name="text" >
                <string>URL:</string>
               </property>
-              <property name="alignment" >
-               <set>Qt::AlignAbsolute|Qt::AlignBottom|Qt::AlignCenter|Qt::AlignHCenter|Qt::AlignHorizontal_Mask|Qt::AlignJustify|Qt::AlignLeading|Qt::AlignLeft|Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing|Qt::AlignVCenter|Qt::AlignVertical_Mask</set>
-              </property>
               <property name="margin" >
                <number>3</number>
               </property>
@@ -499,14 +496,14 @@
    <header>kpushbutton.h</header>
   </customwidget>
   <customwidget>
-   <class>ResultsSearchBar</class>
-   <extends>QWidget</extends>
-   <header>resultssearchbar.h</header>
-  </customwidget>
-  <customwidget>
    <class>KLSHistoryCombo</class>
    <extends>KHistoryComboBox</extends>
    <header>klshistorycombo.h</header>
+  </customwidget>
+  <customwidget>
+   <class>ResultsSearchBar</class>
+   <extends>QWidget</extends>
+   <header>resultssearchbar.h</header>
   </customwidget>
   <customwidget>
    <class>TreeView</class>

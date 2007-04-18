@@ -33,7 +33,7 @@ class SessionStackedWidget : public QStackedWidget
 {
     Q_OBJECT
 public:
-    SessionStackedWidget(KUrl const& url, QWidget* parent = 0);
+    SessionStackedWidget(QWidget* parent = 0);
     ~SessionStackedWidget();
 
     SessionWidget* sessionWidget() const;

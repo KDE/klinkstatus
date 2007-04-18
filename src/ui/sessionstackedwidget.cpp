@@ -26,7 +26,7 @@
 #include "ui/unreferreddocumentswidget.h"
     
 
-SessionStackedWidget::SessionStackedWidget(KUrl const& url, QWidget* parent)
+SessionStackedWidget::SessionStackedWidget(QWidget* parent)
     : QStackedWidget(parent), m_sessionWidget(0), m_unreferredDocumentsWidget(0)
 {
     m_sessionWidget = KLSFactory::createSessionWidget(this);
@@ -35,8 +35,6 @@ SessionStackedWidget::SessionStackedWidget(KUrl const& url, QWidget* parent)
             this, SLOT(slotChangeTitle()));
     connect(m_sessionWidget, SIGNAL(signalUpdateActions()),
             this, SLOT(slotUpdateActions()));
-
-    m_sessionWidget->setUrl(url);
 
     addWidget(m_sessionWidget);
 }
