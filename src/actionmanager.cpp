@@ -275,7 +275,7 @@ void ActionManager::updatePlayActions(SessionStackedWidget* page)
             start_search_action_->setChecked(true);
 
             pause_search_action_->setEnabled(true);
-            start_search_action_->setChecked(false);
+            pause_search_action_->setChecked(false);
 
             stop_search_action_->setEnabled(true);
 

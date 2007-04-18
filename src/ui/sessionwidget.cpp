@@ -348,7 +348,7 @@ void SessionWidget::keyPressEvent(QKeyEvent* e)
 bool SessionWidget::validFields()
 {
     QString url_string = combobox_url->currentText();
-//     kDebug() << "SessionWidget::validFields: " << url_string << endl;
+//     kDebug(23100) << "SessionWidget::validFields: " << url_string << endl;
     if(url_string.isEmpty())
     {
         KMessageBox::sorry(this, i18n("Cowardly refusing to check an empty URL."));
@@ -398,7 +398,6 @@ void SessionWidget::slotRootChecked(LinkStatus* linkstatus)
 
 void SessionWidget::slotLinkChecked(LinkStatus* linkstatus)
 {
-    kDebug(23100) << textlabel_progressbar->text() << endl;
     Q_ASSERT(textlabel_progressbar->text() == i18n("Checking...") ||
             textlabel_progressbar->text() == i18n("Stopped"));
     

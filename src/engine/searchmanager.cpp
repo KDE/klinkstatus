@@ -50,6 +50,8 @@ SearchManager::SearchManager(int max_simultaneous_connections, int time_out,
         number_of_current_level_links_(0), 
         links_rechecked_(0), recheck_current_index_(0)
 {
+    kDebug(23100) <<  "SearchManager::SearchManager()" << endl;
+
     root_.setIsRoot(true);
 
     m_weaver.setMaximumNumberOfThreads(10);
@@ -94,6 +96,7 @@ void SearchManager::reset()
 
 SearchManager::~SearchManager()
 {
+    kDebug(23100) <<  "SearchManager::~SearchManager()" << endl;
     reset();
 }
 
@@ -157,6 +160,8 @@ void SearchManager::recheckLinks(QList<LinkStatus*> const& linkstatus_list)
 
 void SearchManager::startSearch(KUrl const& root, SearchMode const& modo)
 {
+    kDebug(23100) <<  "SearchManager::startSearch()" << endl;
+    
     canceled_ = false;
 
     Q_ASSERT(root.isValid());
@@ -191,6 +196,8 @@ void SearchManager::startSearch(KUrl const& root, SearchMode const& modo)
 
 void SearchManager::resume()
 {
+    kDebug(23100) << "SearchManager::resume" << endl;
+
     searching_ = true;
     canceled_ = false;
     if(recheck_mode_)
@@ -201,7 +208,7 @@ void SearchManager::resume()
 
 void SearchManager::finnish()
 {
-    while(links_being_checked_)
+    while(links_being_checked_ || m_weaver.queueLength() != 0)
     {
         kDebug(23100) << "Waiting for links being checked: " << links_being_checked_ << endl;
         sleep(1);
@@ -218,6 +225,8 @@ void SearchManager::finnish()
 
 void SearchManager::pause()
 {
+    kDebug(23100) <<  "SearchManager::pause()" << endl;
+    
     while(links_being_checked_)
     {
         kDebug(23100) <<  "SearchManager::pause()" << endl
@@ -399,6 +408,8 @@ LinkStatus const* SearchManager::linkStatus(QString const& s_url) const
 
 void SearchManager::startSearch()
 {
+    kDebug(23100) <<  "SearchManager::startSearch() | after root checked" << endl;
+    
     Q_ASSERT(current_depth_ == 1);
     Q_ASSERT(search_results_[current_depth_ - 1].size() == 1);
     Q_ASSERT(current_node_ == 0);
@@ -414,6 +425,8 @@ void SearchManager::startSearch()
 
 void SearchManager::slotLevelAdded()
 {
+    kDebug(23100) << "SearchManager::slotLevelAdded" << endl;
+
     if(current_depth_ == search_results_.size() )
         checkVectorLinks(nodeToAnalize());
     else
@@ -425,11 +438,13 @@ void SearchManager::slotLevelAdded()
 
 void SearchManager::continueRecheck()
 {
+    kDebug(23100) << "SearchManager::continueRecheck" << endl;
     checkVectorLinksToRecheck(recheck_links_);
 }
 
 void SearchManager::continueSearch()
 {
+    kDebug(23100) << "SearchManager::continueSearch" << endl;
     Q_ASSERT(!links_being_checked_);
 
     QList<LinkStatus*> const& node = nodeToAnalize();
@@ -458,6 +473,7 @@ void SearchManager::continueSearch()
 
                 emit signalAddingLevel(true);
 
+                kDebug(23100) << "ThreadWeaver Queue length: " << m_weaver.queueLength() << endl;
                 m_weaver.enqueue(new AddLevelJob(*this));
             }
             else
@@ -579,6 +595,8 @@ void SearchManager::recheckLink(LinkStatus* ls)
 
 void SearchManager::linkRedirectionChecked(LinkStatus* link, bool recheck)
 {
+    kDebug(23100) <<  "SearchManager::linkRedirectionChecked: " << checked_links_ << endl;
+    
     emit signalRedirection();
     recheck ? emit signalLinkRechecked(link) : emit signalLinkChecked(link);
   
@@ -673,6 +691,16 @@ void SearchManager::slotLinkRechecked(LinkStatus* link, LinkChecker* checker)
 
 void SearchManager::buildNewNode(LinkStatus* linkstatus)
 {
+    KUrl const& url = linkstatus->absoluteUrl();
+    if(url.hasRef()) {
+        KUrl urlWithoutRef = url;
+        urlWithoutRef.setRef(QString());
+        if(search_results_hash_.contains(url))
+            return;
+    }
+    
+    kDebug(23100) << "SearchManager::buildNewNode" << endl;
+
     QList<LinkStatus*> new_node;
     fillWithChildren(linkstatus, new_node);
     
@@ -689,6 +717,8 @@ void SearchManager::buildNewNode(LinkStatus* linkstatus)
 
 void SearchManager::addLevel()
 {
+    kDebug(23100) << "SearchManager::addLevel" << endl;
+
     if(new_level_.size() != 0) {
         m_mutex.lock();
         search_results_.push_back(new_level_);
@@ -819,8 +849,8 @@ void SearchManager::addHtmlPart(QString const& key_url, KHTMLPart* html_part)
     Q_ASSERT(html_part);
 
     // FIXME configurable
-    if(html_parts_.count() > 300)
-        removeHtmlParts();
+//     if(html_parts_.size() > 300)
+//         removeHtmlParts();
 
     html_parts_.insert(key_url, html_part);
 }
@@ -915,7 +945,7 @@ void SearchManager::slotJobDone(Job* job)
         return;
     }
     
-    kDebug(23100) << "Job not handled in SearchManager::slotJobDone: " << job << endl;
+//     kDebug(23100) << "Job not handled in SearchManager::slotJobDone: " << job << endl;
 }
 
 QStringList SearchManager::findUnreferredDocuments(KUrl const& baseDir, QStringList const& documentList) const

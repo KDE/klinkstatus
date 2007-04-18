@@ -51,7 +51,7 @@ LinkChecker::LinkChecker(LinkStatus* linkstatus, int time_out,
     Q_ASSERT(linkstatus_);
     Q_ASSERT(!linkstatus_->checked());
 
-    kDebug(23100) << endl << "Checking " << linkstatus_->absoluteUrl().url() << endl;
+    kDebug(23100) << "Checking " << linkstatus_->absoluteUrl().url() << endl;
 }
 
 LinkChecker::~LinkChecker()
@@ -188,8 +188,8 @@ void LinkChecker::slotData(KIO::Job* /*job*/, const QByteArray& data)
     if(finnished_)
         return;
 
-    kDebug(23100) <<  "LinkChecker::slotData -> " << linkstatus_->absoluteUrl().url() 
-            << " - " << t_job_->slave() << "/" <<  t_job_->slave()->slave_pid()  << endl;
+//     kDebug(23100) <<  "LinkChecker::slotData -> " << linkstatus_->absoluteUrl().url() 
+//             << " - " << t_job_->slave() << "/" <<  t_job_->slave()->slave_pid()  << endl;
     
     Q_ASSERT(t_job_);
     
@@ -418,8 +418,8 @@ void LinkChecker::slotResult(KJob* /*job*/)
 
 void LinkChecker::slotRedirection (KIO::Job* /*job*/, const KUrl &url)
 {
-    kDebug(23100) <<  "LinkChecker::slotRedirection -> " << 
-            linkstatus_->absoluteUrl().url()  << " -> " << url.url() << endl;
+//     kDebug(23100) <<  "LinkChecker::slotRedirection -> " << 
+//             linkstatus_->absoluteUrl().url()  << " -> " << url.url() << endl;
 //             << " - " << t_job_->slave() << "/" <<  t_job_->slave()->slave_pid() << endl;
     
     redirection_ = true;
@@ -572,7 +572,7 @@ void LinkChecker::checkRef(KUrl const& url)
     KHTMLPart* html_part = search_manager_->htmlPart(url_string);
     if(!html_part)
     {
-        kDebug() << "new KHTMLPart: " +  url_string << endl;
+        kDebug(23100) << "new KHTMLPart: " +  url_string << endl;
 
         html_part = new KHTMLPart();
         html_part->setOnlyLocalReferences(true);
@@ -589,7 +589,7 @@ void LinkChecker::checkRef(KUrl const& url)
         } 
         else 
         {
-            kDebug(23100) <<  KIO::NetAccess::lastErrorString() << endl;
+            kError(23100) <<  KIO::NetAccess::lastErrorString() << endl;
         }
 
         search_manager_->addHtmlPart(url_string, html_part);
@@ -618,7 +618,7 @@ void LinkChecker::checkRef(LinkStatus const* linkstatus_parent)
     KHTMLPart* html_part = search_manager_->htmlPart(url_string);
     if(!html_part)
     {
-        kDebug() << "new KHTMLPart: " +  url_string << endl;
+        kDebug(23100) << "new KHTMLPart: " +  url_string << endl;
 
         html_part = new KHTMLPart();
         html_part->setOnlyLocalReferences(true);
