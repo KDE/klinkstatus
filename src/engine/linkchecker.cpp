@@ -70,8 +70,9 @@ void LinkChecker::check()
     KUrl url(linkStatus()->absoluteUrl());
     Q_ASSERT(url.isValid());
 
-    if(url.hasRef())
-        checkRef();
+    if(url.hasRef()) {
+        QTimer::singleShot(0, this, SLOT(slotCheckRef()));
+    }
     else
     {
         t_job_ = KIO::get
@@ -524,7 +525,7 @@ HttpResponseHeader LinkChecker::getHttpHeader(KIO::Job* /*job*/, bool remember_c
     return HttpResponseHeader(header_string);
 }
 
-void LinkChecker::checkRef()
+void LinkChecker::slotCheckRef()
 {
     KUrl url(linkStatus()->absoluteUrl());
     Q_ASSERT(url.hasRef());

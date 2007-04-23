@@ -63,12 +63,12 @@ protected slots:
     void slotMimetype(KIO::Job *, const QString &type);
     void slotResult(KJob* job);
     void slotTimeOut();
+    void slotCheckRef(); // #...
 
 protected:
 
     void finnish();
     HttpResponseHeader getHttpHeader(KIO::Job* job, bool remember_check = true);
-    void checkRef(); // #...
 
 private:
     

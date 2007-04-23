@@ -40,11 +40,13 @@ class PlayableWidgetInterface : public WidgetInterface
 public:
     PlayableWidgetInterface(QWidget* parent);
     virtual ~PlayableWidgetInterface() = 0;
-  
+
     bool inProgress() { return in_progress_; }
     bool stopped() { return stopped_; }
     bool paused() { return paused_; }
 
+    virtual bool supportsResuming() = 0;
+    
     virtual void slotStartSearch() = 0;
     virtual void slotPauseSearch() = 0;
     virtual void slotStopSearch() = 0;

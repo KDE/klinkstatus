@@ -854,4 +854,9 @@ KUrl const& SessionWidget::urlToCheck() const
     return url_to_check_;
 }
 
+bool SessionWidget::supportsResuming()
+{
+    return true;
+}
+
 #include "sessionwidget.moc"

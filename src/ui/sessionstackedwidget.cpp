@@ -63,6 +63,17 @@ bool SessionStackedWidget::isUnreferredDocumentsWidgetActive() const
     return m_unreferredDocumentsWidget == currentWidget();
 }
 
+void SessionStackedWidget::addUnreferredDocumentsWidget(UnreferredDocumentsWidget* widget, bool setCurrent)
+{
+    Q_ASSERT(widget);
+    
+    m_unreferredDocumentsWidget = widget;
+    addWidget(widget);
+
+    if(setCurrent)
+        setCurrentWidget(widget);
+}
+
 void SessionStackedWidget::slotChangeTitle()
 {
     emit signalTitleChanged(this);

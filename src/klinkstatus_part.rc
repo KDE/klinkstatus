@@ -32,6 +32,8 @@
                 <Action name="recheck_broken_items"/>
                 <Action name="recheck_visible_items"/>
             </Menu>
+            <Separator/>
+            <Action name="find_unreferred_documents"/>
         </Menu>
 
         <Menu name="validate"><text>&amp;Validate</text>
@@ -44,6 +46,19 @@
                 <Action name="compare_and_apply"/>
             </Menu>
             <Action name="edit_document"/>-->
+        </Menu>
+
+        <Menu name="window"><text>&amp;Window</text>
+            <Menu name="navigation"><text>Navigation</text>
+                <Action name="goto_previous_view"/>
+                <Action name="goto_next_view"/>
+                <Separator/>
+                <Action name="goto_previous_session"/>
+                <Action name="goto_next_session"/>
+            </Menu>
+            <Separator/>
+            <Action name="goto_check_links"/>
+            <Action name="goto_unreferred_documents"/>
         </Menu>
 
         <Menu name="help"><text>&amp;Help</text>

@@ -123,6 +123,8 @@ signals:
     void signalAddingLevel(bool adding);
     void signalLinksToCheckTotalSteps(int links_to_check);
     void signalRedirection();
+    void signalUnreferredDocStepCompleted() const;
+    void signalUnreferredDocFound(const QString&) const;
 
 private slots:
 

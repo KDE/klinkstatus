@@ -56,6 +56,11 @@ public slots:
     void closeSession();
     void updateTabLabel(SessionStackedWidget*);
     void slotLoadSettings();
+
+    void slotPreviousView();
+    void slotNextView();
+    void slotPreviousSession();
+    void slotNextSession();
     
     void slotHideSearchPanel();
     void slotResetSearchOptions();
@@ -69,6 +74,8 @@ public slots:
     void slotRecheckBrokenItems();
 
     void slotExportAsHTML();
+
+    void slotFindUnreferredDocuments();
 
     // Tidy all the HTML documents present in the current session
     void slotValidateAll();

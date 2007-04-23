@@ -454,11 +454,11 @@ void SearchManager::continueSearch()
 
     else
     {
-        kDebug(23100) <<  "Next node_____________________\n\n";
-        
         current_index_ = 0;
         ++current_node_;
 
+        kDebug(23100) <<  "Next node_____________________\n\n";
+        
         if(current_node_ < (search_results_[current_depth_ - 1]).size() )
             checkVectorLinks(nodeToAnalize());
         else
@@ -504,6 +504,10 @@ void SearchManager::checkVectorLinksToRecheck(QList<LinkStatus*> const& links)
 
 QList<LinkStatus*> SearchManager::chooseLinks(QList<LinkStatus*> const& links)
 {
+    if(current_index_ == 0) {
+        kDebug(23100) << "Node parent: " << links[0]->parent()->absoluteUrl() << endl;
+    }
+  
     QList<LinkStatus*> escolha;
     for(int i = 0; i != max_simultaneous_connections_; ++i)
     {
@@ -699,7 +703,7 @@ void SearchManager::buildNewNode(LinkStatus* linkstatus)
             return;
     }
     
-    kDebug(23100) << "SearchManager::buildNewNode" << endl;
+//     kDebug(23100) << "SearchManager::buildNewNode" << endl;
 
     QList<LinkStatus*> new_node;
     fillWithChildren(linkstatus, new_node);
@@ -963,6 +967,9 @@ QStringList SearchManager::findUnreferredDocuments(KUrl const& baseDir, QStringL
     for(int i = 0; i != documentList.size(); ++i)
     {
         QString document = documentList[i];
+
+//         kDebug(23100) << "Document: " << document << endl;
+        
         KUrl documentUrl(baseDir);    
         documentUrl.addPath(document);
 
@@ -978,8 +985,12 @@ QStringList SearchManager::findUnreferredDocuments(KUrl const& baseDir, QStringL
                 break;
             }
         }
-        if(!found)
+        if(!found) {
             unreferredDocuments.append(document);
+            emit signalUnreferredDocFound(document);
+        }
+
+        emit signalUnreferredDocStepCompleted();
     }
 
     return unreferredDocuments;

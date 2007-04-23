@@ -23,6 +23,7 @@
 #include "ui/sessionwidget.h"
 #include "ui/sessionstackedwidget.h"
 #include "ui/treeview.h"
+#include "ui/unreferreddocumentswidget.h"
 #include "engine/searchmanager.h"
 #include "klsconfig.h"
 #include "actionmanager.h"
@@ -247,6 +248,74 @@ void TabWidgetSession::slotExportAsHTML()
 void TabWidgetSession::slotValidateAll( )
 {
     currentWidget()->sessionWidget()->slotValidateAll();
+}
+
+void TabWidgetSession::slotFindUnreferredDocuments()
+{
+    SessionStackedWidget* current = currentWidget();
+    Q_ASSERT(!current->isUnreferredDocumentsWidgetActive());
+
+    KUrl url = current->sessionWidget()->urlToCheck();
+    url.setFileName(QString());
+    
+    UnreferredDocumentsWidget* widget = new UnreferredDocumentsWidget(url, *current->sessionWidget()->getSearchManager(), this);
+    current->addUnreferredDocumentsWidget(widget, true);
+
+    ActionManager::getInstance()->slotUpdateActions(current);
+}
+
+void TabWidgetSession::slotPreviousView()
+{
+    SessionStackedWidget* widget = currentWidget();
+    
+    int currentIndex = widget->currentIndex();
+    if(currentIndex != 0) {
+        widget->setCurrentIndex(currentIndex - 1);
+    }
+    else {
+        widget->setCurrentIndex(widget->count() - 1);
+    }
+    ActionManager::getInstance()->slotUpdateActions(widget);
+}
+
+void TabWidgetSession::slotNextView()
+{
+    SessionStackedWidget* widget = currentWidget();
+    
+    int currentIndex = widget->currentIndex();
+    if(currentIndex != widget->count() - 1) {
+        widget->setCurrentIndex(currentIndex + 1);
+    }
+    else {
+        widget->setCurrentIndex(0);
+    }
+    ActionManager::getInstance()->slotUpdateActions(widget);
+}
+
+void TabWidgetSession::slotPreviousSession()
+{
+    int _currentIndex = currentIndex();
+    if(_currentIndex != 0) {
+        setCurrentIndex(--_currentIndex);
+    }
+    else {
+        _currentIndex = count() - 1;      
+        setCurrentIndex(_currentIndex);
+    }    
+    slotCurrentChanged(_currentIndex);
+}
+
+void TabWidgetSession::slotNextSession()
+{
+    int _currentIndex = currentIndex();
+    if(_currentIndex != count() - 1) {
+        setCurrentIndex(++_currentIndex);
+    }
+    else {
+        _currentIndex = 0;
+        setCurrentIndex(0);
+    }
+    slotCurrentChanged(_currentIndex);
 }
 
 

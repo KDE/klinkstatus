@@ -77,9 +77,11 @@ public slots:
 
     void slotLoadSettings(bool modify_current_widget_settings = true);
 
-    void slotStartSearch();
-    void slotPauseSearch();
-    void slotStopSearch();
+    virtual bool supportsResuming();
+
+    virtual void slotStartSearch();
+    virtual void slotPauseSearch();
+    virtual void slotStopSearch();
 
     void slotRecheckVisibleItems();
     void slotRecheckBrokenItems();

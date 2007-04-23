@@ -42,6 +42,8 @@ public:
     bool isSessionWidgetActive() const;
     bool isUnreferredDocumentsWidgetActive() const;
 
+    void addUnreferredDocumentsWidget(UnreferredDocumentsWidget* widget, bool setCurrentWidget = false);
+
 Q_SIGNALS:
     void signalTitleChanged(SessionStackedWidget*);
   

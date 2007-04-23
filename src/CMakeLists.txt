@@ -33,8 +33,8 @@ set(libui_SRCS
 	${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/sessionwidget.cpp
     ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/tabwidgetsession.cpp  
     ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/treeview.cpp
-    ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/unreferreddocumentswidget.cpp
     ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/sessionstackedwidget.cpp
+    ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/unreferreddocumentswidget.cpp
 )
 
 set(libuisettings_SRCS 
@@ -65,8 +65,8 @@ set(klinkstatuspart_PART_SRCS
     ${libui_SRCS} 
     global.cpp 
     actionmanager.cpp
-    klsfactory.cpp
     klinkstatus_part.cpp
+    klsfactory.cpp
 )
 
 kde4_add_ui_files(klinkstatuspart_PART_SRCS

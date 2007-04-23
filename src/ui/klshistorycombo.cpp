@@ -46,7 +46,7 @@ void KLSHistoryCombo::init()
     loadItems();
 }
 
-void KLSHistoryCombo::addCurrentItem(QString const & text)
+void KLSHistoryCombo::addCurrentItem(QString const& text)
 {
     int previous_count = count();
     addToHistory(text);

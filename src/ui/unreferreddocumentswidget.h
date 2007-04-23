@@ -17,42 +17,62 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
-
+    
 #ifndef UNREFERRED_DOCUMENTS_WIDGET_H
 #define UNREFERRED_DOCUMENTS_WIDGET_H
 
+#include <global.h>
+#include <kio/job.h>
 class KUrl;
+class KToggleAction;
+class KJob;
 
 #include <QWidget>
-#include <QStringListModel>
-#include <QSortFilterProxyModel>
 #include <QTimer>
-        
-#include "ui_unreferreddocumentswidget.h"
-    
 
-class UnreferredDocumentsWidget : public QWidget
+#include "ui_unreferreddocumentswidget.h"
+#include "ui/widgetinterface.h"
+#include "engine/searchmanager.h"
+                      
+
+class UnreferredDocumentsWidget : public PlayableWidgetInterface
 {
     Q_OBJECT
 public:
-    UnreferredDocumentsWidget(QString const& baseDirectory, QWidget* parent = 0);
-    ~UnreferredDocumentsWidget();
+    UnreferredDocumentsWidget(KUrl const& baseDirectory, SearchManager const& searchManager, QWidget* parent = 0);
+    virtual ~UnreferredDocumentsWidget();
 
     void setBaseDirectory(KUrl const& url);
 
+    virtual bool supportsResuming();
+
+    virtual void slotStartSearch();
+    virtual void slotPauseSearch();
+    virtual void slotStopSearch();
+
 private Q_SLOTS:
     void slotChooseUrlDialog();
-    
+
+    void slotEntries(KIO::Job*, const KIO::UDSEntryList&);
+    void slotPercent(KJob* job, unsigned long percent);
+    void slotResult(KJob*);
+
+    void slotUnreferredDocStepCompleted();
+    void slotUnreferredDocFound(const QString& doc);
+
 private:
     void init();
-    
+    void finish();
+
+    static KUrl normalizeBaseDirectoryInput(QString const& input);
+
 private:
     Ui::UnreferredDocumentsWidget m_ui;
-    QString m_baseDirectory;
+    KUrl m_baseDirectory;
+    QStringList m_documentList;
+    SearchManager const& m_searchManager;
     QTimer m_elapsedTimeTimer;
-
-    QStringListModel m_listModel;
-    QSortFilterProxyModel m_proxyModel;
+    KToggleAction* m_startSearchAction;
 };
     
 #endif

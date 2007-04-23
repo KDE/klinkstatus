@@ -194,16 +194,22 @@ void ActionManager::initTabWidget(TabWidgetSession* tabWidgetSession)
     action->setShortcut(KShortcut("Ctrl+c"));
     action->setEnabled(false);
         
-    action  = new KAction(KIcon("view-refresh"), i18n("&Recheck Broken Links"), this);
+    action  = new KAction(KIcon("view-refresh"), i18n("&Broken Links"), this);
     actionCollection()->addAction("recheck_broken_items", action);
     connect(action, SIGNAL(triggered(bool) ),
             d->tabWidgetSession, SLOT(slotRecheckBrokenItems()));
     action->setEnabled(false);
         
-    action  = new KAction(KIcon("view-refresh"), i18n("Recheck &Displayed Links"), this);
+    action  = new KAction(KIcon("view-refresh"), i18n("&Displayed Links"), this);
     actionCollection()->addAction("recheck_visible_items", action);
     connect(action, SIGNAL(triggered(bool) ),
             d->tabWidgetSession, SLOT(slotRecheckVisibleItems()));
+    action->setEnabled(false);
+        
+    action  = new KAction(KIcon(), i18n("&Unreferred Documents..."), this);
+    actionCollection()->addAction("find_unreferred_documents", action);
+    connect(action, SIGNAL(triggered(bool) ),
+            d->tabWidgetSession, SLOT(slotFindUnreferredDocuments()));
     action->setEnabled(false);
         
     // *************** Validate menu *********************
@@ -212,6 +218,32 @@ void ActionManager::initTabWidget(TabWidgetSession* tabWidgetSession)
     actionCollection()->addAction("html_fix_all", action);
     connect(action, SIGNAL(triggered(bool) ), d->tabWidgetSession, SLOT(slotValidateAll()));
     action->setShortcut(KShortcut());
+    action->setEnabled(true);
+
+    // *************** Windows menu *********************
+        
+    action = new KAction(KIcon(), i18n("Previous View"), this);
+    actionCollection()->addAction("goto_previous_view", action);
+    connect(action, SIGNAL(triggered(bool) ), d->tabWidgetSession, SLOT(slotPreviousView()));
+    action->setShortcut(KShortcut(QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_F8)));
+    action->setEnabled(true);
+        
+    action = new KAction(KIcon(), i18n("Next View"), this);
+    actionCollection()->addAction("goto_next_view", action);
+    connect(action, SIGNAL(triggered(bool) ), d->tabWidgetSession, SLOT(slotNextView()));
+    action->setShortcut(KShortcut(QKeySequence(Qt::CTRL + Qt::Key_F8)));
+    action->setEnabled(true);
+
+    action = new KAction(KIcon(), i18n("Previous Session"), this);
+    actionCollection()->addAction("goto_previous_session", action);
+    connect(action, SIGNAL(triggered(bool) ), d->tabWidgetSession, SLOT(slotPreviousSession()));
+    action->setShortcut(KShortcut(QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_F6)));
+    action->setEnabled(true);
+        
+    action = new KAction(KIcon(), i18n("Next Session"), this);
+    actionCollection()->addAction("goto_next_session", action);
+    connect(action, SIGNAL(triggered(bool) ), d->tabWidgetSession, SLOT(slotNextSession()));
+    action->setShortcut(KShortcut(QKeySequence(Qt::CTRL + Qt::Key_F6)));
     action->setEnabled(true);
 }
 
@@ -274,16 +306,17 @@ void ActionManager::updatePlayActions(SessionStackedWidget* page)
             start_search_action_->setEnabled(true);
             start_search_action_->setChecked(true);
 
-            pause_search_action_->setEnabled(true);
+            pause_search_action_->setEnabled(playable->supportsResuming());
             pause_search_action_->setChecked(false);
 
-            stop_search_action_->setEnabled(true);
-
+            stop_search_action_->setEnabled(playable->supportsResuming());
+            
             if(page->isSessionWidgetActive()) {
                 recheck_visible_items->setEnabled(false);
                 recheck_broken_items->setEnabled(false);
             }
         }
+        // this never happens if it doesn't support resuming
         if(playable->paused())
         {
             Q_ASSERT(playable->inProgress());
@@ -331,26 +364,29 @@ void ActionManager::updateGeneralActions(SessionStackedWidget* page)
     KToggleAction* hideAction = static_cast<KToggleAction*> (action("hide_search_bar"));
     Q_ASSERT(hideAction);
 
+    QAction* resetSearchOptionsAction = action("reset_search_bar");
+    Q_ASSERT(resetSearchOptionsAction);
+
+    QAction* findUnreferredDocumentsAction = action("find_unreferred_documents");
+    Q_ASSERT(findUnreferredDocumentsAction);
+
     SessionWidget* sw = page->sessionWidget();
 
-    if(page->isSessionWidgetActive()) {
-        followAction->setEnabled(true);
-        followAction->setChecked(sw->followLastLinkChecked());
-        
-        hideAction->setEnabled(true);
-        hideAction->setChecked(sw->searchGroupBox->isHidden());
-    }
-    else {
-        followAction->setChecked(false);
-        followAction->setEnabled(false);
-        
-        hideAction->setChecked(false);
-        hideAction->setEnabled(false);
-    }
+    followAction->setEnabled(page->isSessionWidgetActive());
+    followAction->setChecked(sw->followLastLinkChecked());
+
+    hideAction->setEnabled(page->isSessionWidgetActive());
+    hideAction->setChecked(sw->searchGroupBox->isHidden());
+
+    resetSearchOptionsAction->setEnabled(page->isSessionWidgetActive());
+
+    findUnreferredDocumentsAction->setEnabled(!page->isUnreferredDocumentsWidgetActive());
+
     //     ____________________________________________________________________
 
     action("file_export_html")->setEnabled(!sw->isEmpty());
     action("html_fix_all")->setEnabled(!sw->isEmpty() && sw->stopped());
+    action("find_unreferred_documents")->setEnabled(!sw->isEmpty() && sw->stopped());
 }
 
 
