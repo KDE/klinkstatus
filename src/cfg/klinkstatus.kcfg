@@ -58,11 +58,6 @@
             <default>true</default>
         </entry>
         
-        <entry key="DisplayFlatView" type="Bool" >
-            <label>Whether to display a tree view or a flat view in the results view.</label>
-            <default>false</default>
-        </entry>
-        
         <entry key="AutoAdjustColumnWidth" type="Bool" >
             <label>Whether to automatically adjust the width of the result columns (Not used).</label>
             <default>false</default>
@@ -70,7 +65,7 @@
         
         <entry key="FollowLastLinkChecked" type="Bool" >
             <label>Whether the viewport of the result view should follow the last link checked.</label>
-            <default>true</default>
+            <default>false</default>
         </entry>
     
         <entry key="SendIdentification" type="Bool" >

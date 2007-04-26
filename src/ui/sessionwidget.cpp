@@ -18,6 +18,8 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
+#include "sessionwidget.h"
+
 #include <klocale.h>
 #include <kapplication.h>
 #include <kurl.h>
@@ -56,7 +58,6 @@
 #include <QTreeWidget>
 #include <QProcess>
 
-#include "ui/sessionwidget.h"
 #include "ui/treeview.h"
 #include "ui/documentrootdialog.h"
 #include "ui/klshistorycombo.h"
@@ -384,6 +385,7 @@ QString SessionWidget::title() const
 void SessionWidget::slotRootChecked(LinkStatus* linkstatus)
 {
     resultsSearchBar->show();
+
     ActionManager::getInstance()->action("file_export_html")->setEnabled(!isEmpty());
 
     emit signalTitleChanged();
@@ -392,7 +394,7 @@ void SessionWidget::slotRootChecked(LinkStatus* linkstatus)
             textlabel_progressbar->text() == i18n("Stopped"));
     progressbar_checker->setValue(1);
 
-    TreeViewItem* tree_view_item = new TreeViewItem(tree_view, tree_view->invisibleRootItem(), linkstatus);
+    TreeViewItem* tree_view_item = new TreeViewItem(tree_view, linkstatus);
     linkstatus->setTreeViewItem(tree_view_item);
 }
 
@@ -412,7 +414,7 @@ void SessionWidget::slotLinkChecked(LinkStatus* linkstatus)
 
     if(tree_display_)
     {
-        tree_view_item = new TreeViewItem(tree_view, parent_item, parent_item->lastChild(), linkstatus);
+        tree_view_item = new TreeViewItem(tree_view, parent_item, linkstatus);
         parent_item->setLastChild(tree_view_item);
         if(follow_last_link_checked_)
             tree_view->ensureRowVisible(tree_view_item, tree_display_);

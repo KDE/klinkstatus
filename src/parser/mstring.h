@@ -73,9 +73,8 @@ int nextSpaceChar(QString const& s, int i);
 int nextCharDifferentThan(QChar c, QString const& s, int i);
 
 /** Return a vector with the words */
-QList<QString> tokenize(QString s);
-QList<QString> tokenizeWordsSeparatedByDots(QString s);
-QList<QString> tokenizeWordsSeparatedBy(QString s, const QChar & criteria);
+QList<QString> tokenizeWordsSeparatedByDots(QString const& s);
+QList<QString> tokenizeWordsSeparatedBy(QString const& s, const QChar& criteria);
 
 /**
    If char 'caractere' is the last in the string 's' it is removed

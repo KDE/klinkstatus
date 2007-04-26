@@ -130,6 +130,9 @@ LinkStatus* LinkStatusHelper::lastRedirection(LinkStatus* ls)
 
 bool LinkStatusHelper::hasStatus(LinkStatus const* linkstatus, LinkStatusHelper::Status ui_status)
 {
+    if(ui_status == none)
+        return true;
+  
     LinkStatus::Status detailed_status = linkstatus->status();
     
     if(ui_status == good)

@@ -61,7 +61,7 @@ Global::Global(QObject *parent)
     connect(&m_statusBarTimer, SIGNAL(timeout()),
             this, SLOT(slotStatusBarTimeout()));
 
-    m_statusBarTimer.start(1000);
+    m_statusBarTimer.start(1500);
 }
 
 Global::~Global()

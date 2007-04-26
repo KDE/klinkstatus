@@ -1,14 +1,25 @@
-//
-// C++ Implementation: treeview
-//
-// Description:
-//
-//
-// Author: Paulo Moura Guedes <moura@kdewebdev.org>, (C) 2004
-//
-// Copyright: See COPYING file that comes with this distribution
-//
-//
+/***************************************************************************
+ *   Copyright (C) 2004-2007 by Paulo Moura Guedes                              *
+ *   moura@kdewebdev.org                                                   *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the                         *
+ *   Free Software Foundation, Inc.,                                       *
+ *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
+ ***************************************************************************/
+
+#include "treeview.h"
+
 #include <klocale.h>
 #include <kiconloader.h>
 #include <kapplication.h>
@@ -22,19 +33,17 @@
 #include <q3valuelist.h>
 #include <q3header.h>
 #include <QClipboard>
-//Added by qt3to4:
 #include <QPixmap>
 #include <QResizeEvent>
 #include <Q3PopupMenu>
 #include <QHeaderView>
 #include <QScrollBar>
 
-#include "treeview.h"
-#include "global.h"
 #include "engine/linkstatus.h"
 #include "engine/linkfilter.h"
-#include "klsconfig.h"
 #include "tidy/markupvalidator.h"
+#include "global.h"
+#include "klsconfig.h"
 
 
 TreeView::TreeView(QWidget *parent)
@@ -51,6 +60,8 @@ TreeView::TreeView(QWidget *parent)
     setAlternatingRowColors(true);
     setMouseTracking(true);
     setContextMenuPolicy(Qt::CustomContextMenu);
+    // This one is *very* important for performance
+    setUniformRowHeights(true);
     
     connect(this, SIGNAL(itemClicked(QTreeWidgetItem*,int)),
             this, SLOT(slotItemClicked(QTreeWidgetItem*,int)));
@@ -414,17 +425,9 @@ TreeViewItem::TreeViewItem(TreeView* parent, LinkStatus* linkstatus)
     init(linkstatus);
 }
 
-TreeViewItem::TreeViewItem(TreeView* parent, QTreeWidgetItem* after,
+TreeViewItem::TreeViewItem(TreeView* root, QTreeWidgetItem* listview_item,
                            LinkStatus* linkstatus)
-        : QTreeWidgetItem(parent, after),
-        last_child_(0), root_(parent)
-{
-    init(linkstatus);
-}
-
-TreeViewItem::TreeViewItem(TreeView* root, QTreeWidgetItem* listview_item, QTreeWidgetItem* after,
-                           LinkStatus* linkstatus)
-        : QTreeWidgetItem(listview_item, after),
+        : QTreeWidgetItem(listview_item),
         last_child_(0), root_(root)
 {
     init(linkstatus);
@@ -451,6 +454,7 @@ void TreeViewItem::init(LinkStatus* linkstatus)
         else if(i + 1 == root_->statusColumnIndex()) {
             setText(item.columnIndex() - 1, i18n(text.toUtf8()));
             setStatusTip(i, linkstatus->statusText());
+            setToolTip(i, linkstatus->statusText());
         }
         else {
             setText(item.columnIndex() - 1, text);

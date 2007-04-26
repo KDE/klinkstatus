@@ -51,7 +51,7 @@
 #include <tidy/tidy.h>
 #include <tidy/buffio.h>
 
-#include <config-tidy.h>
+#include "config-tidy.h"
     
 #ifdef __cplusplus
 

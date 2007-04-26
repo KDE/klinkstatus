@@ -125,38 +125,10 @@ int nextCharDifferentThan(QChar c, QString const& s, int i)
         return -1;
 }
 
-QList<QString> tokenize(QString s)
-{
-    Q_ASSERT(!s.isEmpty());
-    QList<QString> v;
-
-    while(true)
-    {
-        int inicio = 0;
-        //if(s[0] == ' ' || s[0] == '\t' || s[0] == '\r' || s[0] == '\n')
-        if(isSpace(s[0]))
-            inicio = nextNonSpaceChar(s, 0);
-        if(inicio == -1)
-            return v;
-
-        int fim = nextSpaceChar(s, inicio);
-        if(fim == -1)
-        {
-            v.push_back(s.mid(inicio));
-            return v;
-        }
-        else
-        {
-            QString palavra = s.mid(inicio, fim - inicio);
-            v.push_back(palavra);
-            s.remove(0, fim);
-        }
-    }	
-}
-
-QList<QString> tokenizeWordsSeparatedByDots(QString s)
+QList<QString> tokenizeWordsSeparatedByDots(QString const& _s)
 {
     QList<QString> v;
+    QString s(_s);
 
     while(true)
     {
@@ -181,9 +153,10 @@ QList<QString> tokenizeWordsSeparatedByDots(QString s)
     }	
 }
 
-QList<QString> tokenizeWordsSeparatedBy(QString s, const QChar & criteria)
+QList<QString> tokenizeWordsSeparatedBy(QString const& _s, const QChar & criteria)
 {
     QList<QString> v;
+    QString s(_s);
 
     while(true)
     {

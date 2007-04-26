@@ -96,7 +96,7 @@ KLinkStatus::~KLinkStatus()
 
 void KLinkStatus::load(const KUrl& url)
 {
-    m_part->openUrl( url );
+    m_part->openUrl(url);
 }
 
 void KLinkStatus::setupActions()

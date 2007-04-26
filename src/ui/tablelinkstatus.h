@@ -48,7 +48,7 @@ class TableLinkstatus: public Q3Table, public ResultView
     Q_OBJECT
 public:
 
-    TableLinkstatus(QWidget * parent = 0, const char * name = 0,
+    explicit TableLinkstatus(QWidget * parent = 0, const char * name = 0,
                     int column_index_status = 1,
                     int column_index_label = 2,
                     int column_index_URL = 3);

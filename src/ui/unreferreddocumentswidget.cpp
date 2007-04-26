@@ -45,6 +45,7 @@ void UnreferredDocumentsWidget::init()
     m_ui.setupUi(this);
 
     m_ui.baseDirCombo->init();
+    m_ui.documentListWidget->setUniformItemSizes(true);
 
     setBaseDirectory(m_baseDirectory);
 
@@ -191,6 +192,7 @@ void UnreferredDocumentsWidget::slotUnreferredDocFound(const QString& document)
     item->setFlags(Qt::ItemIsEnabled
         | Qt::ItemIsSelectable
         | Qt::ItemIsUserCheckable);
+    item->setCheckState(Qt::Unchecked);
 }
 
 #include "unreferreddocumentswidget.moc"

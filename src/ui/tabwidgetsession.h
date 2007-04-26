@@ -40,7 +40,7 @@ class TabWidgetSession : public KTabWidget
     Q_OBJECT
 
 public:
-    TabWidgetSession(QWidget * parent = 0, Qt::WFlags f = 0);
+    explicit TabWidgetSession(QWidget * parent = 0, Qt::WFlags f = 0);
     ~TabWidgetSession();
 
     /** Set the URL in the current session widget */

@@ -18,6 +18,8 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
+#include "searchmanager.h"
+
 #include <kapplication.h>
 #include <kdebug.h>
 #include <khtml_part.h>
@@ -26,12 +28,11 @@
 #include <QString>
 #include <q3valuelist.h>
 #include <qdom.h>
-
+#include <QTimer>
+    
 #include <iostream>
 #include <unistd.h>
 
-#include "searchmanager.h"
-#include "linkstatushelper.h"
 #include "parser/mstring.h"
 #include "klsconfig.h"
 
@@ -208,10 +209,11 @@ void SearchManager::resume()
 
 void SearchManager::finnish()
 {
-    while(links_being_checked_ || m_weaver.queueLength() != 0)
+    if(links_being_checked_ || m_weaver.queueLength() != 0)
     {
         kDebug(23100) << "Waiting for links being checked: " << links_being_checked_ << endl;
-        sleep(1);
+        QTimer::singleShot(500, this, SLOT(finnish()));
+        return;
     }
     kDebug(23100) << "SearchManager::finnish" << endl;
     if(!recheck_mode_)
@@ -300,7 +302,7 @@ void SearchManager::slotRootChecked(LinkStatus* link, LinkChecker* checker)
         }
         else
         {
-        kDebug(23100) <<  "SearchManager::slotRootChecked#1" << endl;
+            kDebug(23100) <<  "SearchManager::slotRootChecked#1" << endl;
             finnish();
         }
     }
@@ -473,7 +475,7 @@ void SearchManager::continueSearch()
 
                 emit signalAddingLevel(true);
 
-                kDebug(23100) << "ThreadWeaver Queue length: " << m_weaver.queueLength() << endl;
+//                 kDebug(23100) << "ThreadWeaver Queue length: " << m_weaver.queueLength() << endl;
                 m_weaver.enqueue(new AddLevelJob(*this));
             }
             else
@@ -870,7 +872,7 @@ void SearchManager::removeHtmlParts()
     html_parts_.clear();
 }
 
-void SearchManager::save(QDomElement& element) const
+void SearchManager::save(QDomElement& element, LinkStatusHelper::Status status) const
 {
     // <url>
     QDomElement child_element = element.ownerDocument().createElement("url");
@@ -919,7 +921,7 @@ void SearchManager::save(QDomElement& element) const
             for(int l = 0; l != (search_results_[i])[j].size(); ++l)
             {
                 LinkStatus* ls = ((search_results_[i])[j])[l];
-                if(ls->checked())
+                if(ls->checked() && LinkStatusHelper::hasStatus(ls, status))
                     LinkStatusHelper::save(ls, child_element);
             }
         }
@@ -1053,6 +1055,10 @@ AddLevelJob::~AddLevelJob()
 void AddLevelJob::run()
 {
 //     kDebug(23100) << "\n\n\nAddLevelJob::run\n\n\n" << endl;
+    while(m_searchManager.m_weaver.queueLength() != 0) {
+        kDebug(23100) << "AddLevelJob::run: waiting for running jobs to finish" << endl;
+        sleep(1);
+    }
     m_searchManager.addLevel();
 }
 

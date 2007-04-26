@@ -18,6 +18,8 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.             *
  ***************************************************************************/
 
+#include "klinkstatus_part.h"
+
 #include <kaboutdata.h>
 #include <klocale.h>
 #include <kcomponentdata.h>
@@ -36,15 +38,14 @@
 
 #include <q3buttongroup.h>
 
-#include "global.h"
-#include "klsconfig.h"
-#include "klinkstatus_part.h"
 #include "ui/tabwidgetsession.h"
 #include "ui/sessionwidget.h"
 #include "ui_configsearchdialog.h"
 #include "ui_configresultsdialog.h"
 #include "ui/settings/configidentificationdialog.h"
 #include "actionmanager.h"
+#include "global.h"
+#include "klsconfig.h"
 
 
 const char KLinkStatusPart::description_[] = I18N_NOOP( "A Link Checker" );

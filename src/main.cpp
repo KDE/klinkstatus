@@ -34,7 +34,8 @@ static const char version[] = "0.3.80";
 
 static KCmdLineOptions options[] =
 {
-    { "+[URL]", I18N_NOOP( "Document to open" ), 0 },
+    { "daemon", I18N_NOOP("Run as daemon (no GUI)"), 0 },
+    { "+[URL]", I18N_NOOP("Document to open"), 0 },
     KCmdLineLastOption
 };
 
@@ -57,7 +58,7 @@ int main(int argc, char *argv[])
     about.addCredit("Helge Hielscher", 0, "hhielscher@unternehmen.com");
 
     KCmdLineArgs::init(argc, argv, &about);
-    KCmdLineArgs::addCmdLineOptions( options );
+    KCmdLineArgs::addCmdLineOptions(options);
 
     KApplication app;
 
@@ -69,7 +70,10 @@ int main(int argc, char *argv[])
     else
     {
         // no session.. just start up normally
-        KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+        KCmdLineArgs* args = KCmdLineArgs::parsedArgs();
+
+        if(args->isSet("daemon"))
+            return app.exec();
 
         KLinkStatus *widget = new KLinkStatus;
         widget->show();
@@ -80,10 +84,9 @@ int main(int argc, char *argv[])
         }
         else
         {
-            int i = 0;
-            for (; i < args->count(); i++ )
+            for(int i = 0; i != args->count(); ++i)
             {
-                widget->load( args->url( i ) );
+                widget->load(args->url(i));
             }
         }
         args->clear();

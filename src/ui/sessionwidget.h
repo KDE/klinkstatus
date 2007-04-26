@@ -46,7 +46,7 @@ class SessionWidget: public PlayableWidgetInterface, public Ui_SessionWidgetBase
 
 public:
 
-    SessionWidget(int max_simultaneous_connections = 3, int time_out = 50,
+    explicit SessionWidget(int max_simultaneous_connections = 3, int time_out = 50,
                   QWidget* parent = 0);
 
     virtual ~SessionWidget();

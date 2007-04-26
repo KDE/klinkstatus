@@ -18,13 +18,13 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.             *
  ***************************************************************************/
 
-#include <k3resolver.h>
-
 #include "url.h"
-#include "mstring.h"
-#include "../utils/utils.h"
 
+#include <k3resolver.h>
 #include <kcharsets.h>
+
+#include "parser/mstring.h"
+#include "utils/utils.h"
 
 
 Node::LinkType Url::resolveLinkType(QString const& url)

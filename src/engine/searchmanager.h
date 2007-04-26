@@ -36,6 +36,7 @@ class QDomElement;
 #include <QList>
 
 #include "engine/linkstatus.h"
+#include "engine/linkstatushelper.h"
 #include "engine/linkchecker.h"
 #include "parser/node.h"
 #include "parser/url.h"
@@ -61,7 +62,7 @@ public:
         depth_and_domain
     };
 
-    SearchManager(int max_simultaneous_connections = 5, int time_out = 50,
+    explicit SearchManager(int max_simultaneous_connections = 5, int time_out = 50,
                   QObject *parent = 0);
     ~SearchManager();
 
@@ -134,10 +135,11 @@ private slots:
     void slotSearchFinished();
     void slotLevelAdded();
     void slotJobDone(Job*);
+    void finnish();
 
 private:
 
-    void save(QDomElement& element) const;
+    void save(QDomElement& element, LinkStatusHelper::Status status = LinkStatusHelper::none) const;
     void cleanItems();
     void reset();
     SearchMode const& searchMode() const;
@@ -156,7 +158,6 @@ private:
     void startSearch();
     void continueSearch();
     void continueRecheck();
-    void finnish();
     void pause();
     QList<LinkStatus*> const& nodeToAnalize() const;
     void checkLink(LinkStatus* ls, bool recheck = false);
