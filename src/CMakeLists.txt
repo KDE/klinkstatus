@@ -1,4 +1,6 @@
 
+configure_file(config-tidy.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-tidy.h )
+
 set(libutils_SRCS 
     ${CMAKE_SOURCE_DIR}/klinkstatus/src/utils/utils.cpp 
 )

@@ -1,0 +1,1 @@
+#cmakedefine HAVE_TIDY_ULONG_VERSION 1
