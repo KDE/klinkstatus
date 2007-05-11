@@ -29,6 +29,7 @@ class KJob;
 
 #include <QWidget>
 #include <QTimer>
+class QMenu;
 
 #include "ui_unreferreddocumentswidget.h"
 #include "ui/widgetinterface.h"
@@ -60,9 +61,16 @@ private Q_SLOTS:
     void slotUnreferredDocStepCompleted();
     void slotUnreferredDocFound(const QString& doc);
 
+    void slotDeleteCheckedDocuments();
+    void slotDeleteAllDocuments();
+    void slotResultItemsDeleted(KJob*);
+
+    void slotPopupDocumentListPopup(const QPoint& point);
+
 private:
     void init();
     void finish();
+    void deleteDocuments(bool onlyChecked = false);
 
     static KUrl normalizeBaseDirectoryInput(QString const& input);
 
@@ -73,6 +81,7 @@ private:
     SearchManager const& m_searchManager;
     QTimer m_elapsedTimeTimer;
     KToggleAction* m_startSearchAction;
+    QMenu* m_documentListPopup;
 };
     
 #endif

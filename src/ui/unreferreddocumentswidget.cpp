@@ -24,6 +24,11 @@
 #include <KToggleAction>
 #include <KApplication>
 #include <KMessageBox>
+#include <KActionCollection>
+#include <kio/deletejob.h>
+#include <kio/netaccess.h>
+
+#include <QMenu>
 
 #include "actionmanager.h"
 
@@ -31,7 +36,7 @@
 UnreferredDocumentsWidget::UnreferredDocumentsWidget(KUrl const& baseDir, 
     SearchManager const& searchManager, QWidget* parent)
     : PlayableWidgetInterface(parent), m_baseDirectory(baseDir),
-      m_searchManager(searchManager), m_startSearchAction(0)
+      m_searchManager(searchManager), m_startSearchAction(0), m_documentListPopup(0)
 {
     init();
 }
@@ -63,7 +68,22 @@ void UnreferredDocumentsWidget::init()
 
     m_startSearchAction= static_cast<KToggleAction*> (ActionManager::getInstance()->action("start_search"));
     
-    m_ui.documentSearchLine->setListWidget(m_ui.documentListWidget);    
+    m_ui.documentSearchLine->setListWidget(m_ui.documentListWidget);
+
+    m_documentListPopup = new QMenu(this);
+
+    m_documentListPopup->addAction(i18n("Delete checked Documents"), this, SLOT(slotDeleteCheckedDocuments()));
+    m_documentListPopup->addSeparator();
+    m_documentListPopup->addAction(i18n("Delete All Documents"), this, SLOT(slotDeleteAllDocuments()));
+
+    m_ui.documentListWidget->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(m_ui.documentListWidget, SIGNAL(customContextMenuRequested(const QPoint&)),
+            this, SLOT(slotPopupDocumentListPopup(const QPoint&)));
+}
+
+void UnreferredDocumentsWidget::slotPopupDocumentListPopup(const QPoint& /*point*/)
+{
+    m_documentListPopup->popup(QCursor::pos());
 }
 
 void UnreferredDocumentsWidget::slotChooseUrlDialog()
@@ -105,6 +125,8 @@ void UnreferredDocumentsWidget::slotStartSearch()
     
     ready_ = false;
     in_progress_ = true;
+
+    m_ui.documentListWidget->clear();
 
     QString inputBaseDir = m_ui.baseDirCombo->currentText();
     
@@ -179,6 +201,7 @@ void UnreferredDocumentsWidget::finish()
     m_ui.progressLabel->setText(i18n("Ready"));
     m_ui.progress->reset();
     m_startSearchAction->setChecked(false);
+    m_documentList.clear();
 }
 
 void UnreferredDocumentsWidget::slotUnreferredDocStepCompleted()
@@ -190,9 +213,67 @@ void UnreferredDocumentsWidget::slotUnreferredDocFound(const QString& document)
 {
     QListWidgetItem* item = new QListWidgetItem(document, m_ui.documentListWidget);
     item->setFlags(Qt::ItemIsEnabled
-        | Qt::ItemIsSelectable
+//         | Qt::ItemIsSelectable
         | Qt::ItemIsUserCheckable);
     item->setCheckState(Qt::Unchecked);
 }
+
+void UnreferredDocumentsWidget::deleteDocuments(bool onlyChecked)
+{
+    KUrl::List itemsToDelete;
+    QListWidget* listWidget = m_ui.documentListWidget;
+    
+    for(int i = 0; i != listWidget->count(); ++i) {
+        QListWidgetItem* item = listWidget->item(i);
+        if(onlyChecked && item->checkState() != Qt::Checked)
+            continue;
+        
+        QString path = item->text();
+        KUrl url(m_baseDirectory);
+        url.addPath(path);
+
+        itemsToDelete.push_back(url);
+    }
+
+    KJob* job = KIO::del(itemsToDelete, false, true);
+    connect(job, SIGNAL(result(KJob*)),
+            this, SLOT(slotResultItemsDeleted(KJob*)));
+}
+
+void UnreferredDocumentsWidget::slotDeleteCheckedDocuments()
+{
+    deleteDocuments(true);
+}
+
+void UnreferredDocumentsWidget::slotDeleteAllDocuments()
+{
+    deleteDocuments();
+}
+
+void UnreferredDocumentsWidget::slotResultItemsDeleted(KJob*)
+{
+    kDebug(23100) << "UnreferredDocumentsWidget::slotResultItemsDeleted" << endl;
+  
+    QList<QListWidgetItem*> itemsToRemove;
+    QListWidget* listWidget = m_ui.documentListWidget;
+    
+    for(int i = 0; i != listWidget->count(); ++i) {
+        QListWidgetItem* item = listWidget->item(i);
+
+        QString path = item->text();
+        KUrl url(m_baseDirectory);
+        url.addPath(path);
+
+        if(!KIO::NetAccess::exists(url, false, this)) {
+            itemsToRemove.push_back(item);
+        }
+    }
+
+    for(int i = 0; i != itemsToRemove.size(); ++i) {
+        QListWidgetItem* item = listWidget->takeItem(listWidget->row(itemsToRemove[i]));
+        delete item;
+    }
+}
+
 
 #include "unreferreddocumentswidget.moc"

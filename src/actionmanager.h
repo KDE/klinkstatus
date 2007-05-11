@@ -48,15 +48,14 @@ public:
     virtual QAction* action(const QString & name);
     virtual QWidget* container(const char* name);
 
+    KActionCollection* actionCollection();
+
     void initPart(KLinkStatusPart* part);
     void initSessionWidget(SessionWidget* sessionWidget);
     void initTabWidget(TabWidgetSession* tabWidgetSession);
 
 public slots:
     void slotUpdateActions(SessionStackedWidget*);
-
-protected:
-    KActionCollection* actionCollection();
 
 private:
     // start, pause and stop
