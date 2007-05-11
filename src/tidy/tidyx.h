@@ -102,9 +102,9 @@ class Source : public TidyInputSource
 public:
   Source()
   {
-    getByte    = get;
-    ungetByte  = unget;
-    eof        = end;
+    getByte    = (TidyGetByteFunc) get;
+    ungetByte  = (TidyUngetByteFunc) unget;
+    eof        = (TidyEOFFunc) end;
 #ifdef HAVE_TIDY_ULONG_VERSION
     sourceData = (ulong) this;
 #else
@@ -158,7 +158,7 @@ class Sink : public TidyOutputSink
 public:
   Sink()
   {
-    putByte  = put;
+    putByte  = (TidyPutByteFunc) put;
 #ifdef HAVE_TIDY_ULONG_VERSION
     sinkData = (ulong) this;
 #else
@@ -544,7 +544,7 @@ public:
 #else
             tidySetAppData( _tdoc, this );
 #endif
-            tidySetReportFilter( _tdoc, ReportFilter );
+            tidySetReportFilter( _tdoc, (TidyReportFilter) ReportFilter );
             return 0;
         }
         return -1;
