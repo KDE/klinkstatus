@@ -26,7 +26,6 @@
 #include <kprotocolmanager.h>
 
 #include <QString>
-#include <q3valuelist.h>
 #include <qdom.h>
 #include <QTimer>
     
@@ -162,7 +161,8 @@ void SearchManager::recheckLinks(QList<LinkStatus*> const& linkstatus_list)
 void SearchManager::startSearch(KUrl const& root, SearchMode const& modo)
 {
     kDebug(23100) <<  "SearchManager::startSearch()" << endl;
-    
+
+    root_url_ = root;
     canceled_ = false;
 
     Q_ASSERT(root.isValid());
@@ -222,7 +222,7 @@ void SearchManager::finnish()
         kDebug(23100) << "Links Rechecked: " << links_rechecked_ << endl;
 
     searching_ = false;
-    emit signalSearchFinished();
+    emit signalSearchFinished(this);
 }
 
 void SearchManager::pause()
@@ -298,7 +298,7 @@ void SearchManager::slotRootChecked(LinkStatus* link, LinkChecker* checker)
 
         if(node.size() > 0)
         {
-            startSearch();
+            startSearchAfterRoot();
         }
         else
         {
@@ -408,7 +408,7 @@ LinkStatus const* SearchManager::linkStatus(QString const& s_url) const
     return search_results_hash_.value(KUrl(s_url), 0);
 }
 
-void SearchManager::startSearch()
+void SearchManager::startSearchAfterRoot()
 {
     kDebug(23100) <<  "SearchManager::startSearch() | after root checked" << endl;
     
@@ -840,9 +840,6 @@ bool SearchManager::onlyCheckHeader(LinkStatus* ls) const
             (!ls->local() &&
              ls->externalDomainDepth() == external_domain_depth_ - 1);
 }
-
-void SearchManager::slotSearchFinished()
-{}
 
 KHTMLPart* SearchManager::htmlPart(QString const& key_url) const
 {

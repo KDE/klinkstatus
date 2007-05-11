@@ -145,7 +145,7 @@ void TabWidgetSession::updateTabLabel(SessionStackedWidget* page)
 {
     SessionWidget* sessionWidget = page->sessionWidget();
     setTabText(indexOf(page), KCharsets::resolveEntities(sessionWidget->title()));
-    setTabIcon(indexOf(page), QIconSet(KIO::pixmapForUrl(sessionWidget->urlToCheck())));
+    setTabIcon(indexOf(page), QIcon(KIO::pixmapForUrl(sessionWidget->urlToCheck())));
 }
 
 void TabWidgetSession::slotLoadSettings()

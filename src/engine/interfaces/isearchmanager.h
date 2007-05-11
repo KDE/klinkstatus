@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2004 by Paulo Moura Guedes                              *
- *   moura@kdewebdev.org                                                        *
+ *   Copyright (C) 2007 by Paulo Moura Guedes                              *
+ *   moura@kdewebdev.org                                                   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -15,50 +15,45 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
- *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.             *
+ *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
-#ifndef UTILS_H
-#define UTILS_H
+#ifndef ISEARCH_MANAGER
+#define ISEARCH_MANAGER
 
-#include <kurl.h>
-#include <QString>
+#include <QObject>
+
+#include <KUrl>
+
+#include <QSet>
+
+class SearchManager;
 
 
-int const NUMBER_OF_HTML_CODES = 92;
-extern QString htmlDocCharset[NUMBER_OF_HTML_CODES][2];
-
-/**
-  Decode the html charset.
-  e.g.
-  decode("mail&#64;server&#46;org") => "mail@server.org"
-*/
-void decode(QString& url);
-//void decode(string& url);
-
-/**
-   Compares to integers and returns -1 if a is smaller than b,
-   1 if b is smaller than a, and 0 if a and b are equal or both negative.
-   If one of the integers is negative and the other isn't, it is considered
-   that the positive is smaller.
-   e.g.:
-   a =  0, b = +1 => -1
-   a = +1, b =  0 => +1
-   a = -1, b = -1 =>  0
-   a = +3, b = +3 =>  0
-   a = +1, b = -1 => -1
-*/
-int smallerUnsigned(int a, int b);
-
-namespace FileManager
+class ISearchManager : public QObject
 {
-QString read(QString const& path);
-void write(QString const& content, KUrl const& url);
-}
+    Q_OBJECT
+    Q_CLASSINFO("D-Bus Interface", "org.kdewebdev.klinkstatus.ISearchManager")
 
-namespace XSL
-{
-QString transform(QString const& xmlContent, KUrl const& styleSheet);
-}
+public:
+    ISearchManager(QObject* parent);
+
+public Q_SLOTS:
+    void checkAndExportToHtml(QString const& optionsFilePath);
+//     void checkAndMailResuls(QString const& optionsFilePath);
+
+private Q_SLOTS:
+    void slotExportSearchFinished(SearchManager* searchManager);
+    void slotEmailSearchFinished(SearchManager* searchManager);
+
+private:
+    void initSearchManager(SearchManager* searchManager, QString const& optionsFilePath);
+
+private:
+    QSet<SearchManager*> m_exportSearchManagerList;
+    QSet<SearchManager*> m_mailSearchManagerList;
+
+    KUrl m_exportResultsPath;
+};
 
 #endif

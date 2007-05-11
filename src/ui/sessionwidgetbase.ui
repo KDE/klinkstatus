@@ -340,7 +340,7 @@
       </widget>
      </item>
      <item>
-      <widget class="ResultsSearchBar" native="1" name="resultsSearchBar" >
+      <widget class="ResultsSearchBar" name="resultsSearchBar" >
        <property name="sizePolicy" >
         <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
          <horstretch>0</horstretch>
@@ -501,14 +501,15 @@
    <header>klshistorycombo.h</header>
   </customwidget>
   <customwidget>
-   <class>ResultsSearchBar</class>
-   <extends>QWidget</extends>
-   <header>resultssearchbar.h</header>
-  </customwidget>
-  <customwidget>
    <class>TreeView</class>
    <extends>QTreeWidget</extends>
    <header>treeview.h</header>
+  </customwidget>
+  <customwidget>
+   <class>ResultsSearchBar</class>
+   <extends>QFrame</extends>
+   <header>resultssearchbar.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <includes>

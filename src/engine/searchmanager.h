@@ -69,6 +69,7 @@ public:
     /** Returns the the results in XML format */
     QString toXML() const;
 
+    void startSearch();
     void startSearch(KUrl const& root);
     void startSearch(KUrl const& root, SearchMode const& mode);
     void resume();
@@ -89,6 +90,7 @@ public:
 
     QString searchProtocol() const { return root_.absoluteUrl().protocol(); };
 
+    void setRootUrl(KUrl const& url);
     void setSearchMode(SearchMode modo);
     void setDepth(int depth);
     void setExternalDomainDepth(int depth);
@@ -118,7 +120,7 @@ signals:
     void signalRootChecked(LinkStatus* link);
     void signalLinkChecked(LinkStatus* link);
     void signalLinkRechecked(LinkStatus* link);
-    void signalSearchFinished();
+    void signalSearchFinished(SearchManager*);
     void signalSearchPaused();
     void signalNewLinksToCheck(int number_of_links);
     void signalAddingLevel(bool adding);
@@ -132,7 +134,6 @@ private slots:
     void slotRootChecked(LinkStatus* link, LinkChecker* checker);
     void slotLinkChecked(LinkStatus* link, LinkChecker* checker);
     void slotLinkRechecked(LinkStatus* link, LinkChecker* checker);
-    void slotSearchFinished();
     void slotLevelAdded();
     void slotJobDone(Job*);
     void finnish();
@@ -155,7 +156,7 @@ private:
     void checkVectorLinks(QList<LinkStatus*> const& links);
     void checkVectorLinksToRecheck(QList<LinkStatus*> const& links);
     void fillWithChildren(LinkStatus* link, QList<LinkStatus*>& children);
-    void startSearch();
+    void startSearchAfterRoot();
     void continueSearch();
     void continueRecheck();
     void pause();
@@ -186,6 +187,7 @@ private:
     bool recheck_mode_;
     int max_simultaneous_connections_;
     SearchMode search_mode_;
+    KUrl root_url_;
     LinkStatus root_;
     bool has_document_root_;
     // in case of non http protocols the document root must be explicitly given

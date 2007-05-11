@@ -20,14 +20,15 @@
 
 #include "utils.h"
 
-#include <q3process.h>
-#include <qwidget.h>
-//Added by qt3to4:
+#include <QProcess>
 #include <QTextStream>
+#include<QTextCodec>
 
-#include <kapplication.h>
-#include <kmessagebox.h>
+#include <kstandarddirs.h>
 #include <kdebug.h>
+#include <ktemporaryfile.h>
+#include <ksavefile.h>
+#include <kio/netaccess.h>
 
 
 QString htmlDocCharset[NUMBER_OF_HTML_CODES][2] = {
@@ -186,6 +187,7 @@ int smallerUnsigned(int a, int b)
 
 namespace FileManager
 {
+  
 QString read(QString const& path)
 {
     QFile file(path);
@@ -203,4 +205,73 @@ QString read(QString const& path)
 
     return fileString;
 }
+
+void write(QString const& content, KUrl const& url)
+{
+    if(url.isEmpty())
+        return;
+
+    QString filename;
+
+    if(url.isLocalFile())
+        filename = url.path();
+    else {
+        KTemporaryFile tmp; // ### only used for network export
+        tmp.setAutoRemove(false);
+        tmp.open();
+        filename = tmp.fileName();
+    }
+  
+    KSaveFile savefile(filename);
+    if(!savefile.open())
+       return;
+        
+    QTextStream outputStream(&savefile);
+    outputStream.setCodec(QTextCodec::codecForName("UTF-8"));
+    
+    outputStream << content << endl;
+    outputStream.flush();
+
+    if(url.isLocalFile())
+        return;
+
+    KIO::NetAccess::upload(filename, url, 0);
+}
+
+}
+
+namespace XSL
+{
+
+QString transform(QString const& xmlContent, KUrl const& styleSheet)
+{
+    // Create the XML file
+    KTemporaryFile tmpXml;
+    tmpXml.setSuffix(".xml");
+    if(!tmpXml.open())
+        return QString();
+
+    QTextStream tmpXmlOutputStream(&tmpXml);
+    tmpXmlOutputStream.setCodec(QTextCodec::codecForName("UTF-8"));
+    tmpXmlOutputStream << xmlContent << endl;
+    tmpXmlOutputStream.flush();
+
+      // Run meinproc process
+    QStringList arguments;
+    arguments << "--stylesheet" << styleSheet.url()
+        << "--stdout" << tmpXml.fileName();
+
+    QProcess meinproc;
+    meinproc.start(KStandardDirs::locate("exe", QLatin1String("meinproc")),
+                    arguments, QIODevice::ReadOnly);
+
+    if(!meinproc.waitForStarted())
+        return QString();
+
+    if(!meinproc.waitForFinished())
+        return QString();
+
+    return meinproc.readAllStandardOutput();
+}
+
 }

@@ -39,7 +39,7 @@ void Doc::setErrorBuffer(Buffer & buffer)
 
 Bool Doc::OnMessage(ReportLevel reportLevel, uint line, uint col, ctmbstr message)
 {
-//     kdDebug(23100) << "Message: " << message << endl;
+//     kDebug(23100) << "Message: " << message << endl;
     
     if(!superficialValidation_)
         messages_.push_back(Message(reportLevel, line, col, message));

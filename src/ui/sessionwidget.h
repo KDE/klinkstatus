@@ -105,7 +105,7 @@ private slots:
     void slotRootChecked(LinkStatus* linkstatus);
     void slotLinkChecked(LinkStatus* linkstatus);
     void slotLinkRechecked(LinkStatus* linkstatus);
-    void slotSearchFinished();
+    void slotSearchFinished(SearchManager*);
     void slotSearchPaused();
     void slotSetTimeElapsed();
     void newSearchManager();

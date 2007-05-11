@@ -30,12 +30,9 @@
 #include <kaction.h>
 
 #include <QtDBus>
-#include <q3valuelist.h>
-#include <q3header.h>
 #include <QClipboard>
 #include <QPixmap>
 #include <QResizeEvent>
-#include <Q3PopupMenu>
 #include <QHeaderView>
 #include <QScrollBar>
 
@@ -62,6 +59,7 @@ TreeView::TreeView(QWidget *parent)
     setContextMenuPolicy(Qt::CustomContextMenu);
     // This one is *very* important for performance
     setUniformRowHeights(true);
+//     setUpdatesEnabled(false);
     
     connect(this, SIGNAL(itemClicked(QTreeWidgetItem*,int)),
             this, SLOT(slotItemClicked(QTreeWidgetItem*,int)));

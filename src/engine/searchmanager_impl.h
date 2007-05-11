@@ -38,6 +38,12 @@ inline int SearchManager::checkedLinks() const
     return checked_links_;
 }
 
+inline void SearchManager::startSearch()
+{
+    Q_ASSERT(root_url_.isValid());
+    startSearch(root_url_);
+}
+
 inline void SearchManager::startSearch(KUrl const& root)
 {
     startSearch(root, search_mode_);
@@ -92,6 +98,12 @@ inline void SearchManager::setTimeOut(int time_out)
     Q_ASSERT(time_out > 0);
     time_out_ = time_out;
 }
+
+inline void SearchManager::setRootUrl(KUrl const& url)
+{
+    root_url_ = url;
+}
+
 
 
 

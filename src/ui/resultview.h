@@ -21,10 +21,9 @@
 #ifndef RESULTVIEW_H
 #define RESULTVIEW_H
 
-#include <q3valuelist.h>
 #include <QMenu>
 #include <QStringList>
-
+    
 class KUrl;
 
 #include "../engine/linkstatushelper.h"
@@ -119,8 +118,6 @@ public:
 protected:
 
     QColor const textStatusColor() const;
-    virtual void paint( QPainter *p, const QColorGroup &cg,
-                        const QRect &cr, bool selected ) = 0;
     virtual void setText() = 0;
     virtual void setPixmap() = 0;
 

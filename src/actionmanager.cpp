@@ -28,8 +28,6 @@
 #include <kstandardshortcut.h>
 #include <kicon.h>
 
-#include <q3buttongroup.h>
-
 #include "klinkstatus_part.h"
 #include "ui/sessionwidget.h"
 #include "ui/sessionstackedwidget.h"    

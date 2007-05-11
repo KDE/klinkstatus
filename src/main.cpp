@@ -34,7 +34,6 @@ static const char version[] = "0.3.80";
 
 static KCmdLineOptions options[] =
 {
-    { "daemon", I18N_NOOP("Run as daemon (no GUI)"), 0 },
     { "+[URL]", I18N_NOOP("Document to open"), 0 },
     KCmdLineLastOption
 };
@@ -72,10 +71,7 @@ int main(int argc, char *argv[])
         // no session.. just start up normally
         KCmdLineArgs* args = KCmdLineArgs::parsedArgs();
 
-        if(args->isSet("daemon"))
-            return app.exec();
-
-        KLinkStatus *widget = new KLinkStatus;
+        KLinkStatus *widget = new KLinkStatus;        
         widget->show();
 
         if ( args->count() == 0 )

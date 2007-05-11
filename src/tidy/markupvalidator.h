@@ -21,11 +21,11 @@
 #ifndef TIDYMARKUPVALIDATOR_H
 #define TIDYMARKUPVALIDATOR_H
 
-#include <kurl.h>
+#include <KUrl>
 
-#include <qobject.h>
-#include <qstring.h>
-#include <q3valuelist.h>
+#include <QObject>
+#include <QString>
+#include <QList>
 
 #include "tidyx.h"
 
@@ -53,7 +53,7 @@ struct Message
     QString message;
 };
 
-typedef Q3ValueList<Tidy::Message> TidyMessages;
+typedef QList<Tidy::Message> TidyMessages;
 
 class Doc : public Document
 {
@@ -79,7 +79,7 @@ protected:
     
 private:
     Buffer* errorBuffer_;
-    Q3ValueList<Message> messages_;
+    QList<Message> messages_;
     bool hasErrors_;
     bool hasWarnings_;
 };

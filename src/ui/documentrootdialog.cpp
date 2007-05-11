@@ -26,21 +26,20 @@
 #include <QString>
 #include <QLayout>
 #include <QLabel>
-//Added by qt3to4:
-#include <Q3VBoxLayout>
+#include <QVBoxLayout>
 
 
 DocumentRootDialog::DocumentRootDialog(QWidget *parent, KUrl const& url)
         : KDialog(parent),
         m_url(url)
 {
-    setCaption( i18n( "Choose a Document Root" ) );
-    setButtons( KDialog::Ok );
-    setDefaultButton( KDialog::Ok );
-    showButtonSeparator( true );
+    setCaption(i18n("Choose a Document Root"));
+    setButtons(KDialog::Ok);
+    setDefaultButton(KDialog::Ok);
+    showButtonSeparator(true);
     QWidget* page = new QWidget(this);
     setMainWidget(page);
-    Q3VBoxLayout* topLayout = new Q3VBoxLayout(page, 0, spacingHint());
+    QVBoxLayout* topLayout = new QVBoxLayout(this);
 
     QLabel* label = new QLabel(i18n("As you are using a protocol different than HTTP, \nthere is no way to guess where the document root is, \nin order to resolve relative URLs like the ones started with \"/\".\n\nPlease specify one:"), page);
     topLayout->addWidget(label);
@@ -52,6 +51,7 @@ DocumentRootDialog::DocumentRootDialog(QWidget *parent, KUrl const& url)
     topLayout->addWidget(m_urlRequester);
 
     topLayout->addStretch(10);
+    page->setLayout(topLayout);
 
     //     setInitialSize(configDialogSize("klinkstatus"));
 

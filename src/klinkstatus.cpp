@@ -36,8 +36,6 @@
 #include <kdebug.h>
 #include <kxmlguifactory.h>
 #include <ktoolbar.h>
-//Added by qt3to4:
-#include <Q3PtrList>
 
 
 KLinkStatus::KLinkStatus()

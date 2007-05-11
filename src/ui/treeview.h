@@ -133,7 +133,7 @@ public:
     void init(LinkStatus* linkstatus);
 
 private:
-    Q3ValueList<TreeColumnViewItem> column_items_;
+    QList<TreeColumnViewItem> column_items_;
     QTreeWidgetItem* last_child_;
     TreeView* root_;
 };

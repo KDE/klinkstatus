@@ -31,8 +31,9 @@ class QString;
 typedef unsigned int uint;
 
 
-/* Similar to std::string::find but return the next index of the last char
-   of the first word it finds.
+/**
+   Similar to std::string::find but return the index of the first char
+   of the next word it finds.
    Case insensitive.
    e.g.
    findWord("Biltre larvado", "biltre") => 6

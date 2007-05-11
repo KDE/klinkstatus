@@ -36,8 +36,6 @@
 #include <kglobalsettings.h>
 #include <kshortcut.h>
 
-#include <q3buttongroup.h>
-
 #include "ui/tabwidgetsession.h"
 #include "ui/sessionwidget.h"
 #include "ui_configsearchdialog.h"
@@ -46,6 +44,7 @@
 #include "actionmanager.h"
 #include "global.h"
 #include "klsconfig.h"
+#include "engine/interfaces/isearchmanager.h"
 
 
 const char KLinkStatusPart::description_[] = I18N_NOOP( "A Link Checker" );
@@ -66,6 +65,8 @@ KLinkStatusPart::KLinkStatusPart(QWidget *parentWidget,
     action_manager_ = new ActionManager(this);
     ActionManager::setInstance(action_manager_);
     initGUI();
+
+    new ISearchManager(this);
     
     tabwidget_ = new TabWidgetSession(parentWidget);
     setWidget(tabwidget_);

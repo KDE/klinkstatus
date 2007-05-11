@@ -5,9 +5,7 @@ set(libutils_SRCS
     ${CMAKE_SOURCE_DIR}/klinkstatus/src/utils/utils.cpp 
 )
 
-include_directories( ${CMAKE_SOURCE_DIR}/src/cfg ${CMAKE_SOURCE_DIR}/src/ui )
-    
-set(libparser_SRCS 
+set(libparser_SRCS
     ${CMAKE_SOURCE_DIR}/klinkstatus/src/parser/htmlparser.cpp 
     ${CMAKE_SOURCE_DIR}/klinkstatus/src/parser/http.cpp 
     ${CMAKE_SOURCE_DIR}/klinkstatus/src/parser/mstring.cpp 
@@ -21,6 +19,7 @@ set(libengine_SRCS
     ${CMAKE_SOURCE_DIR}/klinkstatus/src/engine/linkstatus.cpp 
     ${CMAKE_SOURCE_DIR}/klinkstatus/src/engine/linkstatushelper.cpp 
     ${CMAKE_SOURCE_DIR}/klinkstatus/src/engine/searchmanager.cpp 
+    ${CMAKE_SOURCE_DIR}/klinkstatus/src/engine/interfaces/isearchmanager.cpp 
 )
 
 set(libtidy_SRCS
@@ -46,6 +45,7 @@ set(libuisettings_SRCS
 include_directories(
     ${CMAKE_SOURCE_DIR}/klinkstatus/src 
     ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui
+    ${CMAKE_SOURCE_DIR}/klinkstatus/src/engine/interfaces
     ${CMAKE_BINARY_DIR}/klinkstatus/src 
     ${LIBXML2_INCLUDE_DIR}
     ${LIBXSLT_INCLUDE_DIR}
@@ -79,6 +79,9 @@ kde4_add_ui_files(klinkstatuspart_PART_SRCS
    ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/settings/configidentificationdialogui.ui
 
 )
+
+# D-Bus
+qt4_add_dbus_adaptor(klinkstatuspart_PART_SRCS engine/interfaces/org.kdewebdev.klinkstatus.ISearchManager.xml isearchmanager.h ISearchManager)
     
 kde4_add_kcfg_files(klinkstatuspart_PART_SRCS ${CMAKE_SOURCE_DIR}/klinkstatus/src/cfg/klsconfig.kcfgc)
 
@@ -86,9 +89,7 @@ kde4_automoc(${klinkstatuspart_PART_SRCS})
 
 kde4_add_plugin(klinkstatuspart WITH_PREFIX ${klinkstatuspart_PART_SRCS})
 
-
-
-target_link_libraries(klinkstatuspart  
+target_link_libraries(klinkstatuspart
     ${LIBXML2_LIBRARIES}
     ${LIBXSLT_LIBRARIES}
     ${LIBTIDY_LIBRARIES}
@@ -97,10 +98,11 @@ target_link_libraries(klinkstatuspart
     ${KDE4_KIO_LIBS}
     ${KDE4_KHTML_LIBS}
     ${KDE4_THREADWEAVER_LIBRARY}
-    #    ThreadWeaverGui 
 )
 
 install(TARGETS klinkstatuspart  DESTINATION ${PLUGIN_INSTALL_DIR})
+
+install(FILES engine/interfaces/org.kdewebdev.klinkstatus.ISearchManager.xml DESTINATION ${DBUS_INTERFACES_DIR})
 
 
 ########### next target ###############
@@ -111,7 +113,6 @@ kde4_automoc(${klinkstatus_SRCS})
 
 kde4_add_executable(klinkstatus ${klinkstatus_SRCS})
 
-# FIXME Add ThreadWeaverGui to FindKDE4Internal.cmake
 target_link_libraries(klinkstatus  ${KDE4_KPARTS_LIBS})
 
 install(TARGETS klinkstatus  DESTINATION ${BIN_INSTALL_DIR} )

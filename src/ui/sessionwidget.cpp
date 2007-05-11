@@ -47,9 +47,7 @@
 #include <QPushButton>
 #include <QLayout>
 #include <QLabel>
-#include <q3listbox.h>
 #include <QStringList>
-#include <q3buttongroup.h>
 #include <QToolButton>
 #include <QRegExp>
 #include <QPixmap>
@@ -158,14 +156,13 @@ void SessionWidget::newSearchManager()
     search_manager_ = new SearchManager(KLSConfig::maxConnectionsNumber(),
                                         KLSConfig::timeOut(),
                                         this);
-    Q_ASSERT(search_manager_);
 
     connect(search_manager_, SIGNAL(signalRootChecked(LinkStatus*)),
             this, SLOT(slotRootChecked(LinkStatus*)));
     connect(search_manager_, SIGNAL(signalLinkChecked(LinkStatus*)),
             this, SLOT(slotLinkChecked(LinkStatus*)));
-    connect(search_manager_, SIGNAL(signalSearchFinished()),
-            this, SLOT(slotSearchFinished()));
+    connect(search_manager_, SIGNAL(signalSearchFinished(SearchManager*)),
+            this, SLOT(slotSearchFinished(SearchManager*)));
     connect(search_manager_, SIGNAL(signalSearchPaused()),
             this, SLOT(slotSearchPaused()));
     connect(search_manager_, SIGNAL(signalAddingLevel(bool)),
@@ -400,8 +397,8 @@ void SessionWidget::slotRootChecked(LinkStatus* linkstatus)
 
 void SessionWidget::slotLinkChecked(LinkStatus* linkstatus)
 {
-    Q_ASSERT(textlabel_progressbar->text() == i18n("Checking...") ||
-            textlabel_progressbar->text() == i18n("Stopped"));
+//     Q_ASSERT(textlabel_progressbar->text() == i18n("Checking...") ||
+//             textlabel_progressbar->text() == i18n("Stopped"));
     
     progressbar_checker->setValue(progressbar_checker->value() + 1);
 
@@ -434,7 +431,7 @@ void SessionWidget::slotLinkChecked(LinkStatus* linkstatus)
     linkstatus->setTreeViewItem(tree_view_item);
 }
 
-void SessionWidget::slotSearchFinished()
+void SessionWidget::slotSearchFinished(SearchManager*)
 {
     Q_ASSERT(in_progress_);
     Q_ASSERT(!paused_);
@@ -729,9 +726,13 @@ void SessionWidget::resetPendingActions()
 void SessionWidget::slotApplyFilter(LinkMatcher link_matcher)
 {
     if(link_matcher.hasCriteria()) {
+//         kDebug(23100) << "has criteria" << endl;
+//         resultsSearchBar->setStyleSheet(QString("border: 1px solid blue"));
         resultsSearchBar->setBackgroundRole(QPalette::Highlight);
     }
     else {
+//         kDebug(23100) << "not has criteria" << endl;
+//         resultsSearchBar->setStyleSheet(QString(""));
         resultsSearchBar->setBackgroundRole(QPalette::Window);
     }
 
@@ -745,63 +746,12 @@ void SessionWidget::slotExportAsHTML( )
     if(url.isEmpty())
         return;
 
-    QString filename;
-
-    if(url.isLocalFile())
-        filename = url.path();
-    else {
-        KTemporaryFile tmp; // ### only used for network export
-        tmp.setAutoRemove(false);
-        tmp.open();
-        filename = tmp.fileName();
-    }
-
-    KSaveFile savefile(filename);
-    if(!savefile.open())
-       return;
-        
-    QTextStream outputStream(&savefile);
-    outputStream.setCodec(QTextCodec::codecForName("UTF-8"));
-
     kDebug(23100) << "\n\nXML document represention: \n\n" << search_manager_->toXML() << endl;
 
-    // Create the XML file
-    KTemporaryFile tmpXml;
-    tmpXml.setSuffix(".xml");
-    if(!tmpXml.open())
-        return;
+    KUrl styleSheetUrl = KStandardDirs::locate("appdata", "styles/results_stylesheet.xsl");
+    QString html = XSL::transform(search_manager_->toXML(), styleSheetUrl);
+    FileManager::write(html, url);
 
-    QTextStream tmpXmlOutputStream(&tmpXml);
-    tmpXmlOutputStream.setCodec(QTextCodec::codecForName("UTF-8"));
-    tmpXmlOutputStream << search_manager_->toXML() << endl;
-    tmpXmlOutputStream.flush();
-
-      // Run meinproc process
-    QStringList arguments;
-    arguments << "--stylesheet" << KStandardDirs::locate("appdata", "styles/results_stylesheet.xsl")
-        << "--stdout" << tmpXml.fileName();
-
-    QProcess meinproc(this);
-    meinproc.start(KStandardDirs::locate("exe", QLatin1String("meinproc")),
-                    arguments, QIODevice::ReadOnly);
-
-    if(!meinproc.waitForStarted())
-        return;
-
-    if(!meinproc.waitForFinished())
-        return;
-
-    QString html(meinproc.readAllStandardOutput());
-//     kDebug(23100) << "HTML: " << html << endl;
-
-    // Insert the output in the file
-    outputStream << html << endl;
-    outputStream.flush();
-
-    if(url.isLocalFile())
-        return;
-
-    KIO::NetAccess::upload(filename, url, 0);
 }
 
 void SessionWidget::slotValidateAll()

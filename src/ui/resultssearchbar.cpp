@@ -29,7 +29,6 @@
 #include <KIcon>
 
 #include <QApplication>
-#include <q3hbox.h>
 #include <QLabel>
 #include <QPixmap>
 #include <QString>
@@ -37,8 +36,7 @@
 #include <QToolButton>
 #include <QToolTip>
 #include <QLayout>
-//Added by qt3to4:
-#include <Q3HBoxLayout>
+#include <QHBoxLayout>
 
 class ResultsSearchBar::ResultsSearchBarPrivate
 {
@@ -49,7 +47,7 @@ public:
 
     QString searchText;
     QTimer timer;
-    Q3HBoxLayout* layout;
+    QHBoxLayout* layout;
     KLineEdit* searchLine;
     KComboBox* searchCombo;
     int delay;
@@ -57,12 +55,13 @@ public:
 };
 
 ResultsSearchBar::ResultsSearchBar(QWidget* parent)
-        : QWidget(parent), d(new ResultsSearchBar::ResultsSearchBarPrivate)
+        : QFrame(parent), d(new ResultsSearchBar::ResultsSearchBarPrivate)
 {
-    setSizePolicy(QSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed));
-    setAutoFillBackground(true);
-    
-    d->layout = new Q3HBoxLayout(this);
+//     setSizePolicy(QSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed));
+//     setAutoFillBackground(true);
+    setFrameStyle(QFrame::StyledPanel);
+
+    d->layout = new QHBoxLayout(this);
     d->layout->setMargin(2);
     d->layout->setSpacing(5);
     
@@ -100,6 +99,8 @@ ResultsSearchBar::ResultsSearchBar(QWidget* parent)
     d->searchCombo->addItem(iconMalformed, i18n("Malformed Links"));
     d->searchCombo->addItem(iconUndetermined, i18n("Undetermined Links"));
     d->layout->addWidget(d->searchCombo);
+
+    setLayout(d->layout);
 
     clearButton->setToolTip( i18n("Clear filter"));
     d->searchLine->setToolTip( i18n("Enter the terms to filter the result link list"));
@@ -190,7 +191,7 @@ void ResultsSearchBar::slotSearchStringChanged(const QString& search)
 void ResultsSearchBar::slotActivateSearch()
 {
     kDebug(23100) << "ResultsSearchBar::slotActivateSearch" << endl;
-
+    
     d->timer.stop();
     
     LinkStatusHelper::Status status = selectedStatus();

@@ -22,7 +22,7 @@
 #define RESULTSSEARCHBAR_H
 
 #include <QString>
-#include <qwidget.h>
+#include <QFrame>
 
 #include "engine/linkstatushelper.h"
 #include "engine/linkfilter.h"
@@ -31,7 +31,7 @@
     @author Paulo Moura Guedes <moura@kdewebdev.org>
     Based on Akregator code. Kudos ;)
 */
-class ResultsSearchBar : public QWidget
+class ResultsSearchBar : public QFrame
 {
     Q_OBJECT
 public:
