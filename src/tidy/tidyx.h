@@ -51,7 +51,7 @@
 #include <tidy/tidy.h>
 #include <tidy/buffio.h>
 
-#include "config-tidy.h"
+#include <config-tidy.h>
     
 #ifdef __cplusplus
 
@@ -681,7 +681,7 @@ public:
     // Override this virtual function to filter out
     // or redirect error messages.  Return yes (true),
     // for Tidy to proceed with error output. To 
-    // supress the message, return no (false).
+    // suppress the message, return no (false).
 
     virtual Bool OnMessage( ReportLevel /*lvl*/, uint /*line*/, uint /*col*/, ctmbstr /*msg */)
     {

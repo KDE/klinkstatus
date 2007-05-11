@@ -30,7 +30,7 @@
 Node::LinkType Url::resolveLinkType(QString const& url)
 {
     QString aux(url);
-    aux = QUrl::fromPercentEncoding(aux.toUtf8());
+    aux = KUrl::fromPercentEncoding(aux.toUtf8());
 
     if(aux.isNull())
         return Node::relative;
@@ -97,7 +97,7 @@ KUrl Url::normalizeUrl(QString const& string_url, LinkStatus const& link_parent,
 //         kDebug(23100) << "Normalized URL: " 
 //                 << KCharsets::resolveEntities(KUrl::decode_string(url.url())) << endl;
 
-        return KUrl(KCharsets::resolveEntities(QUrl::fromPercentEncoding(url.url().toUtf8())));
+        return KUrl(KCharsets::resolveEntities(KUrl::fromPercentEncoding(url.url().toUtf8())));
     }
 }
 

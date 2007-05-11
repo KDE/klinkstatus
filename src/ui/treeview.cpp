@@ -446,7 +446,7 @@ void TreeViewItem::init(LinkStatus* linkstatus)
         QString text(KCharsets::resolveEntities(item.text(i + 1)));
 
         if(i + 1 == root_->urlColumnIndex()) {
-            setText(item.columnIndex() - 1, QUrl::fromPercentEncoding(text.toUtf8()));
+            setText(item.columnIndex() - 1, KUrl::fromPercentEncoding(text.toUtf8()));
             setStatusTip(i, QTreeWidgetItem::text(i));
         }
         else if(i + 1 == root_->statusColumnIndex()) {

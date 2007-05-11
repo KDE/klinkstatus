@@ -31,7 +31,7 @@
 typedef unsigned int uint;
 
 /**
- * Represents a tag. Sorry for the bad choosen name.
+ * Represents a tag. Sorry for the bad chosen name.
  */
 class Node
 {

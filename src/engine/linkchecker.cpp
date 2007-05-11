@@ -321,7 +321,7 @@ void LinkChecker::slotResult(KJob* /*job*/)
 
     if(job->error() == KIO::ERR_USER_CANCELED)
     {
-        kWarning(23100) << endl << "Job killed quietly, yet signal result was emited..." << endl;
+        kWarning(23100) << endl << "Job killed quietly, yet signal result was emitted..." << endl;
         kDebug(23100) << LinkStatusHelper::toString(linkstatus_) << endl;
 
         finnish();

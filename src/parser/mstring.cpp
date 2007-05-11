@@ -23,12 +23,12 @@
 
 int findWord(QString const& s, QString const& palavra, int a_partir_do_indice)
 {
-    int indice = s.indexOf(palavra, a_partir_do_indice, Qt::CaseInsensitive);
+    int index = s.indexOf(palavra, a_partir_do_indice, Qt::CaseInsensitive);
 
-    if(indice == -1)
-        return indice;
+    if(index == -1)
+        return index;
     else
-        return (indice + palavra.length());
+        return (index + palavra.length());
 }
 
 int findChar(QString const& s, QChar letra, int a_partir_do_indice)
@@ -48,37 +48,37 @@ int findSeparableWord(QString const& s_, QString const& palavra, int a_partir_do
     bool encontrou = true;
     QString s(s_);
     int indice_palavra = 0;
-    int indice = a_partir_do_indice;
+    int index = a_partir_do_indice;
 
     do
     {
         encontrou = true;
         indice_palavra = 0;
 
-        indice = findChar(s, (palavra[indice_palavra++]), indice );
+        index = findChar(s, (palavra[indice_palavra++]), index );
 
-        if(indice == -1)
+        if(index == -1)
         {
-            return indice;
+            return index;
         }
-        --indice;
+        --index;
 
-        while(encontrou && indice_palavra != palavra.length() && indice < s.length() && indice >= 0)
+        while(encontrou && indice_palavra != palavra.length() && index < s.length() && index >= 0)
         {
-            indice = nextNonSpaceChar(s, indice);
+            index = nextNonSpaceChar(s, index);
 
-            if(indice == -1)
-                return indice;
+            if(index == -1)
+                return index;
 
-            // Nao se incrementa o indice porque isso jÃÂ¯ÃÂ¿ÃÂ½ÃÂ¯ÃÂ¿ÃÂ½feito com a funÃÂ¯ÃÂ¿ÃÂ½o nextNonSpaceChar
-            encontrou = encontrou && !(notEqual(s[indice], palavra[indice_palavra++]) );
+            // Nao se incrementa o index porque isso jÃÂ¯ÃÂ¿ÃÂ½ÃÂ¯ÃÂ¿ÃÂ½feito com a funÃÂ¯ÃÂ¿ÃÂ½o nextNonSpaceChar
+            encontrou = encontrou && !(notEqual(s[index], palavra[indice_palavra++]) );
 
         }
     }
-    while(!encontrou && indice < (int)s.length());
+    while(!encontrou && index < (int)s.length());
 
-    if(encontrou && indice < (int)s.length())
-        return ++indice;
+    if(encontrou && index < (int)s.length())
+        return ++index;
     else
         return -1;
 }
