@@ -11,7 +11,6 @@ Type=Application
 DocPath=klinkstatus/index.html
 Terminal=false
 GenericName=Link Checker
-GenericName[bg]=Проверка на препратки
 GenericName[ca]=Comprovador d'enllaços
 GenericName[cs]=Kontrola odkazů
 GenericName[da]=Link-tjekker
