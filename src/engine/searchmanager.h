@@ -135,7 +135,7 @@ private slots:
     void slotLinkChecked(LinkStatus* link, LinkChecker* checker);
     void slotLinkRechecked(LinkStatus* link, LinkChecker* checker);
     void slotLevelAdded();
-    void slotJobDone(Job*);
+    void slotJobDone(ThreadWeaver::Job*);
     void finnish();
 
 private:

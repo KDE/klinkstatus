@@ -55,7 +55,7 @@ SearchManager::SearchManager(int max_simultaneous_connections, int time_out,
     root_.setIsRoot(true);
 
     m_weaver.setMaximumNumberOfThreads(10);
-    connect(&m_weaver, SIGNAL(jobDone(Job*)), SLOT(slotJobDone(Job*)));
+    connect(&m_weaver, SIGNAL(jobDone(ThreadWeaver::Job*)), SLOT(slotJobDone(ThreadWeaver::Job*)));
 }
 
 void SearchManager::reset()
@@ -940,7 +940,7 @@ QString SearchManager::toXML() const
 }
 
 // WARNING If there are several SearchManagers, they receive job done from all of them
-void SearchManager::slotJobDone(Job* job)
+void SearchManager::slotJobDone(ThreadWeaver::Job* job)
 {
     AddLevelJob* addLevelJob = dynamic_cast<AddLevelJob*> (job);
     if(addLevelJob) {

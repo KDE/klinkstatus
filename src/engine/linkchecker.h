@@ -21,7 +21,6 @@
 #define LINKCHECKER_H
 
 #include <QObject>
-#include <QThread>
 #include <QString>
 
 #include <kio/jobclasses.h>
