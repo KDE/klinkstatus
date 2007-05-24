@@ -145,7 +145,7 @@ void SessionWidget::saveCurrentCheckSettings()
     KLSConfig::setCheckParentFolders(!checkbox_subdirs_only->isChecked());
     KLSConfig::setCheckExternalLinks(checkbox_external_links->isChecked());
 
-    KLSConfig::writeConfig();
+    KLSConfig::self()->writeConfig();
 }
 
 void SessionWidget::newSearchManager()

@@ -71,7 +71,7 @@ void KLSHistoryCombo::saveItems()
     QStringList items = historyItems();
 
     KLSConfig::setComboUrlHistory(items);
-    KLSConfig::writeConfig();
+    KLSConfig::self()->writeConfig();
     
     items_saved_ = true;
 }
