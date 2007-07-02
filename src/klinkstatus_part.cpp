@@ -165,27 +165,27 @@ void KLinkStatusPart::slotAbout()
 
 void KLinkStatusPart::slotReportBug()
 {
-    KAboutData aboutData("klinkstatus", I18N_NOOP("KLinkStatus"), version_);
+    KAboutData aboutData("klinkstatus", 0, ki18n("KLinkStatus"), version_);
     KBugReport bugReportDlg(0, true, &aboutData);
     bugReportDlg.exec();
 }
 
 KAboutData* KLinkStatusPart::createAboutData()
 {
-    KAboutData * about = new KAboutData("klinkstatuspart", I18N_NOOP("KLinkStatus Part"), version_,
-                                        description_, KAboutData::License_GPL_V2,
-                                        "(C) 2004 Paulo Moura Guedes", 0, 0, "moura@kdewebdev.org");
+    KAboutData * about = new KAboutData("klinkstatuspart", 0, ki18n("KLinkStatus Part"), version_,
+                                        ki18n(description_), KAboutData::License_GPL_V2,
+                                        ki18n("(C) 2004 Paulo Moura Guedes"), KLocalizedString(), 0, "moura@kdewebdev.org");
 
-    about->addAuthor("Paulo Moura Guedes", 0, "moura@kdewebdev.org");
+    about->addAuthor(ki18n("Paulo Moura Guedes"), KLocalizedString(), "moura@kdewebdev.org");
 
-    about->addCredit("Manuel Menezes de Sequeira", 0, 0, "http://home.iscte.pt/~mms/");
-    about->addCredit("Gonçalo Silva", 0, "gngs@paradigma.co.pt");
-    about->addCredit("Nuno Monteiro", 0, 0, "http://www.itsari.org");
-    about->addCredit("Eric Laffoon", 0, "sequitur@kde.org");
-    about->addCredit("Andras Mantia", 0, "amantia@kde.org");
-    about->addCredit("Michal Rudolf", 0, "mrudolf@kdewebdev.org");
-    about->addCredit("Mathieu Kooiman", 0, " quanta@map-is.nl");
-    about->addCredit("Jens Herden", 0, "jens@kdewebdev.org");
+    about->addCredit(ki18n("Manuel Menezes de Sequeira"), KLocalizedString(), 0, "http://home.iscte.pt/~mms/");
+    about->addCredit(ki18n("Gonçalo Silva"), KLocalizedString(), "gngs@paradigma.co.pt");
+    about->addCredit(ki18n("Nuno Monteiro"), KLocalizedString(), 0, "http://www.itsari.org");
+    about->addCredit(ki18n("Eric Laffoon"), KLocalizedString(), "sequitur@kde.org");
+    about->addCredit(ki18n("Andras Mantia"), KLocalizedString(), "amantia@kde.org");
+    about->addCredit(ki18n("Michal Rudolf"), KLocalizedString(), "mrudolf@kdewebdev.org");
+    about->addCredit(ki18n("Mathieu Kooiman"), KLocalizedString(), " quanta@map-is.nl");
+    about->addCredit(ki18n("Jens Herden"), KLocalizedString(), "jens@kdewebdev.org");
 
     KGlobal::dirs()->addResourceType("appicon", KStandardDirs::kde_default("data") + "klinkstatuspart/pics/");
 
