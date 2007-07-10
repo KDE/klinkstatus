@@ -85,7 +85,6 @@ qt4_add_dbus_adaptor(klinkstatuspart_PART_SRCS engine/interfaces/org.kdewebdev.k
     
 kde4_add_kcfg_files(klinkstatuspart_PART_SRCS ${CMAKE_SOURCE_DIR}/klinkstatus/src/cfg/klsconfig.kcfgc)
 
-kde4_automoc(${klinkstatuspart_PART_SRCS})
 
 kde4_add_plugin(klinkstatuspart WITH_PREFIX ${klinkstatuspart_PART_SRCS})
 
@@ -109,7 +108,6 @@ install(FILES engine/interfaces/org.kdewebdev.klinkstatus.ISearchManager.xml DES
 
 set(klinkstatus_SRCS klinkstatus.cpp main.cpp )
 
-kde4_automoc(${klinkstatus_SRCS})
 
 kde4_add_executable(klinkstatus ${klinkstatus_SRCS})
 
