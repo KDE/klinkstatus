@@ -1,6 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=KLinkStatus
+Name[ne]=केडीई लिङ्क स्थिति
 Name[sv]=Klinkstatus
 Name[ta]=Kதொகுதி நிலைமை
 Name[tr]=K Köprü Durumu
@@ -30,6 +31,7 @@ GenericName[ja]=リンクチェッカー
 GenericName[lt]=Nuorody tikrintuvė
 GenericName[ms]=Pemeriksa Pautan
 GenericName[nds]=Linkprööv
+GenericName[ne]=लिङ्क परीक्षक
 GenericName[nl]=Linkchecker
 GenericName[pl]=Program sprawdzający odnośniki
 GenericName[pt]=Verificação de Hiperligações
