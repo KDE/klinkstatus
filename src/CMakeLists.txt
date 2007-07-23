@@ -101,7 +101,7 @@ target_link_libraries(klinkstatuspart
 
 install(TARGETS klinkstatuspart  DESTINATION ${PLUGIN_INSTALL_DIR})
 
-install(FILES engine/interfaces/org.kdewebdev.klinkstatus.ISearchManager.xml DESTINATION ${DBUS_INTERFACES_DIR})
+install(FILES engine/interfaces/org.kdewebdev.klinkstatus.ISearchManager.xml DESTINATION ${DBUS_INTERFACES_INSTALL_DIR})
 
 
 ########### next target ###############
@@ -118,7 +118,7 @@ install(TARGETS klinkstatus  DESTINATION ${BIN_INSTALL_DIR} )
 
 ########### install files ###############
 
-install( FILES  klinkstatus.desktop  DESTINATION ${XDG_APPS_DIR})
+install( FILES  klinkstatus.desktop  DESTINATION ${XDG_APPS_INSTALL_DIR})
 install( FILES  klinkstatus_part.desktop  DESTINATION ${SERVICES_INSTALL_DIR})
 install( FILES  klinkstatus_part.rc  DESTINATION ${DATA_INSTALL_DIR}/klinkstatuspart)
 install( FILES  klinkstatus_shell.rc  DESTINATION ${DATA_INSTALL_DIR}/klinkstatus)
