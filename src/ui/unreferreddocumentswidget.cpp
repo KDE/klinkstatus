@@ -167,7 +167,7 @@ void UnreferredDocumentsWidget::slotEntries(KIO::Job* /*job*/, const KIO::UDSEnt
         if(entry.isDir())
             continue;
 
-        m_documentList << entry.stringValue(KIO::UDS_NAME);
+        m_documentList << entry.stringValue(KIO::UDSEntry::UDS_NAME);
     }
 }
 
