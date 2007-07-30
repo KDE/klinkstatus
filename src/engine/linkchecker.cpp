@@ -32,7 +32,6 @@
 #include <kio/global.h>
 #include <kio/job.h>
 #include <kio/scheduler.h>
-#include <kio/slave.h>
 #include <kmimetype.h>
 #include <kapplication.h>
 #include <khtml_part.h>
@@ -107,8 +106,8 @@ void LinkChecker::slotTimeOut()
 {
     if(!finnished_ && !parsing_)
     {
-        kDebug(23100) << "timeout: " << linkstatus_->absoluteUrl().url() << " - " 
-                << t_job_->slave() << "/" <<  t_job_->slave()->slave_pid() << endl;
+        //kDebug(23100) << "timeout: " << linkstatus_->absoluteUrl().url() << " - " 
+        //        << t_job_->slave() << "/" <<  t_job_->slave()->slave_pid() << endl;
         
         Q_ASSERT(t_job_);
         if(t_job_->error() != KIO::ERR_USER_CANCELED)
