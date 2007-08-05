@@ -135,7 +135,7 @@ void SessionWidget::slotLoadSettings(bool modify_current_widget_settings)
     if(search_manager_)
         search_manager_->setTimeOut(KLSConfig::timeOut());
 
-    //kDebug(23100) << "tree_display_: " << tree_display_ << endl;
+    //kDebug(23100) << "tree_display_: " << tree_display_;
 }
 
 void SessionWidget::saveCurrentCheckSettings()
@@ -316,7 +316,7 @@ void SessionWidget::slotCheck()
         search_manager_->setRegularExpression(lineedit_reg_exp->text(), false);
     }
 
-    kDebug(23100) <<  "URI to check: " << url.prettyUrl() << endl;
+    kDebug(23100) <<  "URI to check: " << url.prettyUrl();
     
     combobox_url->setEditText(url.prettyUrl());
     url_to_check_ = url;
@@ -346,7 +346,7 @@ void SessionWidget::keyPressEvent(QKeyEvent* e)
 bool SessionWidget::validFields()
 {
     QString url_string = combobox_url->currentText();
-//     kDebug(23100) << "SessionWidget::validFields: " << url_string << endl;
+//     kDebug(23100) << "SessionWidget::validFields: " << url_string;
     if(url_string.isEmpty())
     {
         KMessageBox::sorry(this, i18n("Cowardly refusing to check an empty URL."));
@@ -558,7 +558,7 @@ void SessionWidget::slotHideSearchPanel()
 
 void SessionWidget::setFollowLastLinkChecked(bool follow)
 {
-    kDebug(23100) << "setFollowLastLinkChecked: " << follow << endl;
+    kDebug(23100) << "setFollowLastLinkChecked: " << follow;
     follow_last_link_checked_ = follow;
 }
 
@@ -726,12 +726,12 @@ void SessionWidget::resetPendingActions()
 void SessionWidget::slotApplyFilter(LinkMatcher link_matcher)
 {
     if(link_matcher.hasCriteria()) {
-//         kDebug(23100) << "has criteria" << endl;
+//         kDebug(23100) << "has criteria";
 //         resultsSearchBar->setStyleSheet(QString("border: 1px solid blue"));
         resultsSearchBar->setBackgroundRole(QPalette::Highlight);
     }
     else {
-//         kDebug(23100) << "not has criteria" << endl;
+//         kDebug(23100) << "not has criteria";
 //         resultsSearchBar->setStyleSheet(QString(""));
         resultsSearchBar->setBackgroundRole(QPalette::Window);
     }
@@ -746,7 +746,7 @@ void SessionWidget::slotExportAsHTML( )
     if(url.isEmpty())
         return;
 
-    kDebug(23100) << "\n\nXML document represention: \n\n" << search_manager_->toXML() << endl;
+    kDebug(23100) << "\n\nXML document represention: \n\n" << search_manager_->toXML();
 
     KUrl styleSheetUrl = KStandardDirs::locate("appdata", "styles/results_stylesheet.xsl");
     QString html = XSL::transform(search_manager_->toXML(), styleSheetUrl);

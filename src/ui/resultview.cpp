@@ -142,7 +142,7 @@ QColor const ResultViewItem::textStatusColor() const
 {
     if(linkStatus()->errorOccurred())
     {
-        //kDebug(23100) <<  "ERROR: " << linkStatus()->error() << ": " << linkStatus()->absoluteUrl().prettyUrl() << endl;
+        //kDebug(23100) <<  "ERROR: " << linkStatus()->error() << ": " << linkStatus()->absoluteUrl().prettyUrl();
         if(linkStatus()->error() == i18n( "Javascript not supported" ))
             return Qt::lightGray;
         else
@@ -161,9 +161,9 @@ QColor const ResultViewItem::textStatusColor() const
 
         if(status_code[0] == '0')
         {
-            kWarning(23100) << "status code == 0: " << endl;
-            kWarning(23100) << LinkStatusHelper::toString(linkStatus()) << endl;
-            kWarning(23100) << linkStatus()->httpHeader().toString() << endl;
+            kWarning(23100) << "status code == 0: ";
+            kWarning(23100) << LinkStatusHelper::toString(linkStatus());
+            kWarning(23100) << linkStatus()->httpHeader().toString();
         }
         //Q_ASSERT(status_code[0] != '0');
 

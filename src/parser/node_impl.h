@@ -141,7 +141,7 @@ inline void NodeA::parse()
 inline void NodeA::parseAttributeNAME()
 {
     attribute_name_ = getAttribute("NAME=");
-    //kDebug(23100) << "NodeA::parseAttributeNAME: " << attribute_name_ << endl;
+    //kDebug(23100) << "NodeA::parseAttributeNAME: " << attribute_name_;
 }
 
 // class NodeAREA_______________________________________________________
@@ -166,7 +166,7 @@ inline void NodeAREA::parse()
 inline void NodeAREA::parseAttributeTITLE()
 {
     attribute_title_ = getAttribute("TITLE=");
-//kDebug(23100) << "NodeAREA::parseAttributeTITLE: " << attribute_title_ << endl;
+//kDebug(23100) << "NodeAREA::parseAttributeTITLE: " << attribute_title_;
 }
 
 // class NodeLINK________________________________________
@@ -257,7 +257,7 @@ inline void NodeMETA::parseAttributeNAME()
 inline void NodeMETA::parseAttributeCONTENT()
 {
     attribute_content_ = getAttribute("CONTENT=");
-//     kDebug(23100) << "CONTENT: " << attribute_content_ << endl;
+//     kDebug(23100) << "CONTENT: " << attribute_content_;
 }
 
 
@@ -408,5 +408,5 @@ inline void NodeTITLE::parseAttributeTITLE()
     attribute_title_.replace("</TITLE>", "", Qt::CaseInsensitive);
     attribute_title_.trimmed();
     
-    //kDebug(23100) << "TITLE: " << attribute_title_ << endl;
+    //kDebug(23100) << "TITLE: " << attribute_title_;
 }

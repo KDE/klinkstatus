@@ -81,7 +81,7 @@ QString HttpResponseHeader::charset(QString const& contentTypeHttpHeaderLine)
         _charset = _charset.trimmed();
     }
     
-//     kDebug(23100) << "Charset: |" << _charset << "|" << endl;
+//     kDebug(23100) << "Charset: |" << _charset << "|";
     return _charset;
 
 }

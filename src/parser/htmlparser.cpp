@@ -148,7 +148,7 @@ int HtmlParser::endOfTag(QString const& s, int index, QChar end_of_tag)
             return endOfTag(s, close_aspas + 1, end_of_tag);
         else
         {
-            kDebug(23100) <<  "Mismatched quotes (\"): " << s.mid(index, _end_of_tag - index) << endl;
+            kDebug(23100) <<  "Mismatched quotes (\"): " << s.mid(index, _end_of_tag - index);
             //return -1;
             return _end_of_tag + 1;
         }
@@ -298,7 +298,7 @@ void HtmlParser::stripComments()
             int fim = findWord(document_, end_comment, inicio);
             if(fim == -1)
             {
-                kDebug(23100) <<  "End of comment is missing!" << endl;
+                kDebug(23100) <<  "End of comment is missing!";
                 document_.remove(inicio - begin_comment_length, begin_comment_length);
             }
             else
@@ -328,7 +328,7 @@ void HtmlParser::stripScriptContent()
 
             if(fim == -1)
             {
-                kDebug(23100) <<  "Malformed script tag!" << endl;
+                kDebug(23100) <<  "Malformed script tag!";
                 document_.remove(inicio - begin_script_length, begin_script_length);
             }
             else

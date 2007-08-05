@@ -212,7 +212,7 @@ QString NodeMETA::charset() const
         charset = charset.trimmed();
     }
     
-//     kDebug(23100) << "Charset: |" << charset << "|" << endl;
+//     kDebug(23100) << "Charset: |" << charset << "|";
     return charset;
 }
 
@@ -224,8 +224,8 @@ void NodeIMG::parseAttributeSRC()
 {
     if(findWord(content(), "SRC") == -1)
     {
-        kDebug(23100) <<  "MALFORMED_____________________________________________________________" << endl;
-        kDebug(23100) <<  "Conteudo: " << content() << endl;
+        kDebug(23100) <<  "MALFORMED_____________________________________________________________";
+        kDebug(23100) <<  "Conteudo: " << content();
         setMalformed(true);
         return;
     }

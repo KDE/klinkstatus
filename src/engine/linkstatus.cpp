@@ -99,9 +99,9 @@ void LinkStatus::loadNode()
         setErrorOccurred(true);
         setError("Malformed");
         setStatus(LinkStatus::MALFORMED);
-        kDebug(23100) <<  "Malformed:" << endl;
-        kDebug(23100) <<  "Node: " << node()->content() << endl;
-        //kDebug(23100) <<  toString() << endl; // probable segfault
+        kDebug(23100) <<  "Malformed:";
+        kDebug(23100) <<  "Node: " << node()->content();
+        //kDebug(23100) <<  toString(); // probable segfault
     }
 }
 
@@ -124,9 +124,9 @@ void LinkStatus::setMalformed(bool flag)
         setErrorOccurred(true);
         setError("Malformed");
         setStatus(LinkStatus::MALFORMED);
-        kDebug(23100) <<  "Malformed!" << endl;
-        kDebug(23100) <<  node()->content() << endl;
-        //kDebug(23100) <<  toString() << endl; // probable segfault
+        kDebug(23100) <<  "Malformed!";
+        kDebug(23100) <<  node()->content();
+        //kDebug(23100) <<  toString(); // probable segfault
     }
     else if(error() == "Malformed")
     {

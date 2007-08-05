@@ -190,7 +190,7 @@ void ResultsSearchBar::slotSearchStringChanged(const QString& search)
 
 void ResultsSearchBar::slotActivateSearch()
 {
-    kDebug(23100) << "ResultsSearchBar::slotActivateSearch" << endl;
+    kDebug(23100) << "ResultsSearchBar::slotActivateSearch";
     
     d->timer.stop();
     

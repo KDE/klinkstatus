@@ -50,7 +50,7 @@ SearchManager::SearchManager(int max_simultaneous_connections, int time_out,
         number_of_current_level_links_(0), 
         links_rechecked_(0), recheck_current_index_(0)
 {
-    kDebug(23100) <<  "SearchManager::SearchManager()" << endl;
+    kDebug(23100) <<  "SearchManager::SearchManager()";
 
     root_.setIsRoot(true);
 
@@ -60,7 +60,7 @@ SearchManager::SearchManager(int max_simultaneous_connections, int time_out,
 
 void SearchManager::reset()
 {
-    kDebug(23100) <<  "SearchManager::reset()" << endl;
+    kDebug(23100) <<  "SearchManager::reset()";
 
     //Q_ASSERT(not links_being_checked_);
 
@@ -96,7 +96,7 @@ void SearchManager::reset()
 
 SearchManager::~SearchManager()
 {
-    kDebug(23100) <<  "SearchManager::~SearchManager()" << endl;
+    kDebug(23100) <<  "SearchManager::~SearchManager()";
     reset();
 }
 
@@ -114,19 +114,19 @@ void SearchManager::cleanItems()
                     ((search_results_[i])[j])[l] = 0;
                 }
                 else
-                    kDebug(23100) <<  "LinkStatus NULL!!" << endl;
+                    kDebug(23100) <<  "LinkStatus NULL!!";
             }
             search_results_[i][j].clear();
         }
         search_results_[i].clear();
     }
     search_results_.clear();
-    kDebug(23100) <<  endl;
+    kDebug(23100);
 }
 
 void SearchManager::recheckLinks(QList<LinkStatus*> const& linkstatus_list)
 {
-    kDebug(23100) << "SearchManager::recheckLinks: " << linkstatus_list.size() << endl;
+    kDebug(23100) << "SearchManager::recheckLinks: " << linkstatus_list.size();
   
     Q_ASSERT(!searching_);
     Q_ASSERT(checked_links_ >= linkstatus_list.size());
@@ -160,7 +160,7 @@ void SearchManager::recheckLinks(QList<LinkStatus*> const& linkstatus_list)
 
 void SearchManager::startSearch(KUrl const& root, SearchMode const& modo)
 {
-    kDebug(23100) <<  "SearchManager::startSearch()" << endl;
+    kDebug(23100) <<  "SearchManager::startSearch()";
 
     root_url_ = root;
     canceled_ = false;
@@ -170,7 +170,7 @@ void SearchManager::startSearch(KUrl const& root, SearchMode const& modo)
     if(root.hasHost() && (domain_.isNull() || domain_.isEmpty()))
     {
         setDomain(root.host() + root.directory());
-        kDebug(23100) << "Domain: " << domain_ << endl;
+        kDebug(23100) << "Domain: " << domain_;
     }
     root_.setIsRoot(true);
     root_.setDepth(0);
@@ -197,7 +197,7 @@ void SearchManager::startSearch(KUrl const& root, SearchMode const& modo)
 
 void SearchManager::resume()
 {
-    kDebug(23100) << "SearchManager::resume" << endl;
+    kDebug(23100) << "SearchManager::resume";
 
     searching_ = true;
     canceled_ = false;
@@ -211,15 +211,15 @@ void SearchManager::finnish()
 {
     if(links_being_checked_ || m_weaver.queueLength() != 0)
     {
-        kDebug(23100) << "Waiting for links being checked: " << links_being_checked_ << endl;
+        kDebug(23100) << "Waiting for links being checked: " << links_being_checked_;
         QTimer::singleShot(500, this, SLOT(finnish()));
         return;
     }
-    kDebug(23100) << "SearchManager::finnish" << endl;
+    kDebug(23100) << "SearchManager::finnish";
     if(!recheck_mode_)
-        kDebug(23100) << "Links Checked: " << checked_links_ << endl;
+        kDebug(23100) << "Links Checked: " << checked_links_;
     else
-        kDebug(23100) << "Links Rechecked: " << links_rechecked_ << endl;
+        kDebug(23100) << "Links Rechecked: " << links_rechecked_;
 
     searching_ = false;
     emit signalSearchFinished(this);
@@ -227,7 +227,7 @@ void SearchManager::finnish()
 
 void SearchManager::pause()
 {
-    kDebug(23100) <<  "SearchManager::pause()" << endl;
+    kDebug(23100) <<  "SearchManager::pause()";
     
     while(links_being_checked_)
     {
@@ -258,7 +258,7 @@ void SearchManager::checkRoot()
 
 void SearchManager::slotRootChecked(LinkStatus* link, LinkChecker* checker)
 {
-    kDebug(23100) <<  "SearchManager::slotRootChecked:" << endl;
+    kDebug(23100) <<  "SearchManager::slotRootChecked:";
     kDebug(23100) <<  link->absoluteUrl().url() << " -> " << 
             LinkStatusHelper::lastRedirection(&root_)->absoluteUrl().url() << endl;
 
@@ -269,7 +269,7 @@ void SearchManager::slotRootChecked(LinkStatus* link, LinkChecker* checker)
         LinkStatusHelper::validateMarkup(link);
     
     ++checked_links_;
-    //kDebug(23100) <<  "++checked_links_: SearchManager::slotRootChecked" << endl;
+    //kDebug(23100) <<  "++checked_links_: SearchManager::slotRootChecked";
     emit signalRootChecked(link);
     if(link->isRedirection() && link->redirection())
         linkRedirectionChecked(link->redirection());
@@ -291,8 +291,8 @@ void SearchManager::slotRootChecked(LinkStatus* link, LinkChecker* checker)
 
         if(search_results_.size() != 1)
         {
-            kDebug(23100) <<  "search_results_.size() != 1:" << endl;
-            kDebug(23100) <<  "size: " << search_results_.size() << endl;
+            kDebug(23100) <<  "search_results_.size() != 1:";
+            kDebug(23100) <<  "size: " << search_results_.size();
         }
         Q_ASSERT(search_results_.size() == 1);
 
@@ -302,7 +302,7 @@ void SearchManager::slotRootChecked(LinkStatus* link, LinkChecker* checker)
         }
         else
         {
-            kDebug(23100) <<  "SearchManager::slotRootChecked#1" << endl;
+            kDebug(23100) <<  "SearchManager::slotRootChecked#1";
             finnish();
         }
     }
@@ -310,7 +310,7 @@ void SearchManager::slotRootChecked(LinkStatus* link, LinkChecker* checker)
     else
     {
         Q_ASSERT(search_results_.size() == 0);
-        kDebug(23100) <<  "SearchManager::slotRootChecked#2" << endl;
+        kDebug(23100) <<  "SearchManager::slotRootChecked#2";
         finnish();
     }
 
@@ -367,8 +367,8 @@ void SearchManager::fillWithChildren(LinkStatus* link, QList<LinkStatus*>& child
             {
                 kDebug(23100) <<  "link->externalDomainDepth() > external_domain_depth_: "
                 << link->externalDomainDepth() << endl;
-                kDebug(23100) <<  "link: " << endl << LinkStatusHelper::toString(link) << endl;
-                kDebug(23100) <<  "child: " << endl << LinkStatusHelper::toString(ls) << endl;
+                kDebug(23100) <<  "link: " << endl << LinkStatusHelper::toString(link);
+                kDebug(23100) <<  "child: " << endl << LinkStatusHelper::toString(ls);
 
                 Q_ASSERT(false);
             }
@@ -410,7 +410,7 @@ LinkStatus const* SearchManager::linkStatus(QString const& s_url) const
 
 void SearchManager::startSearchAfterRoot()
 {
-    kDebug(23100) <<  "SearchManager::startSearch() | after root checked" << endl;
+    kDebug(23100) <<  "SearchManager::startSearch() | after root checked";
     
     Q_ASSERT(current_depth_ == 1);
     Q_ASSERT(search_results_[current_depth_ - 1].size() == 1);
@@ -420,33 +420,33 @@ void SearchManager::startSearchAfterRoot()
         checkVectorLinks(nodeToAnalize());
     else
     {
-        kDebug(23100) <<  "Search Finished! (SearchManager::comecaPesquisa)" << endl;
+        kDebug(23100) <<  "Search Finished! (SearchManager::comecaPesquisa)";
         finnish();
     }
 }
 
 void SearchManager::slotLevelAdded()
 {
-    kDebug(23100) << "SearchManager::slotLevelAdded" << endl;
+    kDebug(23100) << "SearchManager::slotLevelAdded";
 
     if(current_depth_ == search_results_.size() )
         checkVectorLinks(nodeToAnalize());
     else
     {
-        kDebug(23100) <<  "Search Finished! (SearchManager::continueSearch#1)" << endl;
+        kDebug(23100) <<  "Search Finished! (SearchManager::continueSearch#1)";
         finnish();
     }
 }
 
 void SearchManager::continueRecheck()
 {
-    kDebug(23100) << "SearchManager::continueRecheck" << endl;
+    kDebug(23100) << "SearchManager::continueRecheck";
     checkVectorLinksToRecheck(recheck_links_);
 }
 
 void SearchManager::continueSearch()
 {
-    kDebug(23100) << "SearchManager::continueSearch" << endl;
+    kDebug(23100) << "SearchManager::continueSearch";
     Q_ASSERT(!links_being_checked_);
 
     QList<LinkStatus*> const& node = nodeToAnalize();
@@ -475,7 +475,7 @@ void SearchManager::continueSearch()
 
                 emit signalAddingLevel(true);
 
-//                 kDebug(23100) << "ThreadWeaver Queue length: " << m_weaver.queueLength() << endl;
+//                 kDebug(23100) << "ThreadWeaver Queue length: " << m_weaver.queueLength();
                 m_weaver.enqueue(new AddLevelJob(*this));
             }
             else
@@ -507,7 +507,7 @@ void SearchManager::checkVectorLinksToRecheck(QList<LinkStatus*> const& links)
 QList<LinkStatus*> SearchManager::chooseLinks(QList<LinkStatus*> const& links)
 {
     if(current_index_ == 0) {
-        kDebug(23100) << "Node parent: " << links[0]->parent()->absoluteUrl() << endl;
+        kDebug(23100) << "Node parent: " << links[0]->parent()->absoluteUrl();
     }
   
     QList<LinkStatus*> escolha;
@@ -601,7 +601,7 @@ void SearchManager::recheckLink(LinkStatus* ls)
 
 void SearchManager::linkRedirectionChecked(LinkStatus* link, bool recheck)
 {
-    kDebug(23100) <<  "SearchManager::linkRedirectionChecked: " << checked_links_ << endl;
+    kDebug(23100) <<  "SearchManager::linkRedirectionChecked: " << checked_links_;
     
     emit signalRedirection();
     recheck ? emit signalLinkRechecked(link) : emit signalLinkChecked(link);
@@ -619,7 +619,7 @@ void SearchManager::linkRedirectionChecked(LinkStatus* link, bool recheck)
 
 void SearchManager::slotLinkChecked(LinkStatus* link, LinkChecker* checker)
 {
-    kDebug(23100) <<  "SearchManager::slotLinkChecked: " << checked_links_ << endl;
+    kDebug(23100) <<  "SearchManager::slotLinkChecked: " << checked_links_;
 //     kDebug(23100) <<  link->absoluteUrl().url() << " -> " << 
 //             LinkStatus::lastRedirection((const_cast<LinkStatus*> (link)))->absoluteUrl().url() << endl;
 
@@ -659,7 +659,7 @@ void SearchManager::slotLinkChecked(LinkStatus* link, LinkChecker* checker)
 
 void SearchManager::slotLinkRechecked(LinkStatus* link, LinkChecker* checker)
 {
-    kDebug(23100) <<  "SearchManager::slotLinkRechecked" << endl;
+    kDebug(23100) <<  "SearchManager::slotLinkRechecked";
 //     kDebug(23100) <<  link->absoluteUrl().url() << " -> " << 
 //             LinkStatus::lastRedirection((const_cast<LinkStatus*> (link)))->absoluteUrl().url() << endl;
 
@@ -705,7 +705,7 @@ void SearchManager::buildNewNode(LinkStatus* linkstatus)
             return;
     }
     
-//     kDebug(23100) << "SearchManager::buildNewNode" << endl;
+//     kDebug(23100) << "SearchManager::buildNewNode";
 
     QList<LinkStatus*> new_node;
     fillWithChildren(linkstatus, new_node);
@@ -723,7 +723,7 @@ void SearchManager::buildNewNode(LinkStatus* linkstatus)
 
 void SearchManager::addLevel()
 {
-    kDebug(23100) << "SearchManager::addLevel" << endl;
+    kDebug(23100) << "SearchManager::addLevel";
 
     if(new_level_.size() != 0) {
         m_mutex.lock();
@@ -761,7 +761,7 @@ bool SearchManager::checkable(KUrl const& url, LinkStatus const& link_parent) co
             return false;
     }
 
-    //kDebug(23100) <<  "url " << url.url() << " is checkable!" << endl;
+    //kDebug(23100) <<  "url " << url.url() << " is checkable!";
     return true;
 }
 
@@ -776,7 +776,7 @@ bool SearchManager::checkableByDomain(KUrl const& url, LinkStatus const& link_pa
         result = false;
     /*
         if(!result)
-            kDebug(23100) <<  "\n\nURL " << url.url() << " is not checkable by domain\n\n" << endl;
+            kDebug(23100) <<  "\n\nURL " << url.url() << " is not checkable by domain\n\n";
     */
     return result;
 }
@@ -796,7 +796,7 @@ bool SearchManager::generalDomain() const
         int barra = domain_.indexOf('/');
         if(barra != -1 && barra != domain_.length() - 1)
         {
-            kDebug(23100) <<  "Domain nao vago" << endl;
+            kDebug(23100) <<  "Domain nao vago";
             return false;
         }
         else
@@ -808,17 +808,17 @@ bool SearchManager::generalDomain() const
             if(primeira_palavra == "www")
             {
                 Q_ASSERT(palavras.size() >= 3);
-                kDebug(23100) <<  "Domain vago" << endl;
+                kDebug(23100) <<  "Domain vago";
                 return true;
             }
             else if(palavras.size() == 2)
             {
-                kDebug(23100) <<  "Domain vago" << endl;
+                kDebug(23100) <<  "Domain vago";
                 return true;
             }
             else
             {
-                kDebug(23100) <<  "Domain nao vago" << endl;
+                kDebug(23100) <<  "Domain nao vago";
                 return false;
             }
         }
@@ -948,7 +948,7 @@ void SearchManager::slotJobDone(ThreadWeaver::Job* job)
         return;
     }
     
-//     kDebug(23100) << "Job not handled in SearchManager::slotJobDone: " << job << endl;
+//     kDebug(23100) << "Job not handled in SearchManager::slotJobDone: " << job;
 }
 
 QStringList SearchManager::findUnreferredDocuments(KUrl const& baseDir, QStringList const& documentList) const
@@ -967,7 +967,7 @@ QStringList SearchManager::findUnreferredDocuments(KUrl const& baseDir, QStringL
     {
         QString document = documentList[i];
 
-//         kDebug(23100) << "Document: " << document << endl;
+//         kDebug(23100) << "Document: " << document;
         
         KUrl documentUrl(baseDir);    
         documentUrl.addPath(document);
@@ -1033,7 +1033,7 @@ BuildNodeJob::~BuildNodeJob()
     
 void BuildNodeJob::run()
 {
-//     kDebug(23100) << "\n\n\nBuildNodeJob::run\n\n\n" << endl;
+//     kDebug(23100) << "\n\n\nBuildNodeJob::run\n\n\n";
     m_searchManager.buildNewNode(m_linkStatus);
 }
 
@@ -1051,9 +1051,9 @@ AddLevelJob::~AddLevelJob()
     
 void AddLevelJob::run()
 {
-//     kDebug(23100) << "\n\n\nAddLevelJob::run\n\n\n" << endl;
+//     kDebug(23100) << "\n\n\nAddLevelJob::run\n\n\n";
     while(m_searchManager.m_weaver.queueLength() != 0) {
-        kDebug(23100) << "AddLevelJob::run: waiting for running jobs to finish" << endl;
+        kDebug(23100) << "AddLevelJob::run: waiting for running jobs to finish";
         sleep(1);
     }
     m_searchManager.addLevel();

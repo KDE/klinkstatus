@@ -252,7 +252,7 @@ void UnreferredDocumentsWidget::slotDeleteAllDocuments()
 
 void UnreferredDocumentsWidget::slotResultItemsDeleted(KJob*)
 {
-    kDebug(23100) << "UnreferredDocumentsWidget::slotResultItemsDeleted" << endl;
+    kDebug(23100) << "UnreferredDocumentsWidget::slotResultItemsDeleted";
   
     QList<QListWidgetItem*> itemsToRemove;
     QListWidget* listWidget = m_ui.documentListWidget;
