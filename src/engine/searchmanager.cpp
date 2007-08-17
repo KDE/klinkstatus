@@ -191,7 +191,7 @@ void SearchManager::startSearch(KUrl const& root, SearchMode const& modo)
 
     searching_ = true;
 
-    //Q_ASSERT(domain_ != QString::null);	//krazy:exclude=nullstrassign for old broken gcc
+    //Q_ASSERT( domain_ != QString() );
     checkRoot();
 }
 
