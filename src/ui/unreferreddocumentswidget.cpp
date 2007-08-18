@@ -264,7 +264,7 @@ void UnreferredDocumentsWidget::slotResultItemsDeleted(KJob*)
         KUrl url(m_baseDirectory);
         url.addPath(path);
 
-        if(!KIO::NetAccess::exists(url, false, this)) {
+        if(!KIO::NetAccess::exists(url, KIO::NetAccess::DestinationSide, this)) {
             itemsToRemove.push_back(item);
         }
     }
