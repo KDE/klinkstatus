@@ -18,6 +18,9 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.             *
  ***************************************************************************/
 
+#ifndef NODE_IMPL_H
+#define NODE_IMPL_H
+
 inline Node::Node()
         : is_redirection_(false), malformed_(false)
 {}
@@ -410,3 +413,5 @@ inline void NodeTITLE::parseAttributeTITLE()
     
     //kDebug(23100) << "TITLE: " << attribute_title_;
 }
+
+#endif // NODE_IMPL_H

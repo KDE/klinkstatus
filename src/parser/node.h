@@ -18,8 +18,8 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.             *
  ***************************************************************************/
 
-#ifndef NODULO_H
-#define NODULO_H
+#ifndef NODE_H
+#define NODE_H
 
 #include "mstring.h"
 
@@ -273,7 +273,6 @@ private:
     QString attribute_title_;
 };
 
-
 #include "node_impl.h"
 
-#endif
+#endif // NODE_H

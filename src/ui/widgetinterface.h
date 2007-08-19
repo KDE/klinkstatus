@@ -18,11 +18,10 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
-#ifndef SESSION_INTERFACE_H
-#define SESSION_INTERFACE_H
+#ifndef WIDGETINTERFACE_H
+#define WIDGETINTERFACE_H
 
 #include <QWidget>
-
     
 class WidgetInterface : public QWidget
 {
@@ -72,5 +71,4 @@ inline PlayableWidgetInterface::~PlayableWidgetInterface()
 {
 }
 
-#endif
-
+#endif // WIDGETINTERFACE_H

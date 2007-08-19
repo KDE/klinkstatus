@@ -18,6 +18,9 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.             *
  ***************************************************************************/
 
+#ifndef LINKSTATUS_IMPL_H
+#define LINKSTATUS_IMPL_H
+
 inline void LinkStatus::setRootUrl(KUrl const& url)
 {
     root_url_ = url;
@@ -375,3 +378,4 @@ inline QSet<KUrl> const& LinkStatus::referrers() const
     return referrers_;
 }
 
+#endif // LINKSTATUS_IMPL_H

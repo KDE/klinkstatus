@@ -18,8 +18,8 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.             *
  ***************************************************************************/
 
-
-
+#ifndef SEARCHMANAGER_IMPL_H
+#define SEARCHMANAGER_IMPL_H
 
 inline int SearchManager::maximumCurrentConnections() const
 {
@@ -166,3 +166,4 @@ inline ThreadWeaver::Weaver* SearchManager::threadWeaver() const
     return &m_weaver;
 }
 
+#endif // SEARCHMANAGER_IMPL_H

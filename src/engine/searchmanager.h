@@ -18,8 +18,8 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.             *
  ***************************************************************************/
 
-#ifndef GESTOR_PESQUISA_H
-#define GESTOR_PESQUISA_H
+#ifndef SEARCHMANAGER_H
+#define SEARCHMANAGER_H
 
 #include <kurl.h>
 #include <threadweaver/Job.h>
@@ -261,7 +261,6 @@ private:
     SearchManager& m_searchManager;
 };
 
-
 #include "searchmanager_impl.h"
 
-#endif
+#endif // SEARCHMANAGER_H
