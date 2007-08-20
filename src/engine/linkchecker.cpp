@@ -38,7 +38,7 @@
 #include <dom/html_misc.h>
 #include <dom/dom_node.h>
 #include <dom/dom_string.h>
-
+#include <dom/dom_html.h>
 
 LinkChecker::LinkChecker(LinkStatus* linkstatus, int time_out,
                          QObject *parent)
