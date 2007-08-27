@@ -26,7 +26,7 @@
     
 #include <kdebug.h>
 #include <kapplication.h>
-#include <kstaticdeleter.h>
+#include <k3staticdeleter.h>
 #include <kurl.h>
 #include <KStatusBar>
 #include <kparts/statusbarextension.h>
@@ -40,7 +40,7 @@ Global* Global::m_self_ = 0;
 ReadOnlyPart* Global::m_klinkStatusPart = 0;
 StatusBarExtension* Global::m_statusBarExtension = 0;
 
-static KStaticDeleter<Global> staticDeleter;
+static K3StaticDeleter<Global> staticDeleter;
 
 
 Global* Global::self()
