@@ -129,7 +129,7 @@
         </entry>
         
         <entry key="Encoding" type="Enum" >
-            <label>his option specifies the character encoding Tidy uses for both the input and output.</label>
+            <label>This option specifies the character encoding Tidy uses for both the input and output.</label>
             <choices>
                 <name>raw</name>
                 <name>ascii</name>
