@@ -49,17 +49,11 @@ KLinkStatus::KLinkStatus()
     // and a status bar
     statusBar()->show();
 
-    // this routine will find and load our Part.  it finds the Part by
-    // name which is a bad idea usually.. but it's alright in this
-    // case since our Part is made for this Shell
-    KLibFactory *factory = KLibLoader::self()->factory("libklinkstatuspart");
-    if (factory)
+    KPluginFactory *factory = KPluginLoader("klinkstatuspart").factory();
+    if(factory)
     {
-        // now that the Part is loaded, we cast it to a Part to get
-        // our hands on it
-        m_part = static_cast<KParts::ReadOnlyPart *>(factory->create(this,
-                 "KParts::ReadOnlyPart" ));
-
+        m_part = factory->create<KParts::ReadOnlyPart> (this);
+    
         if (m_part)
         {
             m_part->widget()->setFocusPolicy(Qt::ClickFocus);
@@ -130,6 +124,9 @@ void KLinkStatus::removeDuplicatedActions()
     QAction* part_about_action = part_action_collection->action("about_klinkstatus");
     QAction* part_report_action = part_action_collection->action("report_bug");
 
+    if(!part_about_action || !part_report_action)
+        return;
+    
     QWidget* container = part_about_action->associatedWidgets().value(0); // call this only once or segfault
     container->removeAction(part_about_action);
     container->removeAction(part_report_action);

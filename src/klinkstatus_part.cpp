@@ -50,14 +50,12 @@
 const char KLinkStatusPart::description_[] = I18N_NOOP( "A Link Checker" );
 const char KLinkStatusPart::version_[] = "0.3.80";
 
-// Factory code for KDE 3
-typedef KParts::GenericFactory<KLinkStatusPart> KLinkStatusFactory;
-K_EXPORT_COMPONENT_FACTORY( libklinkstatuspart, KLinkStatusFactory )
+K_PLUGIN_FACTORY(KLinkStatusFactory, registerPlugin<KLinkStatusPart>();)
+K_EXPORT_PLUGIN(KLinkStatusFactory("klinkstatuspart"))
 
-
-KLinkStatusPart::KLinkStatusPart(QWidget *parentWidget,
-                                 QObject *parent,
-                                 const QStringList & /*string_list*/)
+    
+KLinkStatusPart::KLinkStatusPart(QObject *parent,
+                                 const QVariantList&)
     : KParts::ReadOnlyPart(parent), m_dlgAbout(0)
 {
     setComponentData(KLinkStatusFactory::componentData());
@@ -68,7 +66,8 @@ KLinkStatusPart::KLinkStatusPart(QWidget *parentWidget,
 
     new ISearchManager(this);
     
-    tabwidget_ = new TabWidgetSession(parentWidget);
+//     tabwidget_ = new TabWidgetSession(parentWidget);
+    tabwidget_ = new TabWidgetSession(0);
     setWidget(tabwidget_);
     action_manager_->initTabWidget(tabwidget_);
 

@@ -86,7 +86,8 @@ qt4_add_dbus_adaptor(klinkstatuspart_PART_SRCS engine/interfaces/org.kdewebdev.k
 kde4_add_kcfg_files(klinkstatuspart_PART_SRCS ${CMAKE_SOURCE_DIR}/klinkstatus/src/cfg/klsconfig.kcfgc)
 
 
-kde4_add_plugin(klinkstatuspart WITH_PREFIX ${klinkstatuspart_PART_SRCS})
+# kde4_add_plugin(klinkstatuspart WITH_PREFIX ${klinkstatuspart_PART_SRCS})
+kde4_add_plugin(klinkstatuspart ${klinkstatuspart_PART_SRCS})
 
 target_link_libraries(klinkstatuspart
     ${LIBXML2_LIBRARIES}

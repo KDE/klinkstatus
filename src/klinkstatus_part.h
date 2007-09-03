@@ -38,7 +38,7 @@ class KLinkStatusPart: public KParts::ReadOnlyPart
 {
     Q_OBJECT
 public:
-    KLinkStatusPart(QWidget *parentWidget, QObject *parent, const QStringList& args);
+    KLinkStatusPart(QObject *parent, const QVariantList&);
     virtual ~KLinkStatusPart();
 
     static KAboutData* createAboutData();

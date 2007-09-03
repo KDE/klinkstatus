@@ -581,7 +581,7 @@ QString TreeColumnViewItem::text(int column) const
     }
     else if(column == root_->statusColumnIndex())
     {
-        return QString();
+        return QString::null;
     }
     else if(column == root_->labelColumnIndex())
     {
