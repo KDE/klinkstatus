@@ -24,6 +24,7 @@
 #include <klocale.h>
 #include <kaction.h>
 #include <ktoggleaction.h>
+#include <ktoolbarpopupaction.h>
 #include <kguiitem.h>
 #include <kstandardshortcut.h>
 #include <kicon.h>
@@ -63,6 +64,8 @@ public:
 
     KLinkStatusPart* part;
     TabWidgetSession* tabWidgetSession;
+
+    KToolBarPopupAction* gotoViewAction;
 };
 
 ActionManager::ActionManager(QObject *parent)
@@ -126,7 +129,6 @@ void ActionManager::initPart(KLinkStatusPart* part)
 
     action  = new KAction(i18n("&Report Bug..."), this);
     actionCollection()->addAction("report_bug", action );
-    action = d->actionCollection->addAction( "report_bug" );
     action->setText( i18n("&Report Bug...") );
 
     connect(action, SIGNAL(triggered(bool) ), d->part, SLOT(slotReportBug()));
@@ -219,6 +221,18 @@ void ActionManager::initTabWidget(TabWidgetSession* tabWidgetSession)
     action->setEnabled(true);
 
     // *************** Windows menu *********************
+
+    action = new KAction(KIcon(), i18n("Check Links"), this);
+    actionCollection()->addAction("linkcheck_view", action);
+    connect(action, SIGNAL(triggered(bool) ), d->tabWidgetSession, SLOT(slotShowLinkCheckView()));
+//     action->setShortcut(KShortcut(QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_F8)));
+    action->setEnabled(true);
+        
+    action = new KAction(KIcon(), i18n("Unreferred Documents"), this);
+    actionCollection()->addAction("unreferred_docs_view", action);
+    connect(action, SIGNAL(triggered(bool) ), d->tabWidgetSession, SLOT(slotShowUnreferredDocumentsView()));
+//     action->setShortcut(KShortcut(QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_F8)));
+    action->setEnabled(true);
         
     action = new KAction(KIcon(), i18n("Previous View"), this);
     actionCollection()->addAction("goto_previous_view", action);
@@ -243,6 +257,16 @@ void ActionManager::initTabWidget(TabWidgetSession* tabWidgetSession)
     connect(action, SIGNAL(triggered(bool) ), d->tabWidgetSession, SLOT(slotNextSession()));
     action->setShortcut(KShortcut(QKeySequence(Qt::CTRL + Qt::Key_F6)));
     action->setEnabled(true);
+
+    // *************** Toolbar *********************
+      
+    d->gotoViewAction = new KToolBarPopupAction(KIcon("file-import"), "", this);
+    actionCollection()->addAction("next_view_list", d->gotoViewAction);
+//     action->setShortcuts(KStandardShortcut::shortcut(KStandardShortcut::Back));
+    d->gotoViewAction->setToolTip("Change View");
+
+    connect(d->gotoViewAction, SIGNAL(triggered()), d->tabWidgetSession, SLOT(slotNextView()));
+    connect(d->gotoViewAction->menu(), SIGNAL(aboutToShow()), this, SLOT(slotFillGotoViewPopup()));
 }
 
 void ActionManager::initSessionWidget(SessionWidget* sessionWidget)
@@ -385,6 +409,20 @@ void ActionManager::updateGeneralActions(SessionStackedWidget* page)
     action("file_export_html")->setEnabled(!sw->isEmpty());
     action("html_fix_all")->setEnabled(!sw->isEmpty() && sw->stopped());
     action("find_unreferred_documents")->setEnabled(!sw->isEmpty() && sw->stopped());
+}
+
+void ActionManager::slotFillGotoViewPopup()
+{
+    QMenu* menu = d->gotoViewAction->menu();
+    menu->clear();
+
+    SessionStackedWidget* widget = d->tabWidgetSession->currentWidget();
+    if(widget->sessionWidget()) {
+        menu->addAction(action("linkcheck_view"));
+    }
+    if(widget->unreferredDocumentsWidget()) {
+        menu->addAction(action("unreferred_docs_view"));
+    }
 }
 
 

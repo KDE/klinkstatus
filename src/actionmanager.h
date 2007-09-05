@@ -57,6 +57,9 @@ public:
 public slots:
     void slotUpdateActions(SessionStackedWidget*);
 
+private slots:
+    void slotFillGotoViewPopup();
+    
 private:
     // start, pause and stop
     void updatePlayActions(SessionStackedWidget*);

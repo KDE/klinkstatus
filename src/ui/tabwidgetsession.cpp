@@ -264,6 +264,30 @@ void TabWidgetSession::slotFindUnreferredDocuments()
     ActionManager::getInstance()->slotUpdateActions(current);
 }
 
+void TabWidgetSession::slotShowLinkCheckView()
+{
+    SessionStackedWidget* widget = currentWidget();
+
+    if(widget->isSessionWidgetActive())
+        return;
+    
+    widget->setCurrentWidget(widget->sessionWidget());
+
+    ActionManager::getInstance()->slotUpdateActions(widget);
+}
+    
+void TabWidgetSession::slotShowUnreferredDocumentsView()
+{
+    SessionStackedWidget* widget = currentWidget();
+
+    if(widget->isUnreferredDocumentsWidgetActive())
+        return;
+    
+    widget->setCurrentWidget(widget->unreferredDocumentsWidget());
+
+    ActionManager::getInstance()->slotUpdateActions(widget);
+}
+
 void TabWidgetSession::slotPreviousView()
 {
     SessionStackedWidget* widget = currentWidget();

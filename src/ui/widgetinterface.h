@@ -23,9 +23,11 @@
 
 #include <QWidget>
     
+
 class WidgetInterface : public QWidget
 {
 public:
+
     WidgetInterface(QWidget* parent);
 };
 

@@ -50,6 +50,8 @@ public:
     /** Returns the first empty session it finds */
     SessionWidget* getEmptySession() const;
     
+    SessionStackedWidget* currentWidget() const;
+    SessionStackedWidget* widget(int index) const;
 
 public slots:
     void slotNewSession(KUrl const& url = KUrl());
@@ -57,6 +59,8 @@ public slots:
     void updateTabLabel(SessionStackedWidget*);
     void slotLoadSettings();
 
+    void slotShowLinkCheckView();
+    void slotShowUnreferredDocumentsView();
     void slotPreviousView();
     void slotNextView();
     void slotPreviousSession();
@@ -85,9 +89,6 @@ private slots:
     
 private:
     void addNewSession(KUrl const& url);
-
-    SessionStackedWidget* currentWidget() const;
-    SessionStackedWidget* widget(int index) const;
 
 private:
     QToolButton* tabs_close_;
