@@ -260,7 +260,8 @@ void SessionWidget::slotCheck()
     if(!url.protocol().startsWith("http"))
     {
         KUrl dir = url;
-        dir.setPath(url.directory());
+        QString documentRootHint = url.directory().isEmpty() ? "/" : url.directory();
+        dir.setPath(documentRootHint);
         DocumentRootDialog dialog(this, dir);
         dialog.exec();
         search_manager_->setDocumentRoot(dialog.url());
@@ -739,7 +740,7 @@ void SessionWidget::slotApplyFilter(LinkMatcher link_matcher)
     tree_view->show(link_matcher);
 }
 
-void SessionWidget::slotExportAsHTML( )
+void SessionWidget::slotExportAsHTML()
 {
     KUrl url = KFileDialog::getSaveUrl(KUrl(), "text/html", 0, i18n("Export Results as HTML"));
 

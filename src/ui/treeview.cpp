@@ -124,10 +124,14 @@ void TreeView::removeColunas()
 
 void TreeView::show(LinkMatcher const& link_matcher)
 {
+    window()->setCursor(Qt::WaitCursor);
+    
     for(int i = 0; i != topLevelItemCount(); ++i) {
         QTreeWidgetItem* item = topLevelItem(i);
         setItemVisibleRecursively(item, link_matcher);
     }
+
+    window()->setCursor(Qt::ArrowCursor);
 }
 
 bool TreeView::isVisible(QTreeWidgetItem* item, LinkMatcher const& link_matcher) const
@@ -156,6 +160,16 @@ void TreeView::setItemVisibleRecursively(QTreeWidgetItem* item, LinkMatcher cons
         QTreeWidgetItem* child = item->child(i);
         setItemVisibleRecursively(child, link_matcher);
     }
+
+    if(link_matcher.matches(*(myItem(item)->linkStatus()))) {
+        item->setForeground(col_url_ - 1, QBrush(myItem(item)->textStatusColor(col_url_)));
+        item->setForeground(col_label_ - 1, QBrush(myItem(item)->textStatusColor(col_label_)));
+    }
+    // doesn't match but has children who do
+    else {
+        item->setForeground(col_url_ - 1, QBrush(Qt::lightGray));
+        item->setForeground(col_label_ - 1, QBrush(Qt::lightGray));
+    }
 }
 
 
@@ -165,6 +179,8 @@ void TreeView::showAll()
         QTreeWidgetItem* item = topLevelItem(i);
         setItemVisibleRecursively(item, false);
         item->setHidden(false);
+        item->setForeground(col_url_ - 1, QBrush(myItem(item)->textStatusColor(col_url_)));
+        item->setForeground(col_label_ - 1, QBrush(myItem(item)->textStatusColor(col_label_)));
     }
 }
 
@@ -229,7 +245,9 @@ void TreeView::addLinksWithCriteriaRecursively(QList<LinkStatus*>& items, TreeVi
 
 void TreeView::setItemVisibleRecursively(QTreeWidgetItem* item, bool hidden)
 {
-    setHidden(hidden);
+    item->setHidden(hidden);
+    item->setForeground(col_url_ - 1, myItem(item)->textStatusColor(col_url_));
+    item->setForeground(col_label_ - 1, myItem(item)->textStatusColor(col_label_));
 
     for(int i = 0; i != item->childCount(); ++i) {
         QTreeWidgetItem* child = item->child(i);
@@ -460,7 +478,7 @@ void TreeViewItem::init(LinkStatus* linkstatus)
         }
 
         setIcon(item.columnIndex() - 1, item.pixmap(i + 1));
-        setForeground(item.columnIndex() - 1, QBrush(item.textStatusColor()));
+        setForeground(item.columnIndex() - 1, QBrush(textStatusColor(item.columnIndex())));
     }
 }
 
@@ -498,6 +516,36 @@ LinkStatus* TreeViewItem::linkStatus() const
     return column_items_[0].linkStatus();
 }
 
+QColor const TreeViewItem::textStatusColor(int columnIndex) const
+{
+    if(columnIndex == root_->urlColumnIndex() || columnIndex == root_->statusColumnIndex())
+    {
+        if(linkStatus()->status() == LinkStatus::BROKEN)
+            return Qt::red;
+        else if(linkStatus()->status() == LinkStatus::HTTP_CLIENT_ERROR)
+            return Qt::red;
+        else if(linkStatus()->status() == LinkStatus::HTTP_REDIRECTION)
+            return Qt::black;
+        else if(linkStatus()->status() == LinkStatus::HTTP_SERVER_ERROR)
+            return Qt::darkMagenta;
+        else if(linkStatus()->status() == LinkStatus::MALFORMED)
+            return Qt::red;
+        else if(linkStatus()->status() == LinkStatus::NOT_SUPPORTED)
+            return Qt::lightGray;
+        else if(linkStatus()->status() == LinkStatus::SUCCESSFULL)
+            return Qt::black;
+        else if(linkStatus()->status() == LinkStatus::TIMEOUT)
+            return Qt::darkMagenta;
+        else if(linkStatus()->status() == LinkStatus::UNDETERMINED)
+            return Qt::blue;
+
+        return Qt::red;
+    }
+    else
+        return Qt::black;
+}
+
+
 /* ******************************* TreeColumnViewItem ******************************* */
 
 TreeColumnViewItem::TreeColumnViewItem(TreeView* root, LinkStatus* linkstatus, int column_index)
@@ -528,36 +576,6 @@ LinkStatus* TreeColumnViewItem::linkStatus() const
     Q_ASSERT(ls_);
     return ls_;
 }
-
-QColor const TreeColumnViewItem::textStatusColor() const
-{
-    if(columnIndex() == root_->urlColumnIndex() || columnIndex() == root_->statusColumnIndex())
-    {
-        if(linkStatus()->status() == LinkStatus::BROKEN)
-            return Qt::red;
-        else if(linkStatus()->status() == LinkStatus::HTTP_CLIENT_ERROR)
-            return Qt::red;
-        else if(linkStatus()->status() == LinkStatus::HTTP_REDIRECTION)
-            return Qt::black;
-        else if(linkStatus()->status() == LinkStatus::HTTP_SERVER_ERROR)
-            return Qt::darkMagenta;
-        else if(linkStatus()->status() == LinkStatus::MALFORMED)
-            return Qt::red;
-        else if(linkStatus()->status() == LinkStatus::NOT_SUPPORTED)
-            return Qt::lightGray;
-        else if(linkStatus()->status() == LinkStatus::SUCCESSFULL)
-            return Qt::black;
-        else if(linkStatus()->status() == LinkStatus::TIMEOUT)
-            return Qt::darkMagenta;
-        else if(linkStatus()->status() == LinkStatus::UNDETERMINED)
-            return Qt::blue;
-
-        return Qt::red;
-    }
-    else
-        return Qt::black;
-}
-
 
 QString TreeColumnViewItem::text(int column) const
 {

@@ -30,7 +30,7 @@
 static const char description[] =
     I18N_NOOP("A Link Checker.\n\nKLinkStatus belongs to the kdewebdev module from KDE.");
 
-static const char version[] = "0.3.80";
+static const char version[] = "0.3.92";
 
 int main(int argc, char *argv[])
 {

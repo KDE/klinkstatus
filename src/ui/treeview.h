@@ -93,7 +93,7 @@ private:
     bool isVisible(QTreeWidgetItem* item, LinkMatcher const& link_matcher) const;
     void setItemVisibleRecursively(QTreeWidgetItem* item, LinkMatcher const& link_matcher);
     void setItemVisibleRecursively(QTreeWidgetItem* item, bool hidden);
-
+    
     static TreeViewItem* myItem(QTreeWidgetItem* item);
     QList<LinkStatus*> getLinksWithCriteria(LinkMatcher const& link_matcher) const;
     void addLinksWithCriteriaRecursively(QList<LinkStatus*>& items, TreeViewItem* item, LinkMatcher const& link_matcher) const;
@@ -129,6 +129,8 @@ public:
     QString key(int column, bool) const;
     LinkStatus* linkStatus() const;
 
+    QColor const textStatusColor(int column) const;
+
   private:
     void init(LinkStatus* linkstatus);
 
@@ -153,7 +155,6 @@ public:
     //void setColumnIndex(int i);
     int columnIndex() const;
     LinkStatus* linkStatus() const;
-    QColor const textStatusColor() const;
     QString text(int column) const;
     QPixmap pixmap(int column) const;
 
