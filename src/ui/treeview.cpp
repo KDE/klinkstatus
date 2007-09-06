@@ -55,6 +55,7 @@ TreeView::TreeView(QWidget *parent)
 //     setFocusPolicy( WheelFocus );
     setRootIsDecorated(KLSConfig::displayTreeView());
     setAlternatingRowColors(true);
+    // For status tip
     setMouseTracking(true);
     setContextMenuPolicy(Qt::CustomContextMenu);
     // This one is *very* important for performance
@@ -126,10 +127,14 @@ void TreeView::show(LinkMatcher const& link_matcher)
 {
     window()->setCursor(Qt::WaitCursor);
     
+    setUpdatesEnabled(false);
+
     for(int i = 0; i != topLevelItemCount(); ++i) {
         QTreeWidgetItem* item = topLevelItem(i);
         setItemVisibleRecursively(item, link_matcher);
     }
+
+    setUpdatesEnabled(true);
 
     window()->setCursor(Qt::ArrowCursor);
 }
