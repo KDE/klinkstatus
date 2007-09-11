@@ -54,7 +54,8 @@ K_PLUGIN_FACTORY(KLinkStatusFactory, registerPlugin<KLinkStatusPart>();)
 K_EXPORT_PLUGIN(KLinkStatusFactory("klinkstatuspart"))
 
     
-KLinkStatusPart::KLinkStatusPart(QObject *parent,
+KLinkStatusPart::KLinkStatusPart(QWidget* parentWidget,
+                                 QObject *parent,
                                  const QVariantList&)
     : KParts::ReadOnlyPart(parent), m_dlgAbout(0)
 {
@@ -66,8 +67,7 @@ KLinkStatusPart::KLinkStatusPart(QObject *parent,
 
     new ISearchManager(this);
     
-//     tabwidget_ = new TabWidgetSession(parentWidget);
-    tabwidget_ = new TabWidgetSession(0);
+    tabwidget_ = new TabWidgetSession(parentWidget);
     setWidget(tabwidget_);
     action_manager_->initTabWidget(tabwidget_);
 
