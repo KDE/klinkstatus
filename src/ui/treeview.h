@@ -52,7 +52,7 @@ public:
 
     virtual void setColumns(QStringList const& columns);
     virtual void clear();
-    void removeColunas();
+    void removeColumns();
     void show(LinkMatcher const& link_matcher);
     virtual void showAll();
     
@@ -129,7 +129,8 @@ public:
     QString key(int column, bool) const;
     LinkStatus* linkStatus() const;
 
-    QColor const textStatusColor(int column) const;
+    QColor const foregroundColor(int column) const;
+    QColor const backgroundColor(int column) const;
 
   private:
     void init(LinkStatus* linkstatus);

@@ -54,7 +54,7 @@ TreeView::TreeView(QWidget *parent)
 //     setShowSortIndicator(true);
 //     setFocusPolicy( WheelFocus );
     setRootIsDecorated(KLSConfig::displayTreeView());
-    setAlternatingRowColors(true);
+//     setAlternatingRowColors(true);
     // For status tip
     setMouseTracking(true);
     setContextMenuPolicy(Qt::CustomContextMenu);
@@ -78,7 +78,7 @@ TreeView::~TreeView()
 void TreeView::setColumns(QStringList const& columns)
 {
     ResultView::setColumns(columns);
-    removeColunas();
+    removeColumns();
     setColumnCount(columns.size());
     setHeaderLabels(columns);
     resetColumns();
@@ -118,7 +118,7 @@ void TreeView::clear()
     QTreeWidget::clear();
 }
 
-void TreeView::removeColunas()
+void TreeView::removeColumns()
 {
     clear();
 }
@@ -167,8 +167,8 @@ void TreeView::setItemVisibleRecursively(QTreeWidgetItem* item, LinkMatcher cons
     }
 
     if(link_matcher.matches(*(myItem(item)->linkStatus()))) {
-        item->setForeground(col_url_ - 1, QBrush(myItem(item)->textStatusColor(col_url_)));
-        item->setForeground(col_label_ - 1, QBrush(myItem(item)->textStatusColor(col_label_)));
+        item->setForeground(col_url_ - 1, QBrush(myItem(item)->foregroundColor(col_url_)));
+        item->setForeground(col_label_ - 1, QBrush(myItem(item)->foregroundColor(col_label_)));
     }
     // doesn't match but has children who do
     else {
@@ -184,8 +184,8 @@ void TreeView::showAll()
         QTreeWidgetItem* item = topLevelItem(i);
         setItemVisibleRecursively(item, false);
         item->setHidden(false);
-        item->setForeground(col_url_ - 1, QBrush(myItem(item)->textStatusColor(col_url_)));
-        item->setForeground(col_label_ - 1, QBrush(myItem(item)->textStatusColor(col_label_)));
+        item->setForeground(col_url_ - 1, QBrush(myItem(item)->foregroundColor(col_url_)));
+        item->setForeground(col_label_ - 1, QBrush(myItem(item)->foregroundColor(col_label_)));
     }
 }
 
@@ -251,8 +251,8 @@ void TreeView::addLinksWithCriteriaRecursively(QList<LinkStatus*>& items, TreeVi
 void TreeView::setItemVisibleRecursively(QTreeWidgetItem* item, bool hidden)
 {
     item->setHidden(hidden);
-    item->setForeground(col_url_ - 1, myItem(item)->textStatusColor(col_url_));
-    item->setForeground(col_label_ - 1, myItem(item)->textStatusColor(col_label_));
+    item->setForeground(col_url_ - 1, myItem(item)->foregroundColor(col_url_));
+    item->setForeground(col_label_ - 1, myItem(item)->foregroundColor(col_label_));
 
     for(int i = 0; i != item->childCount(); ++i) {
         QTreeWidgetItem* child = item->child(i);
@@ -483,7 +483,8 @@ void TreeViewItem::init(LinkStatus* linkstatus)
         }
 
         setIcon(item.columnIndex() - 1, item.pixmap(i + 1));
-        setForeground(item.columnIndex() - 1, QBrush(textStatusColor(item.columnIndex())));
+        setForeground(item.columnIndex() - 1, QBrush(foregroundColor(item.columnIndex())));
+        setBackground(item.columnIndex() - 1, QBrush(backgroundColor(item.columnIndex())));
     }
 }
 
@@ -521,7 +522,7 @@ LinkStatus* TreeViewItem::linkStatus() const
     return column_items_[0].linkStatus();
 }
 
-QColor const TreeViewItem::textStatusColor(int columnIndex) const
+QColor const TreeViewItem::foregroundColor(int columnIndex) const
 {
     if(columnIndex == root_->urlColumnIndex() || columnIndex == root_->statusColumnIndex())
     {
@@ -548,6 +549,22 @@ QColor const TreeViewItem::textStatusColor(int columnIndex) const
     }
     else
         return Qt::black;
+}
+
+QColor const TreeViewItem::backgroundColor(int columnIndex) const
+{
+    if(columnIndex != root_->urlColumnIndex()) {
+      return Qt::transparent;
+    }
+
+    if(!linkStatus()->local()) {
+        QColor color(Qt::blue);
+        color.setAlpha(30);
+        return color.lighter();
+    }
+    else {
+        return Qt::transparent;
+    }
 }
 
 

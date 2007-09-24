@@ -23,18 +23,18 @@
 
 #include <kurl.h>
 #include <kdebug.h>
-class TreeView;
-class TreeViewItem;
 
 #include <QString>
 #include <QSet>
-class QDomElement;
-
 #include <QList>
+class QDomElement;
 
 #include "parser/http.h"
 #include "tidy/markupvalidator.h"
 class Node;
+class TreeView;
+class TreeViewItem;
+
 
 class LinkStatus
 {

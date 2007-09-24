@@ -729,12 +729,12 @@ void SessionWidget::slotApplyFilter(LinkMatcher link_matcher)
     if(link_matcher.hasCriteria()) {
 //         kDebug(23100) << "has criteria";
 //         resultsSearchBar->setStyleSheet(QString("border: 1px solid blue"));
-        resultsSearchBar->setBackgroundRole(QPalette::Highlight);
+//         resultsSearchBar->setBackgroundRole(QPalette::Highlight);
     }
     else {
 //         kDebug(23100) << "not has criteria";
 //         resultsSearchBar->setStyleSheet(QString(""));
-        resultsSearchBar->setBackgroundRole(QPalette::Window);
+//         resultsSearchBar->setBackgroundRole(QPalette::Window);
     }
 
     tree_view->show(link_matcher);
