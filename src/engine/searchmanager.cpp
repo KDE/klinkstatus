@@ -337,6 +337,13 @@ void SearchManager::fillWithChildren(LinkStatus* link, QList<LinkStatus*>& child
         else
             url = Url::normalizeUrl(node->url(), *link, documentRoot().toLocalFile());
 
+//         kDebug(23100) << "NODE URL: " << url << endl;
+//         kDebug(23100) << "node->isLink(): " << node->isLink() << endl;
+//         kDebug(23100) << "checkable(url, *link): " << checkable(url, *link) << endl;
+//         kDebug(23100) << "!children_hash.contains(url): " << !children_hash.contains(url) << endl;
+//         kDebug(23100) << "!node->url().isEmpty(): " << !node->url().isEmpty() << endl;
+//         kDebug(23100) << "node->malformed(): " << node->malformed() << endl;
+
         if( (node->isLink() &&
                 checkable(url, *link) &&
                 !children_hash.contains(url) &&
@@ -376,6 +383,8 @@ void SearchManager::fillWithChildren(LinkStatus* link, QList<LinkStatus*>& child
 
             children.push_back(ls);
             children_hash.insert(url, ls);
+
+//             kDebug(23100) << "Going in: " << url << endl;
         }
     }
             

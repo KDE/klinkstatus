@@ -259,24 +259,6 @@ inline HttpResponseHeader& LinkStatus::httpHeader()
     return http_header_;
 }
 
-inline QString LinkStatus::statusText() const
-{
-    if(errorOccurred())
-        return error();
-    else if(!absoluteUrl().protocol().startsWith("http"))
-        return status_text_;
-    else
-    {
-        QString string_code = QString::number(httpHeader().statusCode());
-        if(absoluteUrl().hasRef()) // ref URL
-            return status_text_;
-        else if(string_code == "200"/* or string_code == "304"*/)
-            return "OK";
-        else
-            return string_code;
-    }
-}
-
 inline QString const& LinkStatus::error() const
 {
     return error_;

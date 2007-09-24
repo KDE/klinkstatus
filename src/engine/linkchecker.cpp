@@ -48,7 +48,7 @@ LinkChecker::LinkChecker(LinkStatus* linkstatus, int time_out,
         parsing_(false), is_charset_checked_(false), has_defined_charset_(false)
 {
     Q_ASSERT(linkstatus_);
-    Q_ASSERT(!linkstatus_->checked());
+//     Q_ASSERT(!linkstatus_->checked()); // rechecks are now implemented
 
     kDebug(23100) << "Checking " << linkstatus_->absoluteUrl().url();
 }
@@ -393,7 +393,7 @@ void LinkChecker::slotResult(KJob* /*job*/)
                 return;
             }
             Q_ASSERT(header_checked_);
-            
+
             ls->setStatus(getHttpStatus());
         }
 
@@ -500,7 +500,7 @@ void LinkChecker::finnish()
 
 HttpResponseHeader LinkChecker::getHttpHeader(KIO::Job* /*job*/, bool remember_check)
 {
-    //kDebug(23100) <<  "LinkChecker::getHttpHeader -> " << linkstatus_->absoluteUrl().url();
+//     kDebug(23100) <<  "LinkChecker::getHttpHeader -> " << linkstatus_->absoluteUrl().url() << endl;
     
     Q_ASSERT(!finnished_);
     Q_ASSERT(t_job_);
@@ -520,6 +520,10 @@ HttpResponseHeader LinkChecker::getHttpHeader(KIO::Job* /*job*/, bool remember_c
     }
     else if(remember_check)
         header_checked_ = true;
+
+    if(header_string == "HTTP-CACHE") {
+        return HttpResponseHeader(304);
+    }
 
     return HttpResponseHeader(header_string);
 }

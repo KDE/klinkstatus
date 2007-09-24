@@ -29,7 +29,8 @@
 
     
 LinkStatus::LinkStatus()
-    : depth_(-1), external_domain_depth_(-1), is_root_(false),
+    : status_(LinkStatus::UNDETERMINED), depth_(-1), external_domain_depth_(-1), error_(-1), 
+        is_root_(false),
         error_occurred_(false), is_redirection_(false), parent_(0), redirection_(0), checked_(false),
         only_check_header_(true), malformed_(false),
         node_(0), has_base_URI_(false), has_html_doc_title_(false), ignored_(false),
@@ -39,7 +40,7 @@ LinkStatus::LinkStatus()
 }
 
 LinkStatus::LinkStatus(KUrl const& absolute_url)
-    : depth_(-1), external_domain_depth_(-1), is_root_(false),
+    : status_(LinkStatus::UNDETERMINED), depth_(-1), external_domain_depth_(-1), error_(-1), is_root_(false),
         error_occurred_(false), is_redirection_(false), parent_(0), redirection_(0), checked_(false),
         only_check_header_(true), malformed_(false),
         node_(0), has_base_URI_(false), has_html_doc_title_(false), ignored_(false),
@@ -50,7 +51,7 @@ LinkStatus::LinkStatus(KUrl const& absolute_url)
 }
 
 LinkStatus::LinkStatus(Node* node, LinkStatus* parent)
-    : depth_(-1), external_domain_depth_(-1), is_root_(false),
+    : status_(LinkStatus::UNDETERMINED), depth_(-1), external_domain_depth_(-1), error_(-1), is_root_(false),
         error_occurred_(false), is_redirection_(false), parent_(0), redirection_(0), checked_(false),
         only_check_header_(true), malformed_(false),
         node_(node), has_base_URI_(false), has_html_doc_title_(false), ignored_(false),
@@ -84,6 +85,32 @@ LinkStatus::~LinkStatus()
             delete redirection_;
             redirection_ = 0;
         }
+    }
+}
+
+QString LinkStatus::statusText() const
+{
+    if(errorOccurred())
+        return error();
+    else if(!absoluteUrl().protocol().startsWith("http"))
+        return status_text_;
+    else
+    {
+//         int statusCode = httpHeader().statusCode();
+//         kDebug(23100) << "Status Code: " << statusCode << endl;
+//         kDebug(23100) << "Status Code Reason Phrase: " << httpHeader().reasonPhrase() << endl;
+
+/*        QString const& reasonPhrase = httpHeader().reasonPhrase();
+        if(reasonPhrase.isEmpty())
+            return status_text_;*/
+        
+        QString string_code = QString::number(httpHeader().statusCode());
+        if(absoluteUrl().hasRef()) // ref URL
+            return status_text_;
+        else if(string_code == "200"/* or string_code == "304"*/)
+            return "OK";
+        else
+            return string_code;
     }
 }
 

@@ -32,6 +32,7 @@ public:
   HttpResponseHeader();
   HttpResponseHeader(const QHttpResponseHeader& header);
   explicit HttpResponseHeader(QString const& str);
+  explicit HttpResponseHeader(int code, const QString& text = QString(), int majorVer = 1, int minorVer = 1);
   virtual ~HttpResponseHeader();
 
   void parseLocation();
@@ -64,7 +65,14 @@ inline HttpResponseHeader::HttpResponseHeader(const QHttpResponseHeader& header)
 inline HttpResponseHeader::HttpResponseHeader(QString const& str)
   : QHttpResponseHeader()
 {
+    // Needed - do NOT remove
 	parse(str);
+}
+
+inline HttpResponseHeader::HttpResponseHeader(int code, const QString& text, int majorVer, int minorVer)
+  : QHttpResponseHeader(code, text, majorVer, minorVer)
+{
+
 }
 
 inline HttpResponseHeader::~HttpResponseHeader()

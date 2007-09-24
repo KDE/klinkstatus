@@ -118,6 +118,7 @@ void HtmlParser::parseNodesOfType(QString const& tipo, QString const& document, 
         node = doc.mid(inicio - tag_begining_go_back,
                        fim - inicio + tag_begining_go_back);
         nodes.push_back(node);
+//         kDebug(23100) << "NODE: " << node << endl;
         doc.remove(0, fim);
     }
 }

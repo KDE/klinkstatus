@@ -155,6 +155,9 @@ QList<QString> tokenizeWordsSeparatedByDots(QString const& _s)
 
 QList<QString> tokenizeWordsSeparatedBy(QString const& _s, const QChar & criteria)
 {
+    if(_s.isEmpty())
+        return QList<QString> ();
+  
     QList<QString> v;
     QString s(_s);
 
