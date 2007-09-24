@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
     about.addAuthor(ki18n("Paulo Moura Guedes"), KLocalizedString(), "moura@kdewebdev.org");
 
     about.addCredit(ki18n("Manuel Menezes de Sequeira"), KLocalizedString(), 0, "http://home.iscte.pt/~mms/");
-    about.addCredit(ki18n("Gonçalo Silva"), KLocalizedString(), "gngs@paradigma.co.pt");
+    about.addCredit(ki18n("Gonçalo Silva"), KLocalizedString(), "http://paradigma.pt/gngs/");
     about.addCredit(ki18n("Nuno Monteiro"), KLocalizedString(), 0, "http://www.itsari.org");
     about.addCredit(ki18n("Eric Laffoon"), KLocalizedString(), "sequitur@kde.org");
     about.addCredit(ki18n("Andras Mantia"), KLocalizedString(), "amantia@kde.org");

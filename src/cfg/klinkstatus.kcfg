@@ -79,7 +79,7 @@
 
         <entry key="ShowMarkupStatus" type="Bool" >
             <label>Whether the user can see if the markup is valid by showing a column with an icon indicator.</label>
-            <default>true</default>
+            <default>false</default>
         </entry>
         
     </group>

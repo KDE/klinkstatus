@@ -93,7 +93,7 @@ void ActionManager::initPart(KLinkStatusPart* part)
     // *************** File menu *********************
 
     action = d->actionCollection->addAction( "new_link_check" );
-    action->setText( i18n("New Link Check") );
+    action->setText( i18n("New Session") );
     action->setIcon( KIcon("document-new") );
     action->setShortcuts(KStandardShortcut::shortcut(KStandardShortcut::New));
     connect(action, SIGNAL(triggered(bool) ), d->part, SLOT(slotNewLinkCheck()));
@@ -106,7 +106,7 @@ void ActionManager::initPart(KLinkStatusPart* part)
 
 
     action = d->actionCollection->addAction( "close_tab" );
-    action->setText(i18n("Close Tab"));
+    action->setText(i18n("Close Session"));
     action->setIcon(KIcon("tab-remove") );
     action->setShortcuts(KStandardShortcut::shortcut(KStandardShortcut::Close));
     connect(action, SIGNAL(triggered(bool) ), d->part, SLOT(slotClose()));

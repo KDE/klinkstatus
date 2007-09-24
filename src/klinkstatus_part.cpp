@@ -186,7 +186,7 @@ KAboutData* KLinkStatusPart::createAboutData()
     about->addCredit(ki18n("Mathieu Kooiman"), KLocalizedString(), " quanta@map-is.nl");
     about->addCredit(ki18n("Jens Herden"), KLocalizedString(), "jens@kdewebdev.org");
 
-    KGlobal::dirs()->addResourceType("appicon", KStandardDirs::kde_default("data") + "klinkstatuspart/pics/");
+    KGlobal::dirs()->addResourceType("appicon", "data", "klinkstatuspart/pics/");
 
     return about;
 }

@@ -85,7 +85,7 @@ SessionWidget::SessionWidget(int max_simultaneous_connections, int time_out,
     connect(this, SIGNAL(signalSearchStarted()),
             this, SLOT(slotSearchStarted()));
 
-    connect(combobox_url, SIGNAL(textChanged(const QString&)),
+    connect(combobox_url, SIGNAL(editTextChanged(const QString&)),
             this, SLOT(slotEnableCheckButton(const QString&)));
 
     connect(&elapsed_time_timer_, SIGNAL(timeout()),
