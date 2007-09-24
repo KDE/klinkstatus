@@ -144,6 +144,8 @@ void SessionWidget::saveCurrentCheckSettings()
     KLSConfig::setDepth(spinbox_depth->value());
     KLSConfig::setCheckParentFolders(!checkbox_subdirs_only->isChecked());
     KLSConfig::setCheckExternalLinks(checkbox_external_links->isChecked());
+    KToggleAction* followLinks = static_cast<KToggleAction*> (ActionManager::getInstance()->action("follow_last_link_checked"));
+    KLSConfig::setFollowLastLinkChecked(followLinks->isChecked());
 
     KLSConfig::self()->writeConfig();
 }

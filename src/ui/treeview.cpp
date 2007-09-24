@@ -559,7 +559,7 @@ QColor const TreeViewItem::backgroundColor(int columnIndex) const
 
     if(!linkStatus()->local()) {
         QColor color(Qt::blue);
-        color.setAlpha(30);
+        color.setAlpha(35);
         return color.lighter();
     }
     else {
