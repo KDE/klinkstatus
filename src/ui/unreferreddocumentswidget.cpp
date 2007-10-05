@@ -143,7 +143,7 @@ void UnreferredDocumentsWidget::slotStartSearch()
 
     m_ui.progressLabel->setText(i18n("Crawling folders..."));
     
-    KIO::ListJob* job = KIO::listRecursive(m_baseDirectory, false, false);
+    KIO::ListJob* job = KIO::listRecursive(m_baseDirectory, KIO::HideProgressInfo, false);
     
     connect(job, SIGNAL(entries(KIO::Job*, const KIO::UDSEntryList&)),
             this, SLOT(slotEntries(KIO::Job*, const KIO::UDSEntryList&)));
@@ -235,7 +235,7 @@ void UnreferredDocumentsWidget::deleteDocuments(bool onlyChecked)
         itemsToDelete.push_back(url);
     }
 
-    KJob* job = KIO::del(itemsToDelete, false, true);
+    KJob* job = KIO::del(itemsToDelete);
     connect(job, SIGNAL(result(KJob*)),
             this, SLOT(slotResultItemsDeleted(KJob*)));
 }

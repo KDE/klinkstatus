@@ -74,8 +74,7 @@ void LinkChecker::check()
     }
     else
     {
-        t_job_ = KIO::get
-                     (url, false, false);
+        t_job_ = KIO::get(url, KIO::NoReload, KIO::HideProgressInfo);
 
         t_job_->addMetaData("PropagateHttpHeader", "true"); // to have the http header
         if(search_manager_->sendIdentification())
