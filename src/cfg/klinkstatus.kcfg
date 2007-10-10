@@ -58,6 +58,11 @@
             <default>true</default>
         </entry>
         
+        <entry key="DisplayFlatView" type="Bool" >
+            <label>Whether to display a tree view or a flat view in the results view.</label>
+            <default>false</default>
+        </entry>
+    
         <entry key="AutoAdjustColumnWidth" type="Bool" >
             <label>Whether to automatically adjust the width of the result columns (Not used).</label>
             <default>false</default>

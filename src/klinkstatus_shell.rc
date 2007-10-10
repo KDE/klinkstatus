@@ -16,9 +16,9 @@
       <Separator/>
   </Menu>
 
-  <Menu noMerge="1" name="validate"><text>&amp;Validate</text>
+<!--  <Menu noMerge="1" name="validate"><text>&amp;Validate</text>
       <Separator/>
-  </Menu>
+  </Menu>-->
 
   <Menu noMerge="1" name="window"><text>&amp;Window</text>
       <Separator/>
