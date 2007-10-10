@@ -37,17 +37,17 @@
             <Action name="find_unreferred_documents"/>
         </Menu>
 
-        <Menu name="validate"><text>&amp;Validate</text>
+<!--        <Menu name="validate"><text>&amp;Validate</text>
             <Action name="html_fix_all"/>
-<!--            <Separator/>
+            <Separator/>
             <Action name="html_fix"/>
             <Separator/>
             <Menu name="manual_validation"><text>Manual Fix</text>
                 <Action name="guided_editing"/>
                 <Action name="compare_and_apply"/>
             </Menu>
-            <Action name="edit_document"/>-->
-        </Menu>
+            <Action name="edit_document"/>
+        </Menu>-->
 
         <Menu name="window"><text>&amp;Window</text>
             <Action name="linkcheck_view"/>

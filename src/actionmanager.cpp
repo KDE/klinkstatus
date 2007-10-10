@@ -178,11 +178,11 @@ void ActionManager::initTabWidget(TabWidgetSession* tabWidgetSession)
     action->setShortcut(KShortcut("F5"));
 
     toggle_action  = new KToggleAction(KIcon("color-line"), i18n("&Disable Updates on Results Table"), this);
-    toggle_action->setToolTip("Disable Updates on Results Tables (faster)");
+    toggle_action->setToolTip("Disable Updates on Results Table (faster)");
     actionCollection()->addAction("disable_update_results_table", toggle_action);
     connect(toggle_action, SIGNAL(triggered(bool)), d->tabWidgetSession, SLOT(slotDisableUpdatesOnResultsTable(bool)));
     toggle_action->setShortcut(KShortcut("Ctrl+u"));
-    item = KGuiItem(i18n("&Enable Updates on Results Table"), "color-line", "Enable Updates on Results Tables (slower)");
+    item = KGuiItem(i18n("&Enable Updates on Results Table"), "color-line", "Enable Updates on Results Table (slower)");
     toggle_action->setCheckedState(item);
 
     
