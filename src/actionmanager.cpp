@@ -156,17 +156,20 @@ void ActionManager::initTabWidget(TabWidgetSession* tabWidgetSession)
 
     //     this action must be in the tabwidget because the slot can't be connected to a particular sessionWidget
     KToggleAction *toggle_action  = new KToggleAction(KIcon("goto-page"), i18n("&Follow last Link checked"), this);
+    toggle_action->setToolTip("Follow last Link checked (slower)");
     actionCollection()->addAction("follow_last_link_checked", toggle_action );
     connect(toggle_action, SIGNAL(triggered(bool)), d->tabWidgetSession, SLOT(slotFollowLastLinkChecked()));
     toggle_action->setShortcut(KShortcut("Ctrl+f"));
     toggle_action->setChecked(KLSConfig::followLastLinkChecked());
+    KGuiItem item(i18n("&Do not follow last Link checked"), "goto-page", "Do not follow last Link checked (faster)");
+    toggle_action->setCheckedState(item);
 
     //     this action must be in the tabwidget because the slot can't be connected to a particular sessionWidget
     toggle_action  = new KToggleAction(KIcon("go-bottom"), i18n("&Hide Search Panel"), this);
     actionCollection()->addAction("hide_search_bar", toggle_action );
     connect(toggle_action, SIGNAL(triggered(bool)), d->tabWidgetSession, SLOT(slotHideSearchPanel()));
     toggle_action->setShortcut(KShortcut("Ctrl+h"));
-    KGuiItem item(i18n("&Show Search Panel"), "go-top", "Show Search Panel");
+    item = KGuiItem(i18n("&Show Search Panel"), "go-top", "Show Search Panel");
     toggle_action->setCheckedState(item);
 
     action  = new KAction(KIcon("view-refresh"), i18n("&Reset Search Options"), this);
@@ -181,7 +184,6 @@ void ActionManager::initTabWidget(TabWidgetSession* tabWidgetSession)
     toggle_action->setShortcut(KShortcut("Ctrl+u"));
     item = KGuiItem(i18n("&Enable Updates on Results Table"), "color-line", "Enable Updates on Results Tables (slower)");
     toggle_action->setCheckedState(item);
-    toggle_action-
 
     
     // *************** Search menu *********************

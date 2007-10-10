@@ -21,6 +21,7 @@
             <Action name="reset_search_bar"/>
             <Separator/>
             <Action name="follow_last_link_checked"/>
+            <Action name="disable_update_results_table"/>
         </Menu>
         
         <Menu name="search"><text>S&amp;earch</text>
@@ -79,9 +80,9 @@
         <Separator/>
         <Action name="hide_search_bar"/>
         <Action name="reset_search_bar"/>
-        <Action name="disable_update_results_table"/>
         <Separator/>
         <Action name="follow_last_link_checked"/>
+        <Action name="disable_update_results_table"/>
         <Separator/>
         <Action name="next_view_list"/>
     </ToolBar>
