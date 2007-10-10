@@ -132,6 +132,8 @@ public:
     bool hasHtmlErrors() const;
     bool hasHtmlWarnings() const;
 
+//     static int instances;
+  
 private:
 
     /**

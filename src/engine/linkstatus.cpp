@@ -27,6 +27,8 @@
 #include "../parser/node.h"
 #include "../ui/treeview.h"
 
+
+// int LinkStatus::instances = 0;
     
 LinkStatus::LinkStatus()
     : status_(LinkStatus::UNDETERMINED), depth_(-1), external_domain_depth_(-1), error_(-1), 
@@ -37,6 +39,8 @@ LinkStatus::LinkStatus()
         mimetype_(""), is_error_page_(false), tree_view_item_(0), 
         tidy_info_()
 {
+//     ++instances;
+//     kDebug(23100) << "LinkStatus instances: " << LinkStatus::instances << endl;
 }
 
 LinkStatus::LinkStatus(KUrl const& absolute_url)
@@ -47,6 +51,8 @@ LinkStatus::LinkStatus(KUrl const& absolute_url)
         mimetype_(""), is_error_page_(false), tree_view_item_(0), 
         tidy_info_()
 {
+//     ++instances;
+//     kDebug(23100) << "LinkStatus instances: " << LinkStatus::instances << endl;
     setAbsoluteUrl(absolute_url);
 }
 
@@ -58,6 +64,8 @@ LinkStatus::LinkStatus(Node* node, LinkStatus* parent)
         mimetype_(""), is_error_page_(false), tree_view_item_(0), 
         tidy_info_()
 {
+//     ++instances;
+//     kDebug(23100) << "LinkStatus instances: " << LinkStatus::instances << endl;
     loadNode();
 
     setDepth(parent->depth() + 1);
@@ -86,6 +94,9 @@ LinkStatus::~LinkStatus()
             redirection_ = 0;
         }
     }
+
+//     --instances;
+//     kDebug(23100) << "LinkStatus instances: " << LinkStatus::instances << endl;
 }
 
 QString LinkStatus::statusText() const

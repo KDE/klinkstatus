@@ -79,6 +79,7 @@
         <Separator/>
         <Action name="hide_search_bar"/>
         <Action name="reset_search_bar"/>
+        <Action name="disable_update_results_table"/>
         <Separator/>
         <Action name="follow_last_link_checked"/>
         <Separator/>

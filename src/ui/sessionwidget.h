@@ -89,6 +89,7 @@ public slots:
     void slotHideSearchPanel();
     void slotResetSearchOptions();
     void slotFollowLastLinkChecked();
+    void slotDisableUpdatesOnResultsTable(bool checked);
     
     void slotExportAsHTML();
 

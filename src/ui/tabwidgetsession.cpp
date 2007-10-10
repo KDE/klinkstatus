@@ -189,6 +189,11 @@ void TabWidgetSession::slotFollowLastLinkChecked()
     currentWidget()->sessionWidget()->slotFollowLastLinkChecked();
 }
 
+void TabWidgetSession::slotDisableUpdatesOnResultsTable(bool checked)
+{
+    currentWidget()->sessionWidget()->slotDisableUpdatesOnResultsTable(checked);
+}
+
 void TabWidgetSession::slotResetSearchOptions()
 {
     currentWidget()->sessionWidget()->slotResetSearchOptions();

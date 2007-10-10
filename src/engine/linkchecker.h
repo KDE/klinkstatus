@@ -89,7 +89,7 @@ private:
     LinkStatus* const linkstatus_;
     KIO::TransferJob* t_job_;
     int time_out_;
-    LinkChecker* checker_;
+//     LinkChecker* checker_;
     QString document_charset_;
 /*  A redirection has appened, with the current URL. Several redirections 
     can happen until the final URL is reached.*/

@@ -121,7 +121,20 @@ void SearchManager::cleanItems()
         search_results_[i].clear();
     }
     search_results_.clear();
-    kDebug(23100);
+
+    for(int i = 0; i != new_level_.size(); ++i)
+    {
+        for(int j = 0; j != new_level_[i].size() ; ++j)
+        {
+            delete (new_level_[i])[j];
+            (new_level_[i])[j] = 0;
+        }
+
+        (new_level_[i]).clear();
+    }
+    new_level_.clear();
+
+//     kDebug(23100) << "Number of LinkStatus instances after cleaning items: " << LinkStatus::instances << endl;
 }
 
 void SearchManager::recheckLinks(QList<LinkStatus*> const& linkstatus_list)
@@ -948,16 +961,14 @@ QString SearchManager::toXML() const
     return doc.toString(4);
 }
 
-// WARNING If there are several SearchManagers, they receive job done from all of them
 void SearchManager::slotJobDone(ThreadWeaver::Job* job)
 {
     AddLevelJob* addLevelJob = dynamic_cast<AddLevelJob*> (job);
     if(addLevelJob) {
         slotLevelAdded();
-        return;
     }
-    
-//     kDebug(23100) << "Job not handled in SearchManager::slotJobDone: " << job;
+
+    delete job;
 }
 
 QStringList SearchManager::findUnreferredDocuments(KUrl const& baseDir, QStringList const& documentList) const

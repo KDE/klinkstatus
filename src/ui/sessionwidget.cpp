@@ -570,6 +570,11 @@ void SessionWidget::slotFollowLastLinkChecked()
     follow_last_link_checked_ = !follow_last_link_checked_;
 }
 
+void SessionWidget::slotDisableUpdatesOnResultsTable(bool checked)
+{
+    tree_view->setUpdatesEnabled(!checked);
+}
+
 void SessionWidget::slotResetSearchOptions()
 {
     slotLoadSettings(true);

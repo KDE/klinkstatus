@@ -43,7 +43,7 @@
 LinkChecker::LinkChecker(LinkStatus* linkstatus, int time_out,
                          QObject *parent)
         : QObject(parent), search_manager_(0),
-        linkstatus_(linkstatus), t_job_(0), time_out_(time_out), checker_(0), document_charset_(), 
+        linkstatus_(linkstatus), t_job_(0), time_out_(time_out), document_charset_(),
         redirection_(false), header_checked_(false), finnished_(false), 
         parsing_(false), is_charset_checked_(false), has_defined_charset_(false)
 {
@@ -54,7 +54,10 @@ LinkChecker::LinkChecker(LinkStatus* linkstatus, int time_out,
 }
 
 LinkChecker::~LinkChecker()
-{}
+{
+    delete t_job_;
+    t_job_ = 0;
+}
 
 void LinkChecker::setSearchManager(SearchManager* search_manager)
 {

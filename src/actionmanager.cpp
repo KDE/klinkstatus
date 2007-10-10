@@ -174,6 +174,16 @@ void ActionManager::initTabWidget(TabWidgetSession* tabWidgetSession)
     connect(action, SIGNAL(triggered(bool) ), d->tabWidgetSession, SLOT(slotResetSearchOptions()));
     action->setShortcut(KShortcut("F5"));
 
+    toggle_action  = new KToggleAction(KIcon("color-line"), i18n("&Disable Updates on Results Table"), this);
+    toggle_action->setToolTip("Disable Updates on Results Tables (faster)");
+    actionCollection()->addAction("disable_update_results_table", toggle_action);
+    connect(toggle_action, SIGNAL(triggered(bool)), d->tabWidgetSession, SLOT(slotDisableUpdatesOnResultsTable(bool)));
+    toggle_action->setShortcut(KShortcut("Ctrl+u"));
+    item = KGuiItem(i18n("&Enable Updates on Results Table"), "color-line", "Enable Updates on Results Tables (slower)");
+    toggle_action->setCheckedState(item);
+    toggle_action-
+
+    
     // *************** Search menu *********************
 
     toggle_action  = new KToggleAction(KIcon("media-playback-start"), i18n("&Start Search"), this);
