@@ -473,7 +473,7 @@ void TreeViewItem::init(LinkStatus* linkstatus)
             setStatusTip(i, QTreeWidgetItem::text(i));
         }
         else if(i + 1 == root_->statusColumnIndex()) {
-            setText(item.columnIndex() - 1, i18n(text.toUtf8()));
+            setText(item.columnIndex() - 1, text.toUtf8());
             setStatusTip(i, linkstatus->statusText());
             setToolTip(i, linkstatus->statusText());
         }
