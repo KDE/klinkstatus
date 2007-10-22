@@ -107,7 +107,7 @@ void ActionManager::initPart(KLinkStatusPart* part)
 
     action = d->actionCollection->addAction( "close_tab" );
     action->setText(i18n("Close Session"));
-    action->setIcon(KIcon("tab-remove") );
+    action->setIcon(KIcon("tab-close") );
     action->setShortcuts(KStandardShortcut::shortcut(KStandardShortcut::Close));
     connect(action, SIGNAL(triggered(bool) ), d->part, SLOT(slotClose()));
     action->setEnabled(false);
