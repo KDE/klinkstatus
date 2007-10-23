@@ -58,7 +58,7 @@ void ISearchManager::checkAndExportToHtml(QString const& optionsFilePath)
 
 void ISearchManager::initSearchManager(SearchManager* searchManager, QString const& optionsFilePath)
 {
-    KConfig config(optionsFilePath, KConfig::OnlyLocal);
+    KConfig config(optionsFilePath, KConfig::SimpleConfig);
     KConfigGroup group = config.group(QString());
 
     KUrl url(group.readEntry("URL"));
