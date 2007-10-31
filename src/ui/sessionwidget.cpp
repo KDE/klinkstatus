@@ -460,7 +460,7 @@ void SessionWidget::slotSearchFinished(SearchManager*)
     resetPendingActions();
     emit signalUpdateActions();
 
-    Global::self()->setStatusBarText(i18n("Finished checking") + ' '
+    Global::setStatusBarText(i18n("Finished checking") + ' '
         + combobox_url->currentText(), false);
 
     emit signalSearchFinnished();
@@ -498,7 +498,7 @@ void SessionWidget::slotSearchPaused()
     resetPendingActions();
     emit signalUpdateActions();
 
-    Global::self()->setStatusBarText(i18n("Paused"), false);
+    Global::setStatusBarText(i18n("Paused"), false);
 
     emit signalSearchPaused();
 }
@@ -688,7 +688,7 @@ void SessionWidget::slotPauseSearch()
 
         resetPendingActions();
 
-        Global::self()->setStatusBarText(i18n("Resuming"), false);
+        Global::setStatusBarText(i18n("Resuming"), false);
     }
 }
 
@@ -778,7 +778,7 @@ void SessionWidget::slotSearchStarted()
     textlabel_elapsed_time_value->setText(QTime(0, 0).toString("hh:mm:ss"));
     elapsed_time_timer_.start();
 
-    Global::self()->setStatusBarText(i18n("Checking") + ' ' + combobox_url->currentText(), false);
+    Global::setStatusBarText(i18n("Checking") + ' ' + combobox_url->currentText(), false);
 }
 
 void SessionWidget::slotLinkRecheck(LinkStatus* ls)
@@ -806,7 +806,7 @@ void SessionWidget::slotLinkRechecked(LinkStatus* ls)
         kError(23100) << "Is redirection: " << ls->isRedirection() << endl;
     }
     if(!in_progress_)
-        Global::self()->setStatusBarText(i18n("Done rechecking ") + ls->absoluteUrl().prettyUrl());
+        Global::setStatusBarText(i18n("Done rechecking ") + ls->absoluteUrl().prettyUrl());
 }
 
 KUrl const& SessionWidget::urlToCheck() const

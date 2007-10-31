@@ -73,7 +73,7 @@ KLinkStatusPart::KLinkStatusPart(QWidget* parentWidget,
 
     openURL(KUrl(""));
     
-    Global::self()->setKLinkStatusPart(this);
+    Global::setKLinkStatusPart(this);
 }
 
 KLinkStatusPart::~KLinkStatusPart()

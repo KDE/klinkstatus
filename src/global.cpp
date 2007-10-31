@@ -26,7 +26,6 @@
     
 #include <kdebug.h>
 #include <kapplication.h>
-#include <k3staticdeleter.h>
 #include <kurl.h>
 #include <KStatusBar>
 #include <kparts/statusbarextension.h>
@@ -35,42 +34,49 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-
-Global* Global::m_self_ = 0;
-ReadOnlyPart* Global::m_klinkStatusPart = 0;
-StatusBarExtension* Global::m_statusBarExtension = 0;
-
-static K3StaticDeleter<Global> staticDeleter;
-
-
-Global* Global::self()
+class GlobalPrivate : public QObject
 {
-    if (!m_self_)
-    {
-        staticDeleter.setObject(m_self_, new Global());
-    }
+    Q_OBJECT
+public:
+    GlobalPrivate();
 
-    return m_self_;
-}
+    void setKLinkStatusPart(ReadOnlyPart* part);
+    KStatusBar* statusBar() const;
+//     static ReadOnlyPart* getKLinkStatusPart();
+    
+//     static StatusBarExtension* getStatusBarExtension();
 
-Global::Global(QObject *parent)
-        : QObject(parent), m_statusBarLabel(0)
+    void setStatusBarText(QString const& text, bool permanent = false);
+    void addStatusBarPermanentItem(QWidget* widget);
+
+private slots:
+    void slotRemoveStatusBarLabel();
+    void slotStatusBarTimeout();
+    
+private:
+    static ReadOnlyPart* m_klinkStatusPart;
+    static StatusBarExtension* m_statusBarExtension;
+    QLabel* m_statusBarLabel;
+    // This timer is a workaround for cleaning the temporary messages of tree items (statusTip)
+    // which sometimes don't get hidden
+    QTimer m_statusBarTimer;
+};
+
+ReadOnlyPart* GlobalPrivate::m_klinkStatusPart = 0;
+StatusBarExtension* GlobalPrivate::m_statusBarExtension = 0;
+
+K_GLOBAL_STATIC(GlobalPrivate, global_instance)
+
+GlobalPrivate::GlobalPrivate()
+        : QObject(0), m_statusBarLabel(0)
 {
-    m_self_ = this;
-
     connect(&m_statusBarTimer, SIGNAL(timeout()),
             this, SLOT(slotStatusBarTimeout()));
 
     m_statusBarTimer.start(1500);
 }
 
-Global::~Global()
-{
-    if(m_self_ == this)
-        staticDeleter.setObject(m_self_, 0, false);
-}
-
-void Global::setKLinkStatusPart(ReadOnlyPart* part)
+void GlobalPrivate::setKLinkStatusPart(ReadOnlyPart* part)
 {
     m_klinkStatusPart = part;
 
@@ -80,7 +86,13 @@ void Global::setKLinkStatusPart(ReadOnlyPart* part)
     m_statusBarLabel = new QLabel(statusBar());
 }
 
-KStatusBar* Global::statusBar() const
+
+void Global::setKLinkStatusPart(ReadOnlyPart* part)
+{
+    global_instance->setKLinkStatusPart(part);
+}
+
+KStatusBar* GlobalPrivate::statusBar() const
 {
     if(!m_statusBarExtension)
         return 0;
@@ -88,7 +100,13 @@ KStatusBar* Global::statusBar() const
     return m_statusBarExtension->statusBar();
 }
 
-void Global::setStatusBarText(QString const& text, bool permanent)
+
+KStatusBar* Global::statusBar()
+{
+    return global_instance->statusBar();
+}
+
+void GlobalPrivate::setStatusBarText(QString const& text, bool permanent)
 {
     if(!m_statusBarExtension)
         return;
@@ -102,7 +120,13 @@ void Global::setStatusBarText(QString const& text, bool permanent)
         QTimer::singleShot(1000 * 3, this, SLOT(slotRemoveStatusBarLabel()));
 }
 
-void Global::addStatusBarPermanentItem(QWidget* widget)
+
+void Global::setStatusBarText(QString const& text, bool permanent)
+{
+    global_instance->setStatusBarText(text, permanent);
+}
+
+void GlobalPrivate::addStatusBarPermanentItem(QWidget* widget)
 {
     if(!m_statusBarExtension)
         return;
@@ -110,12 +134,19 @@ void Global::addStatusBarPermanentItem(QWidget* widget)
     m_statusBarExtension->addStatusBarItem(widget, 0, true);
 }
 
-void Global::slotRemoveStatusBarLabel()
+
+void Global::addStatusBarPermanentItem(QWidget* widget)
+{
+    global_instance->addStatusBarPermanentItem(widget);
+}
+
+void GlobalPrivate::slotRemoveStatusBarLabel()
 {
     m_statusBarExtension->removeStatusBarItem(m_statusBarLabel);
 }
 
-void Global::slotStatusBarTimeout()
+
+void GlobalPrivate::slotStatusBarTimeout()
 {
     m_statusBarExtension->statusBar()->clearMessage();
 }

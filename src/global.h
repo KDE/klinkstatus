@@ -36,37 +36,14 @@ using namespace KParts;
 /**
 @author Paulo Moura Guedes
 */
-class Global : public QObject
+class Global
 {
-    Q_OBJECT
 public:
-    static Global* self();
-    ~Global();
-    
-    void setKLinkStatusPart(ReadOnlyPart* part);
-    KStatusBar* statusBar() const;
-//     static ReadOnlyPart* getKLinkStatusPart();
-    
-//     static StatusBarExtension* getStatusBarExtension();
+    static void setKLinkStatusPart(ReadOnlyPart* part);
+    static KStatusBar* statusBar();
 
-    void setStatusBarText(QString const& text, bool permanent = false);
-    void addStatusBarPermanentItem(QWidget* widget);
-
-private slots:
-    void slotRemoveStatusBarLabel();
-    void slotStatusBarTimeout();
-    
-private:
-    Global(QObject *parent = 0);
-
-private:
-    static Global* m_self_;
-    static ReadOnlyPart* m_klinkStatusPart;
-    static StatusBarExtension* m_statusBarExtension;
-    QLabel* m_statusBarLabel;
-    // This timer is a workaround for cleaning the temporary messages of tree items (statusTip)
-    // which sometimes don't get hidden
-    QTimer m_statusBarTimer;
+    static void setStatusBarText(QString const& text, bool permanent = false);
+    static void addStatusBarPermanentItem(QWidget* widget);
 };
 
 #endif
