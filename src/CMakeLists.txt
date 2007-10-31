@@ -70,7 +70,7 @@ set(klinkstatuspart_PART_SRCS
 
 if(LIBTIDY_FOUND)
 	set(libtidy_SRCS ${CMAKE_SOURCE_DIR}/klinkstatus/src/tidy/markupvalidator.cpp)
-    set(klinkstatuspart_PART_SRCS klinkstatuspart_PART_SRCS ${libtidy_SRCS})
+    set(klinkstatuspart_PART_SRCS ${klinkstatuspart_PART_SRCS} ${libtidy_SRCS})
 endif(LIBTIDY_FOUND)
 
 kde4_add_ui_files(klinkstatuspart_PART_SRCS
