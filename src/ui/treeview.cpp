@@ -38,7 +38,9 @@
 
 #include "engine/linkstatus.h"
 #include "engine/linkfilter.h"
+#ifdef HAVE_LIBTIDY
 #include "tidy/markupvalidator.h"
+#endif
 #include "global.h"
 #include "klsconfig.h"
 

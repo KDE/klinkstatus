@@ -30,7 +30,9 @@
 class QDomElement;
 
 #include "parser/http.h"
+#ifdef HAVE_LIBTIDY
 #include "tidy/markupvalidator.h"
+#endif
 class Node;
 class TreeView;
 class TreeViewItem;

@@ -203,10 +203,12 @@ QString const LinkStatusHelper::toString(LinkStatus const* linkstatus)
 
 void LinkStatusHelper::validateMarkup(LinkStatus* linkstatus)
 {
+#ifdef HAVE_LIBTIDY
     Tidy::MarkupValidator markup_validator(linkstatus->absoluteUrl(), linkstatus->docHtml());
     markup_validator.validate();
     
     (linkstatus->tidy_info_).has_errors = markup_validator.hasErrors();
     (linkstatus->tidy_info_).has_warnings = markup_validator.hasWarnings();
 //     tidy_messages_ = markup_validator.messages();
+#endif
 }

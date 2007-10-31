@@ -22,10 +22,6 @@ set(libengine_SRCS
     ${CMAKE_SOURCE_DIR}/klinkstatus/src/engine/interfaces/isearchmanager.cpp 
 )
 
-set(libtidy_SRCS
-    ${CMAKE_SOURCE_DIR}/klinkstatus/src/tidy/markupvalidator.cpp
-)
-    
 set(libui_SRCS 
 	${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/documentrootdialog.cpp 
 	${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/klshistorycombo.cpp
@@ -49,12 +45,14 @@ include_directories(
     ${CMAKE_BINARY_DIR}/klinkstatus/src 
     ${LIBXML2_INCLUDE_DIR}
     ${LIBXSLT_INCLUDE_DIR}
-    ${LIBTIDY_INCLUDE_DIR}
     ${KDE4_INCLUDE_DIR}
     ${KDE4_INCLUDE_DIR}/threadweaver
     ${QT_INCLUDES}
 )
 
+if(LIBTIDY_FOUND)
+    include_directories(${LIBTIDY_INCLUDE_DIR})
+endif(LIBTIDY_FOUND)
 
 ########### next target ###############
 
@@ -62,7 +60,6 @@ set(klinkstatuspart_PART_SRCS
     ${libutils_SRCS} 
     ${libparser_SRCS} 
     ${libengine_SRCS}
-    ${libtidy_SRCS}
     ${libuisettings_SRCS}
     ${libui_SRCS} 
     global.cpp 
@@ -70,6 +67,11 @@ set(klinkstatuspart_PART_SRCS
     klinkstatus_part.cpp
     klsfactory.cpp
 )
+
+if(LIBTIDY_FOUND)
+	set(libtidy_SRCS ${CMAKE_SOURCE_DIR}/klinkstatus/src/tidy/markupvalidator.cpp)
+    set(klinkstatuspart_PART_SRCS klinkstatuspart_PART_SRCS ${libtidy_SRCS})
+endif(LIBTIDY_FOUND)
 
 kde4_add_ui_files(klinkstatuspart_PART_SRCS
    ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/sessionwidgetbase.ui
@@ -92,13 +94,17 @@ kde4_add_plugin(klinkstatuspart ${klinkstatuspart_PART_SRCS})
 target_link_libraries(klinkstatuspart
     ${LIBXML2_LIBRARIES}
     ${LIBXSLT_LIBRARIES}
-    ${LIBTIDY_LIBRARIES}
     ${KDE4_KDECORE_LIBS} 
     ${KDE4_KPARTS_LIBS} 
     ${KDE4_KIO_LIBS}
     ${KDE4_KHTML_LIBS}
     ${KDE4_THREADWEAVER_LIBRARY}
 )
+
+if(LIBTIDY_FOUND)
+    target_link_libraries(klinkstatuspart ${LIBTIDY_LIBRARIES})
+endif(LIBTIDY_FOUND)
+
 
 install(TARGETS klinkstatuspart  DESTINATION ${PLUGIN_INSTALL_DIR})
 
