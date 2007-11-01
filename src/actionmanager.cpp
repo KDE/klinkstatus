@@ -155,13 +155,13 @@ void ActionManager::initTabWidget(TabWidgetSession* tabWidgetSession)
     // *************** View menu *********************
 
     //     this action must be in the tabwidget because the slot can't be connected to a particular sessionWidget
-    KToggleAction *toggle_action  = new KToggleAction(KIcon("goto-page"), i18n("&Follow last Link checked"), this);
+    KToggleAction *toggle_action  = new KToggleAction(KIcon("go-jump"), i18n("&Follow last Link checked"), this);
     toggle_action->setToolTip("Follow last Link checked (slower)");
     actionCollection()->addAction("follow_last_link_checked", toggle_action );
     connect(toggle_action, SIGNAL(triggered(bool)), d->tabWidgetSession, SLOT(slotFollowLastLinkChecked()));
     toggle_action->setShortcut(KShortcut("Ctrl+f"));
     toggle_action->setChecked(KLSConfig::followLastLinkChecked());
-    KGuiItem item(i18n("&Do not follow last Link checked"), "goto-page", "Do not follow last Link checked (faster)");
+    KGuiItem item(i18n("&Do not follow last Link checked"), "go-jump", "Do not follow last Link checked (faster)");
     toggle_action->setCheckedState(item);
 
     //     this action must be in the tabwidget because the slot can't be connected to a particular sessionWidget
@@ -272,7 +272,7 @@ void ActionManager::initTabWidget(TabWidgetSession* tabWidgetSession)
 
     // *************** Toolbar *********************
       
-    d->gotoViewAction = new KToolBarPopupAction(KIcon("file-import"), "", this);
+    d->gotoViewAction = new KToolBarPopupAction(KIcon("view-choose"), "", this);
     actionCollection()->addAction("next_view_list", d->gotoViewAction);
 //     action->setShortcuts(KStandardShortcut::shortcut(KStandardShortcut::Back));
     d->gotoViewAction->setToolTip("Change View");

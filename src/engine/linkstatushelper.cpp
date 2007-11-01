@@ -22,7 +22,7 @@
 
 #include <kcharsets.h>
 
-#include <qdom.h>
+#include <QDomElement>
 #include <QSet>
 
 
