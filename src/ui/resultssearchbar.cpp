@@ -87,7 +87,7 @@ ResultsSearchBar::ResultsSearchBar(QWidget* parent)
     d->layout->addWidget(statusLabel);
 
     d->searchCombo = new KComboBox(this);
-    QPixmap iconAll = KIconLoader::global()->loadIcon("exec", KIconLoader::Small);
+    QPixmap iconAll = KIconLoader::global()->loadIcon("system-run", KIconLoader::Small);
     QPixmap iconGood = KIconLoader::global()->loadIcon("ok", KIconLoader::Small);
     QPixmap iconBroken = KIconLoader::global()->loadIcon("no", KIconLoader::Small);
     QPixmap iconMalformed = KIconLoader::global()->loadIcon("bug", KIconLoader::Small);
