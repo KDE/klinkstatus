@@ -11,8 +11,8 @@
   </property>
   <property name="minimumSize" >
    <size>
-    <width>550</width>
-    <height>350</height>
+    <width>0</width>
+    <height>0</height>
    </size>
   </property>
   <property name="baseSize" >
@@ -82,7 +82,7 @@
             <item>
              <widget class="QLabel" name="textlabel_url" >
               <property name="sizePolicy" >
-               <sizepolicy vsizetype="Preferred" hsizetype="Maximum" >
+               <sizepolicy vsizetype="Fixed" hsizetype="Maximum" >
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
@@ -98,7 +98,7 @@
             <item>
              <widget class="KLSHistoryCombo" name="combobox_url" >
               <property name="sizePolicy" >
-               <sizepolicy vsizetype="Ignored" hsizetype="Preferred" >
+               <sizepolicy vsizetype="Fixed" hsizetype="MinimumExpanding" >
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
@@ -126,7 +126,7 @@
             <item>
              <widget class="KPushButton" name="pushbutton_url" >
               <property name="sizePolicy" >
-               <sizepolicy vsizetype="Minimum" hsizetype="Maximum" >
+               <sizepolicy vsizetype="Fixed" hsizetype="Maximum" >
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
@@ -170,6 +170,12 @@
             </property>
             <item>
              <widget class="QCheckBox" name="checkbox_recursively" >
+              <property name="sizePolicy" >
+               <sizepolicy vsizetype="Fixed" hsizetype="Minimum" >
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="toolTip" >
                <string>Check pages recursively</string>
               </property>
@@ -185,6 +191,18 @@
              <widget class="QSpinBox" name="spinbox_depth" >
               <property name="enabled" >
                <bool>true</bool>
+              </property>
+              <property name="sizePolicy" >
+               <sizepolicy vsizetype="Fixed" hsizetype="Minimum" >
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize" >
+               <size>
+                <width>100</width>
+                <height>0</height>
+               </size>
               </property>
               <property name="toolTip" >
                <string/>
@@ -207,6 +225,12 @@
              <widget class="QCheckBox" name="checkbox_subdirs_only" >
               <property name="enabled" >
                <bool>true</bool>
+              </property>
+              <property name="sizePolicy" >
+               <sizepolicy vsizetype="Fixed" hsizetype="Minimum" >
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
               </property>
               <property name="text" >
                <string>Do &amp;not check parent folders</string>
@@ -253,6 +277,12 @@
               <property name="enabled" >
                <bool>true</bool>
               </property>
+              <property name="sizePolicy" >
+               <sizepolicy vsizetype="Fixed" hsizetype="Minimum" >
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="text" >
                <string>Chec&amp;k external links</string>
               </property>
@@ -298,6 +328,12 @@
             </property>
             <item>
              <widget class="QLabel" name="textLabel1" >
+              <property name="sizePolicy" >
+               <sizepolicy vsizetype="Fixed" hsizetype="Maximum" >
+                <horstretch>255</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="text" >
                <string>Do not check regular expression:</string>
               </property>
@@ -309,10 +345,16 @@
             <item>
              <widget class="QLineEdit" name="lineedit_reg_exp" >
               <property name="sizePolicy" >
-               <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
-                <horstretch>0</horstretch>
+               <sizepolicy vsizetype="Fixed" hsizetype="Preferred" >
+                <horstretch>1</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
+              </property>
+              <property name="maximumSize" >
+               <size>
+                <width>600</width>
+                <height>16777215</height>
+               </size>
               </property>
              </widget>
             </item>
@@ -322,11 +364,11 @@
                <enum>Qt::Horizontal</enum>
               </property>
               <property name="sizeType" >
-               <enum>QSizePolicy::Maximum</enum>
+               <enum>QSizePolicy::Expanding</enum>
               </property>
               <property name="sizeHint" >
                <size>
-                <width>16</width>
+                <width>2</width>
                 <height>20</height>
                </size>
               </property>
