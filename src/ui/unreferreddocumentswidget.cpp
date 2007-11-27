@@ -132,6 +132,7 @@ void UnreferredDocumentsWidget::slotStartSearch()
     
     if(inputBaseDir.startsWith("http")) {
         KMessageBox::sorry(this, i18n("Cannot crawl through directories using HTTP.\n\nTry using file, ftp, sftp or fish, for example."));
+        finish();
         return;
     }
 
