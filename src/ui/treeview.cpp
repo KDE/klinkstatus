@@ -379,7 +379,7 @@ void TreeView::loadContextTableMenu(QSet<KUrl> const& referrers, bool is_root)
     
     delete(sub_menu_);
 
-    sub_menu_ = context_table_menu_.addMenu(KIcon("edit"), i18n("Edit Referrer"));
+    sub_menu_ = context_table_menu_.addMenu(KIcon("object-edit"), i18n("Edit Referrer"));
 
     if(!is_root)
     {
