@@ -672,7 +672,7 @@ QPixmap TreeColumnViewItem::pixmap(int column) const
         if(linkStatus()->hasHtmlErrors())
             return SmallIcon("no");
         else if(linkStatus()->hasHtmlWarnings())
-            return SmallIcon("pencil");
+            return SmallIcon("draw-freehand");
     }
 
     return QPixmap();
