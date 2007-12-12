@@ -58,7 +58,7 @@
         <item>
          <widget class="KLSHistoryCombo" name="baseDirCombo" >
           <property name="sizePolicy" >
-           <sizepolicy vsizetype="Ignored" hsizetype="Preferred" >
+           <sizepolicy vsizetype="Fixed" hsizetype="MinimumExpanding" >
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
@@ -122,6 +122,12 @@
      <layout class="QVBoxLayout" >
       <item>
        <widget class="KListWidgetSearchLine" name="documentSearchLine" >
+        <property name="maximumSize" >
+         <size>
+          <width>400</width>
+          <height>16777215</height>
+         </size>
+        </property>
         <property name="clickMessage" >
          <string>Filter Documents...</string>
         </property>

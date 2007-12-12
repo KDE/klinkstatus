@@ -48,7 +48,7 @@
 
 
 const char KLinkStatusPart::description_[] = I18N_NOOP( "A Link Checker" );
-const char KLinkStatusPart::version_[] = "0.4.0 RC1";
+const char KLinkStatusPart::version_[] = "0.4.0";
 
 K_PLUGIN_FACTORY(KLinkStatusFactory, registerPlugin<KLinkStatusPart>();)
 K_EXPORT_PLUGIN(KLinkStatusFactory("klinkstatuspart"))

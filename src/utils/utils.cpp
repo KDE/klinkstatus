@@ -258,11 +258,11 @@ QString transform(QString const& xmlContent, KUrl const& styleSheet)
 
       // Run meinproc process
     QStringList arguments;
-    arguments << "--stylesheet" << styleSheet.url()
+    arguments << "--stylesheet" << styleSheet.pathOrUrl()
         << "--stdout" << tmpXml.fileName();
 
     QProcess meinproc;
-    meinproc.start(KStandardDirs::locate("exe", QLatin1String("meinproc")),
+    meinproc.start(KStandardDirs::locate("exe", QLatin1String("meinproc4")),
                     arguments, QIODevice::ReadOnly);
 
     if(!meinproc.waitForStarted())
