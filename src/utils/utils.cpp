@@ -271,7 +271,7 @@ QString transform(QString const& xmlContent, KUrl const& styleSheet)
     if(!meinproc.waitForFinished())
         return QString();
 
-    return meinproc.readAllStandardOutput();
+    return QString::fromUtf8(meinproc.readAllStandardOutput());
 }
 
 }
