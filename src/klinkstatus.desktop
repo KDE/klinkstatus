@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=KLinkStatus
 Name[ne]=केडीई लिङ्क वस्तुस्थिति
+Name[sk]=KLink status
 Name[sv]=Klinkstatus
 Name[ta]=Kதொகுதி நிலைமை
 Name[tr]=K Köprü Durumu
@@ -37,6 +38,7 @@ GenericName[pl]=Program sprawdzający odnośniki
 GenericName[pt]=Verificação de Hiperligações
 GenericName[pt_BR]=Verificador de Links
 GenericName[ru]=Проверка ссылок
+GenericName[sk]=Kontrole spojenia
 GenericName[sl]=Preverjalnik povezav
 GenericName[sr]=Провера везе
 GenericName[sr@latin]=Provera veze
