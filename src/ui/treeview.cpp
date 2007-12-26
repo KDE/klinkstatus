@@ -379,7 +379,7 @@ void TreeView::loadContextTableMenu(QSet<KUrl> const& referrers, bool is_root)
     
     delete(sub_menu_);
 
-    sub_menu_ = context_table_menu_.addMenu(KIcon("object-edit"), i18n("Edit Referrer"));
+    sub_menu_ = context_table_menu_.addMenu(KIcon("document-properties"), i18n("Edit Referrer"));
 
     if(!is_root)
     {
@@ -394,7 +394,7 @@ void TreeView::loadContextTableMenu(QSet<KUrl> const& referrers, bool is_root)
     }
     else
     {
-        QMenu* sub_menu = context_table_menu_.addMenu(KIcon("document-open"), i18n("Edit Referrer"));
+        QMenu* sub_menu = context_table_menu_.addMenu(KIcon("document-properties"), i18n("Edit Referrer"));
         sub_menu->setEnabled(false);
     }
     context_table_menu_.addSeparator();
@@ -642,37 +642,35 @@ QPixmap TreeColumnViewItem::pixmap(int column) const
     if(column == root_->statusColumnIndex())
     {
         if(linkStatus()->status() == LinkStatus::BROKEN)
-            return SmallIcon("flag-red");
+            return SmallIcon("dialog-error");
         else if(linkStatus()->status() == LinkStatus::HTTP_CLIENT_ERROR)
-            return SmallIcon("flag-red");
+            return SmallIcon("dialog-error");
         else if(linkStatus()->status() == LinkStatus::HTTP_REDIRECTION)
         {
             if(linkStatus()->statusText() == "304")
-                return SmallIcon("ok");
+                return SmallIcon("dialog-ok");
             else
                 return SmallIcon("edit-redo");
         }
         else if(linkStatus()->status() == LinkStatus::HTTP_SERVER_ERROR)
-            return SmallIcon("flag-red");
+            return SmallIcon("dialog-error");
         else if(linkStatus()->status() == LinkStatus::MALFORMED)
-            // return SmallIcon("edit-delete");
-          return SmallIcon("media-scripts");
+            return SmallIcon("dialog-warning");
         else if(linkStatus()->status() == LinkStatus::NOT_SUPPORTED)
-            return SmallIcon("help-contents");
+            return SmallIcon("unknown");
         else if(linkStatus()->status() == LinkStatus::SUCCESSFULL)
-            return SmallIcon("ok");
+            return SmallIcon("dialog-ok");
         else if(linkStatus()->status() == LinkStatus::TIMEOUT)
-            // return SmallIcon("edit-clear-history"); 
             return SmallIcon("chronometer");
         else if(linkStatus()->status() == LinkStatus::UNDETERMINED)
-            return SmallIcon("help-contents");
+            return SmallIcon("dialog-error");
     }
     else if(column == root_->markupColumnIndex())
     {
         if(linkStatus()->hasHtmlErrors())
-            return SmallIcon("no");
+            return SmallIcon("dialog-error");
         else if(linkStatus()->hasHtmlWarnings())
-            return SmallIcon("draw-freehand");
+            return SmallIcon("dialog-warning");
     }
 
     return QPixmap();
