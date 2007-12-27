@@ -135,7 +135,8 @@ void KLinkStatusPart::slotConfigureKLinkStatus()
     dialog->addPage(search_widget, i18n("Check"), "zoom-original");
     dialog->addPage(results_widget, i18n("Results"), "fileview-detailed");
     dialog->addPage(new ConfigIdentificationDialog(), i18n("Identification"),
-                    "identity", i18n("Configure the way KLinkstatus reports itself"));
+                    "preferences-web-browser-identification",
+                    i18n("Configure the way KLinkstatus reports itself"));
 
     // FIXME check this connection - mismatched arguments between slot and signal
     connect(dialog, SIGNAL(settingsChanged(const QString&)), tabwidget_, SLOT(slotLoadSettings()));
