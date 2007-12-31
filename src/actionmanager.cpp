@@ -127,7 +127,7 @@ void ActionManager::initPart(KLinkStatusPart* part)
 
     connect(action, SIGNAL(triggered(bool) ), d->part, SLOT(slotAbout()));
 
-    action  = new KAction(i18n("&Report Bug..."), this);
+    action  = new KAction(i18n("&Report Bug..."), this); // FIXME: should probably use the "report bug" KStandardAction
     actionCollection()->addAction("report_bug", action );
     action->setText( i18n("&Report Bug...") );
 
@@ -172,17 +172,17 @@ void ActionManager::initTabWidget(TabWidgetSession* tabWidgetSession)
     item = KGuiItem(i18n("&Show Search Panel"), "go-top", "Show Search Panel");
     toggle_action->setCheckedState(item);
 
-    action  = new KAction(KIcon("view-refresh"), i18n("&Reset Search Options"), this);
+    action  = new KAction(KIcon("edit-clear"), i18n("&Reset Search Options"), this);
     actionCollection()->addAction("reset_search_bar", action );
     connect(action, SIGNAL(triggered(bool) ), d->tabWidgetSession, SLOT(slotResetSearchOptions()));
     action->setShortcut(KShortcut("F5"));
 
-    toggle_action  = new KToggleAction(KIcon("color-line"), i18n("&Disable Updates on Results Table"), this);
+    toggle_action  = new KToggleAction(KIcon("view-refresh"), i18n("&Disable Updates on Results Table"), this);
     toggle_action->setToolTip("Disable Updates on Results Table (faster)");
     actionCollection()->addAction("disable_update_results_table", toggle_action);
     connect(toggle_action, SIGNAL(triggered(bool)), d->tabWidgetSession, SLOT(slotDisableUpdatesOnResultsTable(bool)));
     toggle_action->setShortcut(KShortcut("Ctrl+u"));
-    item = KGuiItem(i18n("&Enable Updates on Results Table"), "color-line", "Enable Updates on Results Table (slower)");
+    item = KGuiItem(i18n("&Enable Updates on Results Table"), "view-refresh", "Enable Updates on Results Table (slower)");
     toggle_action->setCheckedState(item);
 
     
@@ -226,7 +226,7 @@ void ActionManager::initTabWidget(TabWidgetSession* tabWidgetSession)
         
     // *************** Validate menu *********************
         
-    action = new KAction(KIcon("ok"), i18n("&Fix All..."), this);
+    action = new KAction(KIcon("dialog-ok"), i18n("&Fix All..."), this);
     actionCollection()->addAction("html_fix_all", action);
     connect(action, SIGNAL(triggered(bool) ), d->tabWidgetSession, SLOT(slotValidateAll()));
     action->setShortcut(KShortcut());
@@ -234,37 +234,37 @@ void ActionManager::initTabWidget(TabWidgetSession* tabWidgetSession)
 
     // *************** Windows menu *********************
 
-    action = new KAction(KIcon(), i18n("Check Links"), this);
+    action = new KAction(i18n("Check Links"), this);
     actionCollection()->addAction("linkcheck_view", action);
     connect(action, SIGNAL(triggered(bool) ), d->tabWidgetSession, SLOT(slotShowLinkCheckView()));
 //     action->setShortcut(KShortcut(QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_F8)));
     action->setEnabled(true);
         
-    action = new KAction(KIcon(), i18n("Unreferred Documents"), this);
+    action = new KAction(i18n("Unreferred Documents"), this);
     actionCollection()->addAction("unreferred_docs_view", action);
     connect(action, SIGNAL(triggered(bool) ), d->tabWidgetSession, SLOT(slotShowUnreferredDocumentsView()));
 //     action->setShortcut(KShortcut(QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_F8)));
     action->setEnabled(true);
         
-    action = new KAction(KIcon(), i18n("Previous View"), this);
+    action = new KAction(i18n("Previous View"), this);
     actionCollection()->addAction("goto_previous_view", action);
     connect(action, SIGNAL(triggered(bool) ), d->tabWidgetSession, SLOT(slotPreviousView()));
     action->setShortcut(KShortcut(QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_F8)));
     action->setEnabled(true);
         
-    action = new KAction(KIcon(), i18n("Next View"), this);
+    action = new KAction(i18n("Next View"), this);
     actionCollection()->addAction("goto_next_view", action);
     connect(action, SIGNAL(triggered(bool) ), d->tabWidgetSession, SLOT(slotNextView()));
     action->setShortcut(KShortcut(QKeySequence(Qt::CTRL + Qt::Key_F8)));
     action->setEnabled(true);
 
-    action = new KAction(KIcon(), i18n("Previous Session"), this);
+    action = new KAction(i18n("Previous Session"), this);
     actionCollection()->addAction("goto_previous_session", action);
     connect(action, SIGNAL(triggered(bool) ), d->tabWidgetSession, SLOT(slotPreviousSession()));
     action->setShortcut(KShortcut(QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_F6)));
     action->setEnabled(true);
         
-    action = new KAction(KIcon(), i18n("Next Session"), this);
+    action = new KAction(i18n("Next Session"), this);
     actionCollection()->addAction("goto_next_session", action);
     connect(action, SIGNAL(triggered(bool) ), d->tabWidgetSession, SLOT(slotNextSession()));
     action->setShortcut(KShortcut(QKeySequence(Qt::CTRL + Qt::Key_F6)));

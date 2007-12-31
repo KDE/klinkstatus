@@ -67,7 +67,7 @@ ResultsSearchBar::ResultsSearchBar(QWidget* parent)
     
     QToolButton* clearButton = new QToolButton(this);
     clearButton->setIcon(KIcon(QApplication::layoutDirection() == Qt::RightToLeft ?
-        "edit-clear-locationbar-rtl" : "edit-clear-locationbar"));
+        "edit-clear-locationbar-rtl" : "edit-clear-locationbar-ltr"));
     clearButton->setAutoRaise(true);
     d->layout->addWidget(clearButton);
 
@@ -87,11 +87,12 @@ ResultsSearchBar::ResultsSearchBar(QWidget* parent)
     d->layout->addWidget(statusLabel);
 
     d->searchCombo = new KComboBox(this);
-    QPixmap iconAll = KIconLoader::global()->loadIcon("system-run", KIconLoader::Small);
-    QPixmap iconGood = KIconLoader::global()->loadIcon("ok", KIconLoader::Small);
-    QPixmap iconBroken = KIconLoader::global()->loadIcon("no", KIconLoader::Small);
-    QPixmap iconMalformed = KIconLoader::global()->loadIcon("bug", KIconLoader::Small);
-    QPixmap iconUndetermined = KIconLoader::global()->loadIcon("help-contents", KIconLoader::Small);
+    QPixmap iconAll = SmallIcon("system-run");
+    QPixmap iconGood = SmallIcon("dialog-ok");
+    // "ok" icon should probably be "dialog-success", but we don't have that icon in KDE 4.0
+    QPixmap iconBroken = SmallIcon("dialog-error");
+    QPixmap iconMalformed = SmallIcon("dialog-warning");
+    QPixmap iconUndetermined = SmallIcon("unknown");
 
     d->searchCombo->addItem(iconAll, i18n("All Links"));
     d->searchCombo->addItem(iconGood, i18n("Good Links"));
