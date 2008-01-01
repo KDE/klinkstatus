@@ -133,7 +133,7 @@ void KLinkStatusPart::slotConfigureKLinkStatus()
     results_ui.setupUi(results_widget);
 
     dialog->addPage(search_widget, i18n("Check"), "zoom-original");
-    dialog->addPage(results_widget, i18n("Results"), "fileview-detailed");
+    dialog->addPage(results_widget, i18n("Results"), "view-list-details");
     dialog->addPage(new ConfigIdentificationDialog(), i18n("Identification"),
                     "preferences-web-browser-identification",
                     i18n("Configure the way KLinkstatus reports itself"));
