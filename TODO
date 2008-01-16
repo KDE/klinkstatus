@@ -13,12 +13,8 @@ Do list:
 
 - Check the size for complete request on homepage
 
-- Use proper charset for the pages
-
 - Advanced search features like:
     - check only files modified recently
-    - check only files matching given regular expression
-    - check only files in given path
 
 - Write better documentation
  

@@ -1,3 +1,18 @@
+Changes for 0.4.0
+-----------------------------------------------------
+
+- Find (and eventually remove) unrefered documents
+- Added the possibility to recheck individual links or the whole session
+- Respect the encoding of the HTML pages when showing the links
+- KLinkStatus has now a proper status bar with improved information
+- Improved column width management in the results view
+- Wrap the text when exporting the results, avoiding giant column widths
+- Better progress information (no more separation between adding level and checking each level)
+- Huge optimizations which led to serious improvements in performance and stability
+- Fix encoding problem in exported HTML file results
+- Visually differentiate external links
+
+
 Changes for 0.3.1
 -----------------------------------------------------
 
