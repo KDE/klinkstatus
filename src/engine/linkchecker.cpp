@@ -77,7 +77,8 @@ void LinkChecker::check()
     }
     else
     {
-        t_job_ = KIO::get(url, KIO::NoReload, KIO::HideProgressInfo);
+        t_job_ = KIO::get(url, KIO::NoReload, KIO::HideProgressInfo);        
+//         t_job_->setUiDelegate(0);
 
         t_job_->addMetaData("PropagateHttpHeader", "true"); // to have the http header
         if(search_manager_->sendIdentification())
@@ -99,8 +100,6 @@ void LinkChecker::check()
                          this, SLOT(slotRedirection(KIO::Job *, const KUrl &)));
 
         QTimer::singleShot(time_out_ * 1000, this, SLOT(slotTimeOut()));
-        
-        t_job_->setUiDelegate(0);
     }
 }
 
