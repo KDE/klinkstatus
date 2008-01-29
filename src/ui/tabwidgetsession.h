@@ -79,6 +79,7 @@ public slots:
     void slotRecheckBrokenItems();
 
     void slotExportAsHTML();
+    void slotExportBrokenAsHTML();
 
     void slotFindUnreferredDocuments();
 

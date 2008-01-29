@@ -91,7 +91,7 @@ public slots:
     void slotFollowLastLinkChecked();
     void slotDisableUpdatesOnResultsTable(bool checked);
     
-    void slotExportAsHTML();
+    void slotExportAsHTML(LinkStatusHelper::Status status = LinkStatusHelper::none);
 
     void slotValidateAll();
 

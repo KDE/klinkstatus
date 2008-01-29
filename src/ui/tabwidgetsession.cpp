@@ -250,6 +250,11 @@ void TabWidgetSession::slotExportAsHTML()
     currentWidget()->sessionWidget()->slotExportAsHTML();
 }
 
+void TabWidgetSession::slotExportBrokenAsHTML()
+{
+    currentWidget()->sessionWidget()->slotExportAsHTML(LinkStatusHelper::bad);
+}
+
 void TabWidgetSession::slotValidateAll( )
 {
     currentWidget()->sessionWidget()->slotValidateAll();

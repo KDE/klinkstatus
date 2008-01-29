@@ -386,7 +386,8 @@ void SessionWidget::slotRootChecked(LinkStatus* linkstatus)
 {
     resultsSearchBar->show();
 
-    ActionManager::getInstance()->action("file_export_html")->setEnabled(!isEmpty());
+    ActionManager::getInstance()->action("file_export_html_all")->setEnabled(!isEmpty());
+    ActionManager::getInstance()->action("file_export_html_broken")->setEnabled(!isEmpty());
 
     emit signalTitleChanged();
 
@@ -747,7 +748,7 @@ void SessionWidget::slotApplyFilter(LinkMatcher link_matcher)
     tree_view->show(link_matcher);
 }
 
-void SessionWidget::slotExportAsHTML()
+void SessionWidget::slotExportAsHTML(LinkStatusHelper::Status status)
 {
     KUrl url = KFileDialog::getSaveUrl(KUrl(), "text/html", 0, i18n("Export Results as HTML"));
 
@@ -757,9 +758,8 @@ void SessionWidget::slotExportAsHTML()
     kDebug(23100) << "\n\nXML document represention: \n\n" << search_manager_->toXML();
 
     KUrl styleSheetUrl = KStandardDirs::locate("appdata", "styles/results_stylesheet.xsl");
-    QString html = XSL::transform(search_manager_->toXML(), styleSheetUrl);
+    QString html = XSL::transform(search_manager_->toXML(status), styleSheetUrl);
     FileManager::write(html, url);
-
 }
 
 void SessionWidget::slotValidateAll()

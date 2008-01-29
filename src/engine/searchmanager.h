@@ -67,7 +67,7 @@ public:
     ~SearchManager();
 
     /** Returns the the results in XML format */
-    QString toXML() const;
+    QString toXML(LinkStatusHelper::Status status = LinkStatusHelper::none) const;
 
     void startSearch();
     void startSearch(KUrl const& root);

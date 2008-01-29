@@ -947,7 +947,7 @@ void SearchManager::save(QDomElement& element, LinkStatusHelper::Status status) 
     } 
 }
 
-QString SearchManager::toXML() const
+QString SearchManager::toXML(LinkStatusHelper::Status status) const
 {
     QDomDocument doc;
     doc.appendChild(doc.createProcessingInstruction( "xml", 
@@ -956,7 +956,7 @@ QString SearchManager::toXML() const
     QDomElement root = doc.createElement("klinkstatus");
     doc.appendChild(root);
 
-    save(root);
+    save(root, status);
     
     return doc.toString(4);
 }

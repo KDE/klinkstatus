@@ -147,9 +147,14 @@ void ActionManager::initTabWidget(TabWidgetSession* tabWidgetSession)
 
     // *************** File menu *********************
 
-    KAction *action  = new KAction(KIcon("document-save"), i18n("E&xport Results as HTML..."), this);
-    actionCollection()->addAction("file_export_html", action );
+    KAction *action  = new KAction(KIcon("document-save"), i18n("All..."), this);
+    actionCollection()->addAction("file_export_html_all", action );
     connect(action, SIGNAL(triggered(bool) ), d->tabWidgetSession, SLOT(slotExportAsHTML()));
+    action->setEnabled(false);
+
+    action  = new KAction(KIcon("document-save"), i18n("Broken..."), this);
+    actionCollection()->addAction("file_export_html_broken", action );
+    connect(action, SIGNAL(triggered(bool) ), d->tabWidgetSession, SLOT(slotExportBrokenAsHTML()));
     action->setEnabled(false);
 
     // *************** View menu *********************
@@ -418,7 +423,8 @@ void ActionManager::updateGeneralActions(SessionStackedWidget* page)
 
     //     ____________________________________________________________________
 
-    action("file_export_html")->setEnabled(!sw->isEmpty());
+    action("file_export_html_all")->setEnabled(!sw->isEmpty());
+    action("file_export_html_broken")->setEnabled(!sw->isEmpty());
     action("html_fix_all")->setEnabled(!sw->isEmpty() && sw->stopped());
     action("find_unreferred_documents")->setEnabled(!sw->isEmpty() && sw->stopped());
 }
