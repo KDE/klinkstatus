@@ -348,7 +348,7 @@ void SearchManager::fillWithChildren(LinkStatus* link, QList<LinkStatus*>& child
         if(node->url().isEmpty())
             url = "";
         else
-            url = Url::normalizeUrl(node->url(), *link, documentRoot().toLocalFile());
+            url = Url::normalizeUrl(node->url(), *link, documentRoot().path());
 
 //         kDebug(23100) << "NODE URL: " << url << endl;
 //         kDebug(23100) << "node->isLink(): " << node->isLink() << endl;

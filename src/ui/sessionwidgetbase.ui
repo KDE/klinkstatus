@@ -343,7 +343,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="lineedit_reg_exp" >
+             <widget class="KLineEdit" name="lineedit_reg_exp" >
               <property name="sizePolicy" >
                <sizepolicy vsizetype="Fixed" hsizetype="Preferred" >
                 <horstretch>1</horstretch>
@@ -355,6 +355,9 @@
                 <width>600</width>
                 <height>16777215</height>
                </size>
+              </property>
+              <property name="showClearButton" stdset="0" >
+               <bool>true</bool>
               </property>
              </widget>
             </item>
@@ -538,6 +541,11 @@
  </widget>
  <layoutdefault spacing="6" margin="11" />
  <customwidgets>
+  <customwidget>
+   <class>KLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>klineedit.h</header>
+  </customwidget>
   <customwidget>
    <class>KPushButton</class>
    <extends>QPushButton</extends>
