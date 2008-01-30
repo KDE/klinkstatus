@@ -210,6 +210,13 @@ void ActionManager::initTabWidget(TabWidgetSession* tabWidgetSession)
     connect(action, SIGNAL(triggered(bool) ), d->tabWidgetSession, SLOT(slotStopSearch()));
     action->setShortcut(KShortcut("Ctrl+c"));
     action->setEnabled(false);
+
+    toggle_action  = new KToggleAction(KIcon(), i18n("Search in Background"), this);
+    actionCollection()->addAction("search_in_background", toggle_action );
+//     connect(toggle_action, SIGNAL(triggered(bool)), d->tabWidgetSession, SLOT(slotPauseSearch()));
+//     toggle_action->setShortcut(KShortcut("Ctrl+p"));
+    toggle_action->setToolTip("Check Links in background and update results when finished (faster)");
+    toggle_action->setEnabled(true);
         
     action  = new KAction(KIcon("view-refresh"), i18n("&Broken Links"), this);
     actionCollection()->addAction("recheck_broken_items", action);

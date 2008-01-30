@@ -75,7 +75,7 @@ SessionWidget::SessionWidget(int max_simultaneous_connections, int time_out,
         elapsed_time_timer_(this), 
         max_simultaneous_connections_(max_simultaneous_connections),
         time_out_(time_out), tree_display_(false), follow_last_link_checked_(KLSConfig::followLastLinkChecked()),
-        start_search_action_(0)
+        check_in_background_(false), start_search_action_(0)
 {
     setupUi(this);
     
@@ -135,6 +135,11 @@ void SessionWidget::slotLoadSettings(bool modify_current_widget_settings)
     if(search_manager_)
         search_manager_->setTimeOut(KLSConfig::timeOut());
 
+    KToggleAction* action = static_cast<KToggleAction*> (ActionManager::getInstance()->action("search_in_background"));
+    if(action) {
+        check_in_background_ = action->isChecked();
+    }
+        
     //kDebug(23100) << "tree_display_: " << tree_display_;
 }
 
@@ -395,7 +400,14 @@ void SessionWidget::slotRootChecked(LinkStatus* linkstatus)
             textlabel_progressbar->text() == i18n("Stopped"));
     progressbar_checker->setValue(1);
 
-    TreeViewItem* tree_view_item = new TreeViewItem(tree_view, linkstatus);
+    TreeViewItem* tree_view_item = 0;
+    if(check_in_background_) {
+        tree_view_item = new TreeViewItem(tree_view, 0, linkstatus);
+    }
+    else {
+        tree_view_item = new TreeViewItem(tree_view, linkstatus);
+    }      
+
     linkstatus->setTreeViewItem(tree_view_item);
 }
 
@@ -408,7 +420,7 @@ void SessionWidget::slotLinkChecked(LinkStatus* linkstatus)
 
     if(!linkstatus->checked())
         return;
-        
+
     TreeViewItem* tree_view_item = 0;
     TreeViewItem* parent_item = linkstatus->parent()->treeViewItem();
     bool match = resultsSearchBar->currentLinkMatcher().matches(*linkstatus);
@@ -440,6 +452,10 @@ void SessionWidget::slotSearchFinished(SearchManager*)
     Q_ASSERT(in_progress_);
     Q_ASSERT(!paused_);
     Q_ASSERT(!stopped_);
+
+    if(check_in_background_) {
+        loadResults();
+    }
 
     KApplication::beep ();
 
@@ -817,6 +833,16 @@ KUrl const& SessionWidget::urlToCheck() const
 bool SessionWidget::supportsResuming()
 {
     return true;
+}
+
+void SessionWidget::loadResults()
+{
+    Q_ASSERT(check_in_background_);
+
+    LinkStatus* linkstatus_root = search_manager_->linkStatusRoot();
+    QTreeWidgetItem* item = linkstatus_root->treeViewItem();
+    tree_view->insertTopLevelItem(0, item);
+    tree_view->expandItem(item);
 }
 
 #include "sessionwidget.moc"

@@ -166,4 +166,5 @@ inline ThreadWeaver::Weaver* SearchManager::threadWeaver() const
     return &m_weaver;
 }
 
+
 #endif // SEARCHMANAGER_IMPL_H

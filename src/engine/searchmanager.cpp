@@ -650,7 +650,7 @@ void SearchManager::slotLinkChecked(LinkStatus* link, LinkChecker* checker)
     Q_ASSERT(link);
 
     if(KLSConfig::showMarkupStatus() && link->isHtmlDocument())
-      LinkStatusHelper::validateMarkup(link);
+        LinkStatusHelper::validateMarkup(link);
 
     emit signalLinkChecked(link);
     

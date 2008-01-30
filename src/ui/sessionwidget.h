@@ -130,6 +130,7 @@ private:
     void saveCurrentCheckSettings();
     bool pendingActions() const;
     void resetPendingActions();
+    void loadResults();
 
 private:
     KUrl url_to_check_;
@@ -141,6 +142,7 @@ private:
     int time_out_;
     bool tree_display_; // tree/flat result display
     bool follow_last_link_checked_;
+    bool check_in_background_;
     KToggleAction* start_search_action_;
 };
 
