@@ -166,16 +166,16 @@ void ActionManager::initTabWidget(TabWidgetSession* tabWidgetSession)
     connect(toggle_action, SIGNAL(triggered(bool)), d->tabWidgetSession, SLOT(slotFollowLastLinkChecked()));
     toggle_action->setShortcut(KShortcut("Ctrl+f"));
     toggle_action->setChecked(KLSConfig::followLastLinkChecked());
-    KGuiItem item(i18n("&Do not follow last Link checked"), "go-jump", "Do not follow last Link checked (faster)");
-    toggle_action->setCheckedState(item);
+//     KGuiItem item(i18n("&Do not follow last Link checked"), "go-jump", "Do not follow last Link checked (faster)");
+//     toggle_action->setCheckedState(item);
 
     //     this action must be in the tabwidget because the slot can't be connected to a particular sessionWidget
     toggle_action  = new KToggleAction(KIcon("go-bottom"), i18n("&Hide Search Panel"), this);
     actionCollection()->addAction("hide_search_bar", toggle_action );
     connect(toggle_action, SIGNAL(triggered(bool)), d->tabWidgetSession, SLOT(slotHideSearchPanel()));
     toggle_action->setShortcut(KShortcut("Ctrl+h"));
-    item = KGuiItem(i18n("&Show Search Panel"), "go-top", "Show Search Panel");
-    toggle_action->setCheckedState(item);
+//     item = KGuiItem(i18n("&Show Search Panel"), "go-top", "Show Search Panel");
+//     toggle_action->setCheckedState(item);
 
     action  = new KAction(KIcon("edit-clear"), i18n("&Reset Search Options"), this);
     actionCollection()->addAction("reset_search_bar", action );
@@ -187,8 +187,8 @@ void ActionManager::initTabWidget(TabWidgetSession* tabWidgetSession)
     actionCollection()->addAction("disable_update_results_table", toggle_action);
     connect(toggle_action, SIGNAL(triggered(bool)), d->tabWidgetSession, SLOT(slotDisableUpdatesOnResultsTable(bool)));
     toggle_action->setShortcut(KShortcut("Ctrl+u"));
-    item = KGuiItem(i18n("&Enable Updates on Results Table"), "view-refresh", "Enable Updates on Results Table (slower)");
-    toggle_action->setCheckedState(item);
+//     item = KGuiItem(i18n("&Enable Updates on Results Table"), "view-refresh", "Enable Updates on Results Table (slower)");
+//     toggle_action->setCheckedState(item);
 
     
     // *************** Search menu *********************
@@ -211,7 +211,7 @@ void ActionManager::initTabWidget(TabWidgetSession* tabWidgetSession)
     action->setShortcut(KShortcut("Ctrl+c"));
     action->setEnabled(false);
 
-    toggle_action  = new KToggleAction(KIcon(), i18n("Search in Background"), this);
+    toggle_action  = new KToggleAction(KIcon("applications-system"), i18n("Search in Background"), this);
     actionCollection()->addAction("search_in_background", toggle_action );
 //     connect(toggle_action, SIGNAL(triggered(bool)), d->tabWidgetSession, SLOT(slotPauseSearch()));
 //     toggle_action->setShortcut(KShortcut("Ctrl+p"));
