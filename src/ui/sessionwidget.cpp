@@ -839,7 +839,7 @@ void SessionWidget::loadResults()
 {
     Q_ASSERT(check_in_background_);
 
-    LinkStatus* linkstatus_root = search_manager_->linkStatusRoot();
+    LinkStatus const* linkstatus_root = search_manager_->linkStatusRoot();
     QTreeWidgetItem* item = linkstatus_root->treeViewItem();
     tree_view->insertTopLevelItem(0, item);
     tree_view->expandItem(item);
