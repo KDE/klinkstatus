@@ -54,6 +54,7 @@ private slots:
 private:
     void setupAccel();
     void setupActions();
+    void setupTrayIcon();
     void removeDuplicatedActions();
 
 private:

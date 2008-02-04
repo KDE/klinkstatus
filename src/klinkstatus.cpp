@@ -37,7 +37,9 @@
 #include <kxmlguifactory.h>
 #include <ktoolbar.h>
 
+#include "trayicon.h"
 
+ 
 KLinkStatus::KLinkStatus()
   : KParts::MainWindow(0, Qt::Window)
 {
@@ -60,6 +62,10 @@ KLinkStatus::KLinkStatus()
             // tell the KParts::MainWindow that this is indeed the main widget
             setCentralWidget(m_part->widget());
             setStandardToolBarMenuEnabled(true);
+
+            connect(m_part, SIGNAL(setWindowCaption(const QString &)), this, SLOT(setCaption (const QString &)));
+
+            setupTrayIcon();
 
             // and integrate the part's GUI with the shell's
             createGUI(m_part);
@@ -86,11 +92,21 @@ KLinkStatus::KLinkStatus()
 }
 
 KLinkStatus::~KLinkStatus()
-{}
+{
+    kDebug(23100) << "";
+    delete TrayIcon::getInstance();
+}
 
 void KLinkStatus::load(const KUrl& url)
 {
     m_part->openUrl(url);
+}
+
+void KLinkStatus::setupTrayIcon()
+{
+    TrayIcon* trayIcon = TrayIcon::getInstance(this);
+    connect(trayIcon, SIGNAL(quitSelected()), this, SLOT(close()));
+    trayIcon->show();
 }
 
 void KLinkStatus::setupActions()

@@ -20,7 +20,7 @@
 
 #include "klinkstatus.h"
 
-#include <kapplication.h>
+#include <kuniqueapplication.h>
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
 #include <klocale.h>
@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
     options.add("+[URL]", ki18n("Document to open"));
     KCmdLineArgs::addCmdLineOptions(options);
 
-    KApplication app;
+    KUniqueApplication app;
 
     // see if we are starting with session management
     if (app.isSessionRestored())
