@@ -22,8 +22,8 @@
 #define GLOBAL_H
 
 #include <QObject>
-class QLabel;
 #include <QTimer>
+class QLabel;
 
 namespace KParts {
     class ReadOnlyPart;
@@ -32,18 +32,22 @@ namespace KParts {
 class KStatusBar;
 
 using namespace KParts;
-    
+
+
 /**
 @author Paulo Moura Guedes
 */
 class Global
 {
 public:
-    static void setKLinkStatusPart(ReadOnlyPart* part);
-    static KStatusBar* statusBar();
+    static Global* getInstance();
 
-    static void setStatusBarText(QString const& text, bool permanent = false);
-    static void addStatusBarPermanentItem(QWidget* widget);
+    void setKLinkStatusPart(ReadOnlyPart* part);
+    
+    KStatusBar* statusBar() const;
+    void setStatusBarText(QString const& text, bool permanent = false);
+    void addStatusBarPermanentItem(QWidget* widget);
 };
+
 
 #endif

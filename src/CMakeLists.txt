@@ -105,7 +105,7 @@ if(LIBTIDY_FOUND)
 endif(LIBTIDY_FOUND)
 
 
-install(TARGETS klinkstatuspart  DESTINATION ${PLUGIN_INSTALL_DIR})
+install(TARGETS klinkstatuspart DESTINATION ${PLUGIN_INSTALL_DIR})
 
 install(FILES engine/interfaces/org.kdewebdev.klinkstatus.ISearchManager.xml DESTINATION ${DBUS_INTERFACES_INSTALL_DIR})
 
@@ -119,9 +119,9 @@ set(klinkstatus_SRCS
 
 kde4_add_executable(klinkstatus ${klinkstatus_SRCS})
 
-target_link_libraries(klinkstatus  ${KDE4_KPARTS_LIBS})
+target_link_libraries(klinkstatus ${KDE4_KPARTS_LIBS})
 
-install(TARGETS klinkstatus  DESTINATION ${BIN_INSTALL_DIR} )
+install(TARGETS klinkstatus DESTINATION ${BIN_INSTALL_DIR})
 
 
 ########### install files ###############

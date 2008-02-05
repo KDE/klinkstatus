@@ -39,7 +39,7 @@
 
 #include "trayicon.h"
 
- 
+
 KLinkStatus::KLinkStatus()
   : KParts::MainWindow(0, Qt::Window)
 {

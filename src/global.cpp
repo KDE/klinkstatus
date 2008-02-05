@@ -19,6 +19,7 @@
  ***************************************************************************/
 
 #include "global.h"
+
 #include <QtDBus>
 #include <QString>
 #include <QTimer>
@@ -30,7 +31,7 @@
 #include <KStatusBar>
 #include <kparts/statusbarextension.h>
 #include <kparts/part.h>
-    
+
 #include <sys/types.h>
 #include <unistd.h>
 
@@ -42,9 +43,6 @@ public:
 
     void setKLinkStatusPart(ReadOnlyPart* part);
     KStatusBar* statusBar() const;
-//     static ReadOnlyPart* getKLinkStatusPart();
-    
-//     static StatusBarExtension* getStatusBarExtension();
 
     void setStatusBarText(QString const& text, bool permanent = false);
     void addStatusBarPermanentItem(QWidget* widget);
@@ -54,21 +52,18 @@ private slots:
     void slotStatusBarTimeout();
     
 private:
-    static ReadOnlyPart* m_klinkStatusPart;
-    static StatusBarExtension* m_statusBarExtension;
+    ReadOnlyPart* m_klinkStatusPart;
+    StatusBarExtension* m_statusBarExtension;
     QLabel* m_statusBarLabel;
     // This timer is a workaround for cleaning the temporary messages of tree items (statusTip)
     // which sometimes don't get hidden
     QTimer m_statusBarTimer;
 };
 
-ReadOnlyPart* GlobalPrivate::m_klinkStatusPart = 0;
-StatusBarExtension* GlobalPrivate::m_statusBarExtension = 0;
-
 K_GLOBAL_STATIC(GlobalPrivate, global_instance)
 
 GlobalPrivate::GlobalPrivate()
-        : QObject(0), m_statusBarLabel(0)
+    : QObject(0), m_klinkStatusPart(0), m_statusBarExtension(0), m_statusBarLabel(0)
 {
     connect(&m_statusBarTimer, SIGNAL(timeout()),
             this, SLOT(slotStatusBarTimeout()));
@@ -87,6 +82,13 @@ void GlobalPrivate::setKLinkStatusPart(ReadOnlyPart* part)
 }
 
 
+K_GLOBAL_STATIC(Global, globalInstance)
+
+Global* Global::getInstance()
+{
+    return globalInstance;
+}
+
 void Global::setKLinkStatusPart(ReadOnlyPart* part)
 {
     global_instance->setKLinkStatusPart(part);
@@ -101,7 +103,7 @@ KStatusBar* GlobalPrivate::statusBar() const
 }
 
 
-KStatusBar* Global::statusBar()
+KStatusBar* Global::statusBar() const
 {
     return global_instance->statusBar();
 }
