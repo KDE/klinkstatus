@@ -64,29 +64,38 @@ ResultsSearchBar::ResultsSearchBar(QWidget* parent)
     d->layout = new QHBoxLayout(this);
     d->layout->setMargin(2);
     d->layout->setSpacing(5);
+
+    int const minimumHeight = 31;
+//     this->setMinimumHeight(minimumHeight);
     
     QToolButton* clearButton = new QToolButton(this);
     clearButton->setIcon(KIcon(QApplication::layoutDirection() == Qt::RightToLeft ?
         "edit-clear-locationbar-rtl" : "edit-clear-locationbar-ltr"));
     clearButton->setAutoRaise(true);
+    clearButton->setMinimumHeight(minimumHeight);
     d->layout->addWidget(clearButton);
 
     QLabel* searchLabel = new QLabel(this);
     searchLabel->setText(i18n("S&earch:"));
+    searchLabel->setMinimumHeight(minimumHeight);
     d->layout->addWidget(searchLabel);
 
     d->searchLine = new KLineEdit(this);
+    d->searchLine->setMinimumHeight(minimumHeight);
+    d->layout->addWidget(d->searchLine);
+
     connect(d->searchLine, SIGNAL(textChanged(const QString &)),
             this, SLOT(slotSearchStringChanged(const QString &)));
 
     searchLabel->setBuddy(d->searchLine);
-    d->layout->addWidget(d->searchLine);
 
     QLabel* statusLabel = new QLabel(this);
-    statusLabel->setText( i18n("Status:") );
+    statusLabel->setText(i18n("Status:"));
+    statusLabel->setMinimumHeight(minimumHeight);
     d->layout->addWidget(statusLabel);
 
     d->searchCombo = new KComboBox(this);
+    d->searchCombo->setMinimumHeight(minimumHeight);
     QPixmap iconAll = SmallIcon("system-run");
     QPixmap iconGood = SmallIcon("dialog-ok");
     // "ok" icon should probably be "dialog-success", but we don't have that icon in KDE 4.0
