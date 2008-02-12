@@ -113,7 +113,7 @@ void SessionWidget::init()
 
     connect(tree_view, SIGNAL(signalLinkRecheck(LinkStatus*)),
             this, SLOT(slotLinkRecheck(LinkStatus*)));
-    
+
     connect(resultsSearchBar, SIGNAL(signalSearch(LinkMatcher)),
             this, SLOT(slotApplyFilter(LinkMatcher)));
 
@@ -128,9 +128,10 @@ void SessionWidget::slotLoadSettings(bool modify_current_widget_settings)
         spinbox_depth->setValue(KLSConfig::depth());
         checkbox_subdirs_only->setChecked(!KLSConfig::checkParentFolders());
         checkbox_external_links->setChecked(KLSConfig::checkExternalLinks());
-        tree_display_ = KLSConfig::displayTreeView();
-        tree_view->setTreeDisplay(tree_display_);
     }
+
+    tree_display_ = KLSConfig::displayTreeView();
+    tree_view->setTreeDisplay(tree_display_);
 
     if(search_manager_)
         search_manager_->setTimeOut(KLSConfig::timeOut());
@@ -433,6 +434,11 @@ void SessionWidget::slotLinkChecked(LinkStatus* linkstatus)
             tree_view->ensureRowVisible(tree_view_item, tree_display_);
 
         tree_view_item->setHidden(!match);
+
+        // update parent items...
+        if(match && resultsSearchBar->currentLinkMatcher().status() != LinkStatusHelper::none) {
+            tree_view->show(resultsSearchBar->currentLinkMatcher());
+        }
     }
     else
     {

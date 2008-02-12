@@ -54,6 +54,8 @@ private:
     QSet<SearchManager*> m_mailSearchManagerList;
 
     KUrl m_exportResultsPath;
+    bool m_isValidInput;
+    bool m_brokenLinksOnly;
 };
 
 #endif

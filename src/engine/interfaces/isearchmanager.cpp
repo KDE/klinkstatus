@@ -29,7 +29,7 @@
 
 
 ISearchManager::ISearchManager(QObject* parent)
-    : QObject(parent)
+    : QObject(parent), m_isValidInput(false), m_brokenLinksOnly(true)
 {
     new ISearchManagerAdaptor(this);
     QDBusConnection dbus = QDBusConnection::sessionBus();
@@ -41,12 +41,16 @@ void ISearchManager::checkAndExportToHtml(QString const& optionsFilePath)
     SearchManager* searchManager = new SearchManager(KLSConfig::maxConnectionsNumber(),
                                         KLSConfig::timeOut(),
                                         this);
+
     m_exportSearchManagerList << searchManager;
 
     initSearchManager(searchManager, optionsFilePath);
-
+    if(!m_isValidInput) {
+        return;
+    }
+    
     connect(searchManager, SIGNAL(signalSearchFinished(SearchManager*)),
-            this, SLOT(slotSearchFinished(SearchManager*)));
+            this, SLOT(slotExportSearchFinished(SearchManager*)));
 
     searchManager->startSearch();
 }
@@ -62,6 +66,15 @@ void ISearchManager::initSearchManager(SearchManager* searchManager, QString con
     KConfigGroup group = config.group(QString());
 
     KUrl url(group.readEntry("URL"));
+    
+    m_isValidInput = true;
+    if(!url.isValid()) {
+        kWarning(23100) << "Invalid options defined in file " << optionsFilePath;
+        m_isValidInput = false;
+        return;
+    }
+
+    KUrl documentRoot(group.readEntry("DocumentRoot"));
     int depth = group.readEntry("Depth", -1);
     bool checkParentFolders = group.readEntry("CheckParentFolders", true);
     bool checkExternalLinks = group.readEntry("CheckExternalLinks", true);
@@ -69,10 +82,28 @@ void ISearchManager::initSearchManager(SearchManager* searchManager, QString con
     bool doNotCheckRegularExpression = !doNotCheckRegularExpressionString.isEmpty();
     KUrl resultsFile(group.readEntry("ResultsFile", ""));
 
+    m_brokenLinksOnly = group.readEntry("BrokenLinksOnly", true);
+
     searchManager->setRootUrl(url);
+    if (documentRoot.isValid()) {
+        searchManager->setDocumentRoot(documentRoot);
+    }
+
     searchManager->setDepth(depth);
+
+    SearchManager::SearchMode mode = depth == -1 ? SearchManager::domain
+        : SearchManager::depth_and_domain;
+    searchManager->setSearchMode(mode);
+
     searchManager->setCheckParentDirs(checkParentFolders);
+
     searchManager->setCheckExternalLinks(checkExternalLinks);
+    if(checkExternalLinks) {
+        searchManager->setExternalDomainDepth(1);
+    }
+    else {
+        searchManager->setExternalDomainDepth(0);
+    }
 
     if(doNotCheckRegularExpression) {
         searchManager->setCheckRegularExpressions(true);
@@ -90,7 +121,9 @@ void ISearchManager::slotExportSearchFinished(SearchManager* searchManager)
     Q_ASSERT(m_exportResultsPath.isValid());
 
     KUrl styleSheetUrl = KStandardDirs::locate("appdata", "styles/results_stylesheet.xsl");
-    QString html = XSL::transform(searchManager->toXML(), styleSheetUrl);
+ 
+    LinkStatusHelper::Status status = m_brokenLinksOnly ?  LinkStatusHelper::bad : LinkStatusHelper::none;
+    QString html = XSL::transform(searchManager->toXML(status), styleSheetUrl);
 
     FileManager::write(html, m_exportResultsPath);
 }

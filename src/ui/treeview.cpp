@@ -218,11 +218,11 @@ void TreeView::addVisibleItemsRecursively(QList<LinkStatus*>& items, TreeViewIte
         QTreeWidgetItem* child = item->child(i);
         
         if(!child->isHidden()) {
-              TreeViewItem* my_item = myItem(child);
-              items.push_back(my_item->linkStatus());
-          
-              addVisibleItemsRecursively(items, my_item);
-          }
+            TreeViewItem* my_item = myItem(child);
+            items.push_back(my_item->linkStatus());
+
+            addVisibleItemsRecursively(items, my_item);
+        }
     }
 }
 
