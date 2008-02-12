@@ -23,11 +23,6 @@
             <label>History of combo url.</label>
         </entry>
         
-        <entry key="RecursiveCheck" type="Bool" >
-            <label>Whether to do a recursive check.</label>
-            <default>true</default>
-        </entry>
-        
         <entry key="Depth" type="Int" >
             <label>Maximum depth to check.</label>
             <default>0</default>

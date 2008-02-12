@@ -124,7 +124,6 @@ void SessionWidget::slotLoadSettings(bool modify_current_widget_settings)
 {
     if(modify_current_widget_settings)
     {
-        checkbox_recursively->setChecked(KLSConfig::recursiveCheck());
         spinbox_depth->setValue(KLSConfig::depth());
         checkbox_subdirs_only->setChecked(!KLSConfig::checkParentFolders());
         checkbox_external_links->setChecked(KLSConfig::checkExternalLinks());
@@ -146,7 +145,6 @@ void SessionWidget::slotLoadSettings(bool modify_current_widget_settings)
 
 void SessionWidget::saveCurrentCheckSettings()
 {
-    KLSConfig::setRecursiveCheck(checkbox_recursively->isChecked());
     KLSConfig::setDepth(spinbox_depth->value());
     KLSConfig::setCheckParentFolders(!checkbox_subdirs_only->isChecked());
     KLSConfig::setCheckExternalLinks(checkbox_external_links->isChecked());
@@ -275,48 +273,46 @@ void SessionWidget::slotCheck()
         search_manager_->setDocumentRoot(dialog.url());
     }
 
-    if(!checkbox_recursively->isChecked())
+//     if(!checkbox_recursively->isChecked())
+//     {
+//         search_manager_->setSearchMode(SearchManager::depth);
+//         search_manager_->setDepth(0);
+//     }
+
+    if(spinbox_depth->value() == 0)
     {
-        search_manager_->setSearchMode(SearchManager::depth);
-        search_manager_->setDepth(0);
+        search_manager_->setSearchMode(SearchManager::domain);
+    }
+    else
+    {
+        search_manager_->setSearchMode(SearchManager::depth_and_domain);
+        search_manager_->setDepth(spinbox_depth->value());
     }
 
-    else if(checkbox_recursively->isChecked())
+    if(checkbox_subdirs_only->isChecked())
     {
-        if(spinbox_depth->value() == 0)
-        {
-            search_manager_->setSearchMode(SearchManager::domain);
-        }
-        else
-        {
-            search_manager_->setSearchMode(SearchManager::depth_and_domain);
-            search_manager_->setDepth(spinbox_depth->value());
-        }
+        search_manager_->setCheckParentDirs(false);
 
-        if(checkbox_subdirs_only->isChecked())
-        {
-            search_manager_->setCheckParentDirs(false);
-
-            if(url.hasHost())
-                search_manager_->setDomain(url.host()
-                    + url.directory(KUrl::AppendTrailingSlash | KUrl::ObeyTrailingSlash));
-        }
-        else
-        {
-            search_manager_->setCheckParentDirs(true);
-
-            if(url.hasHost())
-                search_manager_->setDomain(url.host());
-        }
-        if(checkbox_external_links->isChecked())
-        {
-            search_manager_->setCheckExternalLinks(true);
-        }
-        else
-        {
-            search_manager_->setCheckExternalLinks(false);
-        }
+        if(url.hasHost())
+            search_manager_->setDomain(url.host()
+                + url.directory(KUrl::AppendTrailingSlash | KUrl::ObeyTrailingSlash));
     }
+    else
+    {
+        search_manager_->setCheckParentDirs(true);
+
+        if(url.hasHost())
+            search_manager_->setDomain(url.host());
+    }
+    if(checkbox_external_links->isChecked())
+    {
+        search_manager_->setCheckExternalLinks(true);
+    }
+    else
+    {
+        search_manager_->setCheckExternalLinks(false);
+    }
+    
     if(!lineedit_reg_exp->text().isEmpty())
     {
         search_manager_->setCheckRegularExpressions(true);
@@ -336,7 +332,6 @@ void SessionWidget::keyPressEvent(QKeyEvent* e)
          &&
         ( combobox_url->hasFocus()
          || spinbox_depth->hasFocus()
-         || checkbox_recursively->hasFocus()
          || checkbox_external_links->hasFocus()
          || checkbox_subdirs_only->hasFocus() ) )
     {

@@ -6,7 +6,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>391</height>
+    <height>439</height>
    </rect>
   </property>
   <layout class="QVBoxLayout" >
@@ -249,16 +249,6 @@
          <number>0</number>
         </property>
         <item>
-         <widget class="QCheckBox" name="kcfg_RecursiveCheck" >
-          <property name="text" >
-           <string>Recursive</string>
-          </property>
-          <property name="checked" >
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item>
          <spacer>
           <property name="orientation" >
            <enum>Qt::Horizontal</enum>
@@ -285,7 +275,7 @@
          <widget class="KIntSpinBox" name="kcfg_Depth" >
           <property name="minimumSize" >
            <size>
-            <width>85</width>
+            <width>113</width>
             <height>0</height>
            </size>
           </property>
@@ -364,7 +354,6 @@
   <tabstop>kcfg_MaxConnectionsNumber</tabstop>
   <tabstop>kcfg_TimeOut</tabstop>
   <tabstop>kcfg_MaxCountComboUrl</tabstop>
-  <tabstop>kcfg_RecursiveCheck</tabstop>
   <tabstop>kcfg_Depth</tabstop>
   <tabstop>kcfg_CheckParentFolders</tabstop>
   <tabstop>kcfg_CheckExternalLinks</tabstop>
@@ -375,54 +364,5 @@
   <include location="local" >knuminput.h</include>
  </includes>
  <resources/>
- <connections>
-  <connection>
-   <sender>kcfg_RecursiveCheck</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>textLabel1_2_2_2</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>41</x>
-     <y>184</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>162</x>
-     <y>184</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>kcfg_RecursiveCheck</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>kcfg_CheckParentFolders</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>41</x>
-     <y>184</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>40</x>
-     <y>214</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>kcfg_RecursiveCheck</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>kcfg_CheckExternalLinks</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>41</x>
-     <y>184</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>40</x>
-     <y>242</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>
