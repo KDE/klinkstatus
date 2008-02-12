@@ -41,8 +41,29 @@ class QDomElement;
 #include "parser/node.h"
 #include "parser/url.h"
 class AddLevelJob;
-         
+
 using namespace ThreadWeaver;
+
+
+class SearchCounters
+{
+public:
+    friend class SearchManager;
+    
+    SearchCounters();
+    
+    void updateCounters(LinkStatus* link);
+    void resetCounters(LinkStatus* link);
+
+    int totalLinks() const;
+    int brokenLinks() const;
+    int undeterminedLinks() const;
+    
+private:
+    int total_links_;
+    int broken_links_;
+    int undetermined_links_;
+};
 
 
 typedef QHash<QString, KHTMLPart*> KHTMLPartMap;
@@ -74,6 +95,8 @@ public:
     void startSearch(KUrl const& root, SearchMode const& mode);
     void resume();
     void cancelSearch();
+
+    SearchCounters const& searchCounters() const;
 
     void recheckLink(LinkStatus* linkStatus);
     void recheckLinks(QList<LinkStatus*> const& linkstatus_list);
@@ -183,6 +206,8 @@ private:
 
 private:
 
+    SearchCounters search_counters_;
+    
     // whether it is a new search or refreshing previously checked links
     bool recheck_mode_;
     int max_simultaneous_connections_;
@@ -211,7 +236,6 @@ private:
     
     bool canceled_;
     bool searching_;
-    int checked_links_;
     int ignored_links_;
     bool check_parent_dirs_;
     bool check_external_links_;

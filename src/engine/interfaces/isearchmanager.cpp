@@ -21,6 +21,7 @@
 #include "isearchmanager.h"
 
 #include <KStandardDirs>
+#include <kio/netaccess.h>
 
 #include "engine/searchmanager.h"
 #include "utils/utils.h"
@@ -80,7 +81,13 @@ void ISearchManager::initSearchManager(SearchManager* searchManager, QString con
     bool checkExternalLinks = group.readEntry("CheckExternalLinks", true);
     QString doNotCheckRegularExpressionString = group.readEntry("DoNotCheckRegularExpression", "");
     bool doNotCheckRegularExpression = !doNotCheckRegularExpressionString.isEmpty();
-    KUrl resultsFile(group.readEntry("ResultsFile", ""));
+    KUrl resultsFileDir(group.readEntry("ResultsFilePath", "") + "/");
+
+    if(!resultsFileDir.isLocalFile()) {
+        kWarning(23100) << "Results file path is not local, aborting" << optionsFilePath;
+        m_isValidInput = false;
+        return;
+    }
 
     m_brokenLinksOnly = group.readEntry("BrokenLinksOnly", true);
 
@@ -106,7 +113,12 @@ void ISearchManager::initSearchManager(SearchManager* searchManager, QString con
         searchManager->setCheckRegularExpressions(false);
     }
 
-    m_exportResultsPath = resultsFile;
+    if(!KIO::NetAccess::exists(resultsFileDir, KIO::NetAccess::SourceSide, 0)) {
+        kDebug(23100) << "Creating directory: " << resultsFileDir;
+        KIO::NetAccess::mkdir(resultsFileDir, 0);
+    }
+
+    m_exportResultsPath = resultsFileDir;
 }
 
 void ISearchManager::slotExportSearchFinished(SearchManager* searchManager)
@@ -118,7 +130,12 @@ void ISearchManager::slotExportSearchFinished(SearchManager* searchManager)
     LinkStatusHelper::Status status = m_brokenLinksOnly ?  LinkStatusHelper::bad : LinkStatusHelper::none;
     QString html = XSL::transform(searchManager->toXML(status), styleSheetUrl);
 
-    FileManager::write(html, m_exportResultsPath);
+    bool passed = searchManager->searchCounters().brokenLinks() == 0 ? true : false;
+    QString passedString = passed ? "passed" : "broken";
+    QString dateTime = QDateTime::currentDateTime().toString("yyyyMMddhh");
+
+    KUrl filePath(m_exportResultsPath.url() + "linkcheck-" + passedString + "-" + dateTime + ".html");
+    FileManager::write(html, filePath);
 }
 
 void ISearchManager::slotEmailSearchFinished(SearchManager* /*searchManager*/)

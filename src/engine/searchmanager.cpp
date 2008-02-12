@@ -45,7 +45,7 @@ SearchManager::SearchManager(int max_simultaneous_connections, int time_out,
         finished_connections_(max_simultaneous_connections_),
         maximum_current_connections_(-1), general_domain_(false),
         checked_general_domain_(false), time_out_(time_out), current_connections_(0),
-        send_identification_(true), canceled_(false), searching_(false), checked_links_(0), ignored_links_(0),
+        send_identification_(true), canceled_(false), searching_(false),  ignored_links_(0),
         check_parent_dirs_(true), check_external_links_(true), check_regular_expressions_(false),
         number_of_current_level_links_(0), 
         links_rechecked_(0), recheck_current_index_(0)
@@ -85,7 +85,7 @@ void SearchManager::reset()
     current_connections_ = 0;
     canceled_ = false;
     searching_ = false;
-    checked_links_ = 0;    
+    search_counters_.total_links_ = 0;
     if(KLSConfig::userAgent().isEmpty()) {
         KLSConfig::setUserAgent(KProtocolManager::defaultUserAgent());
     }
@@ -142,7 +142,7 @@ void SearchManager::recheckLinks(QList<LinkStatus*> const& linkstatus_list)
     kDebug(23100) << "SearchManager::recheckLinks: " << linkstatus_list.size();
   
     Q_ASSERT(!searching_);
-    Q_ASSERT(checked_links_ >= linkstatus_list.size());
+    Q_ASSERT(search_counters_.total_links_ >= linkstatus_list.size());
     Q_ASSERT(search_results_.size() != 0);
 
     recheck_mode_ = true;
@@ -230,7 +230,7 @@ void SearchManager::finnish()
     }
     kDebug(23100) << "SearchManager::finnish";
     if(!recheck_mode_)
-        kDebug(23100) << "Links Checked: " << checked_links_;
+        kDebug(23100) << "Links Checked: " << search_counters_.total_links_;
     else
         kDebug(23100) << "Links Rechecked: " << links_rechecked_;
 
@@ -275,14 +275,15 @@ void SearchManager::slotRootChecked(LinkStatus* link, LinkChecker* checker)
     kDebug(23100) <<  link->absoluteUrl().url() << " -> " << 
             LinkStatusHelper::lastRedirection(&root_)->absoluteUrl().url() << endl;
 
-    Q_ASSERT(checked_links_ == 0);
+    Q_ASSERT(search_counters_.total_links_ == 0);
     Q_ASSERT(search_results_.size() == 0);
 
     if(KLSConfig::showMarkupStatus() && link->isHtmlDocument())
         LinkStatusHelper::validateMarkup(link);
     
-    ++checked_links_;
-    //kDebug(23100) <<  "++checked_links_: SearchManager::slotRootChecked";
+    ++search_counters_.total_links_;
+    search_counters_.updateCounters(link);
+
     emit signalRootChecked(link);
     if(link->isRedirection() && link->redirection())
         linkRedirectionChecked(link->redirection());
@@ -618,22 +619,26 @@ void SearchManager::checkLink(LinkStatus* ls, bool recheck)
 
 void SearchManager::recheckLink(LinkStatus* ls)
 {
+    
+  
     checkLink(ls, true);
 }
 
 void SearchManager::linkRedirectionChecked(LinkStatus* link, bool recheck)
 {
-    kDebug(23100) <<  "SearchManager::linkRedirectionChecked: " << checked_links_;
+    kDebug(23100) <<  "SearchManager::linkRedirectionChecked: " << search_counters_.total_links_;
     
     emit signalRedirection();
     recheck ? emit signalLinkRechecked(link) : emit signalLinkChecked(link);
   
     if(!recheck) {
-        ++checked_links_;
+        ++search_counters_.total_links_;
         search_results_hash_.insert(link->absoluteUrl(), link);
     } else {
         ++links_rechecked_;
     }
+    
+    search_counters_.updateCounters(link);
     
     if(link->isRedirection() && link->redirection())
         linkRedirectionChecked(link->redirection(), recheck);
@@ -641,7 +646,7 @@ void SearchManager::linkRedirectionChecked(LinkStatus* link, bool recheck)
 
 void SearchManager::slotLinkChecked(LinkStatus* link, LinkChecker* checker)
 {
-    kDebug(23100) <<  "SearchManager::slotLinkChecked: " << checked_links_;
+    kDebug(23100) <<  "SearchManager::slotLinkChecked: " << search_counters_.total_links_;
 //     kDebug(23100) <<  link->absoluteUrl().url() << " -> " << 
 //             LinkStatus::lastRedirection((const_cast<LinkStatus*> (link)))->absoluteUrl().url() << endl;
 
@@ -657,9 +662,11 @@ void SearchManager::slotLinkChecked(LinkStatus* link, LinkChecker* checker)
     if(link->isRedirection() && link->redirection())
         linkRedirectionChecked(link->redirection());
     
-    ++checked_links_;
+    ++search_counters_.total_links_;
     ++finished_connections_;
     --links_being_checked_;
+    
+    search_counters_.updateCounters(link);
   
     Q_ASSERT(links_being_checked_ >= 0);
 
@@ -692,6 +699,8 @@ void SearchManager::slotLinkRechecked(LinkStatus* link, LinkChecker* checker)
     --links_being_checked_;
     
     Q_ASSERT(link);
+
+    search_counters_.updateCounters(link);
 
     if(KLSConfig::showMarkupStatus() && link->isHtmlDocument())
         LinkStatusHelper::validateMarkup(link);
@@ -1079,4 +1088,35 @@ void AddLevelJob::run()
     m_searchManager.addLevel();
 }
 
+
+SearchCounters::SearchCounters()
+  : total_links_(0), broken_links_(0), undetermined_links_(0)
+{
+}
+
+void SearchCounters::updateCounters(LinkStatus* link)
+{
+    if(LinkStatusHelper::hasStatus(link, LinkStatusHelper::bad)) {
+        ++broken_links_;
+    }
+    else if(LinkStatusHelper::hasStatus(link, LinkStatusHelper::undetermined)) {
+        ++undetermined_links_;
+    }
+}
+
+void SearchCounters::resetCounters(LinkStatus* link)
+{
+    if(link->isRedirection() && link->redirection()) {
+        resetCounters(link->redirection());
+    }
+  
+    if(LinkStatusHelper::hasStatus(link, LinkStatusHelper::bad)) {
+        --broken_links_;
+    }
+    else if(LinkStatusHelper::hasStatus(link, LinkStatusHelper::undetermined)) {
+        --undetermined_links_;
+    }
+}
+
+    
 #include "searchmanager.moc"

@@ -21,6 +21,24 @@
 #ifndef SEARCHMANAGER_IMPL_H
 #define SEARCHMANAGER_IMPL_H
 
+    
+inline int SearchCounters::totalLinks() const {
+    return total_links_;
+}
+
+inline int SearchCounters::brokenLinks() const {
+    return broken_links_;
+}
+
+inline int SearchCounters::undeterminedLinks() const {
+    return undetermined_links_;
+}
+
+inline SearchCounters const& SearchManager::searchCounters() const
+{
+    return search_counters_;
+}
+
 inline int SearchManager::maximumCurrentConnections() const
 {
     Q_ASSERT(maximum_current_connections_ != -1);
@@ -34,8 +52,8 @@ inline SearchManager::SearchMode const& SearchManager::searchMode() const
 
 inline int SearchManager::checkedLinks() const
 {
-    Q_ASSERT(checked_links_ > 0);
-    return checked_links_;
+    Q_ASSERT(search_counters_.total_links_ > 0);
+    return search_counters_.total_links_;
 }
 
 inline void SearchManager::startSearch()
