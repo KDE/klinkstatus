@@ -93,7 +93,6 @@ public:
     void setRootUrl(KUrl const& url);
     void setSearchMode(SearchMode modo);
     void setDepth(int depth);
-    void setExternalDomainDepth(int depth);
     void setDomain(QString const& domain);
     void setCheckParentDirs(bool flag);
     void setCheckExternalLinks(bool flag);
@@ -172,6 +171,7 @@ private:
     int maximumCurrentConnections() const;
     bool onlyCheckHeader(LinkStatus* ls) const;
     void linkRedirectionChecked(LinkStatus* link, bool recheck = false);
+    void setExternalDomainDepth(int depth);
 
     /*
       Entende-se por domain vago um domain do tipo www.google.pt ou google.pt, pelo que,

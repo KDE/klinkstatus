@@ -311,12 +311,10 @@ void SessionWidget::slotCheck()
         if(checkbox_external_links->isChecked())
         {
             search_manager_->setCheckExternalLinks(true);
-            search_manager_->setExternalDomainDepth(1);
         }
         else
         {
             search_manager_->setCheckExternalLinks(false);
-            search_manager_->setExternalDomainDepth(0);
         }
     }
     if(!lineedit_reg_exp->text().isEmpty())

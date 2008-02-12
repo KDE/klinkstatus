@@ -96,14 +96,7 @@ void ISearchManager::initSearchManager(SearchManager* searchManager, QString con
     searchManager->setSearchMode(mode);
 
     searchManager->setCheckParentDirs(checkParentFolders);
-
     searchManager->setCheckExternalLinks(checkExternalLinks);
-    if(checkExternalLinks) {
-        searchManager->setExternalDomainDepth(1);
-    }
-    else {
-        searchManager->setExternalDomainDepth(0);
-    }
 
     if(doNotCheckRegularExpression) {
         searchManager->setCheckRegularExpressions(true);

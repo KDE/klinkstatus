@@ -80,6 +80,7 @@ inline void SearchManager::setCheckParentDirs(bool flag)
 inline void SearchManager::setCheckExternalLinks(bool flag)
 {
     check_external_links_ = flag;
+    external_domain_depth_ = check_external_links_ ? 1 : 0;
 }
 
 inline void SearchManager::setCheckRegularExpressions(bool flag)
