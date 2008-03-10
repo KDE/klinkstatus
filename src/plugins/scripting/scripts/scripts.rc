@@ -1,0 +1,12 @@
+<KrossScripting>
+
+    <collection name="file">
+        <script
+            name="klinkstatus_script"
+            text="Dummy Script"
+            comment="Dummt Script"
+            interpreter="python"
+            file="klinkstatus_script.py" />
+    </collection>
+
+</KrossScripting>
