@@ -1,0 +1,3 @@
+qdbuscpp2xml -M searchmanageradaptor.h -o org.kde.kdewebdev.klinkstatus.SearchManager.xml
+qdbuscpp2xml -M searchmanageragentadaptor.h -o org.kde.kdewebdev.klinkstatus.SearchManagerAgent.xml
+
