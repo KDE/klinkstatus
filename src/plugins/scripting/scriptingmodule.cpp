@@ -30,7 +30,7 @@
 
 
 extern "C" {
-KLINKSTATUS_EXPORT QObject* krossmodule()
+KDE_EXPORT QObject* krossmodule()
 {
     return new ScriptingModule();
 }
