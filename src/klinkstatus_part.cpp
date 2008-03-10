@@ -44,7 +44,7 @@
 #include "actionmanager.h"
 #include "global.h"
 #include "klsconfig.h"
-#include "engine/interfaces/isearchmanager.h"
+#include "engine/searchmanageragent.h"
 
 
 const char KLinkStatusPart::description_[] = I18N_NOOP( "A Link Checker" );
@@ -65,7 +65,7 @@ KLinkStatusPart::KLinkStatusPart(QWidget* parentWidget,
     ActionManager::setInstance(action_manager_);
     initGUI();
 
-    new ISearchManager(this);
+    new SearchManagerAgent(this);
 
     tabwidget_ = new TabWidgetSession(parentWidget);
     setWidget(tabwidget_);
@@ -191,5 +191,7 @@ KAboutData* KLinkStatusPart::createAboutData()
 
     return about;
 }
+
+
 
 #include "klinkstatus_part.moc"

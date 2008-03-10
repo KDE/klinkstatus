@@ -25,6 +25,7 @@
 
 class QToolButton;
 
+#include "klinkstatus_export.h"
 class SessionStackedWidget;
 class SessionWidget;
 class LinkStatus;
@@ -35,7 +36,7 @@ This class handles the creation and destruction of sessions, i.e, severals insta
  
 @author Paulo Moura Guedes
 */
-class TabWidgetSession : public KTabWidget
+class KLINKSTATUS_EXPORT TabWidgetSession : public KTabWidget
 {
     Q_OBJECT
 

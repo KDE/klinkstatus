@@ -35,6 +35,7 @@ class QDomElement;
 
 #include <QList>
 
+#include "klinkstatus_export.h"
 #include "engine/linkstatus.h"
 #include "engine/linkstatushelper.h"
 #include "engine/linkchecker.h"
@@ -68,7 +69,7 @@ private:
 
 typedef QHash<QString, KHTMLPart*> KHTMLPartMap;
 
-class SearchManager: public QObject
+class KLINKSTATUS_EXPORT SearchManager: public QObject
 {
     Q_OBJECT
 

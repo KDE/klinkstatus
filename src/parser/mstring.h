@@ -26,6 +26,8 @@
 #include <QList>
 #include <cctype>
 
+#include "klinkstatus_export.h"
+
 class QString;
 
 typedef unsigned int uint;
@@ -38,14 +40,14 @@ typedef unsigned int uint;
    e.g.
    findWord("Biltre larvado", "biltre") => 6
 */
-int findWord(QString const& s, QString const& palavra, int a_partir_do_indice = 0);
+int KLINKSTATUS_EXPORT findWord(QString const& s, QString const& palavra, int a_partir_do_indice = 0);
 
 /**
    Similar to std::string::find but return the next index of the first char
    it finds.
    Case insensitive.
 */
-int findChar(QString const& s, QChar letra, int a_partir_do_indice = 0);
+int KLINKSTATUS_EXPORT findChar(QString const& s, QChar letra, int a_partir_do_indice = 0);
 
 /**
    Same as findWord but non space chars are eliminated.
@@ -56,46 +58,46 @@ int findChar(QString const& s, QChar letra, int a_partir_do_indice = 0);
    findWord("<\na href=""></a>", "<a") => -1
    findSeparableWord("<\na href=""></a>", "<a") => 3
 */
-int findSeparableWord(QString const& s, QString const& palavra, int a_partir_do_indice = 0);
+int KLINKSTATUS_EXPORT findSeparableWord(QString const& s, QString const& palavra, int a_partir_do_indice = 0);
 
 /**
    Space means Unicode characters with decimal values 
    9 (TAB), 10 (LF), 11 (VT), 12 (FF), 13 (CR), and 32 (Space).
 */
-bool isSpace(QChar c);
+bool KLINKSTATUS_EXPORT isSpace(QChar c);
 
 /**
  Return -1 if unsuccessful.
 */
-int nextNonSpaceChar(QString const& s, int i);
-int nextNonSpaceCharReverse(QString const& s, int i);
-int nextSpaceChar(QString const& s, int i);
+int KLINKSTATUS_EXPORT nextNonSpaceChar(QString const& s, int i);
+int KLINKSTATUS_EXPORT nextNonSpaceCharReverse(QString const& s, int i);
+int KLINKSTATUS_EXPORT nextSpaceChar(QString const& s, int i);
 
-int nextCharDifferentThan(QChar c, QString const& s, int i);
+int KLINKSTATUS_EXPORT nextCharDifferentThan(QChar c, QString const& s, int i);
 
 /** Return a vector with the words */
-QList<QString> tokenizeWordsSeparatedByDots(QString const& s);
-QList<QString> tokenizeWordsSeparatedBy(QString const& s, const QChar& criteria);
+QList<QString> KLINKSTATUS_EXPORT tokenizeWordsSeparatedByDots(QString const& s);
+QList<QString> KLINKSTATUS_EXPORT tokenizeWordsSeparatedBy(QString const& s, const QChar& criteria);
 
 /**
    If char 'caractere' is the last in the string 's' it is removed
 */
-void removeLastCharIfExists(QString& s, QChar caractere);
+void KLINKSTATUS_EXPORT removeLastCharIfExists(QString& s, QChar caractere);
 
 /**
    Remove whitespaces from the end of the string
 */
-void trimmedFromTheEnd(QString& s);
+void KLINKSTATUS_EXPORT trimmedFromTheEnd(QString& s);
 
 
 /**
    Case insensitive comparisons
 */
-bool equal(QString const& s1, QString const& s2);
-bool notEqual(QString const& s1, QString const& s2);
+bool KLINKSTATUS_EXPORT equal(QString const& s1, QString const& s2);
+bool KLINKSTATUS_EXPORT notEqual(QString const& s1, QString const& s2);
 
-bool equal(QChar c1, QChar c2);
-bool notEqual(QChar c1, QChar c2);
+bool KLINKSTATUS_EXPORT equal(QChar c1, QChar c2);
+bool KLINKSTATUS_EXPORT notEqual(QChar c1, QChar c2);
 
 
 //_________________________________________________________________________

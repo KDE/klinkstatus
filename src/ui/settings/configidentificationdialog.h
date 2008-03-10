@@ -23,10 +23,14 @@
 
 #include "ui_configidentificationdialogui.h"
 
+#include "klinkstatus_export.h"
+
+
 /**
 	@author Paulo Moura Guedes <moura@kdewebdev.org>
 */
-class ConfigIdentificationDialog : public QWidget, public Ui::ConfigIdentificationDialogUi
+class KLINKSTATUS_EXPORT ConfigIdentificationDialog : 
+        public QWidget, public Ui::ConfigIdentificationDialogUi
 {
 
 Q_OBJECT

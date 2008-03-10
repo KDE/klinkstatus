@@ -25,6 +25,7 @@
 class QAction;
 class KActionCollection;
 
+#include "klinkstatus_export.h"
 class SessionWidget;
 class SessionStackedWidget;
 class KLinkStatusPart;
@@ -35,7 +36,7 @@ class TabWidgetSession;
 
     interface for accessing actions, popup menus etc. from widgets.
 */
-class ActionManager : public QObject
+class KLINKSTATUS_EXPORT ActionManager : public QObject
 {
     Q_OBJECT
 public:

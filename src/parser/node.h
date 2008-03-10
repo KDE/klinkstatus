@@ -22,6 +22,7 @@
 #define NODE_H
 
 #include "mstring.h"
+#include "klinkstatus_export.h"
 
 #include <QString>
 
@@ -33,7 +34,7 @@ typedef unsigned int uint;
 /**
  * Represents a tag. Sorry for the bad chosen name.
  */
-class Node
+class KLINKSTATUS_EXPORT Node
 {
 public:
 
@@ -85,7 +86,7 @@ protected:
 };
 
 
-class NodeLink: public Node
+class KLINKSTATUS_EXPORT NodeLink: public Node
 {
 public:
     NodeLink();
@@ -109,7 +110,7 @@ private:
     QString attribute_href_;
 };
 
-class NodeA: public NodeLink
+class KLINKSTATUS_EXPORT NodeA: public NodeLink
 {
 public:
     explicit NodeA(const QString & content);
@@ -127,7 +128,7 @@ private:
     QString attribute_name_;
 };
 
-class NodeAREA: public NodeLink
+class KLINKSTATUS_EXPORT NodeAREA: public NodeLink
 {
 public:
     NodeAREA(const QString & content);
@@ -145,7 +146,7 @@ private:
 };
 
 
-class NodeLINK: public NodeLink
+class KLINKSTATUS_EXPORT NodeLINK: public NodeLink
 {
 public:
     explicit NodeLINK(const QString & content);
@@ -154,7 +155,7 @@ public:
     ;
 };
 
-class NodeMETA: public Node
+class KLINKSTATUS_EXPORT NodeMETA: public Node
 {
 public:
     NodeMETA();
@@ -193,7 +194,7 @@ private:
     QString attribute_content_;
 };
 
-class NodeIMG: public Node
+class KLINKSTATUS_EXPORT NodeIMG: public Node
 {
 public:
     explicit NodeIMG(const QString & content);
@@ -218,7 +219,7 @@ private:
     QString attribute_alt_;
 };
 
-class NodeFRAME: public Node
+class KLINKSTATUS_EXPORT NodeFRAME: public Node
 {
 public:
     NodeFRAME(const QString & content);
@@ -238,7 +239,7 @@ private:
     QString attribute_src_;
 };
 
-class NodeBASE: public NodeLink
+class KLINKSTATUS_EXPORT NodeBASE: public NodeLink
 {
 public:
     NodeBASE();
@@ -250,7 +251,7 @@ public:
     virtual bool isLink() const;
 };
 
-class NodeTITLE: public Node
+class KLINKSTATUS_EXPORT NodeTITLE: public Node
 {
 public:
     NodeTITLE();

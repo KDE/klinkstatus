@@ -56,7 +56,7 @@ private:
     void setupActions();
     void setupTrayIcon();
     void removeDuplicatedActions();
-
+    
 private:
     KParts::ReadOnlyPart *m_part;
 

@@ -151,7 +151,7 @@ void ActionManager::initTabWidget(TabWidgetSession* tabWidgetSession)
     actionCollection()->addAction("file_export_html_all", action );
     connect(action, SIGNAL(triggered(bool) ), d->tabWidgetSession, SLOT(slotExportAsHTML()));
     action->setEnabled(false);
-
+    
     action  = new KAction(KIcon("document-save"), i18n("Broken..."), this);
     actionCollection()->addAction("file_export_html_broken", action );
     connect(action, SIGNAL(triggered(bool) ), d->tabWidgetSession, SLOT(slotExportBrokenAsHTML()));

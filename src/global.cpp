@@ -35,10 +35,13 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+
 class GlobalPrivate : public QObject
 {
     Q_OBJECT
 public:
+    friend class Global;
+  
     GlobalPrivate();
 
     void setKLinkStatusPart(ReadOnlyPart* part);

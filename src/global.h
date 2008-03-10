@@ -31,19 +31,21 @@ namespace KParts {
 }
 class KStatusBar;
 
+#include "klinkstatus_export.h"
+
 using namespace KParts;
 
 
 /**
 @author Paulo Moura Guedes
 */
-class Global
+class KLINKSTATUS_EXPORT Global
 {
 public:
     static Global* getInstance();
 
     void setKLinkStatusPart(ReadOnlyPart* part);
-    
+
     KStatusBar* statusBar() const;
     void setStatusBarText(QString const& text, bool permanent = false);
     void addStatusBarPermanentItem(QWidget* widget);
