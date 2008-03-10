@@ -1,0 +1,11 @@
+<!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
+<kpartgui name="KLinkStatusPluginScripting" library="krossmoduleklinkstatus" version="1">
+<MenuBar>
+	<Menu name="tools"><text>&amp;Tools</text>
+		<Separator/>
+		<Action name="edit_script_actions"/>
+		<Action name="reset_script_actions"/>
+        <Separator/>
+	</Menu>
+</MenuBar>
+
