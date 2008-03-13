@@ -1,6 +1,14 @@
 [Desktop Entry]
 Name=Scripting plugin
+Name[ga]=Breiseán scriptithe
+Name[pt]='Plugin' de programação
+Name[pt_BR]='Plugin' de programação
+Name[zh_TW]=文稿外掛程式
 Comment=Allow execution of scripts
+Comment[ga]=Ceadaigh scripteanna a rith
+Comment[pt]=Permitir executar programas ou 'scripts'
+Comment[pt_BR]=Permitir executar programas ou 'scripts'
+Comment[zh_TW]=允許執行文稿
 Type=Service
 X-KDE-Library=krossmoduleklinkstatus
 X-KDE-Version=1
