@@ -37,7 +37,7 @@
 #include <kxmlguifactory.h>
 #include <ktoolbar.h>
 
-#include "trayicon.h"
+#include "ui/trayicon.h"
 
 
 KLinkStatus::KLinkStatus()
