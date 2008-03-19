@@ -422,7 +422,9 @@ void SessionWidget::slotLinkChecked(LinkStatus* linkstatus)
     if(tree_display_)
     {
         tree_view_item = new TreeViewItem(tree_view, parent_item, linkstatus);
-        parent_item->setLastChild(tree_view_item);
+        if(parent_item) {
+            parent_item->setLastChild(tree_view_item);
+        }
         if(follow_last_link_checked_)
             tree_view->ensureRowVisible(tree_view_item, tree_display_);
 
