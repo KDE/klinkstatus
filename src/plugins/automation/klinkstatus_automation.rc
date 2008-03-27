@@ -1,0 +1,10 @@
+<!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
+<kpartgui name="KLinkStatusPluginAutomation" library="automationklinkstatus" version="1">
+<MenuBar>
+	<Menu name="tools"><text>&amp;Tools</text>
+		<Separator/>
+		<Action name="schedule_checks"/>
+        <Separator/>
+	</Menu>
+</MenuBar>
+
