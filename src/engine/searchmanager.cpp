@@ -980,7 +980,7 @@ void SearchManager::slotJobDone(ThreadWeaver::Job* job)
         slotLevelAdded();
     }
 
-    delete job;
+    job->deleteLater();
 }
 
 QStringList SearchManager::findUnreferredDocuments(KUrl const& baseDir, QStringList const& documentList) const
@@ -1055,12 +1055,13 @@ QList<LinkStatus*> SearchManager::getLinksWithHtmlProblems() const
 // BuildNodeJob
 
 BuildNodeJob::BuildNodeJob(SearchManager& manager, LinkStatus* linkstatus)
-  : m_searchManager(manager), m_linkStatus(linkstatus)
+  : Job(&manager), m_searchManager(manager), m_linkStatus(linkstatus)
 {
 }
 
 BuildNodeJob::~BuildNodeJob()
 {
+//     kDebug(23100) << "BuildNodeJob::~BuildNodeJob()";
 }
     
 void BuildNodeJob::run()
@@ -1073,12 +1074,13 @@ void BuildNodeJob::run()
 // AddLevelJob
 
 AddLevelJob::AddLevelJob(SearchManager& manager)
-  : m_searchManager(manager)
+  : Job(&manager), m_searchManager(manager)
 {
 }
 
 AddLevelJob::~AddLevelJob()
 {
+//     kDebug(23100) << "AddLevelJob::~AddLevelJob()";
 }
     
 void AddLevelJob::run()

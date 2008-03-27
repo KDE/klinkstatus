@@ -31,6 +31,7 @@ class ScriptingModule;
 */
 class ScriptingPart : public Kross::ScriptingPlugin
 {
+    Q_OBJECT
 public:
     ScriptingPart(QObject* parent, const QStringList& list);
     ~ScriptingPart();

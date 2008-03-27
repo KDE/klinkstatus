@@ -29,7 +29,8 @@ endif(LIBTIDY_FOUND)
 ########### next target ###############
 
 set(libutils_SRCS 
-    ${CMAKE_SOURCE_DIR}/klinkstatus/src/utils/utils.cpp 
+    ${CMAKE_SOURCE_DIR}/klinkstatus/src/utils/utils.cpp     
+    ${CMAKE_SOURCE_DIR}/klinkstatus/src/utils/timer.cpp
 )
 
 set(libparser_SRCS
@@ -163,10 +164,11 @@ install(TARGETS klinkstatus DESTINATION ${BIN_INSTALL_DIR})
 
 ########### install files ###############
 
-install( FILES  klinkstatus.desktop  DESTINATION ${XDG_APPS_INSTALL_DIR})
-install( FILES  klinkstatus_part.desktop  DESTINATION ${SERVICES_INSTALL_DIR})
-install( FILES  klinkstatus_part.rc  DESTINATION ${DATA_INSTALL_DIR}/klinkstatuspart)
-install( FILES  klinkstatus_shell.rc  DESTINATION ${DATA_INSTALL_DIR}/klinkstatus)
+install(FILES  klinkstatus.desktop  DESTINATION ${XDG_APPS_INSTALL_DIR})
+install(FILES  klinkstatus_part.desktop  DESTINATION ${SERVICES_INSTALL_DIR})
+install(FILES  klinkstatus_part.rc  DESTINATION ${DATA_INSTALL_DIR}/klinkstatuspart)
+install(FILES  klinkstatus_shell.rc  DESTINATION ${DATA_INSTALL_DIR}/klinkstatus)
+install(FILES  klinkstatus.knsrc  DESTINATION  ${CONFIG_INSTALL_DIR})
 
 install(FILES interfaces/engine/org.kde.kdewebdev.klinkstatus.SearchManager.xml 
     DESTINATION ${DBUS_INTERFACES_INSTALL_DIR})

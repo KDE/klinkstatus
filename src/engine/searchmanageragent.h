@@ -32,9 +32,12 @@ class KLINKSTATUS_EXPORT SearchManagerAgent : public QObject
 {
   Q_OBJECT
 public:
-    SearchManagerAgent(QObject *parent = 0);
+    SearchManagerAgent(QObject *parent = 0);    
     ~SearchManagerAgent();
+    
+    void setOptionsFilePath(QString const& optionsFilePath);
 
+    void check();
     void check(QString const& optionsFilePath);
     
     SearchManager* searchManager() const;

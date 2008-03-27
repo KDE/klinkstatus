@@ -11,9 +11,7 @@ set(krossmoduleklinkstatus_PART_SRCS scriptingmodule.cpp scriptingpart.cpp)
 
 kde4_add_plugin(krossmoduleklinkstatus ${krossmoduleklinkstatus_PART_SRCS})
 
-SET(klinkstatus_LIB /home/kde/trunk/KDE/build/kdewebdev/lib/libklinkstatuscommon.so.4.0.0)
-
-target_link_libraries(krossmoduleklinkstatus 
+target_link_libraries(krossmoduleklinkstatus
     ${KDE4_KDECORE_LIBS} 
     ${KDE4_KPARTS_LIBS}  
     ${KDE4_KROSSUI_LIBS} 

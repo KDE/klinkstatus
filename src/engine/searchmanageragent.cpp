@@ -59,6 +59,11 @@ SearchManagerAgent::~SearchManagerAgent()
     delete d;
 }
 
+void SearchManagerAgent::setOptionsFilePath(QString const& optionsFilePath)
+{
+    d->optionsFilePath = optionsFilePath;
+}
+
 void SearchManagerAgent::reset()
 {
     d->busy = false;
@@ -67,6 +72,16 @@ void SearchManagerAgent::reset()
     d->optionsFilePath = QString();
     d->exportResultsPath = KUrl();
     d->brokenLinksOnly = false;
+}
+
+void SearchManagerAgent::check()
+{
+    if(d->optionsFilePath.isEmpty()) {
+        kWarning(23100) << "optionsFilePath.isEmpty()";
+        return;
+    }
+    
+    check(d->optionsFilePath);
 }
 
 void SearchManagerAgent::check(QString const& optionsFilePath)
@@ -149,33 +164,42 @@ bool SearchManagerAgent::initSearchOptions(SearchManager* searchManager)
 
 void SearchManagerAgent::slotExportSearchFinished(SearchManager* searchManager)
 {
+    kDebug(23100) << "SearchManagerAgent::slotExportSearchFinished";
+    kDebug(23100) << d->exportResultsPath;
+    
     if(!d->exportResultsPath.isValid()) {
+        kWarning(23100) << "exportResultsPath is not valid";
         reset();
         return;
     }
       
+    kDebug(23100) << "Exporting results...";
+    
     KUrl styleSheetUrl = KStandardDirs::locate("appdata", "styles/results_stylesheet.xsl");
  
     LinkStatusHelper::Status status = d->brokenLinksOnly ?  
-        LinkStatusHelper::bad : LinkStatusHelper::none;
+            LinkStatusHelper::bad : LinkStatusHelper::none;
     QString html = XSL::transform(searchManager->toXML(status), styleSheetUrl);
     
     // export to file
     if(!KIO::NetAccess::exists(d->exportResultsPath, KIO::NetAccess::SourceSide, 0)) {
         kDebug(23100) << "Creating directory: " << d->exportResultsPath;
         if(!KIO::NetAccess::mkdir(d->exportResultsPath, 0)) {
-            kDebug(23100) << "Could not create directory: " << d->exportResultsPath;
-        }
-        else {
-            bool passed = searchManager->searchCounters().brokenLinks() == 0 ? true : false;
-            QString passedString = passed ? "passed" : "broken";
-            QString dateTime = QDateTime::currentDateTime().toString("yyyyMMddhh");
-
-            KUrl filePath(d->exportResultsPath.url() + "linkcheck-" + passedString + "-"
-                + dateTime + ".html");
-            FileManager::write(html, filePath);
+            kWarning(23100) << "Could not create directory: " << d->exportResultsPath;
+            return;
         }
     }
+        
+    bool passed = searchManager->searchCounters().brokenLinks() == 0 ? true : false;
+    QString passedString = passed ? "passed" : "broken";
+    QString dateTime = QDateTime::currentDateTime().toString("yyyyMMddhh");
+
+    KUrl filePath(d->exportResultsPath.url() + "linkcheck-" + passedString + "-"
+        + dateTime + ".html");
+
+    kDebug(23100) << "Exporting results to file: " << filePath.url();
+
+    FileManager::write(html, filePath);
 
     // E-mail site administrator
     if(!d->mailRecipient.isEmpty()) {

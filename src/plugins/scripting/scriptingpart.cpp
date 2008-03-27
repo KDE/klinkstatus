@@ -49,11 +49,11 @@ ScriptingPart::ScriptingPart(QObject* parent, const QStringList&)
     kDebug(23100) <<"Scripting plugin. Class:" << metaObject()->className() 
         <<", Parent:" << parent->metaObject()->className();
     
-    QString ss;
-    QTextStream s(&ss);
-    QDomDocument doc = domDocument();
-    doc.save(s, 4);
-    kDebug(23100) << s.readAll();
+//     QString ss;
+//     QTextStream s(&ss);
+//     QDomDocument doc = domDocument();
+//     doc.save(s, 4);
+//     kDebug(23100) << s.readAll();
 
     initActions();
 }
@@ -74,3 +74,4 @@ void ScriptingPart::initActions()
     connect(action, SIGNAL(triggered(bool)), this, SLOT(slotResetScriptActions()));
 }
 
+#include "scriptingpart.moc"
