@@ -41,6 +41,7 @@
 #include "ui_configsearchdialog.h"
 #include "ui_configresultsdialog.h"
 #include "ui/settings/configidentificationdialog.h"
+#include "ui/settings/configresultsdialogimpl.h"
 #include "actionmanager.h"
 #include "global.h"
 #include "klsconfig.h"
@@ -121,20 +122,15 @@ void KLinkStatusPart::slotClose()
 
 void KLinkStatusPart::slotConfigureKLinkStatus()
 {
-    KConfigDialog *dialog = new KConfigDialog(tabwidget_, "klsconfig", KLSConfig::self());
+    KConfigDialog* dialog = new KConfigDialog(tabwidget_, "klsconfig", KLSConfig::self());
 
-    Ui::ConfigSearchDialog search_ui;
-    Ui::ConfigResultsDialog results_ui;
-    
-    QWidget *search_widget = new QWidget;
-    QWidget *results_widget = new QWidget;
-    
+    Ui::ConfigSearchDialog search_ui;    
+    QWidget* search_widget = new QWidget(dialog);    
     search_ui.setupUi(search_widget);
-    results_ui.setupUi(results_widget);
 
     dialog->addPage(search_widget, i18n("Check"), "zoom-original");
-    dialog->addPage(results_widget, i18n("Results"), "view-list-details");
-    dialog->addPage(new ConfigIdentificationDialog(), i18n("Identification"),
+    dialog->addPage(new ConfigResultsDialogImpl(dialog), i18n("Results"), "view-list-details");
+    dialog->addPage(new ConfigIdentificationDialog(dialog), i18n("Identification"),
                     "preferences-web-browser-identification",
                     i18n("Configure the way KLinkstatus reports itself"));
 

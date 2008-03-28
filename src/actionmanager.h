@@ -60,6 +60,7 @@ public slots:
 
 private slots:
     void slotFillGotoViewPopup();
+    void slotGHNS();
     
 private:
     // start, pause and stop

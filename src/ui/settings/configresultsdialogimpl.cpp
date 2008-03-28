@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2006 by Paulo Moura Guedes                              *
+ *   Copyright (C) 2008 by Paulo Moura Guedes                              *
  *   moura@kdewebdev.org                                                   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,39 +18,41 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
-#include "configidentificationdialog.h"
-
-#include <kprotocolmanager.h>
-#include <kpushbutton.h>
-#include <klineedit.h>
-
-#include <QString>
+#include "configresultsdialogimpl.h"
 
 #include "klsconfig.h"
 
 
-ConfigIdentificationDialog::ConfigIdentificationDialog(QWidget *parent) 
+ConfigResultsDialogImpl::ConfigResultsDialogImpl(QWidget *parent) 
     : QWidget(parent)
 {
     setupUi(this);
-    if(KLSConfig::userAgent().isEmpty())
-    {
-        slotDefaultUA();
+
+    initStylesCombo();
+}
+
+ConfigResultsDialogImpl::~ConfigResultsDialogImpl()
+{
+}
+
+void ConfigResultsDialogImpl::initStylesCombo()
+{
+    QStringList availableStyles = KLSConfig::stylesheetFiles();
+    foreach(QString style, availableStyles) {
+        kcfg_PreferedStylesheet->addItem(style);
     }
     
-    connect(buttonDefault, SIGNAL(clicked()), this, SLOT(slotDefaultUA()));
-}
-
-ConfigIdentificationDialog::~ConfigIdentificationDialog()
-{
-
-}
-
-void ConfigIdentificationDialog::slotDefaultUA()
-{
-    KLSConfig::setUserAgent(KProtocolManager::defaultUserAgent());
-    kcfg_UserAgent->setText(KLSConfig::userAgent());
+    QString prefered = KLSConfig::preferedStylesheet();
+    int i = kcfg_PreferedStylesheet->findText(prefered);
+    if(i != -1) {
+        kcfg_PreferedStylesheet->setCurrentIndex(i);
+    }
+    else {
+        kcfg_PreferedStylesheet->insertItem(0, prefered);
+        kcfg_PreferedStylesheet->setCurrentItem(0);
+    }
 }
 
 
-#include "configidentificationdialog.moc"
+#include "configresultsdialogimpl.moc"
+

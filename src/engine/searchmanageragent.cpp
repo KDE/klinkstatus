@@ -175,7 +175,14 @@ void SearchManagerAgent::slotExportSearchFinished(SearchManager* searchManager)
       
     kDebug(23100) << "Exporting results...";
     
-    KUrl styleSheetUrl = KStandardDirs::locate("appdata", "styles/results_stylesheet.xsl");
+    QString preferedStylesheet = KLSConfig::preferedStylesheet();
+    KUrl styleSheetUrl = KStandardDirs::locate("appdata", preferedStylesheet);
+//     KUrl styleSheetUrl = KStandardDirs::locate("appdata", "styles/results_stylesheet.xsl");
+    kDebug(23100) << "Style sheet URL: " << styleSheetUrl.url();
+    if(!styleSheetUrl.isValid()) {
+        kWarning(23100) << "Style sheet not valid!";
+        styleSheetUrl = KStandardDirs::locate("appdata", "styles/results_stylesheet.xsl");
+    }
  
     LinkStatusHelper::Status status = d->brokenLinksOnly ?  
             LinkStatusHelper::bad : LinkStatusHelper::none;

@@ -82,6 +82,16 @@
             <default>false</default>
         </entry>
         
+        <entry key="StylesheetFiles" type="StringList" >
+            <label>Available Stylesheets for exporting the results in HTML</label>
+            <default>styles/results_stylesheet.xsl</default>
+        </entry>
+
+        <entry name="PreferedStylesheet" type="String">
+            <label>Defines the stylesheet to use when exporting results to HTML</label>
+            <default>styles/results_stylesheet.xsl</default>
+        </entry>
+
     </group>
 
     <group name="tidy">

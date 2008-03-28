@@ -149,7 +149,7 @@ void TabWidgetSession::updateTabLabel(SessionStackedWidget* page)
 }
 
 void TabWidgetSession::slotLoadSettings()
-{
+{        
     for(int i = 0; i != count(); ++i)
     {
         SessionWidget* sessionWidget = widget(i)->sessionWidget();

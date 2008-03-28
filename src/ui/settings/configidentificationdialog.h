@@ -32,9 +32,7 @@
 class KLINKSTATUS_EXPORT ConfigIdentificationDialog : 
         public QWidget, public Ui::ConfigIdentificationDialogUi
 {
-
-Q_OBJECT
-
+    Q_OBJECT
 public:
     ConfigIdentificationDialog(QWidget *parent = 0);
     ~ConfigIdentificationDialog();

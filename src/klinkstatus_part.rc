@@ -10,6 +10,8 @@
             <Menu name="file_export_html"><text>Export to HTML</text>
                 <Action name="file_export_html_all"/>
                 <Action name="file_export_html_broken"/>
+                <Separator/>
+                <Action name="file_ghns"/>
             </Menu>
             <Separator/>
         </Menu>

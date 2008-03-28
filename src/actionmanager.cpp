@@ -28,6 +28,9 @@
 #include <kguiitem.h>
 #include <kstandardshortcut.h>
 #include <kicon.h>
+#include <knewstuff2/ui/knewstuffaction.h>
+#include <knewstuff2/engine.h>
+#include <KMimeType>
 
 #include "klinkstatus_part.h"
 #include "ui/sessionwidget.h"
@@ -111,6 +114,10 @@ void ActionManager::initPart(KLinkStatusPart* part)
     action->setShortcuts(KStandardShortcut::shortcut(KStandardShortcut::Close));
     connect(action, SIGNAL(triggered(bool) ), d->part, SLOT(slotClose()));
     action->setEnabled(false);
+    
+    action = KNS::standardAction(i18n("Download New Stylesheets..."), 
+                                 this, SLOT(slotGHNS()), actionCollection(), "file_ghns");
+
 
     // *************** Settings menu *********************
 
@@ -448,6 +455,44 @@ void ActionManager::slotFillGotoViewPopup()
     if(widget->unreferredDocumentsWidget()) {
         menu->addAction(action("unreferred_docs_view"));
     }
+}
+
+void ActionManager::slotGHNS()
+{
+    // Opens the dialog
+    KNS::Entry::List entries = KNS::Engine::download();
+    
+    // Dialog is closed
+    
+    QStringList installedItems = KLSConfig::stylesheetFiles();
+    QString lastInstalled;
+    
+    // list of changed entries
+    foreach(KNS::Entry* entry, entries) {
+        // care only about installed ones
+        if (entry->status() == KNS::Entry::Installed) {
+            foreach(QString file, entry->installedFiles()) {
+                KMimeType::Ptr mimeType = KMimeType::findByPath(file);
+                
+                kDebug(23100) << "File: " << file;
+                kDebug(23100) << "KNS2 file of mime type:" << KMimeType::findByPath(file)->name();
+                
+                if (mimeType->name() == "application/xml") {
+                    KUrl url(file);
+                    QString fileString = "styles/" + url.fileName();
+
+                    installedItems.append(fileString);
+                    lastInstalled = fileString;
+                }
+            }
+        }
+    }
+    qDeleteAll(entries);
+    
+    kDebug(23100) << "Setting prefered stylesheet: " << lastInstalled;
+    
+    KLSConfig::setPreferedStylesheet(lastInstalled);
+    KLSConfig::setStylesheetFiles(installedItems);
 }
 
 

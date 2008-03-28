@@ -69,7 +69,9 @@ set(libui_SRCS
 )
 
 set(libuisettings_SRCS 
-    ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/settings/configidentificationdialog.cpp 
+    ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/settings/configidentificationdialog.cpp     
+    ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/settings/configresultsdialogimpl.cpp
+
 )
 
 set (klinkstatuscommon_LIB_SRCS
@@ -118,6 +120,7 @@ target_link_libraries(klinkstatuscommon
     ${KDE4_KHTML_LIBS}
     ${KDE4_THREADWEAVER_LIBRARY}
     ${KDE4_KROSSUI_LIBS}
+    ${KDE4_KNEWSTUFF2_LIBS}
 )
 
 if(LIBTIDY_FOUND)

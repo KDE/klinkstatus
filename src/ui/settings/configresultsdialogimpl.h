@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2006 by Paulo Moura Guedes                              *
+ *   Copyright (C) 2008 by Paulo Moura Guedes                              *
  *   moura@kdewebdev.org                                                   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,39 +18,26 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
-#include "configidentificationdialog.h"
+#ifndef CONFIGRESULTSDIALOGIMPL_H
+#define CONFIGRESULTSDIALOGIMPL_H
 
-#include <kprotocolmanager.h>
-#include <kpushbutton.h>
-#include <klineedit.h>
+#include "ui_configresultsdialog.h"
 
-#include <QString>
+#include "klinkstatus_export.h"
 
-#include "klsconfig.h"
-
-
-ConfigIdentificationDialog::ConfigIdentificationDialog(QWidget *parent) 
-    : QWidget(parent)
+/**
+	@author Paulo Moura Guedes <moura@kdewebdev.org>
+*/
+class KLINKSTATUS_EXPORT ConfigResultsDialogImpl : 
+        public QWidget, public Ui::ConfigResultsDialog
 {
-    setupUi(this);
-    if(KLSConfig::userAgent().isEmpty())
-    {
-        slotDefaultUA();
-    }
+    Q_OBJECT
+public:
+    ConfigResultsDialogImpl(QWidget *parent = 0);
+    ~ConfigResultsDialogImpl();
     
-    connect(buttonDefault, SIGNAL(clicked()), this, SLOT(slotDefaultUA()));
-}
+private:
+    void initStylesCombo();
+};
 
-ConfigIdentificationDialog::~ConfigIdentificationDialog()
-{
-
-}
-
-void ConfigIdentificationDialog::slotDefaultUA()
-{
-    KLSConfig::setUserAgent(KProtocolManager::defaultUserAgent());
-    kcfg_UserAgent->setText(KLSConfig::userAgent());
-}
-
-
-#include "configidentificationdialog.moc"
+#endif
