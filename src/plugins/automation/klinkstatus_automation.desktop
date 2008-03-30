@@ -1,10 +1,6 @@
 [Desktop Entry]
 Name=Automation plugin
-Name[pt]='Plugin' de automatização
-Name[pt_BR]='Plugin' de automatização
 Comment=Allow configuration of automated tasks
-Comment[pt]=Permite a automatização de tarefas
-Comment[pt_BR]=Permite automatização de tarefas
 Type=Service
 X-KDE-Library=automationklinkstatus
 X-KDE-Version=1
