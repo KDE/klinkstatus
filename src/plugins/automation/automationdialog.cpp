@@ -18,40 +18,49 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
-#ifndef SCRIPTINGPART_H
-#define SCRIPTINGPART_H
+#include "automationdialog.h"
 
-#include <kparts/plugin.h>
+#include <KStandardDirs>
+#include <KPageDialog>
+#include <KDebug>
+#include <KConfig>
 
-class SearchManagerAgent;
+#include "automationconfig.h"
 
-/**
-	@author Paulo Moura Guedes <moura@kdewebdev.org>
-*/
-class AutomationPart : public KParts::Plugin
+
+AutomationDialog::AutomationDialog(QWidget* parent, const QString& name, KConfigSkeleton* configSkeleton)
+    : KConfigDialog(parent, name, configSkeleton)
 {
-    Q_OBJECT
-public:
-    explicit AutomationPart(QObject* parent, const QStringList& list);
-    ~AutomationPart();
+    setFaceType(KPageDialog::List);
+
+    QStringList configurationFiles = AutomationDialog::configurationFiles();
+    kDebug(23100) << configurationFiles;
     
-private Q_SLOTS:
-    void slotConfigureLinkChecks();
-    void slotTimeout(QObject*);
-    void slotAutomationDialogFinished(int result);
-
-private:
-    void initActions();
-    void initLinkChecks();
+    AutomationConfig::instance(QString());
     
-    void scheduleCheck(QString const& configurationFilePath);
+   foreach(QString file, configurationFiles) {
+        kDebug(23100) << "Adding site configuration: " << file;
+        
+        delete AutomationConfig::self();
+        AutomationConfig::instance(file);
+        AutomationConfig* config = AutomationConfig::self();
 
-private:
-    Q_DISABLE_COPY(AutomationPart)
+        QString name = config->name();
+        if(name.isEmpty()) {
+            continue;
+        }
+        
+        addPage(new QWidget(this), name);
+    }
+}
 
-    class Private;
-    Private* const d;
-};
+AutomationDialog::~AutomationDialog()
+{
+}
 
+QStringList AutomationDialog::configurationFiles() 
+{
+    return KGlobal::dirs()->findAllResources("appdata", "automation/*.properties");
+}
 
-#endif
+#include "automationdialog.moc"

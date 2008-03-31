@@ -95,6 +95,7 @@ kde4_add_ui_files(klinkstatuscommon_LIB_SRCS
 )
 
 kde4_add_kcfg_files(klinkstatuscommon_LIB_SRCS ${CMAKE_SOURCE_DIR}/klinkstatus/src/cfg/klsconfig.kcfgc)
+kde4_add_kcfg_files(klinkstatuscommon_LIB_SRCS ${CMAKE_SOURCE_DIR}/klinkstatus/src/engine/automationconfig.kcfgc)
 
 if(LIBTIDY_FOUND)
     set(libtidy_SRCS ${CMAKE_SOURCE_DIR}/klinkstatus/src/tidy/markupvalidator.cpp)

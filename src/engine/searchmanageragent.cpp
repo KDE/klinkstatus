@@ -24,6 +24,7 @@
 #include <kio/netaccess.h>
 
 #include "klsconfig.h"
+#include "automationconfig.h"
 #include "engine/searchmanager.h"
 #include "utils/utils.h"
 
@@ -112,25 +113,30 @@ SearchManager* SearchManagerAgent::searchManager() const
 
 bool SearchManagerAgent::initSearchOptions(SearchManager* searchManager)
 {
-    KConfig config(d->optionsFilePath, KConfig::SimpleConfig);
-    KConfigGroup group = config.group(QString());
+    AutomationConfig::instance(QString());
+    delete AutomationConfig::self();
+    AutomationConfig::instance(d->optionsFilePath);
+    AutomationConfig* config = AutomationConfig::self();
 
-    KUrl url(group.readEntry("URL"));
+//     KConfig config(d->optionsFilePath, KConfig::SimpleConfig);
+//     KConfigGroup group = config.group(QString());
+
+    KUrl url(config->urlToCheck());
     
     if(!url.isValid()) {
         kWarning(23100) << "Invalid options defined in file " << d->optionsFilePath;
         return false;
     }
 
-    KUrl documentRoot(group.readEntry("DocumentRoot"));
-    int depth = group.readEntry("Depth", -1);
-    bool checkParentFolders = group.readEntry("CheckParentFolders", true);
-    bool checkExternalLinks = group.readEntry("CheckExternalLinks", true);
-    QString doNotCheckRegularExpressionString = group.readEntry("DoNotCheckRegularExpression", "");
+    KUrl documentRoot(config->documentRoot());
+    int depth = config->depth();
+    bool checkParentFolders = config->checkParentFolders();
+    bool checkExternalLinks = config->checkExternalLinks();
+    QString doNotCheckRegularExpressionString = config->regularExpression();
     bool doNotCheckRegularExpression = !doNotCheckRegularExpressionString.isEmpty();
-    d->brokenLinksOnly = group.readEntry("BrokenLinksOnly", true);
-    d->exportResultsPath = KUrl(group.readEntry("ResultsFilePath", "") + "/", "");
-    d->mailRecipient = group.readEntry("MailRecipient", "");
+    d->brokenLinksOnly = config->brokenLinksOnly();
+    d->exportResultsPath = KUrl(config->resultsFilePath() + "/");
+    d->mailRecipient = config->mailRecipient();
     
     if(!d->exportResultsPath.isLocalFile()) {
         kWarning(23100) << "Results file path is not local, aborting" << d->optionsFilePath;

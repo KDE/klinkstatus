@@ -28,6 +28,8 @@
 #include <klocale.h>
 #include <kconfiggroup.h>
 
+#include "automationdialog.h"
+#include "automationconfig.h"
 #include "engine/searchmanageragent.h"
 #include "utils/timer.h"
 
@@ -37,9 +39,16 @@ K_EXPORT_COMPONENT_FACTORY(automationklinkstatus, KLinkStatusAutomationFactory("
 class AutomationPart::Private
 {
 public:
-//     Private() : configurationFile("automation.properties") {}
+    Private() :
+        automationDialog(0)
+    {}
+    
+    ~Private() {
+        delete automationDialog;
+    }
     
     QStringList configurationFiles;
+    AutomationDialog* automationDialog;
 };
 
 AutomationPart::AutomationPart(QObject* parent, const QStringList&)
@@ -50,7 +59,7 @@ AutomationPart::AutomationPart(QObject* parent, const QStringList&)
     setXMLFile(KStandardDirs::locate("data", "klinkstatus/kpartplugins/klinkstatus_automation.rc"), true);
     kDebug(23100) <<"Automation plugin. Class:" << metaObject()->className()
         <<", Parent:" << parent->metaObject()->className();
-    
+        
     initActions();
     initLinkChecks();
 }
@@ -82,11 +91,13 @@ void AutomationPart::scheduleCheck(QString const& configurationFile)
 {
     kDebug(23100) << "configurationFile: " << configurationFile;
     
-    KConfig config(configurationFile, KConfig::SimpleConfig);
-    KConfigGroup group = config.group(QString());
-
-    QString periodicity(group.readEntry("periodicity", QString()));
-    QString hour(group.readEntry("hour", QString()));
+    AutomationConfig::instance(QString());
+    delete AutomationConfig::self();
+    AutomationConfig::instance(configurationFile);
+    AutomationConfig* config = AutomationConfig::self();
+    
+    QString periodicity(config->periodicity());
+    QString hour(config->hour());
 
     if(periodicity.isEmpty() || hour.isEmpty()) {
         kDebug(23100) << "periodicity.isEmpty() || hour.isEmpty()";
@@ -121,7 +132,15 @@ void AutomationPart::scheduleCheck(QString const& configurationFile)
 
 void AutomationPart::slotConfigureLinkChecks()
 {
+    AutomationConfig::instance(QString());
+    delete AutomationConfig::self();
+    AutomationConfig::instance(QString());
+
+    delete d->automationDialog;
+    d->automationDialog = new AutomationDialog(0, "automationDialog", AutomationConfig::self());
+//     connect(dialog, SIGNAL(finished(int)), this, SLOT(slotAutomationDialogFinished(int)));
     
+    d->automationDialog->show();
 }
 
 void AutomationPart::slotTimeout(QObject* delegate)
@@ -130,6 +149,11 @@ void AutomationPart::slotTimeout(QObject* delegate)
     
     SearchManagerAgent* agent = static_cast<SearchManagerAgent*> (delegate);
     agent->check();
+}
+
+void AutomationPart::slotAutomationDialogFinished(int result)
+{
+    kDebug(23100) << "AutomationPart::slotTimeout - result: " << result;
 }
 
 

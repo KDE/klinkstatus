@@ -1,0 +1,68 @@
+<!DOCTYPE kcfg SYSTEM "http://www.kde.org/standards/kcfg/1.0/kcfg.dtd">
+<kcfg>
+    <kcfgfile arg="true" />
+    
+    <group name="Scheduling" >
+        
+        <entry key="Name" type="String" >
+            <label>Name of the configuration, e.g. kdewebdev</label>
+        </entry>
+        
+        <entry key="Periodicity" type="Int" >
+            <label>Periodicity of the check</label>
+            <default>1</default>
+        </entry>
+        
+        <entry key="Hour" type="String" >
+            <label>Hour in which the task will be executed</label>
+            <default>00:00</default>
+        </entry>
+        
+    </group>
+    
+    
+    <group name="SearchOptions" >
+    
+        <entry key="UrlToCheck" type="String" >
+            <label>URL of the site to check</label>
+        </entry>
+        
+        <entry key="DocumentRoot" type="String" >
+            <label>For protocols different than HTTP, specify the root of your files, e.g. '/var/www'</label>
+        </entry>
+        
+        <entry key="Depth" type="Int" >
+            <label>Depth of recursive search, -1 is unlimited</label>
+            <default>-1</default>
+        </entry>
+        
+        <entry key="CheckParentFolders" type="Bool" >
+            <label>Whether to check links in parent folders</label>
+            <default>true</default>
+        </entry>
+        
+        <entry key="CheckExternalLinks" type="Bool" >
+            <label>Whether to check external links</label>
+            <default>true</default>
+        </entry>
+
+        <entry key="RegularExpression" type="String" >
+            <label>The URLs that match the regexp will not me checked</label>
+        </entry>
+        
+        <entry key="BrokenLinksOnly" type="Bool" >
+            <label>Whether to include only broken links in the result</label>
+            <default>false</default>
+        </entry>
+        
+        <entry key="ResultsFilePath" type="String" >
+            <label>The directory where the results will be saved</label>
+        </entry>
+        
+        <entry key="MailRecipient" type="String" >
+            <label>The e-mail address to where reults will be emailed</label>
+        </entry>
+
+    </group>
+
+</kcfg>

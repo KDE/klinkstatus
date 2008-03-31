@@ -18,40 +18,26 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
-#ifndef SCRIPTINGPART_H
-#define SCRIPTINGPART_H
+#ifndef AUTOMATIONDIALOG_H
+#define AUTOMATIONDIALOG_H
 
-#include <kparts/plugin.h>
+#include <KConfigDialog>
 
-class SearchManagerAgent;
+#include <QStringList>
+
 
 /**
 	@author Paulo Moura Guedes <moura@kdewebdev.org>
 */
-class AutomationPart : public KParts::Plugin
+class AutomationDialog : public KConfigDialog
 {
     Q_OBJECT
 public:
-    explicit AutomationPart(QObject* parent, const QStringList& list);
-    ~AutomationPart();
-    
-private Q_SLOTS:
-    void slotConfigureLinkChecks();
-    void slotTimeout(QObject*);
-    void slotAutomationDialogFinished(int result);
+    AutomationDialog(QWidget* parent, const QString &name, KConfigSkeleton* config);
+    ~AutomationDialog();
 
 private:
-    void initActions();
-    void initLinkChecks();
-    
-    void scheduleCheck(QString const& configurationFilePath);
-
-private:
-    Q_DISABLE_COPY(AutomationPart)
-
-    class Private;
-    Private* const d;
+    static QStringList configurationFiles();
 };
-
 
 #endif
