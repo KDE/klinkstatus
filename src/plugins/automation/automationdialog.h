@@ -36,8 +36,18 @@ public:
     AutomationDialog(QWidget* parent, const QString &name, KConfigSkeleton* config);
     ~AutomationDialog();
 
+private Q_SLOTS:
+    void slotNewClicked();
+    void slotRemoveClicked();
+
 private:
     static QStringList configurationFiles();
+    
+    void loadPages();
+    
+private:
+    class AutomationDialogPrivate;
+    AutomationDialogPrivate* const d;
 };
 
 #endif

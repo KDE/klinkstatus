@@ -9,6 +9,10 @@ set(automationklinkstatus_PART_SRCS
     automationdialog.cpp
 )
 
+kde4_add_ui_files(automationklinkstatus_PART_SRCS
+   ${CMAKE_SOURCE_DIR}/klinkstatus/src/plugins/automation/automationdialogui.ui
+)
+
 kde4_add_kcfg_files(automationklinkstatus_PART_SRCS ${CMAKE_SOURCE_DIR}/klinkstatus/src/engine/automationconfig.kcfgc)
 
 kde4_add_plugin(automationklinkstatus ${automationklinkstatus_PART_SRCS})

@@ -24,21 +24,57 @@
 #include <KPageDialog>
 #include <KDebug>
 #include <KConfig>
+#include <KMessageBox>
+
+#include <QMap>
 
 #include "automationconfig.h"
+#include "ui_automationdialogui.h"
 
+
+class AutomationDialog::AutomationDialogPrivate
+{
+public:
+    AutomationDialogPrivate() {
+    }
+    
+    ~AutomationDialogPrivate() {
+    }
+
+    QMap<QWidget*, KCoreConfigSkeleton*> configForPage;
+};
 
 AutomationDialog::AutomationDialog(QWidget* parent, const QString& name, KConfigSkeleton* configSkeleton)
-    : KConfigDialog(parent, name, configSkeleton)
+    : KConfigDialog(parent, name, configSkeleton), d(new AutomationDialogPrivate())
 {
     setFaceType(KPageDialog::List);
+    setCaption(i18n("Configure Site check Automation"));
+    
+    setButtons(Default|Ok|Apply|Cancel|User1|User2);
+    setButtonText(User1, "New...");
+    setButtonIcon(User1, KIcon());
+    setButtonText(User2, "Remove");
+    setButtonIcon(User2, KIcon());
+    
+    connect(this, SIGNAL(user1Clicked()), this, SLOT(slotNewClicked()));
+    connect(this, SIGNAL(user2Clicked()), this, SLOT(slotRemoveClicked()));
+    
+    loadPages();
+}
 
+AutomationDialog::~AutomationDialog()
+{
+    delete d;
+}
+
+void AutomationDialog::loadPages()
+{
     QStringList configurationFiles = AutomationDialog::configurationFiles();
     kDebug(23100) << configurationFiles;
     
     AutomationConfig::instance(QString());
     
-   foreach(QString file, configurationFiles) {
+    foreach(QString file, configurationFiles) {
         kDebug(23100) << "Adding site configuration: " << file;
         
         delete AutomationConfig::self();
@@ -49,18 +85,38 @@ AutomationDialog::AutomationDialog(QWidget* parent, const QString& name, KConfig
         if(name.isEmpty()) {
             continue;
         }
-        
-        addPage(new QWidget(this), name);
+
+        Ui::AutomationWidgetUi ui;
+        QWidget* widget = new QWidget(this);
+        ui.setupUi(widget);
+
+        KPageWidgetItem* pageItem = addPage(widget, config, name);
+        d->configForPage.insert(pageItem->widget(), config);
     }
 }
 
-AutomationDialog::~AutomationDialog()
-{
-}
-
-QStringList AutomationDialog::configurationFiles() 
+QStringList AutomationDialog::configurationFiles()
 {
     return KGlobal::dirs()->findAllResources("appdata", "automation/*.properties");
 }
+
+void AutomationDialog::slotNewClicked()
+{
+    
+}
+
+void AutomationDialog::slotRemoveClicked()
+{
+    QString configFilename = d->configForPage[currentPage()->widget()]->config()->name();
+        
+    if(!QFile(configFilename).remove()) {
+        KMessageBox::sorry(this, i18n("Could not delete configuration file %1").arg(configFilename));
+        return;
+    }
+    
+    d->configForPage.remove(currentPage()->widget());
+    removePage(currentPage());
+}
+
 
 #include "automationdialog.moc"

@@ -50,6 +50,10 @@
             <label>The URLs that match the regexp will not me checked</label>
         </entry>
         
+    </group>
+    
+    <group name="Results">
+    
         <entry key="BrokenLinksOnly" type="Bool" >
             <label>Whether to include only broken links in the result</label>
             <default>false</default>
@@ -64,5 +68,5 @@
         </entry>
 
     </group>
-
+    
 </kcfg>
