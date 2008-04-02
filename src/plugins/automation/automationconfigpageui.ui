@@ -1,6 +1,6 @@
 <ui version="4.0" >
- <class>AutomationWidgetUi</class>
- <widget class="QWidget" name="AutomationWidgetUi" >
+ <class>AutomationConfigPageUi</class>
+ <widget class="QWidget" name="AutomationConfigPageUi" >
   <property name="geometry" >
    <rect>
     <x>0</x>

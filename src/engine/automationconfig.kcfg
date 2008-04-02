@@ -6,6 +6,7 @@
         
         <entry key="Name" type="String" >
             <label>Name of the configuration, e.g. kdewebdev</label>
+            <default></default>
         </entry>
         
         <entry key="Periodicity" type="Int" >
@@ -23,12 +24,14 @@
     
     <group name="SearchOptions" >
     
-        <entry key="UrlToCheck" type="String" >
+        <entry key="UrlToCheck" type="Url" >
             <label>URL of the site to check</label>
+            <default></default>
         </entry>
         
-        <entry key="DocumentRoot" type="String" >
+        <entry key="DocumentRoot" type="Url" >
             <label>For protocols different than HTTP, specify the root of your files, e.g. '/var/www'</label>
+            <default></default>
         </entry>
         
         <entry key="Depth" type="Int" >
@@ -48,6 +51,7 @@
 
         <entry key="RegularExpression" type="String" >
             <label>The URLs that match the regexp will not me checked</label>
+            <default></default>
         </entry>
         
     </group>
@@ -59,12 +63,14 @@
             <default>false</default>
         </entry>
         
-        <entry key="ResultsFilePath" type="String" >
+        <entry key="ResultsFilePath" type="Url" >
             <label>The directory where the results will be saved</label>
+            <default></default>
         </entry>
         
         <entry key="MailRecipient" type="String" >
             <label>The e-mail address to where reults will be emailed</label>
+            <default></default>
         </entry>
 
     </group>

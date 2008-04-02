@@ -38,13 +38,14 @@ public:
 private Q_SLOTS:
     void slotConfigureLinkChecks();
     void slotTimeout(QObject*);
-    void slotAutomationDialogFinished(int result);
+    void slotAutomationSettingsChanged(const QString&);
 
 private:
     void initActions();
     void initLinkChecks();
-    
     void scheduleCheck(QString const& configurationFilePath);
+
+    SearchManagerAgent* chooseSearchManagerAgent(QString const& configurationFile);
 
 private:
     Q_DISABLE_COPY(AutomationPart)

@@ -18,36 +18,35 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
-#ifndef KLSTIMER_H
-#define KLSTIMER_H
+#include "automationconfigpage.h"
 
-#include <QObject>
-class QTimer;
-class QTime;
+#include "automationconfig.h"
 
-#include "klinkstatus_export.h"
-             
 
-class KLINKSTATUS_EXPORT Timer : public QObject
+AutomationConfigPage::AutomationConfigPage(AutomationConfig* config, QWidget *parent)
+    : QWidget(parent), m_config(config)
 {
-    Q_OBJECT
-public:
-    Timer(QObject* delegate, QObject* parent = 0);
+    setupUi(this);
+    
+    initComponents();
+}
 
-    void start(QTime const& time, int msec);
-    void stop();
-    
-Q_SIGNALS:
-    void timeout(QObject*);
-    
-private Q_SLOTS:
-    void startTimer();
-    void slotTimeout();
-    
-private:
-    QObject* m_delegate;
-    QTimer* m_timer;
-    int m_interval;
-};
+AutomationConfigPage::~AutomationConfigPage()
+{
+}
 
-#endif
+void AutomationConfigPage::initComponents()
+{
+    kcfg_ResultsFilePath->setMode(KFile::Directory | KFile::ExistingOnly | KFile::LocalOnly);
+    kcfg_DocumentRoot->setMode(KFile::Directory | KFile::ExistingOnly | KFile::LocalOnly);
+    
+    kcfg_Periodicity->insertItem(0, "Hourly");
+    kcfg_Periodicity->insertItem(1, "Daily");
+    kcfg_Periodicity->insertItem(2, "Weekly");
+    
+    kDebug(23100) << m_config->periodicity();
+    kcfg_Periodicity->setCurrentIndex(m_config->periodicity());
+}
+
+
+#include "automationconfigpage.moc"

@@ -93,7 +93,7 @@ void SearchManager::reset()
         KLSConfig::setUserAgent(KProtocolManager::defaultUserAgent());
     }
     user_agent_ = KLSConfig::userAgent();
-
+    
     removeHtmlParts();
 }
 
@@ -237,6 +237,13 @@ void SearchManager::finnish()
     else
         kDebug(23100) << "Links Rechecked: " << links_rechecked_;
 
+    // Delete thread jobs
+    QList<Job*> jobs = findChildren<Job*> ();
+    foreach(Job* job, jobs) {
+        job->setParent(0);
+        job->deleteLater();
+    }
+    
     searching_ = false;
     emit signalSearchFinished(this);
 }
@@ -502,7 +509,7 @@ void SearchManager::continueSearch()
                 emit signalAddingLevel(true);
 
 //                 kDebug(23100) << "ThreadWeaver Queue length: " << m_weaver.queueLength();
-                m_weaver.enqueue(new AddLevelJob(*this));
+                m_weaver.enqueue(new AddLevelJob(this));
             }
             else
             {
@@ -674,7 +681,7 @@ void SearchManager::slotLinkChecked(LinkStatus* link, LinkChecker* checker)
     Q_ASSERT(links_being_checked_ >= 0);
 
     if(search_mode_ != depth || current_depth_ < depth_) {
-        m_weaver.enqueue(new BuildNodeJob(*this, link));
+        m_weaver.enqueue(new BuildNodeJob(this, link));
     }
 
     if(canceled_ && searching_ && !links_being_checked_)
@@ -980,7 +987,8 @@ void SearchManager::slotJobDone(ThreadWeaver::Job* job)
         slotLevelAdded();
     }
 
-    job->deleteLater();
+//     delete job;
+//     job->deleteLater();
 }
 
 QStringList SearchManager::findUnreferredDocuments(KUrl const& baseDir, QStringList const& documentList) const
@@ -1054,8 +1062,8 @@ QList<LinkStatus*> SearchManager::getLinksWithHtmlProblems() const
 
 // BuildNodeJob
 
-BuildNodeJob::BuildNodeJob(SearchManager& manager, LinkStatus* linkstatus)
-  : Job(&manager), m_searchManager(manager), m_linkStatus(linkstatus)
+BuildNodeJob::BuildNodeJob(SearchManager* manager, LinkStatus* linkstatus)
+  : Job(manager), m_searchManager(manager), m_linkStatus(linkstatus)
 {
 }
 
@@ -1067,14 +1075,14 @@ BuildNodeJob::~BuildNodeJob()
 void BuildNodeJob::run()
 {
 //     kDebug(23100) << "\n\n\nBuildNodeJob::run\n\n\n";
-    m_searchManager.buildNewNode(m_linkStatus);
+    m_searchManager->buildNewNode(m_linkStatus);
 }
 
 
 // AddLevelJob
 
-AddLevelJob::AddLevelJob(SearchManager& manager)
-  : Job(&manager), m_searchManager(manager)
+AddLevelJob::AddLevelJob(SearchManager* manager)
+  : Job(manager), m_searchManager(manager)
 {
 }
 
@@ -1086,11 +1094,11 @@ AddLevelJob::~AddLevelJob()
 void AddLevelJob::run()
 {
 //     kDebug(23100) << "\n\n\nAddLevelJob::run\n\n\n";
-    while(m_searchManager.m_weaver.queueLength() != 0) {
+    while(m_searchManager->m_weaver.queueLength() != 0) {
         kDebug(23100) << "AddLevelJob::run: waiting for running jobs to finish";
         sleep(1);
     }
-    m_searchManager.addLevel();
+    m_searchManager->addLevel();
 }
 
 

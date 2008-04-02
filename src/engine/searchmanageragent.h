@@ -35,6 +35,7 @@ public:
     SearchManagerAgent(QObject *parent = 0);    
     ~SearchManagerAgent();
     
+    QString const& optionsFilePath() const;
     void setOptionsFilePath(QString const& optionsFilePath);
 
     void check();

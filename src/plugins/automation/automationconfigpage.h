@@ -18,36 +18,29 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
-#ifndef KLSTIMER_H
-#define KLSTIMER_H
+#ifndef AUTOMATIONCONFIGPAGE_H
+#define AUTOMATIONCONFIGPAGE_H
 
-#include <QObject>
-class QTimer;
-class QTime;
+#include "ui_automationconfigpageui.h"
 
-#include "klinkstatus_export.h"
-             
+class AutomationConfig;
 
-class KLINKSTATUS_EXPORT Timer : public QObject
+/**
+	@author Paulo Moura Guedes <moura@kdewebdev.org>
+*/
+class AutomationConfigPage : 
+        public QWidget, public Ui::AutomationConfigPageUi
 {
     Q_OBJECT
 public:
-    Timer(QObject* delegate, QObject* parent = 0);
+    AutomationConfigPage(AutomationConfig* config, QWidget *parent = 0);
+    ~AutomationConfigPage();
 
-    void start(QTime const& time, int msec);
-    void stop();
-    
-Q_SIGNALS:
-    void timeout(QObject*);
-    
-private Q_SLOTS:
-    void startTimer();
-    void slotTimeout();
+private:
+    void initComponents();
     
 private:
-    QObject* m_delegate;
-    QTimer* m_timer;
-    int m_interval;
+    AutomationConfig* m_config;
 };
 
 #endif

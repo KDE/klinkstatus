@@ -7,10 +7,11 @@ set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  ${KDE4_ENABLE_EXCEPTIONS}")
 set(automationklinkstatus_PART_SRCS 
     automationpart.cpp
     automationdialog.cpp
+    automationconfigpage.cpp
 )
 
 kde4_add_ui_files(automationklinkstatus_PART_SRCS
-   ${CMAKE_SOURCE_DIR}/klinkstatus/src/plugins/automation/automationdialogui.ui
+   ${CMAKE_SOURCE_DIR}/klinkstatus/src/plugins/automation/automationconfigpageui.ui
 )
 
 kde4_add_kcfg_files(automationklinkstatus_PART_SRCS ${CMAKE_SOURCE_DIR}/klinkstatus/src/engine/automationconfig.kcfgc)

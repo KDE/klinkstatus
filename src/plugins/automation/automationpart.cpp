@@ -91,38 +91,44 @@ void AutomationPart::scheduleCheck(QString const& configurationFile)
 {
     kDebug(23100) << "configurationFile: " << configurationFile;
     
-    AutomationConfig::instance(QString());
-    delete AutomationConfig::self();
-    AutomationConfig::instance(configurationFile);
-    AutomationConfig* config = AutomationConfig::self();
-    
-    QString periodicity(config->periodicity());
-    QString hour(config->hour());
+    AutomationConfig config(KSharedConfig::openConfig(configurationFile));
 
-    if(periodicity.isEmpty() || hour.isEmpty()) {
-        kDebug(23100) << "periodicity.isEmpty() || hour.isEmpty()";
-        return;
-    }
-    
+    int periodicity = config.periodicity();
+    QString hour(config.hour());
+
     kDebug(23100) << "periodicity: " << periodicity;
     kDebug(23100) << "hour: " << hour;
     
+    if(hour.isEmpty()) {
+        kWarning(23100) << "hour.isEmpty()";
+        return;
+    }
+    
     QTime time = QTime::fromString(hour, "hh:mm");
     int interval = -1;
-    if(periodicity == "hourly") {
+    // FIXME Magic numbers!!!!!!!!
+    // hourly
+    if(periodicity == 0) {
         interval = 1 * 60 * 60 * 1000;
     }
-    else if(periodicity == "daily") {
+    // daily
+    else if(periodicity == 1) {
         interval = 1 * 24 * 60 * 60 * 1000;
     }
-    else if(periodicity == "weekly") {
+    // weekly
+    else if(periodicity == 2) {
         interval = 7 * 24 * 60 * 60 * 1000;
     }
     
     kDebug(23100) << "interval: " << interval;
     kDebug(23100) << "time: " << time;
     
-    SearchManagerAgent* agent = new SearchManagerAgent(this);
+    if(interval <= 0 || !time.isValid()) {
+        kWarning(23100) << "interval <= 0 || !time.isValid()";
+        return;
+    }
+    
+    SearchManagerAgent* agent = chooseSearchManagerAgent(configurationFile);
     agent->setOptionsFilePath(configurationFile);
     
     Timer* timer = new Timer(agent, this);
@@ -130,15 +136,27 @@ void AutomationPart::scheduleCheck(QString const& configurationFile)
     connect(timer, SIGNAL(timeout(QObject*)), this, SLOT(slotTimeout(QObject*)));
 }
 
+SearchManagerAgent* AutomationPart::chooseSearchManagerAgent(QString const& configurationFile)
+{
+    QList<SearchManagerAgent*> agents = findChildren<SearchManagerAgent*> ();
+    
+    foreach(SearchManagerAgent* agent, agents) {
+        if(agent->optionsFilePath() == configurationFile) {
+            return agent;
+        }
+    }
+    
+    return new SearchManagerAgent(this);
+}
+
 void AutomationPart::slotConfigureLinkChecks()
 {
-    AutomationConfig::instance(QString());
-    delete AutomationConfig::self();
-    AutomationConfig::instance(QString());
-
     delete d->automationDialog;
-    d->automationDialog = new AutomationDialog(0, "automationDialog", AutomationConfig::self());
-//     connect(dialog, SIGNAL(finished(int)), this, SLOT(slotAutomationDialogFinished(int)));
+    
+    AutomationConfig* config = new AutomationConfig(KSharedConfig::openConfig());
+    d->automationDialog = new AutomationDialog(0, "automationDialog", config);
+    connect(d->automationDialog, SIGNAL(settingsChanged(const QString&)),
+            this, SLOT(slotAutomationSettingsChanged(const QString&)));
     
     d->automationDialog->show();
 }
@@ -151,9 +169,19 @@ void AutomationPart::slotTimeout(QObject* delegate)
     agent->check();
 }
 
-void AutomationPart::slotAutomationDialogFinished(int result)
+void AutomationPart::slotAutomationSettingsChanged(QString const&)
 {
-    kDebug(23100) << "AutomationPart::slotTimeout - result: " << result;
+    kDebug(23100) << "AutomationPart::slotAutomationSettingsChanged";
+    
+    QList<Timer*> timers = findChildren<Timer*> ();
+    
+    foreach(Timer* timer, timers) {
+        timer->stop();
+        timer->setParent(0);
+        timer->deleteLater();
+    }
+    
+    initLinkChecks();
 }
 
 

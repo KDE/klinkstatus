@@ -28,6 +28,7 @@
 
 #include <QMap>
 
+#include "automationconfigpage.h"
 #include "automationconfig.h"
 #include "ui_automationdialogui.h"
 
@@ -35,17 +36,26 @@
 class AutomationDialog::AutomationDialogPrivate
 {
 public:
-    AutomationDialogPrivate() {
+    AutomationDialogPrivate(KConfigSkeleton* configSkeleton) 
+        : configSkeleton(configSkeleton)
+    {
     }
     
     ~AutomationDialogPrivate() {
+        delete configSkeleton;
+        
+        foreach(KCoreConfigSkeleton* config, configForPage) {
+            delete config;
+            config = 0;
+        }
     }
 
+    KConfigSkeleton* configSkeleton;
     QMap<QWidget*, KCoreConfigSkeleton*> configForPage;
 };
 
 AutomationDialog::AutomationDialog(QWidget* parent, const QString& name, KConfigSkeleton* configSkeleton)
-    : KConfigDialog(parent, name, configSkeleton), d(new AutomationDialogPrivate())
+    : KConfigDialog(parent, name, configSkeleton), d(new AutomationDialogPrivate(configSkeleton))
 {
     setFaceType(KPageDialog::List);
     setCaption(i18n("Configure Site check Automation"));
@@ -62,6 +72,11 @@ AutomationDialog::AutomationDialog(QWidget* parent, const QString& name, KConfig
     loadPages();
 }
 
+// void slotCurrentPageChanged (KPageWidgetItem* current, KPageWidgetItem* before)
+// {
+//     KCoreConfigSkeleton* config = d->configForPage[current->widget()];
+// }
+
 AutomationDialog::~AutomationDialog()
 {
     delete d;
@@ -72,25 +87,23 @@ void AutomationDialog::loadPages()
     QStringList configurationFiles = AutomationDialog::configurationFiles();
     kDebug(23100) << configurationFiles;
     
-    AutomationConfig::instance(QString());
-    
     foreach(QString file, configurationFiles) {
         kDebug(23100) << "Adding site configuration: " << file;
         
-        delete AutomationConfig::self();
-        AutomationConfig::instance(file);
-        AutomationConfig* config = AutomationConfig::self();
+        AutomationConfig* config = new AutomationConfig(KSharedConfig::openConfig(file));
 
         QString name = config->name();
         if(name.isEmpty()) {
             continue;
         }
 
-        Ui::AutomationWidgetUi ui;
-        QWidget* widget = new QWidget(this);
-        ui.setupUi(widget);
+//         Ui::AutomationWidgetUi ui;
+//         QWidget* widget = new QWidget(this);
+//         ui.setupUi(widget);
 
-        KPageWidgetItem* pageItem = addPage(widget, config, name);
+        AutomationConfigPage* page = new AutomationConfigPage(config, this);
+
+        KPageWidgetItem* pageItem = addPage(page, config, name);
         d->configForPage.insert(pageItem->widget(), config);
     }
 }
@@ -102,20 +115,71 @@ QStringList AutomationDialog::configurationFiles()
 
 void AutomationDialog::slotNewClicked()
 {
-    
+    NewScheduleAssistant assistant(this);    
+    assistant.exec();
 }
 
 void AutomationDialog::slotRemoveClicked()
 {
     QString configFilename = d->configForPage[currentPage()->widget()]->config()->name();
         
-    if(!QFile(configFilename).remove()) {
+    QFile file(configFilename);
+    if(file.exists() && !file.remove()) {
         KMessageBox::sorry(this, i18n("Could not delete configuration file %1").arg(configFilename));
         return;
     }
     
     d->configForPage.remove(currentPage()->widget());
     removePage(currentPage());
+}
+
+
+NewScheduleAssistant::NewScheduleAssistant(AutomationDialog* parent, Qt::WFlags flags)
+    : KAssistantDialog(parent, flags), m_parent(parent), m_lineEdit(0)
+{
+    QWidget* widget = new QWidget(this);
+    m_lineEdit = new KLineEdit(widget);
+    m_lineEdit->setMinimumWidth(300);
+
+    KPageWidgetItem* page = addPage(widget, "Recurring Check Name");
+    setValid(page, false);
+
+    connect(this, SIGNAL(user1Clicked()), this, SLOT(slotFinishClicked()));
+
+    connect(m_lineEdit, SIGNAL(textChanged(const QString&)),
+    this, SLOT(slotNameChanged(const QString&)));
+}
+
+NewScheduleAssistant::~NewScheduleAssistant() {}
+
+QString NewScheduleAssistant::scheduleName() const {
+    return m_lineEdit->text();
+}
+
+void NewScheduleAssistant::slotNameChanged(const QString& text) {
+    setValid(currentPage(), !text.isEmpty());
+}
+
+void NewScheduleAssistant::slotFinishClicked()
+{
+    QString file = KGlobal::dirs()->saveLocation("data") 
+            + "klinkstatus/automation/" + scheduleName() + ".properties";
+    kDebug(23100) << "Adding site configuration: " << file;
+
+    AutomationConfig* config = new AutomationConfig(KSharedConfig::openConfig(file));
+
+    config->setName(scheduleName());
+
+//     Ui::AutomationWidgetUi ui;
+//     QWidget* widget = new QWidget(this);
+//     ui.setupUi(widget);
+
+    AutomationConfigPage* page = new AutomationConfigPage(config, m_parent);
+
+    KPageWidgetItem* pageItem = m_parent->addPage(page, config, scheduleName());
+    m_parent->setCurrentPage(pageItem);
+    
+    m_parent->d->configForPage.insert(pageItem->widget(), config);
 }
 
 

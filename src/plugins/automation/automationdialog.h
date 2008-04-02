@@ -22,6 +22,8 @@
 #define AUTOMATIONDIALOG_H
 
 #include <KConfigDialog>
+#include <KAssistantDialog>
+#include <KLineEdit>
 
 #include <QStringList>
 
@@ -33,6 +35,8 @@ class AutomationDialog : public KConfigDialog
 {
     Q_OBJECT
 public:
+    friend class NewScheduleAssistant;
+
     AutomationDialog(QWidget* parent, const QString &name, KConfigSkeleton* config);
     ~AutomationDialog();
 
@@ -49,5 +53,25 @@ private:
     class AutomationDialogPrivate;
     AutomationDialogPrivate* const d;
 };
+
+class NewScheduleAssistant : public KAssistantDialog
+{
+    Q_OBJECT
+public:
+    NewScheduleAssistant(AutomationDialog* parent = 0, Qt::WFlags flags = 0);
+    ~NewScheduleAssistant();
+    
+    QString scheduleName() const;
+    
+private Q_SLOTS:
+    void slotNameChanged(const QString& text);
+    void slotFinishClicked();
+
+private:
+    AutomationDialog* m_parent;
+    KLineEdit* m_lineEdit;
+};
+
+
 
 #endif

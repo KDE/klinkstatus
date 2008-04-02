@@ -43,11 +43,24 @@ void Timer::start(QTime const& time, int msec)
     connect(m_timer, SIGNAL(timeout()), this, SLOT(slotTimeout()));
     
     QTime currentTime = QTime::currentTime();
-    int gap = currentTime.msecsTo(time);
+    int gap = -1;
+    if(currentTime < time) {
+        gap = currentTime.msecsTo(time);
+    }
+    else {
+        QTime zeroTime(0, 0);
+        gap = zeroTime.msecsTo(time);
+        gap += time.msecsTo(currentTime);
+    }
     
     kDebug(23100) << "gap seconds: " << gap / 1000;
     
     QTimer::singleShot(gap, this, SLOT(startTimer()));
+}
+
+void Timer::stop()
+{
+    m_timer->stop();
 }
 
 void Timer::startTimer()

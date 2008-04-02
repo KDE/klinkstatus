@@ -261,14 +261,14 @@ class BuildNodeJob : public Job
 {
     Q_OBJECT
 public:
-    BuildNodeJob(SearchManager& manager, LinkStatus* linkstatus);
+    BuildNodeJob(SearchManager* manager, LinkStatus* linkstatus);
     ~BuildNodeJob();
     
 protected:
     void run();
 
 private:
-    SearchManager& m_searchManager;
+    SearchManager* m_searchManager;
     LinkStatus* m_linkStatus;
 };
 
@@ -276,14 +276,14 @@ class AddLevelJob : public Job
 {
     Q_OBJECT
 public:
-    AddLevelJob(SearchManager& manager);
+    AddLevelJob(SearchManager* manager);
     ~AddLevelJob();
     
 protected:
     void run();
 
 private:
-    SearchManager& m_searchManager;
+    SearchManager* m_searchManager;
 };
 
 #include "searchmanager_impl.h"

@@ -60,6 +60,11 @@ SearchManagerAgent::~SearchManagerAgent()
     delete d;
 }
 
+QString const& SearchManagerAgent::optionsFilePath() const
+{
+    return d->optionsFilePath;
+}
+
 void SearchManagerAgent::setOptionsFilePath(QString const& optionsFilePath)
 {
     d->optionsFilePath = optionsFilePath;
@@ -113,30 +118,25 @@ SearchManager* SearchManagerAgent::searchManager() const
 
 bool SearchManagerAgent::initSearchOptions(SearchManager* searchManager)
 {
-    AutomationConfig::instance(QString());
-    delete AutomationConfig::self();
-    AutomationConfig::instance(d->optionsFilePath);
-    AutomationConfig* config = AutomationConfig::self();
-
-//     KConfig config(d->optionsFilePath, KConfig::SimpleConfig);
-//     KConfigGroup group = config.group(QString());
-
-    KUrl url(config->urlToCheck());
+    AutomationConfig config(KSharedConfig::openConfig(d->optionsFilePath));
     
-    if(!url.isValid()) {
+    KUrl url(config.urlToCheck());
+    
+    if(!url.isValid() 
+        || !KUrl(config.resultsFilePath()).isValid()) {
         kWarning(23100) << "Invalid options defined in file " << d->optionsFilePath;
         return false;
     }
 
-    KUrl documentRoot(config->documentRoot());
-    int depth = config->depth();
-    bool checkParentFolders = config->checkParentFolders();
-    bool checkExternalLinks = config->checkExternalLinks();
-    QString doNotCheckRegularExpressionString = config->regularExpression();
+    KUrl documentRoot(config.documentRoot());
+    int depth = config.depth();
+    bool checkParentFolders = config.checkParentFolders();
+    bool checkExternalLinks = config.checkExternalLinks();
+    QString doNotCheckRegularExpressionString = config.regularExpression();
     bool doNotCheckRegularExpression = !doNotCheckRegularExpressionString.isEmpty();
-    d->brokenLinksOnly = config->brokenLinksOnly();
-    d->exportResultsPath = KUrl(config->resultsFilePath() + "/");
-    d->mailRecipient = config->mailRecipient();
+    d->brokenLinksOnly = config.brokenLinksOnly();
+    d->exportResultsPath = KUrl(config.resultsFilePath().url() + "/");
+    d->mailRecipient = config.mailRecipient();
     
     if(!d->exportResultsPath.isLocalFile()) {
         kWarning(23100) << "Results file path is not local, aborting" << d->optionsFilePath;
@@ -214,8 +214,8 @@ void SearchManagerAgent::slotExportSearchFinished(SearchManager* searchManager)
 
     FileManager::write(html, filePath);
 
-    // E-mail site administrator
-    if(!d->mailRecipient.isEmpty()) {
+    // TODO E-mail site administrator
+    if(false && !d->mailRecipient.isEmpty()) {
 
         // TODO
         QString subject;
