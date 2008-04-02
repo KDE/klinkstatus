@@ -51,7 +51,7 @@ public:
     }
 
     KConfigSkeleton* configSkeleton;
-    QMap<QWidget*, KCoreConfigSkeleton*> configForPage;
+    QMap<KPageWidgetItem*, KConfigSkeleton*> configForPage;
 };
 
 AutomationDialog::AutomationDialog(QWidget* parent, const QString& name, KConfigSkeleton* configSkeleton)
@@ -59,7 +59,9 @@ AutomationDialog::AutomationDialog(QWidget* parent, const QString& name, KConfig
 {
     setFaceType(KPageDialog::List);
     setCaption(i18n("Configure Site check Automation"));
-    
+    setMinimumWidth(800);
+    setMinimumHeight(600);
+
     setButtons(Default|Ok|Apply|Cancel|User1|User2);
     setButtonText(User1, "New...");
     setButtonIcon(User1, KIcon());
@@ -104,7 +106,7 @@ void AutomationDialog::loadPages()
         AutomationConfigPage* page = new AutomationConfigPage(config, this);
 
         KPageWidgetItem* pageItem = addPage(page, config, name);
-        d->configForPage.insert(pageItem->widget(), config);
+        d->configForPage.insert(pageItem, config);
     }
 }
 
@@ -121,7 +123,7 @@ void AutomationDialog::slotNewClicked()
 
 void AutomationDialog::slotRemoveClicked()
 {
-    QString configFilename = d->configForPage[currentPage()->widget()]->config()->name();
+    QString configFilename = d->configForPage[currentPage()]->config()->name();
         
     QFile file(configFilename);
     if(file.exists() && !file.remove()) {
@@ -129,8 +131,12 @@ void AutomationDialog::slotRemoveClicked()
         return;
     }
     
-    d->configForPage.remove(currentPage()->widget());
+    d->configForPage.remove(currentPage());
     removePage(currentPage());
+    
+    if(d->configForPage.size() != 0) {
+        setCurrentPage(d->configForPage.begin().key());
+    }
 }
 
 
@@ -170,16 +176,12 @@ void NewScheduleAssistant::slotFinishClicked()
 
     config->setName(scheduleName());
 
-//     Ui::AutomationWidgetUi ui;
-//     QWidget* widget = new QWidget(this);
-//     ui.setupUi(widget);
-
     AutomationConfigPage* page = new AutomationConfigPage(config, m_parent);
 
     KPageWidgetItem* pageItem = m_parent->addPage(page, config, scheduleName());
     m_parent->setCurrentPage(pageItem);
     
-    m_parent->d->configForPage.insert(pageItem->widget(), config);
+    m_parent->d->configForPage.insert(pageItem, config);
 }
 
 
