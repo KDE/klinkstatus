@@ -30,7 +30,7 @@
 
 #include "automationconfigpage.h"
 #include "automationconfig.h"
-#include "ui_automationdialogui.h"
+#include "ui_automationconfigpageui.h"
 
 
 class AutomationDialog::AutomationDialogPrivate
