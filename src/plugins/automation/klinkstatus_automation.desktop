@@ -1,9 +1,13 @@
 [Desktop Entry]
 Name=Automation plugin
 Name[ga]=Breiseán uathoibrithe
+Name[pt]='Plugin' de automatização
+Name[pt_BR]='Plugin' de automatização
 Name[zh_TW]=自動化外掛程式
 Comment=Allow configuration of automated tasks
 Comment[ga]=Ceadaigh cumraíocht de thascanna uathoibrithe
+Comment[pt]=Permitir a configuração de tarefas automatizadas
+Comment[pt_BR]=Permitir a configuração de tarefas automatizadas
 Comment[zh_TW]=允許設定自動化的工作
 Type=Service
 X-KDE-Library=automationklinkstatus
