@@ -1,5 +1,7 @@
 add_subdirectory(plugins)
 
+find_package (KdepimLibs REQUIRED)
+
 set(GENERIC_KLINKSTATUS_LIB_VERSION "4.0.0")
 set(GENERIC_KLINKSTATUS_LIB_SOVERSION "4")
 
@@ -71,7 +73,11 @@ set(libui_SRCS
 set(libuisettings_SRCS 
     ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/settings/configidentificationdialog.cpp     
     ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/settings/configresultsdialogimpl.cpp
+)
 
+set(libpim_SRCS 
+    ${CMAKE_SOURCE_DIR}/klinkstatus/src/pim/pimconfigdialog.cpp
+    ${CMAKE_SOURCE_DIR}/klinkstatus/src/pim/pimagent.cpp
 )
 
 set (klinkstatuscommon_LIB_SRCS
@@ -81,6 +87,7 @@ set (klinkstatuscommon_LIB_SRCS
     ${libui_SRCS}
     ${libuisettings_SRCS}
     ${libinterfaces_SRC}
+    ${libpim_SRCS}
     klsfactory.cpp
     actionmanager.cpp
     global.cpp
@@ -122,6 +129,11 @@ target_link_libraries(klinkstatuscommon
     ${KDE4_THREADWEAVER_LIBRARY}
     ${KDE4_KROSSUI_LIBS}
     ${KDE4_KNEWSTUFF2_LIBS}
+    ${KDE4_KUTILS_LIBS}
+# kdepimlibs
+    ${KDE4_MAILTRANSPORT_LIBS}
+    ${KDE4_KPIMIDENTITIES_LIBS}
+    ${KDE4_KMIME_LIBS}
 )
 
 if(LIBTIDY_FOUND)

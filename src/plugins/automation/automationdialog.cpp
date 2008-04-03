@@ -59,8 +59,7 @@ AutomationDialog::AutomationDialog(QWidget* parent, const QString& name, KConfig
 {
     setFaceType(KPageDialog::List);
     setCaption(i18n("Configure Site check Automation"));
-    setMinimumWidth(800);
-    setMinimumHeight(600);
+    setInitialSize(QSize(800,600));
 
     setButtons(Default|Ok|Apply|Cancel|User1|User2);
     setButtonText(User1, "New...");
@@ -147,7 +146,7 @@ NewScheduleAssistant::NewScheduleAssistant(AutomationDialog* parent, Qt::WFlags 
     m_lineEdit = new KLineEdit(widget);
     m_lineEdit->setMinimumWidth(300);
 
-    KPageWidgetItem* page = addPage(widget, "Recurring Check Name");
+    KPageWidgetItem* page = addPage(widget, i18n("Recurring Check Name"));
     setValid(page, false);
 
     connect(this, SIGNAL(user1Clicked()), this, SLOT(slotFinishClicked()));

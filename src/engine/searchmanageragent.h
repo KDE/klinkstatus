@@ -25,6 +25,7 @@
 #include "klinkstatus_export.h"
 class SearchManager;
 
+
 /**
  * This class performs higher level operations over SearchManager.
  */
@@ -49,7 +50,7 @@ private Q_SLOTS:
 private:
     void reset();
     bool initSearchOptions(SearchManager* searchManager);
-        
+    
 private:
     class SearchManagerAgentPrivate;
     SearchManagerAgentPrivate* const d;

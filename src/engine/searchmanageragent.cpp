@@ -27,6 +27,7 @@
 #include "automationconfig.h"
 #include "engine/searchmanager.h"
 #include "utils/utils.h"
+#include "pim/pimagent.h"
 
 
 class SearchManagerAgent::SearchManagerAgentPrivate
@@ -48,6 +49,7 @@ public:
     bool brokenLinksOnly;
     KUrl exportResultsPath;
     QString mailRecipient;
+    KUrl urlToCheck;
 };
 
 SearchManagerAgent::SearchManagerAgent(QObject *parent)
@@ -78,6 +80,7 @@ void SearchManagerAgent::reset()
     d->optionsFilePath = QString();
     d->exportResultsPath = KUrl();
     d->brokenLinksOnly = false;
+    d->urlToCheck = KUrl();
 }
 
 void SearchManagerAgent::check()
@@ -120,9 +123,9 @@ bool SearchManagerAgent::initSearchOptions(SearchManager* searchManager)
 {
     AutomationConfig config(KSharedConfig::openConfig(d->optionsFilePath));
     
-    KUrl url(config.urlToCheck());
+    d->urlToCheck = config.urlToCheck();
     
-    if(!url.isValid() 
+    if(!d->urlToCheck.isValid()
         || !KUrl(config.resultsFilePath()).isValid()) {
         kWarning(23100) << "Invalid options defined in file " << d->optionsFilePath;
         return false;
@@ -143,7 +146,7 @@ bool SearchManagerAgent::initSearchOptions(SearchManager* searchManager)
         return false;
     }
 
-    searchManager->setRootUrl(url);
+    searchManager->setRootUrl(d->urlToCheck);
     if (documentRoot.isValid()) {
         searchManager->setDocumentRoot(documentRoot);
     }
@@ -213,24 +216,25 @@ void SearchManagerAgent::slotExportSearchFinished(SearchManager* searchManager)
     kDebug(23100) << "Exporting results to file: " << filePath.url();
 
     FileManager::write(html, filePath);
-
-    // TODO E-mail site administrator
-    if(false && !d->mailRecipient.isEmpty()) {
-
-        // TODO
-        QString subject;
-        QString body;
-        QStringList attachUrls;
-
-        KToolInvocation::invokeMailer(
-        /*to*/          d->mailRecipient,
-        /*cc*/          QString(),
-        /*bcc*/         QString(),
-        /*subject*/     subject,
-        /*body*/        body,
-        /*messageFile*/ QString(),
-        /*attachURLs*/  QStringList(),
-        /*startup_id*/  "" );
+    
+//     kDebug(23100) << html;
+    
+    // E-mail site administrator
+    if(!d->mailRecipient.isEmpty()) {
+        PimAgent agent;
+        agent.setToEmail(d->mailRecipient);
+        
+        if(passed) {
+            agent.setSubject("[Link Check] PASSED - " + d->urlToCheck.url());
+            // No need to have any body
+//             agent.setMessage(html);
+        }
+        else {
+            agent.setSubject("[Link Check] FAILED - " + d->urlToCheck.url());
+            agent.setMessage(html);
+        }
+        
+        agent.sendMessage();
     }
 
     reset();
