@@ -89,6 +89,9 @@ IdentityWidget::IdentityWidget(QWidget* parent)
         if(name.isEmpty() || email.isEmpty()) {
             kcfg_UseSystemIdentity->setEnabled(false);
         }
+        else {
+            kcfg_UseSystemIdentity->setEnabled(true);
+        }
     }
 }
 
@@ -100,6 +103,8 @@ void IdentityWidget::slotUseSystemStateChanged(int state)
 {
     bool enable = (state == Qt::Unchecked);
     formLayout->setEnabled(enable);
+    
+    KLSConfig::setUseSystemIdentity(enable);
 }
 
 MailTransportWidget::MailTransportWidget(QWidget* parent)

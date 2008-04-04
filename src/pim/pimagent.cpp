@@ -20,11 +20,6 @@
 
 #include "pimagent.h"
 
-#include <KDebug>
-#include <KGlobal>
-#include <KComponentData>
-#include <KAboutData>
-
 #include <kmime/kmime_message.h>
 #include <kpimutils/linklocator.h>
 #include <mailtransport/transport.h>
@@ -35,16 +30,29 @@
 #include <kpimidentities/identity.h>
 #include <kpimidentities/identitymanager.h>
 
+#include <KDebug>
+#include <KGlobal>
+#include <KComponentData>
+#include <KAboutData>
+
 #include <QTextCodec>
+
+#include "klsconfig.h"
 
 
 PimAgent::PimAgent()
 {
-    KPIMIdentities::IdentityManager identityManager(false, 0, "IdentityManager");
+    if(KLSConfig::useSystemIdentity()) {
+        KPIMIdentities::IdentityManager identityManager(false, 0, "IdentityManager");
 
-    KPIMIdentities::Identity const& identity = identityManager.defaultIdentity();
-    m_name = identity.fullName();
-    m_fromEmail = identity.emailAddr();
+        KPIMIdentities::Identity const& identity = identityManager.defaultIdentity();
+        m_name = identity.fullName();
+        m_fromEmail = identity.emailAddr();
+    }
+    else {
+        m_name = KLSConfig::userName();
+        m_fromEmail = KLSConfig::userEmail();
+    }
 
     m_transportName = MailTransport::TransportManager::self()->defaultTransportName();
 //     kDebug(23100) << m_transportName;
