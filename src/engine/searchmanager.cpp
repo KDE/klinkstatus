@@ -952,6 +952,22 @@ void SearchManager::save(QDomElement& element, LinkStatusHelper::Status status) 
     child_element = element.ownerDocument().createElement("link_list");
     element.appendChild(child_element);
     
+    // root
+    if(root_.checked() && LinkStatusHelper::hasStatus(&root_, status)) {
+        LinkStatusHelper::save(&root_, child_element);
+    }
+    // redirections
+    LinkStatus const* ls = &root_;
+    while(ls->isRedirection()) {
+        ls = ls->redirection();
+        if(!ls) {
+            break;
+        }
+        if(ls->checked() && LinkStatusHelper::hasStatus(ls, status)) {
+            LinkStatusHelper::save(ls, child_element);
+        }
+    }
+
     for(int i = 0; i != search_results_.size(); ++i)
     {
         for(int j = 0; j != search_results_[i].size() ; ++j)
@@ -959,8 +975,21 @@ void SearchManager::save(QDomElement& element, LinkStatusHelper::Status status) 
             for(int l = 0; l != (search_results_[i])[j].size(); ++l)
             {
                 LinkStatus* ls = ((search_results_[i])[j])[l];
-                if(ls->checked() && LinkStatusHelper::hasStatus(ls, status))
+
+                if(ls->checked() && LinkStatusHelper::hasStatus(ls, status)) {
                     LinkStatusHelper::save(ls, child_element);
+                }
+                                    
+                while(ls->isRedirection()) {
+                    ls = ls->redirection();
+                    if(!ls) {
+                        break;
+                    }
+
+                    if(ls->checked() && LinkStatusHelper::hasStatus(ls, status)) {
+                        LinkStatusHelper::save(ls, child_element);
+                    }
+                }
             }
         }
     } 

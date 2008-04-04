@@ -772,7 +772,7 @@ void SessionWidget::slotExportAsHTML(LinkStatusHelper::Status status)
     if(url.isEmpty())
         return;
 
-    kDebug(23100) << "\n\nXML document represention: \n\n" << search_manager_->toXML();
+//     kDebug(23100) << "\n\nXML document represention: \n\n" << search_manager_->toXML();
 
     QString preferedStylesheet = KLSConfig::preferedStylesheet();
     KUrl styleSheetUrl = KStandardDirs::locate("appdata", preferedStylesheet);
@@ -783,7 +783,10 @@ void SessionWidget::slotExportAsHTML(LinkStatusHelper::Status status)
         styleSheetUrl = KStandardDirs::locate("appdata", "styles/results_stylesheet.xsl");
     }
 
-    QString html = XSL::transform(search_manager_->toXML(status), styleSheetUrl);
+    QString xml(search_manager_->toXML(status));
+    kDebug() << endl << xml;
+    
+    QString html(XSL::transform(xml, styleSheetUrl));
     FileManager::write(html, url);
 }
 

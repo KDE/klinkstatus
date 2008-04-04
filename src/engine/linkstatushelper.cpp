@@ -113,7 +113,7 @@ void LinkStatusHelper::save(LinkStatus const* linkstatus, QDomElement& element)
     
         tmp_1.appendChild(tmp_2);
     }
-    Q_ASSERT(!referrers.isEmpty());
+//     Q_ASSERT(!referrers.isEmpty());
     child_element.appendChild(tmp_1);
 
     element.appendChild(child_element);
