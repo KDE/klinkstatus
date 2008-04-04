@@ -60,7 +60,7 @@
     
         <entry key="BrokenLinksOnly" type="Bool" >
             <label>Whether to include only broken links in the result</label>
-            <default>false</default>
+            <default>true</default>
         </entry>
         
         <entry key="ResultsFilePath" type="Url" >
