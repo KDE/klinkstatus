@@ -94,11 +94,12 @@ set (klinkstatuscommon_LIB_SRCS
 )
 
 kde4_add_ui_files(klinkstatuscommon_LIB_SRCS
-   ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/sessionwidgetbase.ui
-   ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/unreferreddocumentswidget.ui
-   ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/settings/configsearchdialog.ui
-   ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/settings/configresultsdialog.ui
-   ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/settings/configidentificationdialogui.ui
+    ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/sessionwidgetbase.ui
+    ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/unreferreddocumentswidget.ui
+    ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/settings/configsearchdialog.ui
+    ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/settings/configresultsdialog.ui
+    ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/settings/configidentificationdialogui.ui   
+    ${CMAKE_SOURCE_DIR}/klinkstatus/src/pim/identitywidgetui.ui
 )
 
 kde4_add_kcfg_files(klinkstatuscommon_LIB_SRCS ${CMAKE_SOURCE_DIR}/klinkstatus/src/cfg/klsconfig.kcfgc)

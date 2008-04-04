@@ -31,7 +31,6 @@
 #include <mailtransport/transportmanager.h>
 #include <mailtransport/transportjob.h>
 #include <mailtransport/transport.h>
-#include <kpimidentities/identity.h>
 #include <syndication/global.h>
 #include <kpimidentities/identity.h>
 #include <kpimidentities/identitymanager.h>
@@ -43,7 +42,7 @@ PimAgent::PimAgent()
 {
     KPIMIdentities::IdentityManager identityManager(false, 0, "IdentityManager");
 
-    KPIMIdentities::Identity const& identity = identityManager.identityForUoidOrDefault(0);
+    KPIMIdentities::Identity const& identity = identityManager.defaultIdentity();
     m_name = identity.fullName();
     m_fromEmail = identity.emailAddr();
 
@@ -74,6 +73,11 @@ void PimAgent::sendMessage()
 {
     kDebug(23100) << "PimAgent::sendMessage";
     
+    if(m_name.isEmpty() || m_fromEmail.isEmpty()) {
+        kError() << "PIM settings not configured, aborting";
+        return;
+    }
+    
     QByteArray const messageData = compileMessage();
 
     if(messageData.isEmpty()) {
@@ -85,7 +89,7 @@ void PimAgent::sendMessage()
             MailTransport::TransportManager::self()->createTransportJob(m_transportName);
     
     if(!job) {
-        kWarning(23100) << "Not possible to create SMTP Job!";
+        kError(23100) << "Not possible to create SMTP Job!";
         return;
     }
 

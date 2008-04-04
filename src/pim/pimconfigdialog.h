@@ -21,24 +21,47 @@
 #ifndef PIMCONFIGDIALOG_H
 #define PIMCONFIGDIALOG_H
 
-#include <KPageDialog>
+#include <KConfigDialog>
 
 #include "klinkstatus_export.h"
+#include "ui_identitywidgetui.h"
 
 /**
 	@author Paulo Moura Guedes <moura@kdewebdev.org>
 */
-class KLINKSTATUS_EXPORT PimConfigDialog : public KPageDialog
+class KLINKSTATUS_EXPORT PimConfigDialog : public KConfigDialog
 {
     Q_OBJECT
 public:
-    PimConfigDialog(QWidget* parent = 0, Qt::WFlags flags = 0);
+    PimConfigDialog(QWidget* parent, const QString &name, KConfigSkeleton* config);
     ~PimConfigDialog();
+    
+//     void setShowIdentityPage(bool show) { m_showIdentityPage = show; }
+//     void setShowMailTransportPage(bool show) { m_showMailTransportPage = show; }
+    
+private Q_SLOTS:
+    void slotSettingsChanged(QString const&);
+
+private:
+    bool m_showIdentityPage;
+    bool m_showMailTransportPage;
 };
 
 
-class MailTransportWidget : public QWidget
+class KLINKSTATUS_EXPORT IdentityWidget : public QWidget, public Ui::IdentityWidgetUi
 {
+    Q_OBJECT
+public:
+    IdentityWidget(QWidget* parent = 0);
+    ~IdentityWidget();
+    
+private Q_SLOTS:
+    void slotUseSystemStateChanged(int state);
+};
+
+class KLINKSTATUS_EXPORT MailTransportWidget : public QWidget
+{
+    Q_OBJECT
 public:
     MailTransportWidget(QWidget* parent = 0);
     ~MailTransportWidget();

@@ -23,29 +23,89 @@
 #include <KLocale>
 #include <KCModuleLoader>
 
+#include <kpimidentities/identity.h>
+#include <kpimidentities/identitymanager.h>
+#include <mailtransport/transport.h>
+#include <mailtransport/transportmanager.h>
 
-PimConfigDialog::PimConfigDialog(QWidget* parent, Qt::WFlags flags)
-  : KPageDialog(parent, flags)
+#include "klsconfig.h"
+
+
+PimConfigDialog::PimConfigDialog(QWidget* parent, const QString &name, KConfigSkeleton* configSkeleton)
+  : KConfigDialog(parent, name, configSkeleton),
+    m_showIdentityPage(true),
+    m_showMailTransportPage(true)
 {
+//     setButtons(Default|Ok|Apply);
+//     enableButtonOk(false);
+    
+//     connect(this, SIGNAL(settingsChanged(const QString&)), this, SLOT(slotSettingsChanged()));
+    
     setFaceType(KPageDialog::List);
     setCaption(i18n("Configure PIM information"));
     setInitialSize(QSize(555,280));
     
-    QWidget* mailTransportPage = new MailTransportWidget(this);
-    KPageWidgetItem* mailTransportItem = addPage(mailTransportPage, i18n("Mail Transport"));
-    mailTransportItem->setHeader(i18n("Mail Transport"));
-    mailTransportItem->setIcon(KIcon("configure"));
+    if(m_showMailTransportPage) {
+        QWidget* mailTransportPage = new MailTransportWidget(this);
+        KPageWidgetItem* mailTransportItem = addPage(mailTransportPage, i18n("Mail Transport"));
+        mailTransportItem->setHeader(i18n("Mail Transport"));
+        mailTransportItem->setIcon(KIcon("configure"));
+    }
+    
+    if(m_showIdentityPage) {
+        QWidget* identityPage = new IdentityWidget(this);
+        KPageWidgetItem* identityItem = addPage(identityPage, i18n("User Information"));
+        identityItem->setHeader(i18n("User Information"));
+        identityItem->setIcon(KIcon("configure"));
+    }
 }
 
 PimConfigDialog::~PimConfigDialog()
 {
 }
 
+void PimConfigDialog::slotSettingsChanged(QString const&)
+{
+}
+
+
+IdentityWidget::IdentityWidget(QWidget* parent)
+  : QWidget(parent)
+{
+    setupUi(this);
+    
+    connect(kcfg_UseSystemIdentity, SIGNAL(stateChanged(int)), this, SLOT(slotUseSystemStateChanged(int)));
+    
+    KPIMIdentities::IdentityManager identityManager(false, 0, "IdentityManager");
+    KPIMIdentities::Identity const& identity = identityManager.defaultIdentity();
+
+    if(identity == KPIMIdentities::Identity::null()) {
+        kcfg_UseSystemIdentity->setEnabled(false);
+    }
+    else {
+        QString name = identity.fullName();
+        QString email = identity.emailAddr();
+
+        if(name.isEmpty() || email.isEmpty()) {
+            kcfg_UseSystemIdentity->setEnabled(false);
+        }
+    }
+}
+
+IdentityWidget::~IdentityWidget()
+{
+}
+
+void IdentityWidget::slotUseSystemStateChanged(int state)
+{
+    bool enable = (state == Qt::Unchecked);
+    formLayout->setEnabled(enable);
+}
 
 MailTransportWidget::MailTransportWidget(QWidget* parent)
   : QWidget(parent)
 {
-    KCModule* module = KCModuleLoader::loadModule("kcm_mailtransport", KCModuleLoader::Inline, this);
+    KCModuleLoader::loadModule("kcm_mailtransport", KCModuleLoader::Inline, this);
 }
 
 MailTransportWidget::~MailTransportWidget()

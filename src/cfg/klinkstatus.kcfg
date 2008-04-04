@@ -2,6 +2,25 @@
 <kcfg>
     <kcfgfile name="klinkstatus_shell.rc" />
     
+    <group name="pim">
+        
+        <entry key="UseSystemIdentity" type="Bool" >
+            <label>Whether to use the system real name and e-mail</label>
+            <default>false</default>
+        </entry>
+        
+        <entry key="UserName" type="String" >
+            <label>The name associated to the user</label>
+            <default>KLinkStatus Agent</default>
+        </entry>
+        
+        <entry key="UserEmail" type="String" >
+            <label>The email associated to the user</label>
+            <default>klinkstatus@kdewebdev.org</default>
+        </entry>
+
+    </group>
+    
     <group name="klinkstatus" >
         
         <entry key="MaxCountComboUrl" type="Int" >

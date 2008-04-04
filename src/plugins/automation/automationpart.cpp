@@ -20,6 +20,11 @@
 
 #include "automationpart.h"
 
+#include <kpimidentities/identity.h>
+#include <kpimidentities/identitymanager.h>
+#include <mailtransport/transport.h>
+#include <mailtransport/transportmanager.h>
+
 #include <kgenericfactory.h>
 #include <kstandarddirs.h>
 #include <kactioncollection.h>
@@ -32,6 +37,9 @@
 #include "automationconfig.h"
 #include "engine/searchmanageragent.h"
 #include "utils/timer.h"
+#include "pim/pimconfigdialog.h"
+#include "klsconfig.h"
+
 
 typedef KGenericFactory<AutomationPart> KLinkStatusAutomationFactory;
 K_EXPORT_COMPONENT_FACTORY(automationklinkstatus, KLinkStatusAutomationFactory("automationklinkstatus"))
@@ -157,6 +165,8 @@ void AutomationPart::slotConfigureLinkChecks()
     d->automationDialog = new AutomationDialog(0, "automationDialog", config);
     connect(d->automationDialog, SIGNAL(settingsChanged(const QString&)),
             this, SLOT(slotAutomationSettingsChanged(const QString&)));
+    connect(d->automationDialog, SIGNAL(finished()),
+            this, SLOT(slotAutomationSettingsFinished()));
     
     d->automationDialog->show();
 }
@@ -182,6 +192,57 @@ void AutomationPart::slotAutomationSettingsChanged(QString const&)
     }
     
     initLinkChecks();
+}
+
+void AutomationPart::slotAutomationSettingsFinished()
+{
+    bool needIdentity = false;
+    bool needMailTransport = false;
+
+//     KPIMIdentities::IdentityManager identityManager(false, 0, "IdentityManager");
+//     KPIMIdentities::Identity const& identity = identityManager.defaultIdentity();
+//     
+//     if(identity == KPIMIdentities::Identity::null()) {
+//         needIdentity = true;
+//     }
+//     else {
+//         QString name = identity.fullName();
+//         QString email = identity.emailAddr();
+//         
+//         if(name.isEmpty() || email.isEmpty()) {
+//             QString appUserName = KLSConfig::userName();
+//             QString appUserEmail = KLSConfig::userEmail();
+//         
+//             if(appUserName.isEmpty() || appUserEmail.isEmpty()) {
+//                 needIdentity = true;
+//             }
+//             else {
+//                 KPIMIdentities::Identity& ident = 
+//                         identityManager.modifyIdentityForName(identity.identityName());
+//                 if(name.isEmpty()) {
+//                     ident.setFullName(appUserName);
+//                 }
+//                 if(email.isEmpty()) {
+//                     ident.setEmailAddr(appUserEmail);
+//                 }
+//                 
+//                 identityManager.commit();
+//             }
+//         }
+//         else {
+//             kDebug() << "KPIMIdentities::Identity is well configured!";
+//         }
+//     }
+    
+    QString defaultTransport = MailTransport::TransportManager::self()->defaultTransportName();
+    if(defaultTransport.isEmpty()) {
+        needMailTransport = true;
+    }
+    
+    if(needIdentity || needMailTransport) {
+        PimConfigDialog dialog(0, "pimConfigDialog", KLSConfig::self());
+        dialog.exec();
+    }
 }
 
 

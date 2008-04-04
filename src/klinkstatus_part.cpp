@@ -133,6 +133,7 @@ void KLinkStatusPart::slotConfigureKLinkStatus()
     dialog->addPage(new ConfigIdentificationDialog(dialog), i18n("Identification"),
                     "preferences-web-browser-identification",
                     i18n("Configure the way KLinkstatus reports itself"));
+    dialog->addPage(new MailTransportWidget(dialog), i18n("Mail Transport"), "configure");
 
     // FIXME check this connection - mismatched arguments between slot and signal
     connect(dialog, SIGNAL(settingsChanged(const QString&)), tabwidget_, SLOT(slotLoadSettings()));

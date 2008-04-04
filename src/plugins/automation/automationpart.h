@@ -39,6 +39,7 @@ private Q_SLOTS:
     void slotConfigureLinkChecks();
     void slotTimeout(QObject*);
     void slotAutomationSettingsChanged(const QString&);
+    void slotAutomationSettingsFinished();
 
 private:
     void initActions();
