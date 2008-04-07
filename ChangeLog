@@ -1,3 +1,14 @@
+Changes for 0.5.0
+-----------------------------------------------------
+
+- Ability to export broken links only
+- Ability to do background searches which update the UI only when finished
+- Add a tray icon and only allow one intance of the application
+- Added Scripting plugin
+- Added D-Bus/Scripting interfaces
+- Site check automation
+- Get Hot New Stuff for downloading/uploading HTML result stylesheets
+
 Changes for 0.4.0
 -----------------------------------------------------
 
