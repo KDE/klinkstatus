@@ -30,7 +30,7 @@
 static const char description[] =
     I18N_NOOP("A Link Checker.\n\nKLinkStatus belongs to the kdewebdev module from KDE.");
 
-static const char version[] = "0.4.0";
+static const char version[] = "0.5.0";
 
 int main(int argc, char *argv[])
 {
@@ -55,7 +55,7 @@ int main(int argc, char *argv[])
     KCmdLineOptions options;
     options.add("+[URL]", ki18n("Document to open"));
     KCmdLineArgs::addCmdLineOptions(options);
-
+    
     KUniqueApplication app;
 
     // see if we are starting with session management

@@ -1,7 +1,5 @@
 add_subdirectory(plugins)
 
-find_package (KdepimLibs REQUIRED)
-
 set(GENERIC_KLINKSTATUS_LIB_VERSION "4.0.0")
 set(GENERIC_KLINKSTATUS_LIB_SOVERSION "4")
 
