@@ -43,6 +43,8 @@
 PimAgent::PimAgent()
 {
     if(KLSConfig::useSystemIdentity()) {
+        kDebug() << "useSystemIdentity";
+        
         KPIMIdentities::IdentityManager identityManager(false, 0, "IdentityManager");
 
         KPIMIdentities::Identity const& identity = identityManager.defaultIdentity();
@@ -50,8 +52,13 @@ PimAgent::PimAgent()
         m_fromEmail = identity.emailAddr();
     }
     else {
+        kDebug() << "do not useSystemIdentity";
+        
         m_name = KLSConfig::userName();
         m_fromEmail = KLSConfig::userEmail();
+        
+        kDebug() << "name: " << m_name;
+        kDebug() << "fromEmail: " << m_fromEmail;
     }
 
     m_transportName = MailTransport::TransportManager::self()->defaultTransportName();
@@ -82,8 +89,10 @@ void PimAgent::sendMessage()
     kDebug(23100) << "PimAgent::sendMessage";
     
     if(m_name.isEmpty() || m_fromEmail.isEmpty()) {
-        kError() << "PIM settings not configured, aborting";
-        return;
+        kWarning() << "UseSystemIdentity is true but settings are not complete! Using system defaults...";
+        
+        m_name = KLSConfig::userName();
+        m_fromEmail = KLSConfig::userEmail();
     }
     
     QByteArray const messageData = compileMessage();

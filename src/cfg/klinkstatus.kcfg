@@ -2,7 +2,7 @@
 <kcfg>
     <kcfgfile name="klinkstatus_shell.rc" />
     
-    <group name="pim">
+    <group name="pim" >
         
         <entry key="UseSystemIdentity" type="Bool" >
             <label>Whether to use the system real name and e-mail</label>

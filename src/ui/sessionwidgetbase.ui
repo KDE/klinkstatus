@@ -1,24 +1,10 @@
 <ui version="4.0" >
  <class>SessionWidgetBase</class>
  <widget class="QWidget" name="SessionWidgetBase" >
-  <property name="geometry" >
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>682</width>
-    <height>599</height>
-   </rect>
-  </property>
   <property name="minimumSize" >
    <size>
     <width>0</width>
     <height>0</height>
-   </size>
-  </property>
-  <property name="baseSize" >
-   <size>
-    <width>800</width>
-    <height>600</height>
    </size>
   </property>
   <layout class="QVBoxLayout" >
@@ -33,16 +19,7 @@
         <property name="spacing" >
          <number>0</number>
         </property>
-        <property name="leftMargin" >
-         <number>4</number>
-        </property>
-        <property name="topMargin" >
-         <number>4</number>
-        </property>
-        <property name="rightMargin" >
-         <number>4</number>
-        </property>
-        <property name="bottomMargin" >
+        <property name="margin" >
          <number>4</number>
         </property>
         <item>
@@ -50,16 +27,7 @@
           <property name="spacing" >
            <number>1</number>
           </property>
-          <property name="leftMargin" >
-           <number>0</number>
-          </property>
-          <property name="topMargin" >
-           <number>0</number>
-          </property>
-          <property name="rightMargin" >
-           <number>0</number>
-          </property>
-          <property name="bottomMargin" >
+          <property name="margin" >
            <number>0</number>
           </property>
           <item>
@@ -141,7 +109,7 @@
               <property name="sizeType" >
                <enum>QSizePolicy::MinimumExpanding</enum>
               </property>
-              <property name="sizeHint" >
+              <property name="sizeHint" stdset="0" >
                <size>
                 <width>2</width>
                 <height>20</height>
@@ -233,7 +201,7 @@
               <property name="sizeType" >
                <enum>QSizePolicy::Expanding</enum>
               </property>
-              <property name="sizeHint" >
+              <property name="sizeHint" stdset="0" >
                <size>
                 <width>160</width>
                 <height>20</height>
@@ -287,7 +255,7 @@
               <property name="sizeType" >
                <enum>QSizePolicy::Expanding</enum>
               </property>
-              <property name="sizeHint" >
+              <property name="sizeHint" stdset="0" >
                <size>
                 <width>174</width>
                 <height>20</height>
@@ -302,16 +270,7 @@
             <property name="spacing" >
              <number>6</number>
             </property>
-            <property name="leftMargin" >
-             <number>0</number>
-            </property>
-            <property name="topMargin" >
-             <number>0</number>
-            </property>
-            <property name="rightMargin" >
-             <number>0</number>
-            </property>
-            <property name="bottomMargin" >
+            <property name="margin" >
              <number>0</number>
             </property>
             <item>
@@ -357,7 +316,7 @@
               <property name="sizeType" >
                <enum>QSizePolicy::Expanding</enum>
               </property>
-              <property name="sizeHint" >
+              <property name="sizeHint" stdset="0" >
                <size>
                 <width>2</width>
                 <height>20</height>
@@ -451,22 +410,10 @@
        </item>
        <item>
         <layout class="QGridLayout" >
-         <property name="leftMargin" >
+         <property name="margin" >
           <number>1</number>
          </property>
-         <property name="topMargin" >
-          <number>1</number>
-         </property>
-         <property name="rightMargin" >
-          <number>1</number>
-         </property>
-         <property name="bottomMargin" >
-          <number>1</number>
-         </property>
-         <property name="horizontalSpacing" >
-          <number>0</number>
-         </property>
-         <property name="verticalSpacing" >
+         <property name="spacing" >
           <number>0</number>
          </property>
          <item row="1" column="0" >

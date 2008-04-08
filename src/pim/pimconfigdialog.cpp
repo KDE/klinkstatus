@@ -101,7 +101,10 @@ IdentityWidget::~IdentityWidget()
 
 void IdentityWidget::slotUseSystemStateChanged(int state)
 {
+    kDebug() << "IdentityWidget::slotUseSystemStateChanged - state: " << state;
+  
     bool enable = (state == Qt::Unchecked);
+    
     formLayout->setEnabled(enable);
     
     KLSConfig::setUseSystemIdentity(enable);

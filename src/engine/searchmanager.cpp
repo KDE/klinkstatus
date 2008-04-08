@@ -238,11 +238,11 @@ void SearchManager::finnish()
         kDebug(23100) << "Links Rechecked: " << links_rechecked_;
 
     // Delete thread jobs
-    QList<Job*> jobs = findChildren<Job*> ();
-    foreach(Job* job, jobs) {
-        job->setParent(0);
-        job->deleteLater();
-    }
+//     QList<Job*> jobs = findChildren<Job*> ();
+//     foreach(Job* job, jobs) {
+//         job->setParent(0);
+//         job->deleteLater();
+//     }
     
     searching_ = false;
     emit signalSearchFinished(this);
@@ -270,7 +270,7 @@ void SearchManager::cancelSearch()
 
 void SearchManager::checkRoot()
 {
-    LinkChecker* checker = new LinkChecker(&root_, time_out_, this);
+    LinkChecker* checker = new LinkChecker(&root_, time_out_);
     checker->setSearchManager(this);
 
     connect(checker, SIGNAL(transactionFinished(LinkStatus*, LinkChecker*)),
@@ -612,7 +612,7 @@ void SearchManager::checkLink(LinkStatus* ls, bool recheck)
     }
     else
     {
-        LinkChecker* checker = new LinkChecker(ls, time_out_, this);
+        LinkChecker* checker = new LinkChecker(ls, time_out_);
         checker->setSearchManager(this);
 
         if(recheck) {
@@ -1017,7 +1017,7 @@ void SearchManager::slotJobDone(ThreadWeaver::Job* job)
     }
 
 //     delete job;
-//     job->deleteLater();
+    job->deleteLater();
 }
 
 QStringList SearchManager::findUnreferredDocuments(KUrl const& baseDir, QStringList const& documentList) const
@@ -1092,7 +1092,7 @@ QList<LinkStatus*> SearchManager::getLinksWithHtmlProblems() const
 // BuildNodeJob
 
 BuildNodeJob::BuildNodeJob(SearchManager* manager, LinkStatus* linkstatus)
-  : Job(manager), m_searchManager(manager), m_linkStatus(linkstatus)
+  : Job(/*manager*/), m_searchManager(manager), m_linkStatus(linkstatus)
 {
 }
 
@@ -1111,7 +1111,7 @@ void BuildNodeJob::run()
 // AddLevelJob
 
 AddLevelJob::AddLevelJob(SearchManager* manager)
-  : Job(manager), m_searchManager(manager)
+  : Job(/*manager*/), m_searchManager(manager)
 {
 }
 

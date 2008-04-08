@@ -83,12 +83,9 @@ KLinkStatus::KLinkStatus()
         return;
     }
         
-    // apply the saved mainwindow settings, if any, and ask the mainwindow
-    // to automatically save settings if changed: window size, toolbar
-    // position, icon size, etc.
-    setAutoSaveSettings();
-
     setupActions();
+    
+    setAutoSaveSettings(QLatin1String("MainWindow"), true);
 }
 
 KLinkStatus::~KLinkStatus()
