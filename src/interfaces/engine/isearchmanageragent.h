@@ -30,27 +30,27 @@
 
 #include "klinkstatus_export.h"
 #include "engine/searchmanager.h"
-#include "searchmanageradaptor.h"
+#include "isearchmanager.h"
 class SearchManager;
 class SearchManagerAgent;
 
 
-class KLINKSTATUS_EXPORT SearchManagerAgentAdaptor : public QDBusAbstractAdaptor
+class KLINKSTATUS_EXPORT ISearchManagerAgent : public QDBusAbstractAdaptor
 {
     Q_OBJECT
     Q_CLASSINFO("D-Bus Interface", "org.kde.kdewebdev.klinkstatus.SearchManagerAgent")
 
 public:
-    explicit SearchManagerAgentAdaptor(SearchManagerAgent* searchManagerAgent);
+    explicit ISearchManagerAgent(SearchManagerAgent* searchManagerAgent);
 
-    SearchManagerAdaptor* searchManager();
+    ISearchManager* searchManager();
 
 public Q_SLOTS:
     void check(QString const& optionsFilePath);
 
 private:
     SearchManagerAgent* m_searchManagerAgent;
-    SearchManagerAdaptor* m_searchManagerAdaptor;
+    ISearchManager* m_iSearchManager;
 };
 
 #endif

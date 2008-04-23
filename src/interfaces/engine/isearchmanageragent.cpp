@@ -18,7 +18,7 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
-#include "searchmanageragentadaptor.h"
+#include "isearchmanageragent.h"
 
 #include <KStandardDirs>
 #include <kio/netaccess.h>
@@ -31,32 +31,32 @@
 #include "isearchmanageragentadaptor.h"
 
 
-SearchManagerAgentAdaptor::SearchManagerAgentAdaptor(SearchManagerAgent* parent)
+ISearchManagerAgent::ISearchManagerAgent(SearchManagerAgent* parent)
     : QDBusAbstractAdaptor(parent), m_searchManagerAgent(parent)
 {
     new ISearchManagerAgentAdaptor(this);
     QDBusConnection dbus = QDBusConnection::sessionBus();
-    dbus.registerObject("/SearchManagerAgent", this);
+//     dbus.registerObject("/SearchManagerAgent", this);
 }
 
-void SearchManagerAgentAdaptor::check(QString const& optionsFilePath)
+void ISearchManagerAgent::check(QString const& optionsFilePath)
 {
     m_searchManagerAgent->check(optionsFilePath);
-    m_searchManagerAdaptor = new SearchManagerAdaptor(m_searchManagerAgent->searchManager());
+    m_iSearchManager = new ISearchManager(m_searchManagerAgent->searchManager());
 }
 
-SearchManagerAdaptor* SearchManagerAgentAdaptor::searchManager()
+ISearchManager* ISearchManagerAgent::searchManager()
 {
     if(!m_searchManagerAgent->searchManager()) {
         return 0;
     }
     
-    if(!m_searchManagerAdaptor) {
-        m_searchManagerAdaptor = new SearchManagerAdaptor(m_searchManagerAgent->searchManager());
+    if(!m_iSearchManager) {
+        m_iSearchManager = new ISearchManager(m_searchManagerAgent->searchManager());
     }
     
-    return m_searchManagerAdaptor;
+    return m_iSearchManager;
 }
 
 
-#include "searchmanageragentadaptor.moc"
+#include "isearchmanageragent.moc"

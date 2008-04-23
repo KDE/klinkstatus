@@ -30,14 +30,14 @@ class SearchManager;
 /**
 	@author Paulo Moura Guedes <moura@kdewebdev.org>
 */
-class KLINKSTATUS_EXPORT SearchManagerAdaptor : public QDBusAbstractAdaptor
+class KLINKSTATUS_EXPORT ISearchManager : public QDBusAbstractAdaptor
 {
     Q_OBJECT
     Q_CLASSINFO("D-Bus Interface", "org.kde.kdewebdev.klinkstatus.SearchManager")
             
 public:
-    explicit SearchManagerAdaptor(SearchManager* searchManager);
-    ~SearchManagerAdaptor();
+    explicit ISearchManager(SearchManager* searchManager);
+    ~ISearchManager();
 
 public Q_SLOTS:
     bool hasDocumentRoot();

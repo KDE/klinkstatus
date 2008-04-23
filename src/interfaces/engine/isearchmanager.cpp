@@ -18,13 +18,13 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
-#include "isearchmanageradaptor.h"
+#include "isearchmanager.h"
 
 #include "isearchmanageradaptor.h"
 #include "engine/searchmanager.h"
 
 
-SearchManagerAdaptor::SearchManagerAdaptor(SearchManager* searchManager)
+ISearchManager::ISearchManager(SearchManager* searchManager)
     : QDBusAbstractAdaptor(searchManager), m_searchManager(searchManager)
 {
     new ISearchManagerAdaptor(this);
@@ -35,22 +35,22 @@ SearchManagerAdaptor::SearchManagerAdaptor(SearchManager* searchManager)
 }
 
 
-SearchManagerAdaptor::~SearchManagerAdaptor()
+ISearchManager::~ISearchManager()
 {
 }
 
-bool SearchManagerAdaptor::hasDocumentRoot()
+bool ISearchManager::hasDocumentRoot()
 {
     return true;
 }
 
-void SearchManagerAdaptor::pauseSearch()
+void ISearchManager::pauseSearch()
 {
 }
 
-void SearchManagerAdaptor::resumeSearch()
+void ISearchManager::resumeSearch()
 {
 }
 
 
-#include "searchmanageradaptor.moc"
+#include "isearchmanager.moc"
