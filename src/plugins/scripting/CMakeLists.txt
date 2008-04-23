@@ -1,6 +1,6 @@
 add_subdirectory(scripts)
 
-include_directories( 
+include_directories(
     ${CMAKE_SOURCE_DIR}/klinkstatus/src 
 )
 
@@ -19,6 +19,7 @@ target_link_libraries(krossmoduleklinkstatus
 
 
 install(TARGETS krossmoduleklinkstatus DESTINATION ${PLUGIN_INSTALL_DIR})
+
 
 ########### install files ###############
 

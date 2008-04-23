@@ -52,8 +52,8 @@ set(libengine_SRCS
 )
 
 set(libinterfaces_SRC
-    ${CMAKE_SOURCE_DIR}/klinkstatus/src/interfaces/engine/searchmanageradaptor.cpp
-    ${CMAKE_SOURCE_DIR}/klinkstatus/src/interfaces/engine/searchmanageragentadaptor.cpp
+    ${CMAKE_SOURCE_DIR}/klinkstatus/src/interfaces/engine/isearchmanager.cpp
+    ${CMAKE_SOURCE_DIR}/klinkstatus/src/interfaces/engine/isearchmanageragent.cpp
 )
 
 set(libui_SRCS 
@@ -110,8 +110,8 @@ endif(LIBTIDY_FOUND)
 
 
 # D-Bus
-qt4_add_dbus_adaptor(klinkstatuscommon_LIB_SRCS interfaces/engine/org.kde.kdewebdev.klinkstatus.SearchManager.xml searchmanageradaptor.h SearchManagerAdaptor isearchmanageradaptor ISearchManagerAdaptor)
-qt4_add_dbus_adaptor(klinkstatuscommon_LIB_SRCS interfaces/engine/org.kde.kdewebdev.klinkstatus.SearchManagerAgent.xml searchmanageragentadaptor.h SearchManagerAgentAdaptor isearchmanageragentadaptor ISearchManagerAgentAdaptor)
+qt4_add_dbus_adaptor(klinkstatuscommon_LIB_SRCS interfaces/engine/org.kde.kdewebdev.klinkstatus.SearchManager.xml isearchmanager.h ISearchManager isearchmanageradaptor ISearchManagerAdaptor)
+qt4_add_dbus_adaptor(klinkstatuscommon_LIB_SRCS interfaces/engine/org.kde.kdewebdev.klinkstatus.SearchManagerAgent.xml isearchmanageragent.h ISearchManagerAgent isearchmanageragentadaptor ISearchManagerAgentAdaptor)
     
 
 kde4_add_library(klinkstatuscommon SHARED ${klinkstatuscommon_LIB_SRCS})

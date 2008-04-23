@@ -34,7 +34,7 @@
 
 #include "klsconfig.h"
 #include "parser/mstring.h"
-#include "interfaces/engine/searchmanageradaptor.h"
+#include "interfaces/engine/isearchmanager.h"
 
 
 SearchManager::SearchManager(int max_simultaneous_connections, int time_out,
@@ -58,7 +58,7 @@ SearchManager::SearchManager(int max_simultaneous_connections, int time_out,
     m_weaver.setMaximumNumberOfThreads(10);
     connect(&m_weaver, SIGNAL(jobDone(ThreadWeaver::Job*)), SLOT(slotJobDone(ThreadWeaver::Job*)));
     
-    new SearchManagerAdaptor(this);
+    new ISearchManager(this);
 }
 
 void SearchManager::reset()

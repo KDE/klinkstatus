@@ -18,4 +18,4 @@ Comment[zh_TW]=允許執行文稿
 Type=Service
 X-KDE-Library=krossmoduleklinkstatus
 X-KDE-Version=1
-
+X-KDE-PluginKeyword=scripts

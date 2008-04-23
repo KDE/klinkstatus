@@ -23,17 +23,13 @@
       <terminal>false</terminal>
       <autocompile>true</autocompile>
       <envvars>
-        <envvar value="/home/kde/installs/cmake" name="CMAKEDIR" />
-        <envvar value="/home/kde/installs/dbus" name="DBUSDIR" />
-        <envvar value="/home/kde/installs/4.0" name="KDEDIR" />
-        <envvar value=" " name="KDEDIRS" />
-        <envvar value="$HOME/.kde4" name="KDEHOME" />
-        <envvar value="/tmp/$USER-kde4" name="KDETMP" />
-        <envvar value="/var/tmp/$USER-kde4" name="KDEVARTMP" />
-        <envvar value="/home/kde/installs/dbus/lib:/home/kde/installs/qt-4.2/lib:/home/kde/installs/4.0/lib:$LD_LIBRARY_PATH" name="LD_LIBRARY_PATH" />
-        <envvar value="/home/kde/installs/cmake/bin:/home/kde/installs/qt-4.2/bin:/home/kde/installs/4.0/bin:/home/kde/installs/dbus/bin:$PATH" name="PATH" />
-        <envvar value="/home/kde/installs/qt-4.2" name="QTDIR" />
-        <envvar value="/home/kde/installs/4.0/lib/kde4/plugins" name="QT_PLUGIN_PATH" />
+        <envvar value="/home/kde/installs/kde4" name="KDEDIR" />
+        <envvar value=" /home/kde/installs/kde4" name="KDEDIRS" />
+        <envvar value="/home/mourao/.kde4" name="KDEHOME" />
+        <envvar value="/home/kde/installs/qt4/lib:/home/kde/installs/kde4/lib:$LD_LIBRARY_PATH" name="LD_LIBRARY_PATH" />
+        <envvar value="/home/kde/installs/qt4/bin:/home/kde/installs/kde4/bin:$PATH" name="PATH" />
+        <envvar value="/home/kde/installs/qt4" name="QTDIR" />
+        <envvar value="/home/kde/installs/kde4/lib/kde4/plugins" name="QT_PLUGIN_PATH" />
         <envvar value=" " name="XDG_CONFIG_DIRS" />
         <envvar value=" " name="XDG_DATA_DIRS" />
       </envvars>
@@ -53,29 +49,51 @@
       <prio>0</prio>
       <dontact>false</dontact>
       <makebin/>
-      <defaulttarget/>
+      <defaulttarget>install</defaulttarget>
       <makeoptions/>
       <selectedenvironment>default</selectedenvironment>
       <environments>
         <default>
-          <envvar value="/home/kde/installs/cmake" name="CMAKEDIR" />
-          <envvar value="/home/kde/installs/dbus" name="DBUSDIR" />
-          <envvar value="/home/kde/installs/4.0" name="KDEDIR" />
-          <envvar value=" " name="KDEDIRS" />
+          <envvar value=" /home/kde/installs/kde4" name="KDEDIRS" />
           <envvar value="$HOME/.kde4" name="KDEHOME" />
-          <envvar value="/tmp/$USER-kde4" name="KDETMP" />
-          <envvar value="/var/tmp/$USER-kde4" name="KDEVARTMP" />
-          <envvar value="/home/kde/installs/qt-4.2/lib:/home/kde/installs/4.0/lib:/home/kde/installs/dbus/lib:$LD_LIBRARY_PATH" name="LD_LIBRARY_PATH" />
-          <envvar value="/home/kde/installs/cmake/bin:/home/kde/installs/qt-4.2/bin:/home/kde/installs/4.0/bin:/home/kde/installs/dbus/bin:$PATH" name="PATH" />
-          <envvar value="/home/kde/installs/qt-4.2/lib:/home/kde/installs/dbus/lib/pkgconfig:$PKG_CONFIG_PATH" name="PKG_CONFIG_PATH" />
-          <envvar value="/home/kde/installs/qt-4.2" name="QTDIR" />
-          <envvar value="/home/kde/installs/4.0/lib/kde4/plugins/" name="QT_PLUGIN_PATH" />
+          <envvar value="/home/kde/installs/qt4/lib:/home/kde/installs/kde4/lib:$LD_LIBRARY_PATH" name="LD_LIBRARY_PATH" />
+          <envvar value="/home/kde/installs/qt4/bin:/home/kde/installs/kde4/bin:$PATH" name="PATH" />
+          <envvar value="/home/kde/installs/qt4/lib:$PKG_CONFIG_PATH" name="PKG_CONFIG_PATH" />
+          <envvar value="/home/kde/installs/qt4" name="QTDIR" />
+          <envvar value="/home/kde/installs/kde4/lib/kde4/plugins/" name="QT_PLUGIN_PATH" />
           <envvar value=" " name="XDG_CONFIG_DIRS" />
           <envvar value=" " name="XDG_DATA_DIRS" />
           <envvar value="'byacc -d'" name="YACC" />
         </default>
       </environments>
     </make>
+    <filetypes>
+      <filetype>*.java</filetype>
+      <filetype>*.h</filetype>
+      <filetype>*.H</filetype>
+      <filetype>*.hh</filetype>
+      <filetype>*.hxx</filetype>
+      <filetype>*.hpp</filetype>
+      <filetype>*.c</filetype>
+      <filetype>*.C</filetype>
+      <filetype>*.cc</filetype>
+      <filetype>*.cpp</filetype>
+      <filetype>*.c++</filetype>
+      <filetype>*.cxx</filetype>
+      <filetype>Makefile</filetype>
+      <filetype>CMakeLists.txt</filetype>
+    </filetypes>
+    <blacklist/>
+    <other>
+      <prio>0</prio>
+      <otherbin/>
+      <defaulttarget/>
+      <otheroptions/>
+      <selectedenvironment>default</selectedenvironment>
+      <environments>
+        <default/>
+      </environments>
+    </other>
   </kdevcustomproject>
   <kdevdebugger>
     <general>
@@ -88,6 +106,7 @@
       <breakonloadinglibs>true</breakonloadinglibs>
       <separatetty>false</separatetty>
       <floatingtoolbar>false</floatingtoolbar>
+      <raiseGDBOnStart>false</raiseGDBOnStart>
     </general>
     <display>
       <staticmembers>false</staticmembers>
@@ -163,7 +182,7 @@
       <includestyle>4</includestyle>
       <designerintegration>ExternalDesigner</designerintegration>
       <qmake>/usr/bin/qmake</qmake>
-      <designer>/home/kde/installs/qt-4.2/bin/designer</designer>
+      <designer></designer>
       <designerpluginpaths/>
     </qt>
     <codecompletion>
@@ -185,13 +204,15 @@
       <namespaceAliases>std=_GLIBCXX_STD;__gnu_cxx=std</namespaceAliases>
       <processPrimaryTypes>true</processPrimaryTypes>
       <processFunctionArguments>true</processFunctionArguments>
-      <preProcessAllHeaders>false</preProcessAllHeaders>
+      <preProcessAllHeaders>true</preProcessAllHeaders>
       <parseMissingHeaders>false</parseMissingHeaders>
       <resolveIncludePaths>true</resolveIncludePaths>
       <alwaysParseInBackground>true</alwaysParseInBackground>
       <usePermanentCaching>true</usePermanentCaching>
-      <alwaysIncludeNamespaces>false</alwaysIncludeNamespaces>
+      <alwaysIncludeNamespaces>true</alwaysIncludeNamespaces>
       <includePaths>.;</includePaths>
+      <parseMissingHeadersExperimental>true</parseMissingHeadersExperimental>
+      <resolveIncludePathsUsingMakeExperimental>true</resolveIncludePathsUsingMakeExperimental>
     </codecompletion>
     <creategettersetter>
       <prefixGet/>
@@ -203,6 +224,7 @@
     </creategettersetter>
     <references>
       <pcs>Qt4</pcs>
+      <pcs>automatic_%2Fhome%2Fkde%2Ftrunk%2FKDE%2Fkdewebdev%2Fklinkstatus</pcs>
       <pcs>KDElibs</pcs>
     </references>
     <splitheadersource>

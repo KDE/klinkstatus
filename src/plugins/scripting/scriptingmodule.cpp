@@ -24,8 +24,8 @@
 
 #include "engine/searchmanager.h"
 #include "engine/searchmanageragent.h"
-#include "interfaces/engine/searchmanageradaptor.h"
-#include "interfaces/engine/searchmanageragentadaptor.h"
+#include "interfaces/engine/isearchmanager.h"
+#include "interfaces/engine/isearchmanageragent.h"
 
 
 
@@ -57,12 +57,14 @@ ScriptingModule::~ScriptingModule()
 
 QObject* ScriptingModule::createSearchManagerAgent()
 {
-    return new SearchManagerAgentAdaptor(new SearchManagerAgent());
+    SearchManagerAgent* agent = new SearchManagerAgent();
+    return agent->findChild<ISearchManagerAgent*> ();
 }
 
 QObject* ScriptingModule::createSearchManager()
 {
-    return new SearchManagerAdaptor(new SearchManager());
+    SearchManager* manager = new SearchManager();
+    return manager->findChild<ISearchManager*> ();
 }
 
 

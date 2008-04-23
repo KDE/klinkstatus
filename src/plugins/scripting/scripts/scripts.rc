@@ -1,12 +1,12 @@
-<KrossScripting>
+<KrossScripting version="2">
 
     <collection name="file">
         <script
-            name="klinkstatus_script"
-            text="Dummy Script"
-            comment="Dummt Script"
-            interpreter="python"
-            file="klinkstatus_script.py" />
+            name="statistics_script"
+            text="Statistics"
+            comment="Statistics Script"
+            interpreter="ruby"
+            file="statistics.rb" />
     </collection>
 
 </KrossScripting>

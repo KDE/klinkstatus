@@ -26,7 +26,7 @@
 #include <KConfig>
 #include <KMessageBox>
 
-#include <QMap>
+#include <QHash>
 
 #include "automationconfigpage.h"
 #include "automationconfig.h"
@@ -51,7 +51,7 @@ public:
     }
 
     KConfigSkeleton* configSkeleton;
-    QMap<KPageWidgetItem*, KConfigSkeleton*> configForPage;
+    QHash<KPageWidgetItem*, KConfigSkeleton*> configForPage;
 };
 
 AutomationDialog::AutomationDialog(QWidget* parent, const QString& name, KConfigSkeleton* configSkeleton)
