@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004 by Paulo Moura Guedes                              *
+ *   Copyright (C) 2008 by Paulo Moura Guedes                              *
  *   moura@kdewebdev.org                                                   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,56 +18,35 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
-#ifndef _KLINKSTATUSPART_H_
-#define _KLINKSTATUSPART_H_
+#ifndef VIEW_H
+#define VIEW_H
 
-#include <kparts/part.h>
+#include <QWidget>
 
-class View;
-class ActionManager;
+#include <KUrl>
 
-class QWidget;
-class QPainter;
+#include "klinkstatus_export.h"
 
-class KUrl;
-class KAboutData;
-class KAboutApplicationDialog;
-class KAction;
+class TabWidgetSession;
 
-class KLinkStatusPart: public KParts::ReadOnlyPart
+
+class KLINKSTATUS_EXPORT View : public QWidget
 {
-    Q_OBJECT
+Q_OBJECT
 public:
-    KLinkStatusPart(QWidget* parentWidget, QObject *parent, const QVariantList&);
-    virtual ~KLinkStatusPart();
-
-    static KAboutData* createAboutData();
-
-protected:
-    /** This must be implemented by each part */
-    virtual bool openFile();
-    virtual bool openURL (const KUrl &url);
-
-protected slots:
-    void slotNewLinkCheck();
-    void slotOpenLink();
-    void slotClose();
-    void slotConfigureKLinkStatus();
-    void slotAbout();
-    void slotReportBug();
+    View(QWidget* parent = 0);
+    ~View();
     
-private:
-    void initGUI();
+    TabWidgetSession* sessionsTabWidget() const;
+
+public Q_SLOTS:
+    void slotNewSession(KUrl const& url = KUrl());
+    void closeSession();
+    void slotLoadSettings();
 
 private:
-    static const char description_[];
-    static const char version_[];
-
-    ActionManager* action_manager_;
-
-    View* view_;
-//     TabWidgetSession* tabwidget_;
-    KAboutApplicationDialog* m_dlgAbout;
+    class ViewPrivate;
+    ViewPrivate* const d;
 };
 
-#endif // _KLINKSTATUSPART_H_
+#endif

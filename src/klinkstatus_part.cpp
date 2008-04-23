@@ -36,6 +36,7 @@
 #include <kglobalsettings.h>
 #include <kshortcut.h>
 
+#include "ui/view.h"
 #include "ui/tabwidgetsession.h"
 #include "ui/sessionwidget.h"
 #include "ui_configsearchdialog.h"
@@ -68,10 +69,10 @@ KLinkStatusPart::KLinkStatusPart(QWidget* parentWidget,
 
     new SearchManagerAgent(this);
 
-    tabwidget_ = new TabWidgetSession(parentWidget);
-    setWidget(tabwidget_);
-    action_manager_->initTabWidget(tabwidget_);
-
+    view_ = new View(parentWidget);
+    setWidget(view_);
+    action_manager_->initTabWidget(view_->sessionsTabWidget());
+    
     openURL(KUrl(""));
 
     Global::getInstance()->setKLinkStatusPart(this);
@@ -90,7 +91,7 @@ void KLinkStatusPart::initGUI()
 
 bool KLinkStatusPart::openURL(KUrl const& url)
 {
-    tabwidget_->slotNewSession(url);
+    view_->slotNewSession(url);
 
     return true;
 }
@@ -117,12 +118,12 @@ void KLinkStatusPart::slotOpenLink()
 
 void KLinkStatusPart::slotClose()
 {
-    tabwidget_->closeSession();
+    view_->closeSession();
 }
 
 void KLinkStatusPart::slotConfigureKLinkStatus()
 {
-    KConfigDialog* dialog = new KConfigDialog(tabwidget_, "klsconfig", KLSConfig::self());
+    KConfigDialog* dialog = new KConfigDialog(view_, "klsconfig", KLSConfig::self());
 
     Ui::ConfigSearchDialog search_ui;    
     QWidget* search_widget = new QWidget(dialog);    
@@ -136,7 +137,7 @@ void KLinkStatusPart::slotConfigureKLinkStatus()
     dialog->addPage(new MailTransportWidget(dialog), i18n("Mail Transport"), "configure");
 
     // FIXME check this connection - mismatched arguments between slot and signal
-    connect(dialog, SIGNAL(settingsChanged(const QString&)), tabwidget_, SLOT(slotLoadSettings()));
+    connect(dialog, SIGNAL(settingsChanged(const QString&)), view_, SLOT(slotLoadSettings()));
     dialog->show();
 }
 
@@ -145,7 +146,7 @@ void KLinkStatusPart::slotAbout()
     if(m_dlgAbout == 0)
     {
         static KAboutData * about = createAboutData();
-        m_dlgAbout = new KAboutApplicationDialog(about, tabwidget_);
+        m_dlgAbout = new KAboutApplicationDialog(about, view_);
         if(m_dlgAbout == 0)
             return;
     }

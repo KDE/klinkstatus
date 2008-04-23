@@ -57,6 +57,7 @@ set(libinterfaces_SRC
 )
 
 set(libui_SRCS 
+    ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/view.cpp 
     ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/documentrootdialog.cpp 
     ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/klshistorycombo.cpp
     ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/resultssearchbar.cpp 

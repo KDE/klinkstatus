@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004 by Paulo Moura Guedes                              *
+ *   Copyright (C) 2008 by Paulo Moura Guedes                              *
  *   moura@kdewebdev.org                                                   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,56 +18,56 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
-#ifndef _KLINKSTATUSPART_H_
-#define _KLINKSTATUSPART_H_
+#include "view.h"
 
-#include <kparts/part.h>
+#include <QVBoxLayout>
 
-class View;
-class ActionManager;
+#include "ui/tabwidgetsession.h"
 
-class QWidget;
-class QPainter;
 
-class KUrl;
-class KAboutData;
-class KAboutApplicationDialog;
-class KAction;
-
-class KLinkStatusPart: public KParts::ReadOnlyPart
+class View::ViewPrivate
 {
-    Q_OBJECT
 public:
-    KLinkStatusPart(QWidget* parentWidget, QObject *parent, const QVariantList&);
-    virtual ~KLinkStatusPart();
-
-    static KAboutData* createAboutData();
-
-protected:
-    /** This must be implemented by each part */
-    virtual bool openFile();
-    virtual bool openURL (const KUrl &url);
-
-protected slots:
-    void slotNewLinkCheck();
-    void slotOpenLink();
-    void slotClose();
-    void slotConfigureKLinkStatus();
-    void slotAbout();
-    void slotReportBug();
-    
-private:
-    void initGUI();
-
-private:
-    static const char description_[];
-    static const char version_[];
-
-    ActionManager* action_manager_;
-
-    View* view_;
-//     TabWidgetSession* tabwidget_;
-    KAboutApplicationDialog* m_dlgAbout;
+  
+    TabWidgetSession* tabWidget;
 };
 
-#endif // _KLINKSTATUSPART_H_
+View::View(QWidget* parent)
+    : QWidget(parent), d(new ViewPrivate())
+{
+    d->tabWidget = new TabWidgetSession();
+    
+    QVBoxLayout* layout = new QVBoxLayout();
+    layout->addWidget(d->tabWidget);
+    
+    setLayout(layout);
+}
+
+View::~View()
+{
+    delete d;
+}
+
+TabWidgetSession* View::sessionsTabWidget() const
+{
+    return d->tabWidget;
+}
+
+void View::slotNewSession(KUrl const& url)
+{
+    d->tabWidget->slotNewSession(url);
+}
+
+void View::closeSession()
+{
+    d->tabWidget->closeSession();
+}
+
+void View::slotLoadSettings()
+{
+    d->tabWidget->slotLoadSettings();
+}
+
+
+
+#include "view.moc"
