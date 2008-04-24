@@ -1,14 +1,18 @@
 [Desktop Entry]
 Name=Automation plugin
+Name[fr]=Module Automation
 Name[ga]=Breiseán uathoibrithe
 Name[pt]='Plugin' de automatização
 Name[pt_BR]='Plugin' de automatização
+Name[sv]=Insticksprogram för automatisering
 Name[uk]=Додаток автоматизації
 Name[zh_TW]=自動化外掛程式
 Comment=Allow configuration of automated tasks
+Comment[fr]=Autoriser la configuration de tâches automatisées
 Comment[ga]=Ceadaigh cumraíocht de thascanna uathoibrithe
 Comment[pt]=Permitir a configuração de tarefas automatizadas
 Comment[pt_BR]=Permitir a configuração de tarefas automatizadas
+Comment[sv]=Tillåt inställning av automatiserade uppgifter
 Comment[uk]=Надає вам можливість налаштувати автоматичні завдання
 Comment[zh_TW]=允許設定自動化的工作
 Type=Service
