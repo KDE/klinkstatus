@@ -34,20 +34,14 @@ class ISearchManager;
 class KLINKSTATUS_EXPORT IView : public QDBusAbstractAdaptor
 {
     Q_OBJECT
-    Q_CLASSINFO("D-Bus Interface", "org.kde.kdewebdev.klinkstatus.View")
+    Q_CLASSINFO("D-Bus Interface", "org.kde.kdewebdev.klinkstatus.IView")
             
 public:
     explicit IView(View* view);
     ~IView();
     
 public Q_SLOTS:
-    void dummy() {}
-
-    Q_SCRIPTABLE QObject* activeSearchManager();
-
-    
-Q_SIGNALS:
-    
+    Q_SCRIPTABLE QObject* activeSearchManager();    
     
 private:
     View* m_view;

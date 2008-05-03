@@ -59,13 +59,5 @@ int ISearchManager::numberOfUndeterminedLinks() const
     return m_searchManager->searchCounters().undeterminedLinks();
 }
 
-void ISearchManager::pauseSearch()
-{
-}
-
-void ISearchManager::resumeSearch()
-{
-}
-
 
 #include "isearchmanager.moc"

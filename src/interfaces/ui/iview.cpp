@@ -29,8 +29,8 @@
 IView::IView(View* view)
     : QDBusAbstractAdaptor(view), m_view(view)
 {
-    new IViewAdaptor(this);
-    QDBusConnection dbus = QDBusConnection::sessionBus();
+//     new IViewAdaptor(this);
+//     QDBusConnection dbus = QDBusConnection::sessionBus();
 //     dbus.registerObject("/View", this);
 
     setAutoRelaySignals(true);

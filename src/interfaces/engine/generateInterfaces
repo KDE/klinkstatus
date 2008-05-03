@@ -1,3 +1,2 @@
 qdbuscpp2xml -M isearchmanager.h -o org.kde.kdewebdev.klinkstatus.SearchManager.xml
-qdbuscpp2xml -M isearchmanageragent.h -o org.kde.kdewebdev.klinkstatus.SearchManagerAgent.xml
 

@@ -27,7 +27,6 @@
 #include "engine/searchmanager.h"
 #include "engine/searchmanageragent.h"
 #include "interfaces/engine/isearchmanager.h"
-#include "interfaces/engine/isearchmanageragent.h"
 #include "interfaces/ui/iview.h"
 
 
