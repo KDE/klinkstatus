@@ -59,8 +59,19 @@
       </item>
       <item row="0" column="1" >
        <widget class="QProgressBar" name="goodProgressBar" >
+        <property name="styleSheet" >
+         <string notr="true" >QProgressBar {
+    border: 1px solid grey;
+    border-radius: 5px; 
+	text-align: center;
+}
+
+QProgressBar::chunk {
+    background-color: rgb(0, 170, 0);
+}</string>
+        </property>
         <property name="value" >
-         <number>0</number>
+         <number>10</number>
         </property>
        </widget>
       </item>
@@ -73,6 +84,17 @@
       </item>
       <item row="1" column="1" >
        <widget class="QProgressBar" name="brokenProgressBar" >
+        <property name="styleSheet" >
+         <string notr="true" >QProgressBar {
+    border: 1px solid grey;
+    border-radius: 5px; 
+	text-align: center;
+}
+
+QProgressBar::chunk {
+    background-color: green;
+}</string>
+        </property>
         <property name="value" >
          <number>0</number>
         </property>
@@ -87,6 +109,17 @@
       </item>
       <item row="2" column="1" >
        <widget class="QProgressBar" name="undeterminedProgressBar" >
+        <property name="styleSheet" >
+         <string notr="true" >QProgressBar {
+    border: 1px solid grey;
+    border-radius: 5px; 
+	text-align: center;
+}
+
+QProgressBar::chunk {
+    background-color: green;
+}</string>
+        </property>
         <property name="value" >
          <number>0</number>
         </property>
