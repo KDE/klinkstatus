@@ -23,6 +23,9 @@
 #include <QVBoxLayout>
 
 #include "ui/tabwidgetsession.h"
+#include "ui/sessionstackedwidget.h"
+#include "ui/sessionwidget.h"
+#include "interfaces/ui/iview.h"
 
 
 class View::ViewPrivate
@@ -41,11 +44,18 @@ View::View(QWidget* parent)
     layout->addWidget(d->tabWidget);
     
     setLayout(layout);
+
+    new IView(this);
 }
 
 View::~View()
 {
     delete d;
+}
+
+SearchManager* View::activeSearchManager() const
+{
+    return d->tabWidget->currentWidget()->sessionWidget()->getSearchManager();
 }
 
 TabWidgetSession* View::sessionsTabWidget() const

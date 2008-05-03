@@ -33,20 +33,18 @@ class SearchManager;
 class KLINKSTATUS_EXPORT ISearchManager : public QDBusAbstractAdaptor
 {
     Q_OBJECT
-    Q_CLASSINFO("D-Bus Interface", "org.kde.kdewebdev.klinkstatus.SearchManager")
+    Q_CLASSINFO("D-Bus Interface", "org.kde.kdewebdev.klinkstatus.ISearchManager")
             
 public:
     explicit ISearchManager(SearchManager* searchManager);
     ~ISearchManager();
 
 public Q_SLOTS:
-    bool hasDocumentRoot();
-    void pauseSearch();
-    void resumeSearch();
-    
-Q_SIGNALS:
-    
-    
+    Q_SCRIPTABLE int numberOfCheckedLinks() const;
+    Q_SCRIPTABLE int numberOfGoodLinks() const;
+    Q_SCRIPTABLE int numberOfBrokenLinks() const;
+    Q_SCRIPTABLE int numberOfUndeterminedLinks() const;
+
 private:
     SearchManager* m_searchManager;
 };

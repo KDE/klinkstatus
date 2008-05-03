@@ -901,6 +901,8 @@ void SearchManager::addHtmlPart(QString const& key_url, KHTMLPart* html_part)
 
 void SearchManager::removeHtmlParts()
 {
+    kDebug() << "SearchManager::removeHtmlParts";
+    
     for(KHTMLPartMap::iterator it = html_parts_.begin(); it != html_parts_.end(); ++it)
     {
         delete it.value();

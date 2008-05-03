@@ -581,6 +581,7 @@ void LinkChecker::checkRef(KUrl const& url)
         kDebug(23100) << "new KHTMLPart: " +  url_string;
 
         html_part = new KHTMLPart();
+        html_part->setJScriptEnabled(false);
         html_part->setOnlyLocalReferences(true);
 
         QString tmpFile;
@@ -627,6 +628,7 @@ void LinkChecker::checkRef(LinkStatus const* linkstatus_parent)
         kDebug(23100) << "new KHTMLPart: " +  url_string;
 
         html_part = new KHTMLPart();
+        html_part->setJScriptEnabled(false);
         html_part->setOnlyLocalReferences(true);
 
         html_part->begin();

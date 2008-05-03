@@ -1,0 +1,2 @@
+qdbuscpp2xml -M iview.h -o org.kde.kdewebdev.klinkstatus.View.xml
+

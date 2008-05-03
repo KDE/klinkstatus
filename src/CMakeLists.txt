@@ -11,6 +11,7 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui
     ${CMAKE_SOURCE_DIR}/klinkstatus/src/interfaces
     ${CMAKE_SOURCE_DIR}/klinkstatus/src/interfaces/engine
+    ${CMAKE_SOURCE_DIR}/klinkstatus/src/interfaces/ui
     ${CMAKE_BINARY_DIR}/klinkstatus/src
     ${LIBXML2_INCLUDE_DIR}
     ${LIBXSLT_INCLUDE_DIR}
@@ -54,6 +55,7 @@ set(libengine_SRCS
 set(libinterfaces_SRC
     ${CMAKE_SOURCE_DIR}/klinkstatus/src/interfaces/engine/isearchmanager.cpp
     ${CMAKE_SOURCE_DIR}/klinkstatus/src/interfaces/engine/isearchmanageragent.cpp
+    ${CMAKE_SOURCE_DIR}/klinkstatus/src/interfaces/ui/iview.cpp
 )
 
 set(libui_SRCS 
@@ -90,6 +92,7 @@ set (klinkstatuscommon_LIB_SRCS
     klsfactory.cpp
     actionmanager.cpp
     global.cpp
+    klinkstatusbasepart.cpp
 )
 
 kde4_add_ui_files(klinkstatuscommon_LIB_SRCS
@@ -113,7 +116,9 @@ endif(LIBTIDY_FOUND)
 # D-Bus
 qt4_add_dbus_adaptor(klinkstatuscommon_LIB_SRCS interfaces/engine/org.kde.kdewebdev.klinkstatus.SearchManager.xml isearchmanager.h ISearchManager isearchmanageradaptor ISearchManagerAdaptor)
 qt4_add_dbus_adaptor(klinkstatuscommon_LIB_SRCS interfaces/engine/org.kde.kdewebdev.klinkstatus.SearchManagerAgent.xml isearchmanageragent.h ISearchManagerAgent isearchmanageragentadaptor ISearchManagerAgentAdaptor)
-    
+
+qt4_add_dbus_adaptor(klinkstatuscommon_LIB_SRCS interfaces/ui/org.kde.kdewebdev.klinkstatus.View.xml iview.h IView iviewadaptor IViewAdaptor)
+
 
 kde4_add_library(klinkstatuscommon SHARED ${klinkstatuscommon_LIB_SRCS})
 

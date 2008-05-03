@@ -43,6 +43,7 @@ ScriptingPart::ScriptingPart(QObject* parent, const QStringList&)
     , d(new Private())
 {
     d->module = new ScriptingModule(parent);
+    addObject(d->module, "KLinkStatus");
 
     setComponentData(ScriptingPart::componentData());
     setXMLFile(KStandardDirs::locate("data", "klinkstatus/kpartplugins/scripting.rc"), true);

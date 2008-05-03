@@ -59,7 +59,7 @@ K_EXPORT_PLUGIN(KLinkStatusFactory("klinkstatuspart"))
 KLinkStatusPart::KLinkStatusPart(QWidget* parentWidget,
                                  QObject *parent,
                                  const QVariantList&)
-    : KParts::ReadOnlyPart(parent), m_dlgAbout(0)
+    : KParts::ReadOnlyPart(parent), KLinkStatusBasePart(), m_dlgAbout(0)
 {
     setComponentData(KLinkStatusFactory::componentData());
 
@@ -189,7 +189,6 @@ KAboutData* KLinkStatusPart::createAboutData()
 
     return about;
 }
-
 
 
 #include "klinkstatus_part.moc"

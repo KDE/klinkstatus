@@ -77,6 +77,7 @@ public:
 
     friend class BuildNodeJob;
     friend class AddLevelJob;
+    friend class ISearchManager;
 
     enum SearchMode {
         depth,

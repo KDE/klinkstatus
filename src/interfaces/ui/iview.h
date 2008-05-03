@@ -17,39 +17,40 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
+ 
+#ifndef IVIEW_H
+#define IVIEW_H
 
-#ifndef VIEW_H
-#define VIEW_H
-
-#include <QWidget>
-
-#include <KUrl>
+#include <QtDBus/QtDBus>
 
 #include "klinkstatus_export.h"
 
-class TabWidgetSession;
-class SearchManager;
+class View;
+class ISearchManager;
 
-
-class KLINKSTATUS_EXPORT View : public QWidget
+/**
+	@author Paulo Moura Guedes <moura@kdewebdev.org>
+*/
+class KLINKSTATUS_EXPORT IView : public QDBusAbstractAdaptor
 {
-Q_OBJECT
+    Q_OBJECT
+    Q_CLASSINFO("D-Bus Interface", "org.kde.kdewebdev.klinkstatus.View")
+            
 public:
-    View(QWidget* parent = 0);
-    ~View();
+    explicit IView(View* view);
+    ~IView();
     
-    SearchManager* activeSearchManager() const;
-    TabWidgetSession* sessionsTabWidget() const;
-    
-
 public Q_SLOTS:
-    void slotNewSession(KUrl const& url = KUrl());
-    void closeSession();
-    void slotLoadSettings();
+    void dummy() {}
 
+    Q_SCRIPTABLE QObject* activeSearchManager();
+
+    
+Q_SIGNALS:
+    
+    
 private:
-    class ViewPrivate;
-    ViewPrivate* const d;
+    View* m_view;
 };
 
 #endif

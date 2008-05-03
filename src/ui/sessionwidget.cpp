@@ -200,7 +200,7 @@ bool SessionWidget::isEmpty() const
     return tree_view->isEmpty();
 }
 
-SearchManager const* SessionWidget::getSearchManager() const
+SearchManager* SessionWidget::getSearchManager() const
 {
     return search_manager_;
 }

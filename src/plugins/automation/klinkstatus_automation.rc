@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
-<kpartgui name="KLinkStatusPluginAutomation" library="automationklinkstatus" version="1">
+<kpartgui name="KLinkStatusPluginAutomation" library="automationklinkstatus" version="2">
 <MenuBar>
 	<Menu name="tools"><text>&amp;Tools</text>
 		<Separator/>

@@ -21,9 +21,9 @@
 #ifndef _KLINKSTATUSPART_H_
 #define _KLINKSTATUSPART_H_
 
+#include "klinkstatusbasepart.h"
 #include <kparts/part.h>
 
-class View;
 class ActionManager;
 
 class QWidget;
@@ -34,7 +34,8 @@ class KAboutData;
 class KAboutApplicationDialog;
 class KAction;
 
-class KLinkStatusPart: public KParts::ReadOnlyPart
+
+class KLinkStatusPart: public KParts::ReadOnlyPart, public KLinkStatusBasePart
 {
     Q_OBJECT
 public:
@@ -42,7 +43,7 @@ public:
     virtual ~KLinkStatusPart();
 
     static KAboutData* createAboutData();
-
+    
 protected:
     /** This must be implemented by each part */
     virtual bool openFile();
@@ -65,7 +66,6 @@ private:
 
     ActionManager* action_manager_;
 
-    View* view_;
 //     TabWidgetSession* tabwidget_;
     KAboutApplicationDialog* m_dlgAbout;
 };

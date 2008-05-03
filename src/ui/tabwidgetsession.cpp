@@ -49,8 +49,6 @@ TabWidgetSession::TabWidgetSession(QWidget* parent, Qt::WFlags f)
 {
     setFocusPolicy(Qt::NoFocus);
     setTabReorderingEnabled(true);
-    setHoverCloseButton(true);
-    setHoverCloseButtonDelayed(true);
         
     QToolButton* tabs_new = new QToolButton(this);
     tabs_new->setShortcut(QKeySequence("Ctrl+N"));

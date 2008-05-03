@@ -39,9 +39,24 @@ ISearchManager::~ISearchManager()
 {
 }
 
-bool ISearchManager::hasDocumentRoot()
+int ISearchManager::numberOfCheckedLinks() const
 {
-    return true;
+    return m_searchManager->checkedLinks();
+}
+
+int ISearchManager::numberOfGoodLinks() const
+{
+    return m_searchManager->searchCounters().totalLinks();
+}
+
+int ISearchManager::numberOfBrokenLinks() const
+{
+    return m_searchManager->searchCounters().brokenLinks();
+}
+
+int ISearchManager::numberOfUndeterminedLinks() const
+{
+    return m_searchManager->searchCounters().undeterminedLinks();
 }
 
 void ISearchManager::pauseSearch()

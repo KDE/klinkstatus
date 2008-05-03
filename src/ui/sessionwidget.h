@@ -64,7 +64,7 @@ public:
     void setFollowLastLinkChecked(bool follow);
 
     bool isEmpty() const;
-    SearchManager const* getSearchManager() const;
+    SearchManager* getSearchManager() const;
 
 signals:
     void signalTitleChanged();

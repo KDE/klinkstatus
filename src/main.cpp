@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
     options.add("+[URL]", ki18n("Document to open"));
     KCmdLineArgs::addCmdLineOptions(options);
     
-    KUniqueApplication app;
+    KApplication app;
 
     // see if we are starting with session management
     if (app.isSessionRestored())

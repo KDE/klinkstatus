@@ -18,80 +18,22 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
-#include "scriptingmodule.h"
-
-#include <kdemacros.h>
-
 #include "klinkstatusbasepart.h"
+
 #include "ui/view.h"
-#include "engine/searchmanager.h"
-#include "engine/searchmanageragent.h"
-#include "interfaces/engine/isearchmanager.h"
-#include "interfaces/engine/isearchmanageragent.h"
-#include "interfaces/ui/iview.h"
 
 
-extern "C" {
-KDE_EXPORT QObject* krossmodule()
+KLinkStatusBasePart::KLinkStatusBasePart()
 {
-    return new ScriptingModule(0);
-}
 }
 
-
-class ScriptingModule::Private
+KLinkStatusBasePart::~KLinkStatusBasePart()
 {
-public:
-};
+}
 
-ScriptingModule::ScriptingModule(QObject* parent)
-    : QObject(parent)
-    , d(new Private())
+View* KLinkStatusBasePart::view()
 {
-    setObjectName("KLinkStatus");
+    return view_;
 }
 
 
-ScriptingModule::~ScriptingModule()
-{
-    delete d;
-}
-
-KLinkStatusBasePart* ScriptingModule::basePart() const
-{
-    if(!parent()) {
-        kDebug() << "this->parent() is null";
-        return 0;
-    }
-
-    KLinkStatusBasePart* part = dynamic_cast<KLinkStatusBasePart*> (parent());
-    if(!part) {
-        kDebug() << "ScriptingModule::view - parent is not a KLinkStatusBasePart";
-        kDebug() << parent()->metaObject()->className();
-        return 0;
-    }
-    
-    return part;
-}
-
-QObject* ScriptingModule::view()
-{
-    KLinkStatusBasePart* part = basePart();
-    if(!part) {
-        return 0;
-    }
-
-    View* view = part->view();
-    return view->findChild<IView*> ();
-}
-
-// QObject* ScriptingModule::searchManagerAgent()
-// {
-//     KLinkStatusBasePart* part = basePart();
-// 
-//     SearchManagerAgent* agent = part->searchManagerAgent();
-//     return agent->findChild<SearchManagerAgent*> ();
-// }
-
-
-#include "scriptingmodule.moc"

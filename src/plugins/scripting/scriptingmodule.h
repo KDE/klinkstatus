@@ -23,6 +23,8 @@
 
 #include <QObject>
 
+class KLinkStatusBasePart;
+
 /**
 	@author Paulo Moura Guedes <moura@kdewebdev.org>
 */
@@ -30,12 +32,15 @@ class ScriptingModule : public QObject
 {
      Q_OBJECT
 public:
-    ScriptingModule(QObject* parent = 0);
+    ScriptingModule(QObject* parent);
     ~ScriptingModule();
     
 public slots:
-    QObject* createSearchManagerAgent();
-    QObject* createSearchManager();
+    QObject* view();
+//     QObject* searchManagerAgent();
+
+private:
+    KLinkStatusBasePart* basePart() const;
 
 private:
     Q_DISABLE_COPY(ScriptingModule)

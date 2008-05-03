@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2007 by Paulo Moura Guedes                              *
+ *   Copyright (C) 2008 by Paulo Moura Guedes                              *
  *   moura@kdewebdev.org                                                   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,39 +18,25 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
-#ifndef ISEARCH_MANAGER
-#define ISEARCH_MANAGER
-
-#include <QObject>
-#include <QtDBus/QtDBus>
-
-#include <KUrl>
-
-#include <QSet>
+#ifndef KLINKSTATUSBASEPART_H
+#define KLINKSTATUSBASEPART_H
 
 #include "klinkstatus_export.h"
-#include "engine/searchmanager.h"
-#include "isearchmanager.h"
-class SearchManager;
-class SearchManagerAgent;
+class View;
 
-
-class KLINKSTATUS_EXPORT ISearchManagerAgent : public QDBusAbstractAdaptor
+/**
+	@author Paulo Moura Guedes <moura@kdewebdev.org>
+*/
+class KLINKSTATUS_EXPORT KLinkStatusBasePart
 {
-    Q_OBJECT
-    Q_CLASSINFO("D-Bus Interface", "org.kde.kdewebdev.klinkstatus.SearchManagerAgent")
-
 public:
-    explicit ISearchManagerAgent(SearchManagerAgent* searchManagerAgent);
+    KLinkStatusBasePart();
+    virtual ~KLinkStatusBasePart();
 
-    ISearchManager* searchManager();
-
-public Q_SLOTS:
-    void check(QString const& optionsFilePath);
-
-private:
-    SearchManagerAgent* m_searchManagerAgent;
-    ISearchManager* m_iSearchManager;
+    View* view();
+    
+protected:
+    View* view_;
 };
 
 #endif

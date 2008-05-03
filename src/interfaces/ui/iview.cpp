@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2007 by Paulo Moura Guedes                              *
+ *   Copyright (C) 2008 by Paulo Moura Guedes                              *
  *   moura@kdewebdev.org                                                   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,45 +18,40 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
-#include "isearchmanageragent.h"
+#include "iview.h"
 
-#include <KStandardDirs>
-#include <kio/netaccess.h>
-#include <kross/core/action.h>
-
+#include "iviewadaptor.h"
 #include "engine/searchmanager.h"
-#include "engine/searchmanageragent.h"
-#include "utils/utils.h"
-#include "klsconfig.h"
-#include "isearchmanageragentadaptor.h"
+#include "ui/view.h"
+#include "interfaces/engine/isearchmanager.h"
 
 
-ISearchManagerAgent::ISearchManagerAgent(SearchManagerAgent* parent)
-    : QDBusAbstractAdaptor(parent), m_searchManagerAgent(parent)
+IView::IView(View* view)
+    : QDBusAbstractAdaptor(view), m_view(view)
 {
-    new ISearchManagerAgentAdaptor(this);
+    new IViewAdaptor(this);
     QDBusConnection dbus = QDBusConnection::sessionBus();
-//     dbus.registerObject("/SearchManagerAgent", this);
+//     dbus.registerObject("/View", this);
+
+    setAutoRelaySignals(true);
 }
 
-void ISearchManagerAgent::check(QString const& optionsFilePath)
+IView::~IView()
 {
-    m_searchManagerAgent->check(optionsFilePath);
-    m_iSearchManager = new ISearchManager(m_searchManagerAgent->searchManager());
 }
 
-ISearchManager* ISearchManagerAgent::searchManager()
+QObject* IView::activeSearchManager()
 {
-    if(!m_searchManagerAgent->searchManager()) {
+    kDebug() << "IView::activeSearchManager";
+    SearchManager* m = m_view->activeSearchManager();
+    kDebug() << m;
+    if(!m) {
+        kDebug() << "activeSearchManager is null";
         return 0;
     }
     
-    if(!m_iSearchManager) {
-        m_iSearchManager = new ISearchManager(m_searchManagerAgent->searchManager());
-    }
-    
-    return m_iSearchManager;
+    return m->findChild<ISearchManager*> ();
 }
 
 
-#include "isearchmanageragent.moc"
+#include "iview.moc"
