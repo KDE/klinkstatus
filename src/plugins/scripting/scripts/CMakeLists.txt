@@ -9,11 +9,11 @@ if(RUBY_FOUND)
     include_directories(${RUBY_INCLUDE_PATH})
 
     install(FILES 
-        statistics/statisticsui.ui
+        examples/statistics/statisticsui.ui
         DESTINATION ${DATA_INSTALL_DIR}/klinkstatus/scripts)
         
     install(PROGRAMS
-        statistics/statistics.rb 
+        examples/statistics/statistics.rb 
         DESTINATION ${DATA_INSTALL_DIR}/klinkstatus/scripts)
         
 endif(RUBY_FOUND)
