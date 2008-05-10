@@ -50,7 +50,7 @@
         </entry>
 
         <entry key="RegularExpression" type="String" >
-            <label>The URLs that match the regexp will not me checked</label>
+            <label>The URLs that match the regexp will not be checked</label>
             <default></default>
         </entry>
         
@@ -69,7 +69,7 @@
         </entry>
         
         <entry key="MailRecipient" type="String" >
-            <label>The e-mail address to where reults will be emailed</label>
+            <label>The e-mail address to where results will be emailed</label>
             <default></default>
         </entry>
 
