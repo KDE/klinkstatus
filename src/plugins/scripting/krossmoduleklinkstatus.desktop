@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Scripting plugin
 Name[de]=Scripting-Modul
+Name[el]=Πρόσθετο σεναρίων
 Name[fr]=Module Scripting
 Name[ga]=Breiseán scriptithe
 Name[pt]='Plugin' de programação
@@ -12,6 +13,7 @@ Name[x-test]=xxScripting pluginxx
 Name[zh_TW]=文稿外掛程式
 Comment=Allow execution of scripts
 Comment[de]=Ausführung von Skripten erlauben
+Comment[el]=Επιτρέπει την εκτέλεση σεναρίων
 Comment[fr]=Permet l'exécution de scripts
 Comment[ga]=Ceadaigh scripteanna a rith
 Comment[pt]=Permitir executar programas ou 'scripts'
