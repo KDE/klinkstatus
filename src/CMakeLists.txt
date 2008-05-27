@@ -176,7 +176,7 @@ kde4_add_executable(klinkstatus ${klinkstatus_SRCS})
 
 target_link_libraries(klinkstatus ${KDE4_KPARTS_LIBS})
 
-install(TARGETS klinkstatus DESTINATION ${BIN_INSTALL_DIR})
+install(TARGETS klinkstatus ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 
 ########### install files ###############
