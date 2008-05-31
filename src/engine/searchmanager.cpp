@@ -49,7 +49,7 @@ SearchManager::SearchManager(int max_simultaneous_connections, int time_out,
         send_identification_(true), canceled_(false), searching_(false),  ignored_links_(0),
         check_parent_dirs_(true), check_external_links_(true), check_regular_expressions_(false),
         number_of_current_level_links_(0), 
-        links_rechecked_(0), recheck_current_index_(0)
+        links_rechecked_(0), recheck_current_index_(0), m_weaver(this)
 {
     kDebug(23100) <<  "SearchManager::SearchManager()";
 
@@ -270,7 +270,7 @@ void SearchManager::cancelSearch()
 
 void SearchManager::checkRoot()
 {
-    LinkChecker* checker = new LinkChecker(&root_, time_out_);
+    LinkChecker* checker = new LinkChecker(&root_, time_out_, this);
     checker->setSearchManager(this);
 
     connect(checker, SIGNAL(transactionFinished(LinkStatus*, LinkChecker*)),
@@ -612,7 +612,7 @@ void SearchManager::checkLink(LinkStatus* ls, bool recheck)
     }
     else
     {
-        LinkChecker* checker = new LinkChecker(ls, time_out_);
+        LinkChecker* checker = new LinkChecker(ls, time_out_, this);
         checker->setSearchManager(this);
 
         if(recheck) {
@@ -896,7 +896,7 @@ void SearchManager::addHtmlPart(QString const& key_url, KHTMLPart* html_part)
 //     if(html_parts_.size() > 300)
 //         removeHtmlParts();
 
-    html_parts_.insert(key_url, html_part);
+//     html_parts_.insert(key_url, html_part);
 }
 
 void SearchManager::removeHtmlParts()

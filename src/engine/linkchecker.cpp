@@ -42,20 +42,26 @@
 #include <dom/dom_html.h>
 
 LinkChecker::LinkChecker(LinkStatus* linkstatus, int time_out,
-                         QObject* /*parent*/)
-        : QObject(/*parent*/), search_manager_(0),
+                         QObject* parent)
+        : QObject(parent), search_manager_(0),
         linkstatus_(linkstatus), t_job_(0), time_out_(time_out), document_charset_(),
         redirection_(false), header_checked_(false), finnished_(false), 
         parsing_(false), is_charset_checked_(false), has_defined_charset_(false)
 {
+//     static int i = 0;
     Q_ASSERT(linkstatus_);
 //     Q_ASSERT(!linkstatus_->checked()); // rechecks are now implemented
 
     kDebug(23100) << "Checking " << linkstatus_->absoluteUrl().url();
+
+//     kDebug(23100) << "LinkChecker::LinkChecker " << ++i;
 }
 
 LinkChecker::~LinkChecker()
 {
+//     static int i = 0;
+//     kDebug(23100) << "LinkChecker::~LinkChecker " << ++i;
+    
     delete t_job_;
     t_job_ = 0;
 }
@@ -114,12 +120,16 @@ void LinkChecker::slotTimeOut()
         Q_ASSERT(t_job_);
         if(t_job_->error() != KIO::ERR_USER_CANCELED)
         {
+            if(redirection_) {
+                processRedirection(redirection_url_);
+            }
             linkstatus_->setErrorOccurred(true);
-            linkstatus_->setChecked(true);
+//             linkstatus_->setChecked(true);
             linkstatus_->setError("Timeout");
             linkstatus_->setStatus(LinkStatus::TIMEOUT);
 
             killJob();
+            kDebug(23100) << "LinkChecker::slotTimeOut - " << linkstatus_->absoluteUrl().url();
             finnish();
         }
     }
@@ -160,6 +170,7 @@ void LinkChecker::slotMimetype (KIO::Job* /*job*/, const QString &type)
                 ls->setStatus(LinkStatus::SUCCESSFULL);
                 
                 killJob();                
+                kDebug(23100) << "LinkChecker::slotMimetype - " << linkstatus_->absoluteUrl().url();
                 finnish();
             }
         }
@@ -178,6 +189,7 @@ void LinkChecker::slotMimetype (KIO::Job* /*job*/, const QString &type)
                     ls->setStatus(LinkStatus::SUCCESSFULL);
                     
                     killJob();                    
+                    kDebug(23100) << "LinkChecker::slotMimetype - " << linkstatus_->absoluteUrl().url();
                     finnish();
                 }
             }
@@ -206,7 +218,7 @@ void LinkChecker::slotData(KIO::Job* /*job*/, const QByteArray& data)
 
     if(!t_job_->error())
     {
-      if(ls->onlyCheckHeader() && !KLSConfig::showMarkupStatus())
+        if(ls->onlyCheckHeader() && !KLSConfig::showMarkupStatus())
         {
             Q_ASSERT(header_checked_ == false);
             // the job should have been killed in slotMimetype
@@ -223,9 +235,13 @@ void LinkChecker::slotData(KIO::Job* /*job*/, const QByteArray& data)
 
                 if(header_checked_)
                 {
+                    if(redirection_) {
+                        processRedirection(redirection_url_);
+                    }
                     killJob();
                     linkstatus_->setStatus(getHttpStatus());
-                    linkstatus_->setChecked(true);
+//                     linkstatus_->setChecked(true);
+//                     kDebug(23100) << "LinkChecker::slotData 1 - " << linkstatus_->absoluteUrl().url();
                     finnish();
                     return;
                 }
@@ -239,11 +255,18 @@ void LinkChecker::slotData(KIO::Job* /*job*/, const QByteArray& data)
                 {
                     ls->setHttpHeader(getHttpHeader(t_job_));                    
                 }
-                if(ls->mimeType() != "text/html" && header_checked_)
+                if((ls->mimeType() != "text/html" && ls->mimeType() != "application/xml" )
+                    && header_checked_)
                 {
-                    //kDebug(23100) <<  "mimetype of " << ls->absoluteUrl().prettyUrl() << ": " << ls->mimeType();
+                    kDebug(23100) <<  "mimetype of " << ls->absoluteUrl().url() << ": "
+                        << ls->mimeType();
+
                     ls->setStatus(getHttpStatus());
+                    if(redirection_) {
+                        processRedirection(redirection_url_);
+                    }
                     killJob();
+//                     kDebug(23100) << "LinkChecker::slotData 2 - " << linkstatus_->absoluteUrl().url();
                     finnish(); // if finnish is called before kill what you get is a segfault, don't know why
                     return;
                 }
@@ -252,8 +275,12 @@ void LinkChecker::slotData(KIO::Job* /*job*/, const QByteArray& data)
                     //kDebug(23100) <<  "ERROR PAGE";
                     ls->setIsErrorPage(true);
                     ls->setStatus(getHttpStatus());
-                    ls->setChecked(true);
+//                     ls->setChecked(true);
+                    if(redirection_) {
+                        processRedirection(redirection_url_);
+                    }
                     killJob();
+//                     kDebug(23100) << "LinkChecker::slotData 3 - " << linkstatus_->absoluteUrl().url();
                     finnish();
                     return;
                 }
@@ -271,7 +298,7 @@ void LinkChecker::slotData(KIO::Job* /*job*/, const QByteArray& data)
             if(!codec)
                 codec = QTextCodec::codecForName("iso8859-1"); // default
             
-            doc_html_ += codec->toUnicode(data);
+            doc_html_.append(codec->toUnicode(data));
         }
     }
 }
@@ -300,7 +327,7 @@ void LinkChecker::slotResult(KJob* /*job*/)
     if(finnished_)
         return;
 
-    //kDebug(23100) <<  "LinkChecker::slotResult -> " << linkstatus_->absoluteUrl().url();
+    kDebug(23100) <<  "LinkChecker::slotResult -> " << linkstatus_->absoluteUrl().url();
 
     Q_ASSERT(t_job_);
     if(!t_job_)
@@ -309,7 +336,7 @@ void LinkChecker::slotResult(KJob* /*job*/)
     if(redirection_) {
         if(!processRedirection(redirection_url_)) {
             t_job_ = 0;
-            linkstatus_->setChecked(true);
+//             linkstatus_->setChecked(true);
             finnish();
             return;
         }
@@ -325,6 +352,7 @@ void LinkChecker::slotResult(KJob* /*job*/)
         kWarning(23100) << endl << "Job killed quietly, yet signal result was emitted...";
         kDebug(23100) << LinkStatusHelper::toString(linkstatus_);
 
+//         kDebug(23100) << "LinkChecker::slotResult - " << linkstatus_->absoluteUrl().url();
         finnish();
         return;
     }
@@ -350,7 +378,9 @@ void LinkChecker::slotResult(KJob* /*job*/)
 //     if(ls->isErrorPage())
 //         kWarning(23100) << "\n\n" << LinkStatusHelper::toString(ls) << endl;
 
-    Q_ASSERT(!job->isErrorPage());
+    // This can happen, Job Error code:  111
+    // http://www.wi-fi.org/OpenSection/index.asp
+//     Q_ASSERT(!job->isErrorPage());
 
     if(job->error())
     {
@@ -415,13 +445,14 @@ void LinkChecker::slotResult(KJob* /*job*/)
             parsing_ = false;
         }
     }
+//     kDebug(23100) << "LinkChecker::slotResult - " << linkstatus_->absoluteUrl().url();
     finnish();
 }
 
 void LinkChecker::slotRedirection (KIO::Job* /*job*/, const KUrl &url)
 {
-//     kDebug(23100) <<  "LinkChecker::slotRedirection -> " << 
-//             linkstatus_->absoluteUrl().url()  << " -> " << url.url() << endl;
+    kDebug(23100) <<  "LinkChecker::slotRedirection -> " <<
+            linkstatus_->absoluteUrl().url()  << " -> " << url.url() << endl;
 //             << " - " << t_job_->slave() << "/" <<  t_job_->slave()->slave_pid() << endl;
     
     redirection_ = true;
@@ -433,8 +464,8 @@ bool LinkChecker::processRedirection(KUrl const& toUrl)
     if(finnished_)
         return true;
 
-//     kDebug(23100) <<  "LinkChecker::processRedirection -> " << linkstatus_->absoluteUrl().url() 
-//         << " -> " << toUrl.url() << endl;
+    kDebug(23100) <<  "LinkChecker::processRedirection -> " << linkstatus_->absoluteUrl().url()
+        << " -> " << toUrl.url() << endl;
 
     Q_ASSERT(t_job_);
     Q_ASSERT(linkstatus_->absoluteUrl().protocol().startsWith("http"));
@@ -487,15 +518,21 @@ void LinkChecker::finnish()
 
     if(!finnished_)
     {
-        //kDebug(23100) <<  "LinkChecker::finnish -> " << linkstatus_->absoluteUrl().url();
+        kDebug(23100) <<  "LinkChecker::finnish -> " << linkstatus_->absoluteUrl().url();
 
         finnished_ = true;
 
-        if(redirection_)
+        if(redirection_) {
+            // processRedirection already called
             Q_ASSERT(linkstatus_->checked());
+            linkstatus_->setChecked(true);
+//             linkstatus_->redirection()->setDocHtml(QString());
+        }
         else
             linkstatus_->setChecked(true);
 
+//           linkstatus_->setDocHtml(QString());
+        
         emit transactionFinished(linkstatus_, this);
     }
 }
@@ -539,6 +576,7 @@ void LinkChecker::slotCheckRef()
     if(ref.isEmpty() || ref == "top") {
         linkstatus_->setStatusText("OK");
         linkstatus_->setStatus(LinkStatus::SUCCESSFULL);
+        kDebug(23100) << "LinkChecker::slotCheckRef - " << linkstatus_->absoluteUrl().url();
         finnish();
         return;
     }
@@ -578,10 +616,15 @@ void LinkChecker::checkRef(KUrl const& url)
     KHTMLPart* html_part = search_manager_->htmlPart(url_string);
     if(!html_part)
     {
-        kDebug(23100) << "new KHTMLPart: " +  url_string;
+//         kDebug(23100) << "new KHTMLPart: " +  url_string;
 
-        html_part = new KHTMLPart();
+        QWidget* w = 0;
+        html_part = new KHTMLPart(w, this);
+//         html_part = new KHTMLPart();
         html_part->setJScriptEnabled(false);
+        html_part->setJavaEnabled(false);
+        html_part->setMetaRefreshEnabled(false);
+        html_part->setPluginsEnabled(false);
         html_part->setOnlyLocalReferences(true);
 
         QString tmpFile;
@@ -614,6 +657,7 @@ void LinkChecker::checkRef(KUrl const& url)
         linkstatus_->setStatus(LinkStatus::BROKEN);
     }
 
+//     kDebug(23100) << "LinkChecker::checkRef - " << linkstatus_->absoluteUrl().url();
     finnish();
 }
 
@@ -625,10 +669,15 @@ void LinkChecker::checkRef(LinkStatus const* linkstatus_parent)
     KHTMLPart* html_part = search_manager_->htmlPart(url_string);
     if(!html_part)
     {
-        kDebug(23100) << "new KHTMLPart: " +  url_string;
-
-        html_part = new KHTMLPart();
+//         kDebug(23100) << "new KHTMLPart: " +  url_string;
+        
+        QWidget* w = 0;
+        html_part = new KHTMLPart(w, this);
+//         html_part = new KHTMLPart();
         html_part->setJScriptEnabled(false);
+        html_part->setJavaEnabled(false);
+        html_part->setMetaRefreshEnabled(false);
+        html_part->setPluginsEnabled(false);
         html_part->setOnlyLocalReferences(true);
 
         html_part->begin();
@@ -650,6 +699,7 @@ void LinkChecker::checkRef(LinkStatus const* linkstatus_parent)
         linkstatus_->setStatus(LinkStatus::BROKEN);
     }
 
+//     kDebug(23100) << "LinkChecker::checkRef - " << linkstatus_->absoluteUrl().url();
     finnish();
 }
 
