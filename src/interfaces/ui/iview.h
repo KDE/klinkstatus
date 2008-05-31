@@ -41,7 +41,7 @@ public:
     ~IView();
     
 public Q_SLOTS:
-    Q_SCRIPTABLE QObject* activeSearchManager();    
+    Q_SCRIPTABLE QObject* activeSearchManager();
     
 private:
     View* m_view;

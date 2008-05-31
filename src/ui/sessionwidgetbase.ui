@@ -1,6 +1,14 @@
 <ui version="4.0" >
  <class>SessionWidgetBase</class>
  <widget class="QWidget" name="SessionWidgetBase" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>565</width>
+    <height>462</height>
+   </rect>
+  </property>
   <property name="minimumSize" >
    <size>
     <width>0</width>
@@ -342,13 +350,13 @@
        <property name="minimumSize" >
         <size>
          <width>0</width>
-         <height>27</height>
+         <height>33</height>
         </size>
        </property>
        <property name="maximumSize" >
         <size>
          <width>5000</width>
-         <height>16777215</height>
+         <height>33</height>
         </size>
        </property>
       </widget>

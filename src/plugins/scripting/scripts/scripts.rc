@@ -1,6 +1,7 @@
 <KrossScripting version="3">
 
-    <collection name="file">
+    <collection name="view">
+        <separator/>
         <script
             name="statistics_script"
             text="Statistics"
