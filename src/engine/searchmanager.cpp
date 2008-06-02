@@ -34,6 +34,7 @@
 
 #include "klsconfig.h"
 #include "parser/mstring.h"
+#include "parser/htmlparser.h"
 #include "interfaces/engine/isearchmanager.h"
 
 
@@ -305,7 +306,7 @@ void SearchManager::slotRootChecked(LinkStatus* link, LinkChecker* checker)
 
         QList<LinkStatus*> node;
         fillWithChildren(LinkStatusHelper::lastRedirection(&root_), node);
-
+        
         emit signalLinksToCheckTotalSteps(node.size());
 
         QList< QList<LinkStatus*> > nivel;
@@ -343,12 +344,24 @@ void SearchManager::slotRootChecked(LinkStatus* link, LinkChecker* checker)
 
 void SearchManager::fillWithChildren(LinkStatus* link, QList<LinkStatus*>& children)
 {
+//     kDebug(23100) << "SearchManager::fillWithChildren - " << link->absoluteUrl().url();
+  
     if(!link || link->absoluteUrl().hasRef())
         return;
 
-    QList<Node*> const& nodes = link->childrenNodes();
-//     children.reserve(nodes.size());
+    HtmlParser parser(link->docHtml());
 
+    if(parser.hasBaseUrl())
+        link->setBaseURI(KUrl(parser.baseUrl().url()));
+    if(parser.hasTitle())
+        link->setHtmlDocTitle(parser.title().attributeTITLE());
+
+    link->setChildrenNodes(parser.anchorNodes());
+    // Free some space
+    link->setDocHtml(QString());
+
+    QList<Node*> const& nodes = parser.nodes();
+  
     QHash<KUrl, LinkStatus*> children_hash;
     children_hash.reserve(nodes.size());
     
@@ -410,9 +423,14 @@ void SearchManager::fillWithChildren(LinkStatus* link, QList<LinkStatus*>& child
 
 //             kDebug(23100) << "Going in: " << url << endl;
         }
+        else {
+            delete node;
+        }
     }
             
     search_results_hash_ = search_results_hash_.unite(children_hash);
+
+//     kDebug(23100) << "SearchManager::fillWithChildren - end";
 }
 
 bool SearchManager::existUrl(KUrl const& url, KUrl const& url_parent) const
@@ -584,6 +602,7 @@ void SearchManager::checkLinksSimultaneously(QList<LinkStatus*> const& links, bo
 
 void SearchManager::checkLink(LinkStatus* ls, bool recheck)
 {
+//     kDebug(23100) << "SearchManager::checkLink - " << ls->absoluteUrl();
     Q_ASSERT(ls);
 
     QString protocol = ls->absoluteUrl().protocol();
@@ -750,7 +769,7 @@ void SearchManager::buildNewNode(LinkStatus* linkstatus)
 
     QList<LinkStatus*> new_node;
     fillWithChildren(linkstatus, new_node);
-    
+
     if(new_node.size() == 0)
         return;
         

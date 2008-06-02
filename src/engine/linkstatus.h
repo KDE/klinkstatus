@@ -57,7 +57,7 @@ public:
     };
     
     LinkStatus();
-    LinkStatus(KUrl const& absolute_url);
+//     LinkStatus(KUrl const& absolute_url);
     LinkStatus(Node* node, LinkStatus* parent);
     ~LinkStatus();
     
@@ -100,12 +100,12 @@ public:
     uint depth() const;
     bool local() const;         // linkstatus.paradigma.co.pt == paradigma.co.pt
     bool isLocalRestrict() const; // linkstatus.paradigma.co.pt != paradigma.co.pt
-    LinkStatus const* parent() const;
+    LinkStatus* parent() const;
     QString const& originalUrl() const;
     QString const& label() const;
     KUrl const& absoluteUrl() const;
     QString const& docHtml() const;
-    HttpResponseHeader const& httpHeader() const;
+      HttpResponseHeader const& httpHeader() const;
     HttpResponseHeader& httpHeader();
     QString statusText() const; // FIXME Legacy. This should be eliminated in favor of LinkStatus::Status
     QString const& error() const;

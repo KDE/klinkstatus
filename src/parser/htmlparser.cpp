@@ -27,8 +27,10 @@
 HtmlParser::HtmlParser(QString const& documento)
     : is_content_type_set_(false), document_(documento)
 {
-    Q_ASSERT(!documento.isEmpty());
-
+//     Q_ASSERT(!documento.isEmpty());
+    if(documento.isEmpty())
+        return;
+  
     stripScriptContent();
     stripComments(); // after removing the script because comments in scripts have diferent sintax
 
@@ -41,6 +43,10 @@ HtmlParser::HtmlParser(QString const& documento)
     parseNodesOfTypeIFRAME();
     parseNodesOfTypeBASE();
     parseNodesOfTypeTITLE();
+}
+
+HtmlParser::~HtmlParser()
+{
 }
 
 bool HtmlParser::hasBaseUrl() const
@@ -161,6 +167,11 @@ QList<Node*> const& HtmlParser::nodes() const
     return nodes_;
 }
 
+QList<Node*> const& HtmlParser::anchorNodes() const
+{
+    return anchor_nodes_;
+}
+
 
 void HtmlParser::parseNodesOfTypeA()
 {
@@ -168,7 +179,12 @@ void HtmlParser::parseNodesOfTypeA()
 
     for(QList<QString>::size_type i = 0; i != aux.size(); ++i)
     {
-        nodes_.push_back( new NodeA(aux[i]) );
+        NodeA* node = new NodeA(aux[i]);
+        nodes_.push_back(node);
+
+        if(!node->attributeNAME().isEmpty()) {
+            anchor_nodes_.push_back(new NodeA(aux[i]));
+        }
     }
 }
 

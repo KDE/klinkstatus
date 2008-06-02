@@ -42,6 +42,7 @@ public:
   ~HtmlParser();
 
   QList<Node*> const& nodes() const;
+  QList<Node*> const& anchorNodes() const;
   bool hasBaseUrl() const;
   bool hasTitle() const;
   bool hasContentType() const;
@@ -90,6 +91,7 @@ private:
 
   QList<QString> aux_; // for what the hell is this? looks ugly... maybe I was drunk, can't remember
   QList<Node*> nodes_;
+  QList<Node*> anchor_nodes_;
   NodeBASE node_BASE_;
   NodeTITLE node_TITLE_;
   NodeMETA node_META_content_type_;
@@ -100,11 +102,6 @@ private:
   QString comments_;
 };
 
-
-inline HtmlParser::~HtmlParser()
-{
-  //kDebug(23100) <<  "*";
-}
 
 inline bool HtmlParser::hasContentType() const
 {

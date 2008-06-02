@@ -1,4 +1,4 @@
-/***************************************************************************
+  /***************************************************************************
  *   Copyright (C) 2004 by Paulo Moura Guedes                              *
  *   moura@kdewebdev.org                                                        *
  *                                                                         *
@@ -61,7 +61,7 @@ inline void LinkStatus::setLabel(QString const& label)
 
 inline void LinkStatus::setDocHtml(QString const& doc_html)
 {
-    Q_ASSERT(!doc_html.isEmpty());
+//     Q_ASSERT(!doc_html.isEmpty());
     doc_html_ = doc_html;
 }
 
@@ -224,7 +224,7 @@ inline bool LinkStatus::isLocalRestrict() const
     return is_local_restrict_;
 }
 
-inline LinkStatus const* LinkStatus::parent() const
+inline LinkStatus* LinkStatus::parent() const
 {
     return parent_;
 }

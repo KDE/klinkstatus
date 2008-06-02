@@ -24,6 +24,8 @@
 #include <kurl.h>
 #include <QString>
 
+#include "klinkstatus_export.h"
+
 
 int const NUMBER_OF_HTML_CODES = 92;
 extern QString htmlDocCharset[NUMBER_OF_HTML_CODES][2];
@@ -52,7 +54,7 @@ int smallerUnsigned(int a, int b);
 
 namespace FileManager
 {
-QString read(QString const& path);
+QString KLINKSTATUS_EXPORT read(QString const& path);
 void write(QString const& content, KUrl const& url);
 }
 

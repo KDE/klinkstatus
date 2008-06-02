@@ -21,8 +21,8 @@
 #include "linkchecker.h"
 #include "linkstatushelper.h"
 #include "searchmanager.h"
-#include "../utils/utils.h"
-#include "../parser/htmlparser.h"
+#include "utils/utils.h"
+#include "parser/htmlparser.h"
 #include "klsconfig.h"
 
 #include <QString>
@@ -434,14 +434,14 @@ void LinkChecker::slotResult(KJob* /*job*/)
             ls->setDocHtml(doc_html_);
 
             parsing_ = true;
-            HtmlParser parser(doc_html_);
-
-            if(parser.hasBaseUrl())
-                ls->setBaseURI(KUrl(parser.baseUrl().url()));
-            if(parser.hasTitle())
-                ls->setHtmlDocTitle(parser.title().attributeTITLE());
-            
-            ls->setChildrenNodes(parser.nodes());
+//             HtmlParser parser(doc_html_);
+// 
+//             if(parser.hasBaseUrl())
+//                 ls->setBaseURI(KUrl(parser.baseUrl().url()));
+//             if(parser.hasTitle())
+//                 ls->setHtmlDocTitle(parser.title().attributeTITLE());
+//             
+//             ls->setChildrenNodes(parser.nodes());
             parsing_ = false;
         }
     }
@@ -518,7 +518,7 @@ void LinkChecker::finnish()
 
     if(!finnished_)
     {
-        kDebug(23100) <<  "LinkChecker::finnish -> " << linkstatus_->absoluteUrl().url();
+        kDebug(23100) <<  "LinkChecker::finnish - " << linkstatus_->absoluteUrl().url();
 
         finnished_ = true;
 
@@ -526,14 +526,12 @@ void LinkChecker::finnish()
             // processRedirection already called
             Q_ASSERT(linkstatus_->checked());
             linkstatus_->setChecked(true);
-//             linkstatus_->redirection()->setDocHtml(QString());
         }
-        else
+        else {
             linkstatus_->setChecked(true);
+        }
 
-//           linkstatus_->setDocHtml(QString());
-        
-        emit transactionFinished(linkstatus_, this);
+          emit transactionFinished(linkstatus_, this);
     }
 }
 
@@ -600,7 +598,7 @@ void LinkChecker::slotCheckRef()
     }
 
     if(ls_parent)
-        checkRef(ls_parent);
+          checkRef(ls_parent);
     else
     {
         url = KUrl(url.url().left(i_ref));
@@ -665,41 +663,28 @@ void LinkChecker::checkRef(LinkStatus const* linkstatus_parent)
 {
     Q_ASSERT(search_manager_);
 
-    QString url_string = linkstatus_parent->absoluteUrl().url();
-    KHTMLPart* html_part = search_manager_->htmlPart(url_string);
-    if(!html_part)
-    {
-//         kDebug(23100) << "new KHTMLPart: " +  url_string;
-        
-        QWidget* w = 0;
-        html_part = new KHTMLPart(w, this);
-//         html_part = new KHTMLPart();
-        html_part->setJScriptEnabled(false);
-        html_part->setJavaEnabled(false);
-        html_part->setMetaRefreshEnabled(false);
-        html_part->setPluginsEnabled(false);
-        html_part->setOnlyLocalReferences(true);
-
-        html_part->begin();
-        html_part->write(linkstatus_parent->docHtml());
-        html_part->end();
-
-        search_manager_->addHtmlPart(url_string, html_part);
+    bool found = false;
+    
+    QList<Node*> const& children_nodes = linkstatus_parent->childrenNodes();
+    for(int i = 0; i != children_nodes.size(); ++i) {
+        if(children_nodes[i]->element() == Node::A) {
+            NodeA* nodeA = static_cast<NodeA*> (children_nodes[i]);
+            if(nodeA->attributeNAME() == linkStatus()->absoluteUrl().ref()) {
+                found = true;
+            }
+        }
     }
 
-    if(hasAnchor(html_part, linkStatus()->absoluteUrl().ref()))
-    {
+    if(found) {
         linkstatus_->setStatusText("OK");
         linkstatus_->setStatus(LinkStatus::SUCCESSFULL);
     }
-    else
-    {
+    else {
         linkstatus_->setErrorOccurred(true);
         linkstatus_->setError("Link destination not found.");
         linkstatus_->setStatus(LinkStatus::BROKEN);
     }
 
-//     kDebug(23100) << "LinkChecker::checkRef - " << linkstatus_->absoluteUrl().url();
     finnish();
 }
 
