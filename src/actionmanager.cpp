@@ -291,7 +291,7 @@ void ActionManager::initTabWidget(TabWidgetSession* tabWidgetSession)
 
     // *************** Toolbar *********************
       
-    d->gotoViewAction = new KToolBarPopupAction(KIcon("view-choose"), "", this);
+    d->gotoViewAction = new KToolBarPopupAction(KIcon("view-choose"), "Change View", this);
     actionCollection()->addAction("next_view_list", d->gotoViewAction);
 //     action->setShortcuts(KStandardShortcut::shortcut(KStandardShortcut::Back));
     d->gotoViewAction->setToolTip("Change View");
