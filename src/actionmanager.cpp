@@ -167,7 +167,7 @@ void ActionManager::initTabWidget(TabWidgetSession* tabWidgetSession)
     // *************** View menu *********************
 
     //     this action must be in the tabwidget because the slot can't be connected to a particular sessionWidget
-    KToggleAction *toggle_action  = new KToggleAction(KIcon("go-jump"), i18n("&Follow last Link checked"), this);
+    KToggleAction *toggle_action  = new KToggleAction(KIcon("go-jump"), i18n("&Follow Last Link"), this);
     toggle_action->setToolTip("Follow last Link checked (slower)");
     actionCollection()->addAction("follow_last_link_checked", toggle_action );
     connect(toggle_action, SIGNAL(triggered(bool)), d->tabWidgetSession, SLOT(slotFollowLastLinkChecked()));
