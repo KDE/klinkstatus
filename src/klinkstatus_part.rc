@@ -86,11 +86,10 @@
         <Action name="stop_search"/>
         <Separator/>
         <Action name="search_in_background"/>
+        <Action name="follow_last_link_checked"/>
         <Separator/>
         <Action name="hide_search_bar"/>
         <Action name="reset_search_bar"/>
-        <Separator/>
-        <Action name="follow_last_link_checked"/>
         <Separator/>
         <Action name="next_view_list"/>
     </ToolBar>
