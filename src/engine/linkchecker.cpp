@@ -590,14 +590,14 @@ void LinkChecker::slotCheckRef()
     {
         i_ref = url.url().indexOf('#');
         url_base = url.url().left(i_ref);
-        //kDebug(23100) << "url_base: " << url_base;
+//         kDebug(23100) << "url_base: " << url_base;
 
         Q_ASSERT(search_manager_);
 
         ls_parent = search_manager_->linkStatus(url_base);
     }
 
-    if(ls_parent)
+    if(ls_parent && ls_parent->checked() && ls_parent->docHtml().isEmpty())
           checkRef(ls_parent);
     else
     {
@@ -608,6 +608,7 @@ void LinkChecker::slotCheckRef()
 
 void LinkChecker::checkRef(KUrl const& url)
 {
+//     kDebug(23100) << "LinkChecker::checkRef(KUrl const& url)" << url.url();
     Q_ASSERT(search_manager_);
     
     QString url_string = url.url();
@@ -661,6 +662,8 @@ void LinkChecker::checkRef(KUrl const& url)
 
 void LinkChecker::checkRef(LinkStatus const* linkstatus_parent)
 {
+//     kDebug(23100) << "LinkChecker::checkRef(LinkStatus const* linkstatus_paren)";
+    
     Q_ASSERT(search_manager_);
 
     bool found = false;
