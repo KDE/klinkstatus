@@ -117,7 +117,7 @@ void SessionWidget::init()
     connect(resultsSearchBar, SIGNAL(signalSearch(LinkMatcher)),
             this, SLOT(slotApplyFilter(LinkMatcher)));
 
-    elapsed_time_timer_.setInterval(1000);
+    elapsed_time_timer_.setInterval(500);
 }
 
 void SessionWidget::slotLoadSettings(bool modify_current_widget_settings)
@@ -528,9 +528,9 @@ void SessionWidget::insertUrlAtCombobox(QString const& url)
 
 void SessionWidget::slotSetTimeElapsed()
 {
-    QTime time = QTime::fromString(textlabel_elapsed_time_value->text(), "hh:mm:ss");
-    time = time.addMSecs(elapsed_time_timer_.interval());
-    textlabel_elapsed_time_value->setText(time.toString("hh:mm:ss"));
+    QTime current(0, 0);
+    current = current.addMSecs(start_time_.elapsed());
+    textlabel_elapsed_time_value->setText(current.toString("hh:mm:ss"));
 }
 
 void SessionWidget::slotAddingLevel(bool adding)
@@ -804,6 +804,7 @@ void SessionWidget::slotValidateAll()
 void SessionWidget::slotSearchStarted()
 {
     textlabel_elapsed_time_value->setText(QTime(0, 0).toString("hh:mm:ss"));
+    start_time_.start();
     elapsed_time_timer_.start();
 
     Global::getInstance()->setStatusBarText(i18n("Checking") + ' ' + combobox_url->currentText(), false);

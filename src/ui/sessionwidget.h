@@ -31,6 +31,7 @@ class ActionManager;
 
 #include <QKeyEvent>
 #include <QTimer>
+#include <QTime>
 #include <QString>
 class QStringList;
 class QTreeWidgetItem;
@@ -138,6 +139,7 @@ private:
     SearchManager* search_manager_;
 
     QTimer elapsed_time_timer_;
+    QTime start_time_;
     int max_simultaneous_connections_;
     int time_out_;
     bool tree_display_; // tree/flat result display
