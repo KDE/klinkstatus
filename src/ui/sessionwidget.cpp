@@ -237,8 +237,6 @@ void SessionWidget::slotCheck()
         return;
     }
 
-    emit signalSearchStarted();
-
     in_progress_ = true;
     paused_ = false;
     stopped_ = false;
@@ -327,6 +325,9 @@ void SessionWidget::slotCheck()
     
     combobox_url->setEditText(url.prettyUrl());
     url_to_check_ = url;
+
+    emit signalSearchStarted();
+
     search_manager_->startSearch(url);
 }
 
