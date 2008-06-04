@@ -98,6 +98,7 @@ public:
     void resume();
     void cancelSearch();
 
+    int checkedLinks() const;
     SearchCounters const& searchCounters() const;
 
     void recheckLink(LinkStatus* linkStatus);
@@ -169,7 +170,6 @@ private:
     void reset();
     SearchMode const& searchMode() const;
     bool checkRegularExpressions() const { return check_regular_expressions_; }
-    int checkedLinks() const;
     bool checkParentDirs() const;
     bool checkExternalLinks() const;
     int maxSimultaneousConnections() const;

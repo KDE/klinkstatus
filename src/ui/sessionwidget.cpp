@@ -107,6 +107,8 @@ void SessionWidget::init()
     pushbutton_url->setFixedSize(pixmapSize + 8, pixmapSize + 8);
     connect(pushbutton_url, SIGNAL(clicked()), this, SLOT(slotChooseUrlDialog()));
 
+    textedit_elapsed_time_value->setText(QTime(0, 0).toString("hh:mm:ss"));
+
     resultsSearchBar->hide();
 
     start_search_action_ = static_cast<KToggleAction*> (ActionManager::getInstance()->action("start_search"));
@@ -117,7 +119,7 @@ void SessionWidget::init()
     connect(resultsSearchBar, SIGNAL(signalSearch(LinkMatcher)),
             this, SLOT(slotApplyFilter(LinkMatcher)));
 
-    elapsed_time_timer_.setInterval(500);
+    elapsed_time_timer_.setInterval(1000);
 }
 
 void SessionWidget::slotLoadSettings(bool modify_current_widget_settings)
@@ -256,7 +258,9 @@ void SessionWidget::slotCheck()
     textlabel_progressbar->setText(i18n( "Checking..." ));
 
     textlabel_elapsed_time->setEnabled(true);
-    textlabel_elapsed_time_value->setEnabled(true);
+    textedit_elapsed_time_value->setEnabled(true);
+    label_checked_links->setEnabled(true);
+    textedit_checked_links->setEnabled(true);
 
     //table_linkstatus->clear();
     tree_view->clear();
@@ -394,6 +398,8 @@ void SessionWidget::slotRootChecked(LinkStatus* linkstatus)
             textlabel_progressbar->text() == i18n("Stopped"));
     progressbar_checker->setValue(1);
 
+    textedit_checked_links->setText(QString::number(search_manager_->checkedLinks()));
+
     TreeViewItem* tree_view_item = 0;
     if(check_in_background_) {
         tree_view_item = new TreeViewItem(tree_view, 0, linkstatus);
@@ -411,6 +417,7 @@ void SessionWidget::slotLinkChecked(LinkStatus* linkstatus)
 //             textlabel_progressbar->text() == i18n("Stopped"));
     
     progressbar_checker->setValue(progressbar_checker->value() + 1);
+    textedit_checked_links->setText(QString::number(search_manager_->checkedLinks()));
 
     if(!linkstatus->checked())
         return;
@@ -469,7 +476,9 @@ void SessionWidget::slotSearchFinished(SearchManager*)
     ready_ = true;
 
     textlabel_elapsed_time->setEnabled(true);
-    textlabel_elapsed_time_value->setEnabled(true);
+    textedit_elapsed_time_value->setEnabled(true);
+    label_checked_links->setEnabled(true);
+    textedit_checked_links->setEnabled(true);
     elapsed_time_timer_.stop();
 
     in_progress_ = false;
@@ -510,7 +519,9 @@ void SessionWidget::slotSearchPaused()
     }
 
     textlabel_elapsed_time->setEnabled(true);
-    textlabel_elapsed_time_value->setEnabled(true);
+    textedit_elapsed_time_value->setEnabled(true);
+    label_checked_links->setEnabled(true);
+    textedit_checked_links->setEnabled(true);
     elapsed_time_timer_.stop();
 
     resetPendingActions();
@@ -530,7 +541,7 @@ void SessionWidget::slotSetTimeElapsed()
 {
     QTime current(0, 0);
     current = current.addMSecs(start_time_.elapsed());
-    textlabel_elapsed_time_value->setText(current.toString("hh:mm:ss"));
+    textedit_elapsed_time_value->setText(current.toString("hh:mm:ss"));
 }
 
 void SessionWidget::slotAddingLevel(bool adding)
@@ -803,7 +814,7 @@ void SessionWidget::slotValidateAll()
 
 void SessionWidget::slotSearchStarted()
 {
-    textlabel_elapsed_time_value->setText(QTime(0, 0).toString("hh:mm:ss"));
+    textedit_elapsed_time_value->setText(QTime(0, 0).toString("hh:mm:ss"));
     start_time_.start();
     elapsed_time_timer_.start();
 
