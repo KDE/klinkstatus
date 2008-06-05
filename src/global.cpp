@@ -36,7 +36,7 @@
 #include <unistd.h>
 
 
-class GlobalPrivate : public QObject
+class Global::GlobalPrivate : public QObject
 {
     Q_OBJECT
 public:
@@ -63,9 +63,9 @@ private:
     QTimer m_statusBarTimer;
 };
 
-K_GLOBAL_STATIC(GlobalPrivate, global_instance)
+// K_GLOBAL_STATIC(GlobalPrivate, global_private)
 
-GlobalPrivate::GlobalPrivate()
+Global::GlobalPrivate::GlobalPrivate()
     : QObject(0), m_klinkStatusPart(0), m_statusBarExtension(0), m_statusBarLabel(0)
 {
     connect(&m_statusBarTimer, SIGNAL(timeout()),
@@ -74,7 +74,7 @@ GlobalPrivate::GlobalPrivate()
     m_statusBarTimer.start(1500);
 }
 
-void GlobalPrivate::setKLinkStatusPart(ReadOnlyPart* part)
+void Global::GlobalPrivate::setKLinkStatusPart(ReadOnlyPart* part)
 {
     m_klinkStatusPart = part;
 
@@ -92,12 +92,22 @@ Global* Global::getInstance()
     return globalInstance;
 }
 
-void Global::setKLinkStatusPart(ReadOnlyPart* part)
+Global::Global()
+    : global_private(new GlobalPrivate())
 {
-    global_instance->setKLinkStatusPart(part);
 }
 
-KStatusBar* GlobalPrivate::statusBar() const
+Global::~Global()
+{
+    delete global_private;
+}
+
+void Global::setKLinkStatusPart(ReadOnlyPart* part)
+{
+    global_private->setKLinkStatusPart(part);
+}
+
+KStatusBar* Global::GlobalPrivate::statusBar() const
 {
     if(!m_statusBarExtension)
         return 0;
@@ -108,10 +118,10 @@ KStatusBar* GlobalPrivate::statusBar() const
 
 KStatusBar* Global::statusBar() const
 {
-    return global_instance->statusBar();
+    return global_private->statusBar();
 }
 
-void GlobalPrivate::setStatusBarText(QString const& text, bool permanent)
+void Global::GlobalPrivate::setStatusBarText(QString const& text, bool permanent)
 {
     if(!m_statusBarExtension)
         return;
@@ -128,10 +138,10 @@ void GlobalPrivate::setStatusBarText(QString const& text, bool permanent)
 
 void Global::setStatusBarText(QString const& text, bool permanent)
 {
-    global_instance->setStatusBarText(text, permanent);
+    global_private->setStatusBarText(text, permanent);
 }
 
-void GlobalPrivate::addStatusBarPermanentItem(QWidget* widget)
+void Global::GlobalPrivate::addStatusBarPermanentItem(QWidget* widget)
 {
     if(!m_statusBarExtension)
         return;
@@ -142,16 +152,16 @@ void GlobalPrivate::addStatusBarPermanentItem(QWidget* widget)
 
 void Global::addStatusBarPermanentItem(QWidget* widget)
 {
-    global_instance->addStatusBarPermanentItem(widget);
+    global_private->addStatusBarPermanentItem(widget);
 }
 
-void GlobalPrivate::slotRemoveStatusBarLabel()
+void Global::GlobalPrivate::slotRemoveStatusBarLabel()
 {
     m_statusBarExtension->removeStatusBarItem(m_statusBarLabel);
 }
 
 
-void GlobalPrivate::slotStatusBarTimeout()
+void Global::GlobalPrivate::slotStatusBarTimeout()
 {
     m_statusBarExtension->statusBar()->clearMessage();
 }
