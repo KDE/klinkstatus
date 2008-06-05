@@ -37,9 +37,11 @@ DocumentRootDialog::DocumentRootDialog(QWidget *parent, KUrl const& url)
     setButtons(KDialog::Ok);
     setDefaultButton(KDialog::Ok);
     showButtonSeparator(true);
+    
     QWidget* page = new QWidget(this);
     setMainWidget(page);
-    QVBoxLayout* topLayout = new QVBoxLayout(this);
+    
+    QVBoxLayout* topLayout = new QVBoxLayout(page);
 
     QLabel* label = new QLabel(i18n("As you are using a protocol different than HTTP, \nthere is no way to guess where the document root is, \nin order to resolve relative URLs like the ones started with \"/\".\n\nPlease specify one:"), page);
     topLayout->addWidget(label);
@@ -51,7 +53,7 @@ DocumentRootDialog::DocumentRootDialog(QWidget *parent, KUrl const& url)
     topLayout->addWidget(m_urlRequester);
 
     topLayout->addStretch(10);
-    page->setLayout(topLayout);
+//     page->setLayout(topLayout);
 
     //     setInitialSize(configDialogSize("klinkstatus"));
 

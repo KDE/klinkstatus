@@ -63,8 +63,6 @@ private:
     QTimer m_statusBarTimer;
 };
 
-// K_GLOBAL_STATIC(GlobalPrivate, global_private)
-
 Global::GlobalPrivate::GlobalPrivate()
     : QObject(0), m_klinkStatusPart(0), m_statusBarExtension(0), m_statusBarLabel(0)
 {
