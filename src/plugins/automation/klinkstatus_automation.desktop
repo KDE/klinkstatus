@@ -2,6 +2,7 @@
 Name=Automation plugin
 Name[de]=Modul zur Automatisierung
 Name[el]=Πρόσθετο αυτοματοποίησης
+Name[et]=Automatiseerimine plugin
 Name[fr]=Module Automation
 Name[ga]=Breiseán uathoibrithe
 Name[gl]=Extensión de automatización
@@ -16,6 +17,7 @@ Name[zh_TW]=自動化外掛程式
 Comment=Allow configuration of automated tasks
 Comment[de]=Einrichtung von automatisierten Aufgaben erlauben
 Comment[el]=Επιτρέπει τη ρύθμιση αυτοματοποιημένων εργασιών
+Comment[et]=Automatiseeritud ülesannete seadistamise lubamine
 Comment[fr]=Autoriser la configuration de tâches automatisées
 Comment[ga]=Ceadaigh cumraíocht de thascanna uathoibrithe
 Comment[gl]=Permite configurar tarefas automátizadas
