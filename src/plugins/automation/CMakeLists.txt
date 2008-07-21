@@ -21,8 +21,9 @@ kde4_add_kcfg_files(automationklinkstatus_PART_SRCS ${CMAKE_SOURCE_DIR}/klinksta
 kde4_add_plugin(automationklinkstatus ${automationklinkstatus_PART_SRCS})
 
 target_link_libraries(automationklinkstatus
-    ${KDE4_KDECORE_LIBS} 
-    ${KDE4_KPARTS_LIBS}  
+    ${KDE4_KDECORE_LIBS}
+    ${KDE4_KPARTS_LIBS}
+    ${KDE4_MAILTRANSPORT_LIBS}
     klinkstatuscommon)
 
 install(TARGETS automationklinkstatus DESTINATION ${PLUGIN_INSTALL_DIR})
