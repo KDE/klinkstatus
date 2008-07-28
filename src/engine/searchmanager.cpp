@@ -54,6 +54,11 @@ SearchManager::SearchManager(int max_simultaneous_connections, int time_out,
 
     root_.setIsRoot(true);
 
+    if (KLSConfig::userAgent().isEmpty()) {
+        KLSConfig::setUserAgent(KProtocolManager::defaultUserAgent());
+    }
+    user_agent_ = KLSConfig::userAgent();
+
     m_weaver.setMaximumNumberOfThreads(10);
     connect(&m_weaver, SIGNAL(jobDone(ThreadWeaver::Job*)), SLOT(slotJobDone(ThreadWeaver::Job*)));
 }
