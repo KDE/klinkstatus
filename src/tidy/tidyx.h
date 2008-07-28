@@ -48,8 +48,8 @@
   Created 2002-07-11 by Charles Reitzel
 */
 
-#include <tidy/tidy.h>
-#include <tidy/buffio.h>
+#include <tidy.h>
+#include <buffio.h>
 
 #include <config-tidy.h>
     
