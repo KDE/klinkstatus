@@ -95,7 +95,7 @@ void AutomationDialog::loadPages()
 
         QString name = config->name();
         if(name.isEmpty()) {
-            continue;
+            name = i18n("empty");
         }
 
 //         Ui::AutomationWidgetUi ui;
