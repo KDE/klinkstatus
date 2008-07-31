@@ -159,7 +159,7 @@ kde4_add_kcfg_files(klinkstatuspart_PART_SRCS ${CMAKE_SOURCE_DIR}/klinkstatus/sr
 
 kde4_add_plugin(klinkstatuspart ${klinkstatuspart_PART_SRCS})
 
-target_link_libraries(klinkstatuspart klinkstatuscommon)
+target_link_libraries(klinkstatuspart klinkstatuscommon ${KDE4_KDEUI_LIBS} ${KDE4_KPARTS_LIBS})
 
 install(TARGETS klinkstatuspart DESTINATION ${PLUGIN_INSTALL_DIR})
 
