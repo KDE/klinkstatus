@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Automation plugin
+Name[ca]=Endollable d'automatització
 Name[da]=Automatiseringsplugin
 Name[de]=Modul zur Automatisierung
 Name[el]=Πρόσθετο αυτοματοποίησης
@@ -21,6 +22,7 @@ Name[x-test]=xxAutomation pluginxx
 Name[zh_CN]=自动化插件
 Name[zh_TW]=自動化外掛程式
 Comment=Allow configuration of automated tasks
+Comment[ca]=Permet la configuració de tasques automàtiques
 Comment[da]=Tillad indstilling af automatiserede opgaver
 Comment[de]=Einrichtung von automatisierten Aufgaben erlauben
 Comment[el]=Επιτρέπει τη ρύθμιση αυτοματοποιημένων εργασιών
