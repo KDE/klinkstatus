@@ -35,7 +35,7 @@ static const char version[] = "0.5.1";
 int main(int argc, char *argv[])
 {
     KAboutData about("klinkstatus", 0, ki18n("KLinkStatus"), version, ki18n(description),
-                     KAboutData::License_GPL_V2, ki18n("(C) 2004-2007 Paulo Moura Guedes"), KLocalizedString(),
+                     KAboutData::License_GPL_V2, ki18n("(C) 2004-2008 Paulo Moura Guedes"), KLocalizedString(),
                      "http://klinkstatus.kdewebdev.org");
 
     about.addAuthor(ki18n("Paulo Moura Guedes"), KLocalizedString(), "moura@kdewebdev.org");

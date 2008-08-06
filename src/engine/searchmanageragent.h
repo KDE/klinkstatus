@@ -43,6 +43,9 @@ public:
     void check(QString const& optionsFilePath);
     
     SearchManager* searchManager() const;
+
+signals:
+    void signalSearchFinished(SearchManager* searchManager);
     
 private Q_SLOTS:
     void slotExportSearchFinished(SearchManager* searchManager);

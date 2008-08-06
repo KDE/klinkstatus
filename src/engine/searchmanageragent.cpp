@@ -110,6 +110,8 @@ void SearchManagerAgent::check(QString const& optionsFilePath)
     
     connect(d->searchManager, SIGNAL(signalSearchFinished(SearchManager*)),
             this, SLOT(slotExportSearchFinished(SearchManager*)));
+    connect(d->searchManager, SIGNAL(signalSearchFinished(SearchManager*)),
+            this, SIGNAL(signalSearchFinished(SearchManager*)));
 
     d->searchManager->startSearch();
 }
