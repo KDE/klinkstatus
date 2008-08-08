@@ -117,6 +117,9 @@ public:
     QString searchProtocol() const { return root_.absoluteUrl().protocol(); };
 
     void setRootUrl(KUrl const& url);
+    void setIsLoginPostRequest(bool is);
+    void setPostUrl(QString const& url);
+    void setPostData(QByteArray const& data);
     void setSearchMode(SearchMode modo);
     void setDepth(int depth);
     void setDomain(QString const& domain);
@@ -209,6 +212,11 @@ private:
 private:
 
     SearchCounters search_counters_;
+
+    // authentication
+    bool is_login_post_request_;
+    QString post_url_;
+    QByteArray post_data_;
     
     // whether it is a new search or refreshing previously checked links
     bool recheck_mode_;

@@ -161,7 +161,8 @@ void Global::GlobalPrivate::slotRemoveStatusBarLabel()
 
 void Global::GlobalPrivate::slotStatusBarTimeout()
 {
-    m_statusBarExtension->statusBar()->clearMessage();
+    if(m_statusBarExtension->statusBar())
+        m_statusBarExtension->statusBar()->clearMessage();
 }
 
 

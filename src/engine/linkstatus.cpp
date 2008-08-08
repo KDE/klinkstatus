@@ -87,13 +87,10 @@ LinkStatus::~LinkStatus()
 
     children_nodes_.clear();
 
-    if(isRedirection())
+    if(isRedirection() && redirection_)
     {
-        if(redirection_)
-        {
-            delete redirection_;
-            redirection_ = 0;
-        }
+        delete redirection_;
+        redirection_ = 0;
     }
 
 //     --instances;

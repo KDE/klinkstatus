@@ -49,7 +49,7 @@ set(libengine_SRCS
     ${CMAKE_SOURCE_DIR}/klinkstatus/src/engine/linkstatushelper.cpp
     ${CMAKE_SOURCE_DIR}/klinkstatus/src/engine/searchmanager.cpp 
     ${CMAKE_SOURCE_DIR}/klinkstatus/src/engine/searchmanageragent.cpp 
-
+    ${CMAKE_SOURCE_DIR}/klinkstatus/src/engine/automationengine.cpp 
 )
 
 set(libinterfaces_SRC
@@ -68,6 +68,7 @@ set(libui_SRCS
     ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/treeview.cpp
     ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/sessionstackedwidget.cpp
     ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/unreferreddocumentswidget.cpp
+    ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/httppostdialog.cpp
 )
 
 set(libuisettings_SRCS 
@@ -97,6 +98,7 @@ set (klinkstatuscommon_LIB_SRCS
 kde4_add_ui_files(klinkstatuscommon_LIB_SRCS
     ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/sessionwidgetbase.ui
     ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/unreferreddocumentswidget.ui
+    ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/httppostwidgetui.ui
     ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/settings/configsearchdialog.ui
     ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/settings/configresultsdialog.ui
     ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/settings/configidentificationdialogui.ui   
@@ -177,6 +179,22 @@ kde4_add_executable(klinkstatus ${klinkstatus_SRCS})
 target_link_libraries(klinkstatus ${KDE4_KPARTS_LIBS})
 
 install(TARGETS klinkstatus ${INSTALL_TARGETS_DEFAULT_ARGS})
+
+
+
+########### next target ###############
+
+# set(klinkstatus_SRCS
+#     mainCli.cpp
+# )
+# 
+# 
+# kde4_add_executable(klinkstatuscli ${klinkstatus_SRCS})
+# 
+# target_link_libraries(klinkstatuscli klinkstatuscommon)
+# 
+# install(TARGETS klinkstatuscli ${INSTALL_TARGETS_DEFAULT_ARGS})
+
 
 
 ########### install files ###############

@@ -40,7 +40,7 @@
 
 SearchManager::SearchManager(int max_simultaneous_connections, int time_out,
                              QObject *parent)
-        : QObject(parent), recheck_mode_(false), 
+        : QObject(parent), is_login_post_request_(false), recheck_mode_(false), 
         max_simultaneous_connections_(max_simultaneous_connections), has_document_root_(false), 
         depth_(-1), current_depth_(0), external_domain_depth_(0),
         current_node_(0), current_index_(0), links_being_checked_(0),
@@ -75,6 +75,7 @@ void SearchManager::reset()
 
     LinkStatusHelper::reset(&root_);
     cleanItems();
+    is_login_post_request_ = false;
     recheck_mode_ = false;
     recheck_links_.clear();
     links_rechecked_ = 0;
@@ -282,7 +283,13 @@ void SearchManager::checkRoot()
     connect(checker, SIGNAL(transactionFinished(LinkStatus*, LinkChecker*)),
             this, SLOT(slotRootChecked(LinkStatus*, LinkChecker*)));
 
-    checker->check();
+    if(!is_login_post_request_) {
+        checker->check();
+    }
+    else {
+        checker->httpPost(post_url_,
+                          post_data_);
+    }
 }
 
 void SearchManager::slotRootChecked(LinkStatus* link, LinkChecker* checker)
@@ -1130,6 +1137,10 @@ BuildNodeJob::~BuildNodeJob()
 void BuildNodeJob::run()
 {
 //     kDebug(23100) << "\n\n\nBuildNodeJob::run\n\n\n";
+    if(m_searchManager->canceled_) {
+        return;
+    }
+
     m_searchManager->buildNewNode(m_linkStatus);
 }
 
@@ -1153,6 +1164,11 @@ void AddLevelJob::run()
         kDebug(23100) << "AddLevelJob::run: waiting for running jobs to finish";
         sleep(1);
     }
+    
+    if(m_searchManager->canceled_) {
+        return;
+    }
+
     m_searchManager->addLevel();
 }
 

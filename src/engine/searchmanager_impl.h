@@ -56,6 +56,8 @@ inline int SearchManager::checkedLinks() const
     return search_counters_.total_links_;
 }
 
+
+
 inline void SearchManager::startSearch()
 {
     Q_ASSERT(root_url_.isValid());
@@ -65,6 +67,21 @@ inline void SearchManager::startSearch()
 inline void SearchManager::startSearch(KUrl const& root)
 {
     startSearch(root, search_mode_);
+}
+
+inline void SearchManager::setIsLoginPostRequest(bool is)
+{
+    is_login_post_request_ = is;
+}
+
+inline void SearchManager::setPostUrl(QString const& url)
+{
+    post_url_ = url;
+}
+
+inline void SearchManager::setPostData(QByteArray const& data)
+{
+    post_data_ = data;
 }
 
 inline void SearchManager::setSearchMode(SearchMode modo)

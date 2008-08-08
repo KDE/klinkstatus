@@ -41,6 +41,7 @@
 #include <dom/dom_string.h>
 #include <dom/dom_html.h>
 
+
 LinkChecker::LinkChecker(LinkStatus* linkstatus, int time_out,
                          QObject* parent)
         : QObject(parent), search_manager_(0),
@@ -109,6 +110,40 @@ void LinkChecker::check()
         QTimer::singleShot(time_out_ * 1000, this, SLOT(slotTimeOut()));
     }
 }
+
+void LinkChecker::httpPost(QString const& postUrlString, QByteArray const& postData)
+{
+    kDebug(23100) << "LinkChecker::httpPost";
+  
+    Q_ASSERT(!finnished_);
+
+    KUrl url(linkStatus()->absoluteUrl(), postUrlString);
+    Q_ASSERT(url.isValid());
+
+    t_job_ = KIO::http_post(url, postData, KIO::HideProgressInfo);
+
+    t_job_->addMetaData("PropagateHttpHeader", "true"); // to have the http header
+    if(search_manager_->sendIdentification())
+    {
+        t_job_->addMetaData("SendUserAgent", "true");
+        t_job_->addMetaData("UserAgent", search_manager_->userAgent());
+    }
+    else {
+        t_job_->addMetaData("SendUserAgent", "false");
+    }
+        
+    QObject::connect(t_job_, SIGNAL(data(KIO::Job *, const QByteArray &)),
+                      this, SLOT(slotData(KIO::Job *, const QByteArray &)));
+    QObject::connect(t_job_, SIGNAL(mimetype(KIO::Job *, const QString &)),
+                      this, SLOT(slotMimetype(KIO::Job *, const QString &)));
+    QObject::connect(t_job_, SIGNAL(result(KJob *)),
+                      this, SLOT(slotResult(KJob *)));
+    QObject::connect(t_job_, SIGNAL(redirection(KIO::Job *, const KUrl &)),
+                      this, SLOT(slotRedirection(KIO::Job *, const KUrl &)));
+
+    QTimer::singleShot(time_out_ * 1000, this, SLOT(slotTimeOut()));
+}
+
 
 void LinkChecker::slotTimeOut()
 {
@@ -608,7 +643,7 @@ void LinkChecker::slotCheckRef()
 
 void LinkChecker::checkRef(KUrl const& url)
 {
-//     kDebug(23100) << "LinkChecker::checkRef(KUrl const& url)" << url.url();
+//     kDebug(23100) << "LinkChecker::checkRef(KUrl const&): " << ++checkedRefHeavy;
     Q_ASSERT(search_manager_);
     
     QString url_string = url.url();
@@ -662,7 +697,7 @@ void LinkChecker::checkRef(KUrl const& url)
 
 void LinkChecker::checkRef(LinkStatus const* linkstatus_parent)
 {
-//     kDebug(23100) << "LinkChecker::checkRef(LinkStatus const* linkstatus_paren)";
+//     kDebug(23100) << "LinkChecker::checkRef(LinkStatus const*): " << ++checkedRefLight;
     
     Q_ASSERT(search_manager_);
 

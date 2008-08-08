@@ -43,6 +43,8 @@ public:
     ~LinkChecker();
 
     void check();
+    void httpPost(QString const& postUrl, QByteArray const& postData);
+    
     void setSearchManager(SearchManager* search_manager);
 
     LinkStatus const* linkStatus() const;

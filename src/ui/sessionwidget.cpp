@@ -61,6 +61,7 @@
 #include "ui/klshistorycombo.h"
 #include "ui/resultssearchbar.h"
 #include "ui/resultview.h"
+#include "ui/httppostdialog.h"
 #include "klsconfig.h"
 #include "global.h"
 #include "engine/linkstatus.h"
@@ -267,12 +268,28 @@ void SessionWidget::slotCheck()
 
     if(!url.protocol().startsWith("http"))
     {
+        checkBoxLogin->setCheckState(Qt::Unchecked);
+      
         KUrl dir = url;
         QString documentRootHint = url.directory().isEmpty() ? "/" : url.directory();
         dir.setPath(documentRootHint);
         DocumentRootDialog dialog(this, dir);
         dialog.exec();
         search_manager_->setDocumentRoot(dialog.url());
+    }
+    else if(checkBoxLogin->isChecked())
+    {
+        HttpPostDialog dialog(this);
+        dialog.setDomainField(url.host());
+        dialog.setPostUrlField(url.path());
+        
+        dialog.exec();
+
+        search_manager_->setIsLoginPostRequest(true);
+        search_manager_->setPostUrl(dialog.postUrl());
+        search_manager_->setPostData(dialog.postData());
+
+        url = KUrl(url, dialog.postUrl());
     }
 
 //     if(!checkbox_recursively->isChecked())
