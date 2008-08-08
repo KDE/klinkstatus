@@ -20,11 +20,18 @@
 
 #include "httppostdialog.h"
 
+#include <KUrl>
+
 #include <QHeaderView>
+#include <QDomElement>
+
+#include "global.h"
+#include "parser/url.h"
+#include "ui/sessionwidget.h"
 
 
-HttpPostDialog::HttpPostDialog(QWidget *parent)
-  : KDialog(parent)
+HttpPostDialog::HttpPostDialog(QString const& searchUrl, QWidget *parent)
+  : KDialog(parent), m_searchUrl(searchUrl)
 {
     setCaption(i18n("Login Input"));
     setButtons(KDialog::Ok);
@@ -41,10 +48,67 @@ HttpPostDialog::HttpPostDialog(QWidget *parent)
     setMainWidget(widget);
 
     connect(this, SIGNAL(accepted()), this, SLOT(slotAccepted()));
+
+    init();
 }
 
 HttpPostDialog::~HttpPostDialog()
 {
+}
+
+void HttpPostDialog::init()
+{
+    QDomElement element;
+    Global::getInstance()->findCurrentSession(m_searchUrl, element);
+
+    KUrl url = Url::normalizeUrl(m_searchUrl);
+    setDomainField(url.host());
+    
+    if(!element.isNull()) {
+        QDomNode node = element.namedItem("login");
+        if(!node.isNull() && node.isElement()) {
+            QDomElement loginElement = node.toElement();
+                
+            SessionTO sessionTO;
+            sessionTO.load(element);
+
+            loadSessionTO(sessionTO);
+
+            return;
+        }
+    }
+    
+    setPostUrlField(url.path());
+}
+
+void HttpPostDialog::loadSessionTO(SessionTO const& session)
+{
+    setPostUrlField(session.postUrl);
+
+    QByteArray postData = session.postData;
+    kDebug(23100) << postData;
+
+    QList<QByteArray> tokens = postData.split('&');
+    kDebug(23100) << tokens.size();
+    for(int i = 0; i != tokens.size(); ++i)
+    {
+        QByteArray token = tokens[i];
+        kDebug(23100) << token;
+        QList<QByteArray> pair = token.split('=');
+        kDebug(23100) << pair;
+
+        QString key = QUrl::fromPercentEncoding(pair[0]);
+        QString value = QUrl::fromPercentEncoding(pair[1]);
+
+        QTableWidgetItem* keyItem = new QTableWidgetItem(key);
+        QTableWidgetItem* valueItem = new QTableWidgetItem(value);
+
+        int currentRowCount = m_ui.tableWidgetPostData->rowCount();
+        m_ui.tableWidgetPostData->setRowCount(currentRowCount + 1);
+        
+        m_ui.tableWidgetPostData->setItem(currentRowCount, 0, keyItem);
+        m_ui.tableWidgetPostData->setItem(currentRowCount, 1, valueItem);
+    }
 }
 
 void HttpPostDialog::setDomainField(QString const& domain)

@@ -28,11 +28,13 @@
 class SearchManager;
 class TableItem;
 class ActionManager;
+class HttpPostDialog;
 
 #include <QKeyEvent>
 #include <QTimer>
 #include <QTime>
 #include <QString>
+#include <QDomDocument>
 class QStringList;
 class QTreeWidgetItem;
 
@@ -41,11 +43,37 @@ class KConfig;
 class KToggleAction;
 
 
+class SessionTO
+{
+public:
+    SessionTO()
+      : depth(-1),
+        checkParentFolders(true),
+        checkExternalLinks(true),
+        login(false)
+    {}
+  
+    QDomDocument save(QDomDocument& doc) const;
+    void load(QDomElement const& doc);
+
+    QString url;
+    int depth;
+    bool checkParentFolders;
+    bool checkExternalLinks;
+    QString regExp;
+    bool login;
+    QString postUrl;
+    QByteArray postData;
+};
+
+
 class SessionWidget: public PlayableWidgetInterface, public Ui_SessionWidgetBase
 {
     Q_OBJECT
 
 public:
+
+    friend class SessionTO;
 
     explicit SessionWidget(int max_simultaneous_connections = 3, int time_out = 50,
                   QWidget* parent = 0);
@@ -118,6 +146,7 @@ private slots:
     // Happens when there is a redirection
     void slotIncrementLinksToCheckTotalSteps();
 
+    void slotLoadSession(QString const& url);
     void slotChooseUrlDialog();
 
     void slotApplyFilter(LinkMatcher);
@@ -126,6 +155,12 @@ private:
 
     virtual void keyPressEvent ( QKeyEvent* e );
     bool validFields();
+    void loadSession();
+    void saveSession();
+    void saveSessionSearchOptions();
+    SessionTO buildTO() const;
+    void loadSessionTO(SessionTO const& session);
+    SessionTO buildSessionTO() const;
     void insertUrlAtCombobox(QString const& url);
     void init();
     void saveCurrentCheckSettings();
@@ -138,6 +173,7 @@ private:
   
     SearchManager* search_manager_;
 
+    HttpPostDialog* login_dialog_;
     QTimer elapsed_time_timer_;
     QTime start_time_;
     int max_simultaneous_connections_;

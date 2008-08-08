@@ -73,7 +73,7 @@
 SessionWidget::SessionWidget(int max_simultaneous_connections, int time_out,
                              QWidget* parent)
     : PlayableWidgetInterface(parent), search_manager_(0),
-        elapsed_time_timer_(this), 
+        login_dialog_(0), elapsed_time_timer_(this), 
         max_simultaneous_connections_(max_simultaneous_connections),
         time_out_(time_out), tree_display_(false), follow_last_link_checked_(KLSConfig::followLastLinkChecked()),
         check_in_background_(false), start_search_action_(0)
@@ -106,8 +106,13 @@ void SessionWidget::init()
     pushbutton_url->setIcon(KIcon("document-open"));
     const int pixmapSize = style()->pixelMetric(QStyle::PM_SmallIconSize);
     pushbutton_url->setFixedSize(pixmapSize + 8, pixmapSize + 8);
+    
     connect(pushbutton_url, SIGNAL(clicked()), this, SLOT(slotChooseUrlDialog()));
-
+    connect(combobox_url, SIGNAL(editTextChanged(const QString&)),
+            this, SLOT(slotLoadSession(const QString&)));
+    connect(combobox_url, SIGNAL(currentIndexChanged(const QString&)),
+            this, SLOT(slotLoadSession(const QString&)));
+    
     textedit_elapsed_time_value->setText(QTime(0, 0).toString("hh:mm:ss"));
 
     resultsSearchBar->hide();
@@ -247,9 +252,9 @@ void SessionWidget::slotCheck()
 
     // WORKAROUND addToHistory breaks currentText()
     QString current_text = combobox_url->currentText();
-    insertUrlAtCombobox(current_text);
-    
-    combobox_url->saveItems(); // save on disk
+
+//     saveSession();
+
     progressbar_checker->reset();
     progressbar_checker->setTextVisible(true);
     progressbar_checker->setRange(0, 1); // check root page
@@ -279,17 +284,21 @@ void SessionWidget::slotCheck()
     }
     else if(checkBoxLogin->isChecked())
     {
-        HttpPostDialog dialog(this);
-        dialog.setDomainField(url.host());
-        dialog.setPostUrlField(url.path());
+        if(login_dialog_) {
+            delete login_dialog_;
+            login_dialog_ = 0;
+        }
+        login_dialog_ = new HttpPostDialog(current_text, this);
+//         login_dialog_->setDomainField(url.host());
+//         login_dialog_->setPostUrlField(url.path());
         
-        dialog.exec();
+        login_dialog_->exec();
 
         search_manager_->setIsLoginPostRequest(true);
-        search_manager_->setPostUrl(dialog.postUrl());
-        search_manager_->setPostData(dialog.postData());
+        search_manager_->setPostUrl(login_dialog_->postUrl());
+        search_manager_->setPostData(login_dialog_->postData());
 
-        url = KUrl(url, dialog.postUrl());
+        url = KUrl(url, login_dialog_->postUrl());
     }
 
 //     if(!checkbox_recursively->isChecked())
@@ -346,6 +355,8 @@ void SessionWidget::slotCheck()
     emit signalSearchStarted();
 
     search_manager_->startSearch(url);
+
+    saveSession();
 }
 
 void SessionWidget::keyPressEvent(QKeyEvent* e)
@@ -550,6 +561,78 @@ void SessionWidget::slotSearchPaused()
     emit signalSearchPaused();
 }
 
+void SessionWidget::saveSession()
+{
+    QString current_text = combobox_url->currentText();
+    
+    insertUrlAtCombobox(current_text);
+    combobox_url->saveItems(); // save on disk
+
+    saveSessionSearchOptions();
+}
+
+void SessionWidget::slotLoadSession(QString const& /*url*/)
+{
+    loadSession();
+}
+
+void SessionWidget::loadSession()
+{
+    QString url = combobox_url->currentText();
+
+    QDomElement element;
+    Global::getInstance()->findCurrentSession(url, element);
+
+    if(!element.isNull()) {
+        SessionTO sessionTO;
+        sessionTO.load(element);
+
+        loadSessionTO(sessionTO);
+    }
+}
+
+void SessionWidget::loadSessionTO(SessionTO const& session)
+{
+    spinbox_depth->setValue(session.depth);
+    checkbox_subdirs_only->setChecked(!session.checkParentFolders);
+    checkbox_external_links->setChecked(session.checkExternalLinks);
+    lineedit_reg_exp->setText(session.regExp);
+    
+//     session.login = checkBoxLogin->isChecked();
+//     if(session.login && login_dialog_) {
+//         session.postUrl = login_dialog_->postUrl();
+//         session.postData = login_dialog_->postData();
+//     }    
+}
+
+SessionTO SessionWidget::buildSessionTO() const
+{
+    SessionTO session;
+    
+    session.url = combobox_url->currentText();
+    session.depth = spinbox_depth->value();
+    session.checkParentFolders = !checkbox_subdirs_only->isChecked();
+    session.checkExternalLinks = checkbox_external_links->isChecked();
+    session.regExp = lineedit_reg_exp->text();
+    
+    session.login = checkBoxLogin->isChecked();
+    if(session.login && login_dialog_) {
+        session.postUrl = login_dialog_->postUrl();
+        session.postData = login_dialog_->postData();
+    }
+
+    return session;
+}
+
+void SessionWidget::saveSessionSearchOptions()
+{
+    SessionTO session = buildSessionTO();
+    
+    QDomDocument& doc = Global::getInstance()->sessionsDocument();
+    session.save(doc);
+    Global::getInstance()->saveSessionsDocument();
+}
+
 void SessionWidget::insertUrlAtCombobox(QString const& url)
 {
     combobox_url->addToHistory(url);
@@ -596,6 +679,8 @@ void SessionWidget::slotIncrementLinksToCheckTotalSteps()
 void SessionWidget::slotChooseUrlDialog()
 {
     setUrl(KFileDialog::getOpenUrl());
+
+    loadSession();
 }
 
 void SessionWidget::slotHideSearchPanel()
@@ -886,5 +971,125 @@ void SessionWidget::loadResults()
     tree_view->insertTopLevelItem(0, item);
     tree_view->expandItem(item);
 }
+
+
+
+QDomDocument SessionTO::save(QDomDocument& _doc) const
+{
+    QDomNode node = _doc.namedItem("sessions");
+    QDomElement sessionsElement;
+    if(!node.isNull() && node.isElement()) {
+        sessionsElement = node.toElement();
+    }
+    else {
+        return _doc;
+    }
+
+    QDomElement element;
+    Global::getInstance()->findCurrentSession(url, element);
+
+    if(!element.isNull()) {
+        sessionsElement.removeChild(element);
+    }
+
+    element = _doc.createElement("session");
+    element.setAttribute("url", url);
+    sessionsElement.appendChild(element);
+
+    // <url>
+//     QDomElement child_element = element.ownerDocument().createElement("url");
+//     child_element.appendChild(element.ownerDocument().createTextNode(url));
+//     element.appendChild(child_element);
+
+    // <depth>
+    QDomElement child_element = element.ownerDocument().createElement("depth");
+    child_element.appendChild(element.ownerDocument().
+            createTextNode(QString::number(depth)));
+    element.appendChild(child_element);
+
+    // <check_parent_folders>
+    child_element = element.ownerDocument().createElement("check_parent_folders");
+    child_element.appendChild(element.ownerDocument().
+            createTextNode(checkParentFolders ? "true" : "false"));
+    element.appendChild(child_element);
+
+    // <check_external_links>
+    child_element = element.ownerDocument().createElement("check_external_links");
+    child_element.appendChild(element.ownerDocument().
+            createTextNode(checkExternalLinks ? "true" : "false"));
+    element.appendChild(child_element);
+
+    // <check_regular_expression>
+    child_element = element.ownerDocument().createElement("check_regular_expression");
+    child_element.appendChild(element.ownerDocument().
+            createTextNode(regExp));
+    element.appendChild(child_element);
+    
+    if(login) {
+        // <login>
+        child_element = element.ownerDocument().createElement("login");
+        element.appendChild(child_element);
+
+        QDomElement postUrlElement = element.ownerDocument().createElement("postUrl");
+        child_element.appendChild(postUrlElement);
+        postUrlElement.appendChild(element.ownerDocument().
+                createTextNode(postUrl));
+
+        QDomElement postDataElement = element.ownerDocument().createElement("postData");
+        child_element.appendChild(postDataElement);
+        postDataElement.appendChild(element.ownerDocument().
+                createTextNode(postData));
+    }
+
+    return _doc;
+}
+
+void SessionTO::load(QDomElement const& sessionElement)
+{
+    url = sessionElement.attribute("url");
+  
+//     QDomNode node = sessionElement.namedItem("url");
+//     if(!node.isNull() && node.isElement()) {
+//         url = node.toElement().text();
+//     }
+    
+    QDomNode node = sessionElement.namedItem("depth");
+    if(!node.isNull() && node.isElement()) {
+        depth = node.toElement().text().toInt();
+    }
+    
+    node = sessionElement.namedItem("check_parent_folders");
+    if(!node.isNull() && node.isElement()) {
+        checkParentFolders = node.toElement().text() == "true" ? true : false;
+    }
+        
+    node = sessionElement.namedItem("check_external_links");
+    if(!node.isNull() && node.isElement()) {
+        checkExternalLinks = node.toElement().text() == "true" ? true : false;
+    }
+        
+    node = sessionElement.namedItem("check_regular_expression");
+    if(!node.isNull() && node.isElement()) {
+        regExp = node.toElement().text();
+    }
+    
+    node = sessionElement.namedItem("login");
+    if(!node.isNull() && node.isElement()) {
+        login = true;
+
+        QDomNode childNode = node.namedItem("postUrl");
+        if(!childNode.isNull() && childNode.isElement()) {
+            postUrl = childNode.toElement().text();
+        }
+        
+        childNode = node.namedItem("postData");
+        if(!childNode.isNull() && childNode.isElement()) {
+            postData = childNode.toElement().text().toUtf8();
+        }
+    }
+}
+
+
+
 
 #include "sessionwidget.moc"

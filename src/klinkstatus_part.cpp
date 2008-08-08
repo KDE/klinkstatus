@@ -79,7 +79,9 @@ KLinkStatusPart::KLinkStatusPart(QWidget* parentWidget,
 }
 
 KLinkStatusPart::~KLinkStatusPart()
-{}
+{
+    Global::getInstance()->setPartDestroyed();
+}
 
 void KLinkStatusPart::initGUI()
 {

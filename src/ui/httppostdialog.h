@@ -24,13 +24,13 @@
 #include <KDialog>
 
 #include "ui_httppostwidgetui.h"
-
+class SessionTO;
 
 class HttpPostDialog : public KDialog
 {
 Q_OBJECT
 public:
-    HttpPostDialog(QWidget* parent = 0);
+    HttpPostDialog(QString const& searchUrl, QWidget* parent = 0);
     ~HttpPostDialog();
 
     QString const& postUrl() const { return m_postUrl; }
@@ -46,10 +46,13 @@ private slots:
     void slotAddButtonClicked();
 
 private:
+    void init();
+    void loadSessionTO(SessionTO const& session);
     QByteArray buildPostData() const;
 
 private:
     Ui::HttpPostWidgetUi m_ui;
+    QString m_searchUrl;
     QString m_postUrl;
     QByteArray m_postData;
 };

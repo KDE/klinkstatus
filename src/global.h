@@ -23,6 +23,7 @@
 
 #include <QObject>
 #include <QTimer>
+#include <QDomDocument>
 class QLabel;
 
 namespace KParts {
@@ -47,10 +48,18 @@ public:
     Global();
     ~Global();
     void setKLinkStatusPart(ReadOnlyPart* part);
+    void setPartDestroyed();
 
     KStatusBar* statusBar() const;
     void setStatusBarText(QString const& text, bool permanent = false);
     void addStatusBarPermanentItem(QWidget* widget);
+
+    /**
+     * The XML document where sessions setting (url, depth, etc) are saved
+     **/
+    QDomDocument& sessionsDocument();
+    void saveSessionsDocument() const;
+    void findCurrentSession(QString const& url, QDomElement& element);
 
 private:
     class GlobalPrivate;

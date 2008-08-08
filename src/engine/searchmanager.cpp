@@ -945,6 +945,8 @@ void SearchManager::removeHtmlParts()
 
 void SearchManager::save(QDomElement& element, LinkStatusHelper::Status status) const
 {
+    // Search options
+    
     // <url>
     QDomElement child_element = element.ownerDocument().createElement("url");
     child_element.appendChild(element.ownerDocument().createTextNode(root_.absoluteUrl().prettyUrl()));
@@ -982,9 +984,12 @@ void SearchManager::save(QDomElement& element, LinkStatusHelper::Status status) 
                 createTextNode(reg_exp_.pattern()));
     element.appendChild(child_element);
     
+    
+    // Results
+    
     child_element = element.ownerDocument().createElement("link_list");
     element.appendChild(child_element);
-    
+
     // root
     if(root_.checked() && LinkStatusHelper::hasStatus(&root_, status)) {
         LinkStatusHelper::save(&root_, child_element);
