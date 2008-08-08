@@ -1059,6 +1059,10 @@ BuildNodeJob::~BuildNodeJob()
 void BuildNodeJob::run()
 {
 //     kDebug(23100) << "\n\n\nBuildNodeJob::run\n\n\n";
+    if (m_searchManager->canceled_) {
+        return;
+    }
+    
     m_searchManager.buildNewNode(m_linkStatus);
 }
 
@@ -1081,6 +1085,11 @@ void AddLevelJob::run()
         kDebug(23100) << "AddLevelJob::run: waiting for running jobs to finish";
         sleep(1);
     }
+ 
+    if (m_searchManager->canceled_) {
+        return;
+    }
+
     m_searchManager.addLevel();
 }
 
