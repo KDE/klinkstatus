@@ -123,7 +123,7 @@ void HttpPostDialog::setPostUrlField(QString const& url)
 
 void HttpPostDialog::slotAccepted()
 {
-    m_postUrl = "/login/login";
+    m_postUrl = m_ui.lineeditPostUrl->text();
     m_postData = buildPostData();
 }
 
