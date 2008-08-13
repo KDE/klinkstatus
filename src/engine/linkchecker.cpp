@@ -80,6 +80,11 @@ void LinkChecker::check()
                      (url, false, false);
 
         t_job_->addMetaData("PropagateHttpHeader", "true"); // to have the http header
+
+        if (linkstatus_->parent()) {
+            t_job_->addMetaData("referrer", linkstatus_->parent()->absoluteUrl().prettyUrl());
+        }
+
         if(search_manager_->sendIdentification())
         {
             t_job_->addMetaData("SendUserAgent", "true");

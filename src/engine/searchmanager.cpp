@@ -50,6 +50,11 @@ SearchManager::SearchManager(int max_simultaneous_connections, int time_out,
         number_of_level_links_(0), number_of_links_to_check_(0)
 {
     root_.setIsRoot(true);
+
+    if (KLSConfig::userAgent().isEmpty()) {
+        KLSConfig::setUserAgent(KProtocolManager::defaultUserAgent());
+    }
+    user_agent_ = KLSConfig::userAgent();
 }
 
 void SearchManager::reset()
