@@ -81,39 +81,41 @@ void LinkChecker::check()
     Q_ASSERT(url.isValid());
 
     if(url.hasRef()) {
-        QTimer::singleShot(0, this, SLOT(slotCheckRef()));
+        KMimeType::Ptr mimeType = KMimeType::findByUrl(url);
+        if(mimeType->is("text/html") || mimeType->is("application/xml")) {
+            QTimer::singleShot(0, this, SLOT(slotCheckRef()));
+            return;
+        }
     }
-    else
-    {
-        t_job_ = KIO::get(url, KIO::NoReload, KIO::HideProgressInfo);
+        
+    t_job_ = KIO::get(url, KIO::NoReload, KIO::HideProgressInfo);
 //         t_job_->setUiDelegate(0);
 
-        t_job_->addMetaData("PropagateHttpHeader", "true"); // to have the http header
-        
-        if(linkstatus_->parent()) {
-            t_job_->addMetaData("referrer", linkstatus_->parent()->absoluteUrl().prettyUrl());
-        }
+    t_job_->addMetaData("PropagateHttpHeader", "true"); // to have the http header
 
-        if(search_manager_->sendIdentification())
-        {
-            t_job_->addMetaData("SendUserAgent", "true");
-            t_job_->addMetaData("UserAgent", search_manager_->userAgent());
-        }
-        else
-            t_job_->addMetaData("SendUserAgent", "false");
-        
-        
-        QObject::connect(t_job_, SIGNAL(data(KIO::Job *, const QByteArray &)),
-                         this, SLOT(slotData(KIO::Job *, const QByteArray &)));
-        QObject::connect(t_job_, SIGNAL(mimetype(KIO::Job *, const QString &)),
-                         this, SLOT(slotMimetype(KIO::Job *, const QString &)));
-        QObject::connect(t_job_, SIGNAL(result(KJob *)),
-                         this, SLOT(slotResult(KJob *)));
-        QObject::connect(t_job_, SIGNAL(redirection(KIO::Job *, const KUrl &)),
-                         this, SLOT(slotRedirection(KIO::Job *, const KUrl &)));
-
-        QTimer::singleShot(time_out_ * 1000, this, SLOT(slotTimeOut()));
+    if(linkstatus_->parent()) {
+        t_job_->addMetaData("referrer", linkstatus_->parent()->absoluteUrl().prettyUrl());
     }
+
+    if(search_manager_->sendIdentification())
+    {
+        t_job_->addMetaData("SendUserAgent", "true");
+        t_job_->addMetaData("UserAgent", search_manager_->userAgent());
+    }
+    else
+        t_job_->addMetaData("SendUserAgent", "false");
+
+
+    QObject::connect(t_job_, SIGNAL(data(KIO::Job *, const QByteArray &)),
+                      this, SLOT(slotData(KIO::Job *, const QByteArray &)));
+    QObject::connect(t_job_, SIGNAL(mimetype(KIO::Job *, const QString &)),
+                      this, SLOT(slotMimetype(KIO::Job *, const QString &)));
+    QObject::connect(t_job_, SIGNAL(result(KJob *)),
+                      this, SLOT(slotResult(KJob *)));
+    QObject::connect(t_job_, SIGNAL(redirection(KIO::Job *, const KUrl &)),
+                      this, SLOT(slotRedirection(KIO::Job *, const KUrl &)));
+
+    QTimer::singleShot(time_out_ * 1000, this, SLOT(slotTimeOut()));
 }
 
 void LinkChecker::httpPost(QString const& postUrlString, QByteArray const& postData)
