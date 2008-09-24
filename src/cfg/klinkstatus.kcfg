@@ -58,7 +58,7 @@
         </entry>
         
         <entry key="RememberCheckSettings" type="Bool" >
-            <label>Whether to remeber the check settings like depth, and so on, on exit.</label>
+            <label>Whether to remember the check settings like depth, and so on, on exit.</label>
             <default>false</default>
         </entry>
         
