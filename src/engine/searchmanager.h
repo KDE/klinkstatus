@@ -89,7 +89,7 @@ public:
                   QObject *parent = 0);
     ~SearchManager();
 
-    /** Returns the the results in XML format */
+    /** Returns the results in XML format */
     QString toXML(LinkStatusHelper::Status status = LinkStatusHelper::none) const;
 
     void startSearch();
