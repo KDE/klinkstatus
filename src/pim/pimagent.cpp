@@ -200,9 +200,9 @@ QByteArray PimAgent::compileMessage()
 QString PimAgent::highlightText(const QString& text)
 {
     // make the quotation colors.
-    QStringList temp = text.split("\n");
+    const QStringList temp = text.split("\n");
     QString result;
-    QStringList::iterator it = temp.begin();
+    QStringList::const_iterator it = temp.begin();
     while(it != temp.end())
     {
         result.append(highlightParagraph((*it)+'\n'));
