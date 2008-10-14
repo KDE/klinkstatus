@@ -62,9 +62,9 @@ AutomationDialog::AutomationDialog(QWidget* parent, const QString& name, KConfig
     setInitialSize(QSize(800,600));
 
     setButtons(Default|Ok|Apply|Cancel|User1|User2);
-    setButtonText(User1, "New...");
+    setButtonText(User1, i18n("New..."));
     setButtonIcon(User1, KIcon());
-    setButtonText(User2, "Remove");
+    setButtonText(User2, i18n("Remove"));
     setButtonIcon(User2, KIcon());
     
     connect(this, SIGNAL(user1Clicked()), this, SLOT(slotNewClicked()));

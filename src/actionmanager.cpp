@@ -168,7 +168,7 @@ void ActionManager::initTabWidget(TabWidgetSession* tabWidgetSession)
 
     //     this action must be in the tabwidget because the slot can't be connected to a particular sessionWidget
     KToggleAction *toggle_action  = new KToggleAction(KIcon("go-jump"), i18n("&Follow Last Link"), this);
-    toggle_action->setToolTip("Follow last Link checked (slower)");
+    toggle_action->setToolTip(i18n("Follow last Link checked (slower)"));
     actionCollection()->addAction("follow_last_link_checked", toggle_action );
     connect(toggle_action, SIGNAL(triggered(bool)), d->tabWidgetSession, SLOT(slotFollowLastLinkChecked()));
     toggle_action->setShortcut(KShortcut("Ctrl+f"));
@@ -190,7 +190,7 @@ void ActionManager::initTabWidget(TabWidgetSession* tabWidgetSession)
     action->setShortcut(KShortcut("F5"));
 
     toggle_action  = new KToggleAction(KIcon("view-refresh"), i18n("&Disable Updates on Results Table"), this);
-    toggle_action->setToolTip("Disable Updates on Results Table (faster)");
+    toggle_action->setToolTip(i18n("Disable Updates on Results Table (faster)"));
     actionCollection()->addAction("disable_update_results_table", toggle_action);
     connect(toggle_action, SIGNAL(triggered(bool)), d->tabWidgetSession, SLOT(slotDisableUpdatesOnResultsTable(bool)));
     toggle_action->setShortcut(KShortcut("Ctrl+u"));
@@ -222,7 +222,7 @@ void ActionManager::initTabWidget(TabWidgetSession* tabWidgetSession)
     actionCollection()->addAction("search_in_background", toggle_action );
 //     connect(toggle_action, SIGNAL(triggered(bool)), d->tabWidgetSession, SLOT(slotPauseSearch()));
 //     toggle_action->setShortcut(KShortcut("Ctrl+p"));
-    toggle_action->setToolTip("Check Links in background and update results when finished (faster)");
+    toggle_action->setToolTip(i18n("Check Links in background and update results when finished (faster)"));
     toggle_action->setEnabled(true);
         
     action  = new KAction(KIcon("view-refresh"), i18n("&Broken Links"), this);
@@ -291,10 +291,10 @@ void ActionManager::initTabWidget(TabWidgetSession* tabWidgetSession)
 
     // *************** Toolbar *********************
       
-    d->gotoViewAction = new KToolBarPopupAction(KIcon("view-choose"), "Change View", this);
+    d->gotoViewAction = new KToolBarPopupAction(KIcon("view-choose"), i18n("Change View"), this);
     actionCollection()->addAction("next_view_list", d->gotoViewAction);
 //     action->setShortcuts(KStandardShortcut::shortcut(KStandardShortcut::Back));
-    d->gotoViewAction->setToolTip("Change View");
+    d->gotoViewAction->setToolTip(i18n("Change View"));
 
     connect(d->gotoViewAction, SIGNAL(triggered()), d->tabWidgetSession, SLOT(slotNextView()));
     connect(d->gotoViewAction->menu(), SIGNAL(aboutToShow()), this, SLOT(slotFillGotoViewPopup()));
