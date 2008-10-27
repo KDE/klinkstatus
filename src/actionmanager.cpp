@@ -489,7 +489,7 @@ void ActionManager::slotGHNS()
     }
     qDeleteAll(entries);
     
-    kDebug(23100) << "Setting prefered stylesheet: " << lastInstalled;
+    kDebug(23100) << "Setting preferred stylesheet: " << lastInstalled;
     
     KLSConfig::setPreferedStylesheet(lastInstalled);
     KLSConfig::setStylesheetFiles(installedItems);

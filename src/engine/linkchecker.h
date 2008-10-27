@@ -108,7 +108,7 @@ private:
      */
     bool is_charset_checked_;
     /**
-     * Wheter the page define the enconding (latin1, utf8, etc).
+     * Whether the page define the enconding (latin1, utf8, etc).
      * According to the spec (http://www.w3.org/TR/html4/charset.html), 
      * it first check the server response and then the info in the html meta element.
      */

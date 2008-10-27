@@ -42,13 +42,13 @@ void ConfigResultsDialogImpl::initStylesCombo()
         kcfg_PreferedStylesheet->addItem(style);
     }
     
-    QString prefered = KLSConfig::preferedStylesheet();
-    int i = kcfg_PreferedStylesheet->findText(prefered);
+    QString preferred = KLSConfig::preferedStylesheet();
+    int i = kcfg_PreferedStylesheet->findText(preferred);
     if(i != -1) {
         kcfg_PreferedStylesheet->setCurrentIndex(i);
     }
     else {
-        kcfg_PreferedStylesheet->insertItem(0, prefered);
+        kcfg_PreferedStylesheet->insertItem(0, preferred);
         kcfg_PreferedStylesheet->setCurrentItem(0);
     }
 }
