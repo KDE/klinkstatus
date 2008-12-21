@@ -3,6 +3,7 @@ install(FILES
     DESTINATION ${DATA_INSTALL_DIR}/klinkstatus/scripts)
 
 macro_optional_find_package(RUBY)
+macro_log_feature(RUBY_FOUND "Ruby" "An Interpreted object-oriented scripting language" "http://www.ruby-lang.org" FALSE "" "For KLinkStatus example ruby scripts")
 
 if(RUBY_FOUND)
     
