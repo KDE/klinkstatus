@@ -91,7 +91,7 @@ void ActionManager::initPart(KLinkStatusPart* part)
     d->part = part;
     d->actionCollection = part->actionCollection();
 
-    QAction* action = 0;
+    KAction* action = 0;
 
     // *************** File menu *********************
 
