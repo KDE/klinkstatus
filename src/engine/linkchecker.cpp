@@ -213,7 +213,7 @@ void LinkChecker::slotMimetype (KIO::Job* /*job*/, const QString &type)
             // file is OK (http can have an error page though job->error() is false)
             if(!url.protocol().startsWith("http"))
             {
-                ls->setStatusText("OK");
+                ls->setStatusText(i18n("OK"));
                 ls->setStatus(LinkStatus::SUCCESSFULL);
                 
                 killJob();                
@@ -232,7 +232,7 @@ void LinkChecker::slotMimetype (KIO::Job* /*job*/, const QString &type)
                 if(type != "text/html"/* && type != "text/plain"*/)
                 {
                     //kDebug(23100) <<  "mimetype: " << type;
-                    ls->setStatusText("OK");
+                    ls->setStatusText(i18n("OK"));
                     ls->setStatus(LinkStatus::SUCCESSFULL);
                     
                     killJob();                    
@@ -436,7 +436,7 @@ void LinkChecker::slotResult(KJob* /*job*/)
 
         if(job->error() == KIO::ERR_IS_DIRECTORY)
         {
-            ls->setStatusText("OK");
+            ls->setStatusText(i18n("OK"));
             ls->setStatus(LinkStatus::SUCCESSFULL);
         }
         else
@@ -452,14 +452,14 @@ void LinkChecker::slotResult(KJob* /*job*/)
             if(job->error() != KIO::ERR_NO_CONTENT) 
                 ls->setError(job->errorString());
             else
-                ls->setError("No Content");
+                ls->setError(i18n("No Content"));
         }
     }
 
     else
     {
         if(!ls->absoluteUrl().protocol().startsWith("http")) {
-            ls->setStatusText("OK");
+            ls->setStatusText(i18n("OK"));
             ls->setStatus(LinkStatus::SUCCESSFULL);
            }
         else
@@ -520,7 +520,7 @@ bool LinkChecker::processRedirection(KUrl const& toUrl)
 
     linkstatus_->setHttpHeader(getHttpHeader(t_job_, false));
     linkstatus_->setIsRedirection(true);
-    linkstatus_->setStatusText("redirection");
+    linkstatus_->setStatusText(i18n("redirection"));
     linkstatus_->setStatus(LinkStatus::HTTP_REDIRECTION);
     linkstatus_->setChecked(true);
     
@@ -619,7 +619,7 @@ void LinkChecker::slotCheckRef()
     
     QString ref = url.ref();
     if(ref.isEmpty() || ref == "top") {
-        linkstatus_->setStatusText("OK");
+        linkstatus_->setStatusText(i18n("OK"));
         linkstatus_->setStatus(LinkStatus::SUCCESSFULL);
         kDebug(23100) << "LinkChecker::slotCheckRef - " << linkstatus_->absoluteUrl().url();
         finnish();
@@ -693,7 +693,7 @@ void LinkChecker::checkRef(KUrl const& url)
 
     if(hasAnchor(html_part, linkStatus()->absoluteUrl().ref()))
     {
-        linkstatus_->setStatusText("OK");
+        linkstatus_->setStatusText(i18n("OK"));
         linkstatus_->setStatus(LinkStatus::SUCCESSFULL);
     }
     else
@@ -726,7 +726,7 @@ void LinkChecker::checkRef(LinkStatus const* linkstatus_parent)
     }
 
     if(found) {
-        linkstatus_->setStatusText("OK");
+        linkstatus_->setStatusText(i18n("OK"));
         linkstatus_->setStatus(LinkStatus::SUCCESSFULL);
     }
     else {
