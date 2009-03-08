@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=KLinkStatus
+Name[hne]=के-लिंक-स्टेटस
 Name[ne]=केडीई लिङ्क वस्तुस्थिति
 Name[sk]=KLink status
 Name[sv]=Klinkstatus
@@ -26,6 +27,7 @@ GenericName[fi]=Linkkien tarkistaja
 GenericName[fr]=Vérificateur de liens
 GenericName[ga]=Seiceálaí Nasc
 GenericName[gl]=Verificador de ligazóns
+GenericName[hne]=संकली जंचइया
 GenericName[hu]=Linkellenőrző
 GenericName[is]=Yfirfer tengla
 GenericName[it]=Controllo dei collegamenti
