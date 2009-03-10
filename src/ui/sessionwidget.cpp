@@ -908,7 +908,7 @@ void SessionWidget::slotValidateAll()
 {
   if(search_manager_->searchProtocol().startsWith("http"))
   {
-    KMessageBox::sorry(this, i18n("Use a protocol different than HTTP, e.g., file, ftp, sftp, fish, etc, so the files can be saved."));
+    KMessageBox::sorry(this, i18n("Use a protocol other than HTTP, e.g., file, ftp, sftp, fish, etc., so the files can be saved."));
   }
 
 /*    QWizard* wizard = new ValidateAllWizard();

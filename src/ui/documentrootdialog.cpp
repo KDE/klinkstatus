@@ -43,7 +43,7 @@ DocumentRootDialog::DocumentRootDialog(QWidget *parent, KUrl const& url)
     
     QVBoxLayout* topLayout = new QVBoxLayout(page);
 
-    QLabel* label = new QLabel(i18n("As you are using a protocol different than HTTP, \nthere is no way to guess where the document root is, \nin order to resolve relative URLs like the ones started with \"/\".\n\nPlease specify one:"), page);
+    QLabel* label = new QLabel(i18n("As you are using a protocol other than HTTP, \nthere is no way to guess where the document root is, \nin order to resolve relative URLs like the ones started with \"/\".\n\nPlease specify one:"), page);
     topLayout->addWidget(label);
 
     m_urlRequester = new KUrlRequester(page);
