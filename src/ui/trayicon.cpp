@@ -20,6 +20,8 @@
 
 #include "trayicon.h"
 
+#include <QWidget>
+
 #include <kicon.h>
 #include <klocale.h>
 #include <kwindowsystem.h>
@@ -39,10 +41,10 @@ TrayIcon* TrayIcon::getInstance(QWidget* parent)
 }
 
 TrayIcon::TrayIcon(QWidget* parent)
-    : KSystemTrayIcon(parent)
+    : KNotificationItem(parent)
 {
-    setIcon(KIcon("klinkstatus"));
-    setToolTip(i18n("KLinkStatus - Link Checker"));
+    setIconByName("klinkstatus");
+    setToolTip("klinkstatus", i18n("KLinkStatus - Link Checker"), QString());
 }
 
 TrayIcon::~TrayIcon()

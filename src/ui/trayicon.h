@@ -21,12 +21,12 @@
 #ifndef TRAYICON_H
 #define TRAYICON_H
 
-#include <ksystemtrayicon.h>
+#include <knotificationitem.h>
 
 /**
 	@author Paulo Moura Guedes <moura@kdewebdev.org>
 */
-class TrayIcon : public KSystemTrayIcon
+class TrayIcon : public KNotificationItem
 {
 Q_OBJECT
 public:

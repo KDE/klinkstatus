@@ -91,7 +91,6 @@ KLinkStatus::KLinkStatus()
 KLinkStatus::~KLinkStatus()
 {
     kDebug(23100) << "";
-    delete TrayIcon::getInstance();
 }
 
 void KLinkStatus::load(const KUrl& url)
@@ -101,9 +100,7 @@ void KLinkStatus::load(const KUrl& url)
 
 void KLinkStatus::setupTrayIcon()
 {
-    TrayIcon* trayIcon = TrayIcon::getInstance(this);
-    connect(trayIcon, SIGNAL(quitSelected()), this, SLOT(close()));
-    trayIcon->show();
+    TrayIcon::getInstance(this);
 }
 
 void KLinkStatus::setupActions()
