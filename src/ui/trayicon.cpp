@@ -41,7 +41,7 @@ TrayIcon* TrayIcon::getInstance(QWidget* parent)
 }
 
 TrayIcon::TrayIcon(QWidget* parent)
-    : KNotificationItem(parent)
+    : KStatusNotifierItem(parent)
 {
     setIconByName("klinkstatus");
     setToolTip("klinkstatus", i18n("KLinkStatus - Link Checker"), QString());
