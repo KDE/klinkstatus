@@ -73,9 +73,6 @@ LinkStatus::LinkStatus(Node* node, LinkStatus* parent)
 
 LinkStatus::~LinkStatus()
 {
-    delete node_;
-    node_ = 0;
-    
     for(int i = 0; i != children_nodes_.size(); ++i)
     {
         if(children_nodes_[i])
@@ -84,13 +81,20 @@ LinkStatus::~LinkStatus()
             children_nodes_[i] = 0;
         }
     }
-
+    
     children_nodes_.clear();
 
     if(isRedirection() && redirection_)
     {
         delete redirection_;
         redirection_ = 0;
+    }
+    else
+    {
+        // node_ is shared through redirections so only erase it one thime (in the last leaf)
+        // kDebug(23100) << "delete node: " << node_;
+        delete node_;
+        node_ = 0;
     }
 
 //     --instances;
