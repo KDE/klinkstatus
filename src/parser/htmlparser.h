@@ -98,7 +98,7 @@ private:
   bool is_content_type_set_;
 
   QString document_;
-  QString script_; // Fica aqui guardado (JavaScript, etc)
+//   QString script_; // Fica aqui guardado (JavaScript, etc)
   QString comments_;
 };
 

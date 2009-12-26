@@ -350,8 +350,8 @@ void HtmlParser::stripScriptContent()
             }
             else
             {
-                script_ += '\n' + document_.mid(inicio - begin_script_length,
-                                                fim - inicio + begin_script_length);
+//                 script_ += '\n' + document_.mid(inicio - begin_script_length,
+//                                                 fim - inicio + begin_script_length);
 
                 document_.remove(inicio - begin_script_length,
                                  fim - inicio + begin_script_length);
