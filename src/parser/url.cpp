@@ -59,13 +59,20 @@ KUrl Url::normalizeUrl(QString const& string_url, LinkStatus const& link_parent,
         base_url = link_parent.absoluteUrl();
 
     // resolve relative url
-    if(_string_url.isEmpty())
+    if(_string_url.isEmpty()) {
         return base_url;
-    else if(Url::hasProtocol(_string_url))
+    }
+    else if(Url::hasProtocol(_string_url)) {
         return KUrl(_string_url);
+    }
     else
     {
-        s_url.prepend(base_url.protocol() + "://" + base_url.host());
+        if(_string_url.startsWith("//")) {
+            s_url.prepend(base_url.protocol() + ":");
+        }
+        else {
+            s_url.prepend(base_url.protocol() + "://" + base_url.host());
+        }
 
         if(_string_url[0] == '/') {
             if(!base_url.protocol().startsWith("http")) {
