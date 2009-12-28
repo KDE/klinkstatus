@@ -106,17 +106,16 @@ QString Node::getAttribute(QString const& atributo)
 
 void NodeLink::parseAttributeHREF()
 {
-    if(findWord(content(), "HREF") == -1 &&
-            findWord(content(), "NAME") == -1 &&
-            findWord(content(), "TARGET") == -1)
-    {
-        kDebug(23100) <<  "MALFORMED: " << endl
-        << "NodeLink::parseAttributeHREF: " << content() << endl;
-        setMalformed(true);
-        return;
-    }
+//     if(findWord(content(), "HREF") == -1 &&
+//             findWord(content(), "NAME") == -1 &&
+//             findWord(content(), "TARGET") == -1)
+//     {
+//         kDebug(23100) <<  "no href attr found: " << endl << content() << endl;
+//         setMalformed(true);
+//         return;
+//     }
 
-    else if(findWord(content(), "HREF") != -1)
+    if(findWord(content(), "HREF") != -1)
     {
         attribute_href_ = getAttribute("HREF=");
 
@@ -225,7 +224,7 @@ void NodeIMG::parseAttributeSRC()
     if(findWord(content(), "SRC") == -1)
     {
         kDebug(23100) <<  "MALFORMED_____________________________________________________________";
-        kDebug(23100) <<  "Conteudo: " << content();
+        kDebug(23100) <<  "Content: " << content();
         setMalformed(true);
         return;
     }
