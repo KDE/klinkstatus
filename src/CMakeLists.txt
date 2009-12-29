@@ -40,6 +40,7 @@ set(libparser_SRCS
     ${CMAKE_SOURCE_DIR}/klinkstatus/src/parser/mstring.cpp 
     ${CMAKE_SOURCE_DIR}/klinkstatus/src/parser/node.cpp 
     ${CMAKE_SOURCE_DIR}/klinkstatus/src/parser/url.cpp
+    ${CMAKE_SOURCE_DIR}/klinkstatus/src/parser/robotsparser.cpp
 )
 
 set(libengine_SRCS 
