@@ -181,9 +181,27 @@ void SearchManager::recheckLinks(QList<LinkStatus*> const& linkstatus_list)
     checkVectorLinksToRecheck(recheck_links_);
 }
 
+void SearchManager::initRobotsParser(KUrl const& url)
+{
+    if(!url.protocol().startsWith("http")) {
+        return;
+    }
+
+    KUrl robotsUrl;
+    robotsUrl.setProtocol(url.protocol());
+    robotsUrl.setAuthority(url.authority());
+    robotsUrl.setFileName("robots.txt");
+    
+    robots_parser_.parseRobotFileUrl(robotsUrl);
+
+    robots_parser_.setUserAgent(user_agent_);
+}
+
 void SearchManager::startSearch(KUrl const& root, SearchMode const& modo)
 {
     kDebug(23100) <<  "SearchManager::startSearch()";
+
+    initRobotsParser(root);
 
     root_url_ = root;
     canceled_ = false;
@@ -831,6 +849,10 @@ bool SearchManager::checkable(KUrl const& url, LinkStatus const& link_parent) co
 
         if(reg_exp_.indexIn(url.url()) != -1)
             return false;
+    }
+    if(!robots_parser_.canFetch(url))
+    {
+        return false;
     }
 
     //kDebug(23100) <<  "url " << url.url() << " is checkable!";

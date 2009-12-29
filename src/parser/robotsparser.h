@@ -34,7 +34,7 @@ public:
     RobotsParser();
     ~RobotsParser();
 
-    bool canFetch(KUrl const& url);
+    bool canFetch(KUrl const& url) const;
 
     void parseRobotFileUrl(KUrl const& robotUrl);
     void setUserAgent(QString const& userAgent) { m_userAgent = userAgent; }

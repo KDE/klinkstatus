@@ -41,6 +41,7 @@ class QDomElement;
 #include "engine/linkchecker.h"
 #include "parser/node.h"
 #include "parser/url.h"
+#include "parser/robotsparser.h"
 class AddLevelJob;
 
 using namespace ThreadWeaver;
@@ -172,6 +173,7 @@ private:
     void cleanItems();
     void reset();
     SearchMode const& searchMode() const;
+    void initRobotsParser(KUrl const& url);
     bool checkRegularExpressions() const { return check_regular_expressions_; }
     bool checkParentDirs() const;
     bool checkExternalLinks() const;
@@ -223,6 +225,7 @@ private:
     int max_simultaneous_connections_;
     SearchMode search_mode_;
     KUrl root_url_;
+    RobotsParser robots_parser_;
     LinkStatus root_;
     bool has_document_root_;
     // in case of non http protocols the document root must be explicitly given

@@ -100,7 +100,7 @@ void RobotsParser::parseRobotFileUrl(KUrl const& robotsUrl)
 }
 
 
-bool RobotsParser::canFetch(KUrl const& url)
+bool RobotsParser::canFetch(KUrl const& url) const
 {
     if(m_blockedUrls.isEmpty()) {
         return true;
