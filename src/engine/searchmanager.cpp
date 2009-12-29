@@ -850,7 +850,7 @@ bool SearchManager::checkable(KUrl const& url, LinkStatus const& link_parent) co
         if(reg_exp_.indexIn(url.url()) != -1)
             return false;
     }
-    if(!robots_parser_.canFetch(url))
+    if(localDomain(url) && !robots_parser_.canFetch(url))
     {
         return false;
     }
