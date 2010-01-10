@@ -2,6 +2,7 @@
 Name=KLinkStatus
 Name[br]=KLinkStatus
 Name[ca]=KLinkStatus
+Name[ca@valencia]=KLinkStatus
 Name[cs]=KLinkStatus
 Name[cy]=KLinkStatus
 Name[da]=KLinkStatus
@@ -56,6 +57,7 @@ X-DocPath=klinkstatus/index.html
 Terminal=false
 GenericName=Link Checker
 GenericName[ca]=Comprovador d'enllaços
+GenericName[ca@valencia]=Comprovador d'enllaços
 GenericName[cs]=Kontrola odkazů
 GenericName[da]=Link-tjekker
 GenericName[de]=Überprüfungswerkzeug für Verknüpfungen
