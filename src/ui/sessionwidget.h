@@ -121,7 +121,8 @@ public slots:
     void slotDisableUpdatesOnResultsTable(bool checked);
     
     void slotExportAsHTML(LinkStatusHelper::Status status = LinkStatusHelper::none);
-
+    void slotCreateSiteMap();
+    
     void slotValidateAll();
 
 private slots:

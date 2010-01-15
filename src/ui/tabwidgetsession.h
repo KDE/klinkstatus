@@ -81,7 +81,8 @@ public slots:
 
     void slotExportAsHTML();
     void slotExportBrokenAsHTML();
-
+    void slotCreateSiteMap();
+    
     void slotFindUnreferredDocuments();
 
     // Tidy all the HTML documents present in the current session

@@ -92,7 +92,8 @@ public:
 
     /** Returns the results in XML format */
     QString toXML(LinkStatusHelper::Status status = LinkStatusHelper::none) const;
-
+    QString buildSiteMapXml() const;
+    
     void startSearch();
     void startSearch(KUrl const& root);
     void startSearch(KUrl const& root, SearchMode const& mode);

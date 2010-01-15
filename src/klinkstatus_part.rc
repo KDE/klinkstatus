@@ -13,6 +13,7 @@
                 <Separator/>
                 <Action name="file_ghns"/>
             </Menu>
+            <Action name="file_create_site_map"/>
             <Separator/>
         </Menu>
         

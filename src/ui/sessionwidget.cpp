@@ -420,7 +420,8 @@ void SessionWidget::slotRootChecked(LinkStatus* linkstatus)
 
     ActionManager::getInstance()->action("file_export_html_all")->setEnabled(!isEmpty());
     ActionManager::getInstance()->action("file_export_html_broken")->setEnabled(!isEmpty());
-
+    ActionManager::getInstance()->action("file_create_site_map")->setEnabled(!isEmpty());
+    
     emit signalTitleChanged();
 
     Q_ASSERT(textlabel_progressbar->text() == i18n("Checking...") ||
@@ -902,6 +903,21 @@ void SessionWidget::slotExportAsHTML(LinkStatusHelper::Status status)
     
     QString html(XSL::transform(xml, styleSheetUrl));
     FileManager::write(html, url);
+}
+
+void SessionWidget::slotCreateSiteMap()
+{
+    KUrl url = KFileDialog::getSaveUrl(KUrl(), "text/xml", 0, i18n("Create XML Site Map"));
+    
+    if(url.isEmpty())
+        return;
+    
+    //     kDebug(23100) << "\n\nXML document represention: \n\n" << search_manager_->toXML();
+    
+    QString xml(search_manager_->buildSiteMapXml());
+    kDebug() << endl << xml;
+    
+    FileManager::write(xml, url);
 }
 
 void SessionWidget::slotValidateAll()

@@ -164,6 +164,12 @@ void ActionManager::initTabWidget(TabWidgetSession* tabWidgetSession)
     connect(action, SIGNAL(triggered(bool) ), d->tabWidgetSession, SLOT(slotExportBrokenAsHTML()));
     action->setEnabled(false);
 
+    action  = new KAction(KIcon("document-save"), i18n("Create Site Map..."), this);
+    actionCollection()->addAction("file_create_site_map", action);
+    connect(action, SIGNAL(triggered(bool) ), d->tabWidgetSession, SLOT(slotCreateSiteMap()));
+    action->setEnabled(false);
+    
+
     // *************** View menu *********************
 
     //     this action must be in the tabwidget because the slot can't be connected to a particular sessionWidget
@@ -439,6 +445,7 @@ void ActionManager::updateGeneralActions(SessionStackedWidget* page)
 
     action("file_export_html_all")->setEnabled(!sw->isEmpty());
     action("file_export_html_broken")->setEnabled(!sw->isEmpty());
+    action("file_create_site_map")->setEnabled(!sw->isEmpty());
     action("html_fix_all")->setEnabled(!sw->isEmpty() && sw->stopped());
     action("find_unreferred_documents")->setEnabled(!sw->isEmpty() && sw->stopped());
 }
