@@ -1082,9 +1082,9 @@ QString SearchManager::buildSiteMapXml() const
     root.setAttribute("xmlns", "http://www.sitemaps.org/schemas/sitemap/0.9");    
     doc.appendChild(root);    
 
-    // redirections
     LinkStatus const* ls = &root_;
-    if(ls->checked() && !LinkStatusHelper::hasStatus(ls, LinkStatusHelper::undetermined)) {
+    if(ls->checked() && localDomain(ls->absoluteUrl())
+        && !LinkStatusHelper::hasStatus(ls, LinkStatusHelper::undetermined)) {
         LinkStatusHelper::buildSiteMapUrl(ls, root);
     }
 
@@ -1093,7 +1093,9 @@ QString SearchManager::buildSiteMapXml() const
         if(!ls) {
             break;
         }
-        if(ls->checked() && !LinkStatusHelper::hasStatus(ls, LinkStatusHelper::undetermined)) {
+        if(ls->checked() && localDomain(ls->absoluteUrl())
+            && !LinkStatusHelper::hasStatus(ls, LinkStatusHelper::undetermined))
+        {
             LinkStatusHelper::buildSiteMapUrl(ls, root);
         }
     }
@@ -1106,7 +1108,8 @@ QString SearchManager::buildSiteMapXml() const
             {
                 LinkStatus* ls = ((search_results_[i])[j])[l];
                 
-                if(ls->checked() && !LinkStatusHelper::hasStatus(ls, LinkStatusHelper::undetermined)) {
+                if(ls->checked() && localDomain(ls->absoluteUrl())
+                    && !LinkStatusHelper::hasStatus(ls, LinkStatusHelper::undetermined)) {
                     LinkStatusHelper::buildSiteMapUrl(ls, root);
                 }
                 
@@ -1116,7 +1119,8 @@ QString SearchManager::buildSiteMapXml() const
                         break;
                     }
                     
-                    if(ls->checked() && !LinkStatusHelper::hasStatus(ls, LinkStatusHelper::undetermined)) {
+                    if(ls->checked() && localDomain(ls->absoluteUrl())
+                        && !LinkStatusHelper::hasStatus(ls, LinkStatusHelper::undetermined)) {
                         LinkStatusHelper::buildSiteMapUrl(ls, root);
                     }
                 }
