@@ -119,6 +119,30 @@ void LinkStatusHelper::save(LinkStatus const* linkstatus, QDomElement& element)
     element.appendChild(child_element);
 }
 
+void LinkStatusHelper::buildSiteMapUrl(LinkStatus const* linkstatus, QDomElement& element)
+{
+    QDomElement url_element = element.ownerDocument().createElement("url");
+    
+    // <loc>
+    QDomElement loc = element.ownerDocument().createElement("loc");
+    loc.appendChild(element.ownerDocument().createTextNode(linkstatus->absoluteUrl().prettyUrl()));
+    url_element.appendChild(loc);
+    
+    // <lastmod>
+    QDomElement lastMod = element.ownerDocument().createElement("lastmod");
+    url_element.appendChild(lastMod);
+    
+    // <changefreq>
+    QDomElement changeFreq = element.ownerDocument().createElement("changefreq");
+    url_element.appendChild(changeFreq);
+    
+    // <priority>
+    QDomElement priority = element.ownerDocument().createElement("priority");
+    url_element.appendChild(priority);
+    
+    element.appendChild(url_element);
+}
+
 LinkStatus* LinkStatusHelper::lastRedirection(LinkStatus* ls)
 {
     if(ls->isRedirection())

@@ -1018,6 +1018,9 @@ void SearchManager::save(QDomElement& element, LinkStatusHelper::Status status) 
     }
     // redirections
     LinkStatus const* ls = &root_;
+    if(ls->checked() && LinkStatusHelper::hasStatus(ls, status)) {
+        LinkStatusHelper::save(ls, child_element);
+    }
     while(ls->isRedirection()) {
         ls = ls->redirection();
         if(!ls) {
@@ -1058,7 +1061,7 @@ void SearchManager::save(QDomElement& element, LinkStatusHelper::Status status) 
 QString SearchManager::toXML(LinkStatusHelper::Status status) const
 {
     QDomDocument doc;
-    doc.appendChild(doc.createProcessingInstruction( "xml", 
+    doc.appendChild(doc.createProcessingInstruction( "xml",
                                        "version=\"1.0\" encoding=\"UTF-8\""));
     
     QDomElement root = doc.createElement("klinkstatus");
@@ -1068,6 +1071,62 @@ QString SearchManager::toXML(LinkStatusHelper::Status status) const
     
     return doc.toString(4);
 }
+
+QString SearchManager::buildSiteMapXml() const
+{
+    QDomDocument doc;
+    doc.appendChild(doc.createProcessingInstruction( "xml",
+                                                     "version=\"1.0\" encoding=\"UTF-8\""));
+                                                     
+    QDomElement root = doc.createElement("urlset");
+    root.setAttribute("xmlns", "http://www.sitemaps.org/schemas/sitemap/0.9");    
+    doc.appendChild(root);    
+
+    // redirections
+    LinkStatus const* ls = &root_;
+    if(ls->checked() && !LinkStatusHelper::hasStatus(ls, LinkStatusHelper::undetermined)) {
+        LinkStatusHelper::buildSiteMapUrl(ls, root);
+    }
+
+    while(ls->isRedirection()) {
+        ls = ls->redirection();
+        if(!ls) {
+            break;
+        }
+        if(ls->checked() && !LinkStatusHelper::hasStatus(ls, LinkStatusHelper::undetermined)) {
+            LinkStatusHelper::buildSiteMapUrl(ls, root);
+        }
+    }
+    
+    for(int i = 0; i != search_results_.size(); ++i)
+    {
+        for(int j = 0; j != search_results_[i].size() ; ++j)
+        {
+            for(int l = 0; l != (search_results_[i])[j].size(); ++l)
+            {
+                LinkStatus* ls = ((search_results_[i])[j])[l];
+                
+                if(ls->checked() && !LinkStatusHelper::hasStatus(ls, LinkStatusHelper::undetermined)) {
+                    LinkStatusHelper::buildSiteMapUrl(ls, root);
+                }
+                
+                while(ls->isRedirection()) {
+                    ls = ls->redirection();
+                    if(!ls) {
+                        break;
+                    }
+                    
+                    if(ls->checked() && !LinkStatusHelper::hasStatus(ls, LinkStatusHelper::undetermined)) {
+                        LinkStatusHelper::buildSiteMapUrl(ls, root);
+                    }
+                }
+            }
+        }
+    }
+    
+    return doc.toString(4);
+}
+
 
 void SearchManager::slotJobDone(ThreadWeaver::Job* job)
 {

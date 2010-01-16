@@ -253,6 +253,11 @@ void TabWidgetSession::slotExportBrokenAsHTML()
     currentWidget()->sessionWidget()->slotExportAsHTML(LinkStatusHelper::bad);
 }
 
+void TabWidgetSession::slotCreateSiteMap()
+{
+    currentWidget()->sessionWidget()->slotCreateSiteMap();
+}
+
 void TabWidgetSession::slotValidateAll( )
 {
     currentWidget()->sessionWidget()->slotValidateAll();

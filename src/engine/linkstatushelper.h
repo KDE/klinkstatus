@@ -49,6 +49,7 @@ public:
     static QString const toString(LinkStatus const* linkstatus);
 
     static void save(LinkStatus const* linkstatus, QDomElement& element);
+    static void buildSiteMapUrl(LinkStatus const* linkstatus, QDomElement& element);
     
     static LinkStatus* lastRedirection(LinkStatus* ls);
 
