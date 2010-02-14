@@ -128,7 +128,7 @@ void LinkStatusHelper::buildSiteMapUrl(LinkStatus const* linkstatus, QDomElement
     loc.appendChild(element.ownerDocument().createTextNode(linkstatus->absoluteUrl().prettyUrl()));
     url_element.appendChild(loc);
     
-    // <lastmod>
+/*    // <lastmod>
     QDomElement lastMod = element.ownerDocument().createElement("lastmod");
     url_element.appendChild(lastMod);
     
@@ -138,7 +138,7 @@ void LinkStatusHelper::buildSiteMapUrl(LinkStatus const* linkstatus, QDomElement
     
     // <priority>
     QDomElement priority = element.ownerDocument().createElement("priority");
-    url_element.appendChild(priority);
+    url_element.appendChild(priority);*/
     
     element.appendChild(url_element);
 }
