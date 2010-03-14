@@ -15,6 +15,7 @@ include_directories(
     ${CMAKE_BINARY_DIR}/klinkstatus/src
     ${LIBXML2_INCLUDE_DIR}
     ${LIBXSLT_INCLUDE_DIR}
+    ${KDEPIMLIBS_INCLUDE_DIR}
     ${KDE4_INCLUDE_DIR}
     ${KDE4_INCLUDE_DIR}/threadweaver
     ${KROSS_INCLUDES}
@@ -134,10 +135,9 @@ target_link_libraries(klinkstatuscommon
     ${KDE4_KROSSUI_LIBS}
     ${KDE4_KNEWSTUFF2_LIBS}
     ${KDE4_KUTILS_LIBS}
-# kdepimlibs
-    ${KDE4_MAILTRANSPORT_LIBS}
-    ${KDE4_KPIMIDENTITIES_LIBS}
-    ${KDE4_KMIME_LIBS}
+    ${KDEPIMLIBS_MAILTRANSPORT_LIBS}
+    ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
+    ${KDEPIMLIBS_KMIME_LIBS}
 )
 
 if(LIBTIDY_FOUND)

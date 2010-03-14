@@ -1,6 +1,7 @@
 include_directories(
     ${CMAKE_SOURCE_DIR}/klinkstatus/src 
     ${CMAKE_BINARY_DIR}/klinkstatus/src
+    ${KDEPIMLIBS_INCLUDE_DIR}
 )
 
 set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  ${KDE4_ENABLE_EXCEPTIONS}")
@@ -23,7 +24,7 @@ kde4_add_plugin(automationklinkstatus ${automationklinkstatus_PART_SRCS})
 target_link_libraries(automationklinkstatus
     ${KDE4_KDECORE_LIBS}
     ${KDE4_KPARTS_LIBS}
-    ${KDE4_MAILTRANSPORT_LIBS}
+    ${KDEPIMLIBS_MAILTRANSPORT_LIBS}
     klinkstatuscommon)
 
 install(TARGETS automationklinkstatus DESTINATION ${PLUGIN_INSTALL_DIR})
