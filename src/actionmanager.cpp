@@ -478,7 +478,7 @@ void ActionManager::slotGHNS()
     foreach(KNS::Entry* entry, entries) {
         // care only about installed ones
         if (entry->status() == KNS::Entry::Installed) {
-            foreach(QString file, entry->installedFiles()) {
+            foreach(const QString &file, entry->installedFiles()) {
                 KMimeType::Ptr mimeType = KMimeType::findByPath(file);
                 
                 kDebug(23100) << "File: " << file;

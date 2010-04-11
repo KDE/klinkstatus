@@ -164,7 +164,7 @@ void UnreferredDocumentsWidget::slotStopSearch()
 
 void UnreferredDocumentsWidget::slotEntries(KIO::Job* /*job*/, const KIO::UDSEntryList& list)
 {
-    foreach(KIO::UDSEntry entry, list) {
+    foreach(const KIO::UDSEntry &entry, list) {
         if(entry.isDir())
             continue;
 

@@ -88,7 +88,7 @@ void AutomationDialog::loadPages()
     QStringList configurationFiles = AutomationDialog::configurationFiles();
     kDebug(23100) << configurationFiles;
 
-    foreach(QString file, configurationFiles) {
+    foreach(const QString &file, configurationFiles) {
         kDebug(23100) << "Adding site configuration: " << file;
         
         AutomationConfig* config = new AutomationConfig(KSharedConfig::openConfig(file));

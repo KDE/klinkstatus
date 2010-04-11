@@ -90,7 +90,7 @@ void AutomationPart::initLinkChecks()
 
     d->configurationFiles = KGlobal::dirs()->findAllResources("appdata", "automation/*.properties");
     
-    foreach(QString file, d->configurationFiles) {
+    foreach(const QString &file, d->configurationFiles) {
         scheduleCheck(file);
     }
 }

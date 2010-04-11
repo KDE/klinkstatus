@@ -323,7 +323,7 @@ void TreeView::slotEditReferrers()
     if(!_item) return;
     QSet<KUrl> const& referrers = _item->linkStatus()->referrers();
 
-    foreach(KUrl url, referrers) {
+    foreach(const KUrl &url, referrers) {
         (void) KRun::runUrl(url, QString("text/plain"), 0, false);
     }
 }
@@ -386,7 +386,7 @@ void TreeView::loadContextTableMenu(QSet<KUrl> const& referrers, bool is_root)
         sub_menu_->addAction(i18n("All"), this, SLOT(slotEditReferrers()));
         sub_menu_->addSeparator();
 
-        foreach(KUrl url, referrers)
+        foreach(const KUrl &url, referrers)
         {
             sub_menu_->addAction(url.prettyUrl());
         }

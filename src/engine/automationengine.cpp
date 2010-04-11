@@ -45,7 +45,7 @@ void AutomationEngine::startLinkCheck()
         return;
     }
     
-    foreach(QString file, configurationFiles) {
+    foreach(const QString &file, configurationFiles) {
         check(file);
     }
 }

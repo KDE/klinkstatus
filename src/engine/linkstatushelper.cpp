@@ -106,7 +106,7 @@ void LinkStatusHelper::save(LinkStatus const* linkstatus, QDomElement& element)
     tmp_1 = element.ownerDocument().createElement("referrers");
     
     QSet<KUrl> referrers = linkstatus->referrers();
-    foreach(KUrl url, referrers)
+    foreach(const KUrl &url, referrers)
     {
         QDomElement tmp_2 = element.ownerDocument().createElement("url");
         tmp_2.appendChild(element.ownerDocument().createTextNode(url.prettyUrl()));

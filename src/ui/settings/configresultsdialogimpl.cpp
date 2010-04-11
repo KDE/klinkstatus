@@ -38,7 +38,7 @@ ConfigResultsDialogImpl::~ConfigResultsDialogImpl()
 void ConfigResultsDialogImpl::initStylesCombo()
 {
     QStringList availableStyles = KLSConfig::stylesheetFiles();
-    foreach(QString style, availableStyles) {
+    foreach(const QString &style, availableStyles) {
         kcfg_PreferedStylesheet->addItem(style);
     }
     
