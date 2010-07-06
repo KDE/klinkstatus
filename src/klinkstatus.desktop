@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=KLinkStatus
+Name[bg]=KLinkStatus
 Name[br]=KLinkStatus
 Name[ca]=KLinkStatus
 Name[ca@valencia]=KLinkStatus
@@ -56,6 +57,7 @@ X-KDE-HasTempFileOption=true
 X-DocPath=klinkstatus/index.html
 Terminal=false
 GenericName=Link Checker
+GenericName[bg]=Проверка на препратки
 GenericName[ca]=Comprovador d'enllaços
 GenericName[ca@valencia]=Comprovador d'enllaços
 GenericName[cs]=Kontrola odkazů
