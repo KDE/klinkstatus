@@ -1,5 +1,5 @@
 #! /usr/bin/env bash
-LIST=`find . -name \*.ui -o -name \*.kcfg -o -name \*.rc` 
+LIST=`find . -name \*.ui -o -name \*.kcfg -o -name \*.rc | grep -v plugins/scripting/scripts/scripts.rc` 
 if test -n "$LIST"; then 
 	$EXTRACTRC $LIST >> rc.cpp 
 fi
