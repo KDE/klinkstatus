@@ -40,9 +40,9 @@ void AutomationConfigPage::initComponents()
     kcfg_ResultsFilePath->setMode(KFile::Directory | KFile::ExistingOnly | KFile::LocalOnly);
     kcfg_DocumentRoot->setMode(KFile::Directory | KFile::ExistingOnly | KFile::LocalOnly);
     
-    kcfg_Periodicity->insertItem(0, "Hourly");
-    kcfg_Periodicity->insertItem(1, "Daily");
-    kcfg_Periodicity->insertItem(2, "Weekly");
+    kcfg_Periodicity->insertItem(0, i18n ("Hourly") );
+    kcfg_Periodicity->insertItem(1, i18n ("Daily") );
+    kcfg_Periodicity->insertItem(2, i18n ("Weekly") );
     
     kDebug(23100) << m_config->periodicity();
     kcfg_Periodicity->setCurrentIndex(m_config->periodicity());
