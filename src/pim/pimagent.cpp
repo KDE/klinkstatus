@@ -26,7 +26,6 @@
 #include <mailtransport/transportmanager.h>
 #include <mailtransport/transportjob.h>
 #include <mailtransport/transport.h>
-#include <syndication/global.h>
 #include <kpimidentities/identity.h>
 #include <kpimidentities/identitymanager.h>
 
