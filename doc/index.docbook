@@ -33,8 +33,8 @@
 
 <legalnotice>&FDLNotice;</legalnotice>
 
-<date>2004-04-29</date>
-<releaseinfo>0&#46;1&#46;3</releaseinfo>
+<date>2011-08-22</date>
+<releaseinfo>0.7.0</releaseinfo>
 
 <abstract>
 <para>
@@ -58,7 +58,7 @@
 &klinkstatus; is a link checker for &kde;.
 It allows you to search internal and external links in your entire web site, 
 just a single page and choose the depth to search.
-You can also check local files, ftp, fish, etc, as &klinkstatus; uses KIO.
+You can also check local files, ftp, fish, &etc;, as &klinkstatus; uses KIO.
 For performance, links can be checked simultaneously.
 </para>
 </chapter>
@@ -67,7 +67,9 @@ For performance, links can be checked simultaneously.
 <title>Using &klinkstatus;</title>
 
 <para>
-
+  To check links on a web site or local file enter its address into the <guilabel>URL:</guilabel> field and hit &Enter;
+  You can also use folder icon to the right to navigate to the address needed using &GUI;.
+</para>
 <screenshot>
 <screeninfo>Here's a screenshot of &klinkstatus;</screeninfo>
 	<mediaobject>
@@ -77,10 +79,44 @@ For performance, links can be checked simultaneously.
 	  <textobject>
 	    <phrase>Screenshot</phrase>
 	  </textobject>
+	  <caption>
+	    <para>
+	      &klinkstatus; checking links on KDevelop web site. Broken and malformed links are marked with red.
+	    </para>
+	  </caption>
 	</mediaobject>
 </screenshot>
+<para>
+  If access to the inspected data is restricted, please check the <guilabel>Login</guilabel> option. After hitting &Enter; in &URL; field or push <guibutton>Start Search</guibutton> button on the toolbar the following dialog will be shown to enter the credentials.
 </para>
-
+<screenshot>
+<screeninfo>Credentials dialog of &klinkstatus;</screeninfo>
+	<mediaobject>
+	  <imageobject>
+	    <imagedata fileref="login-dialog.png" format="PNG"/>
+	  </imageobject>
+	  <textobject>
+	    <phrase>Credentials dialog of &klinkstatus;</phrase>
+	  </textobject>
+	  <caption>
+	    <para>
+	      &klinkstatus; asking you to enter the credentials.
+	    </para>
+	  </caption>
+	</mediaobject>
+</screenshot>
+<para>
+  Enter the the credentials and push <guibutton>OK</guibutton> button.
+</para>
+<para>
+  You can narrow down the range of the links to be checked by unchecking <guilabel>Check external links</guilabel> item (if external links need not to be checked) or entering regular expression into <guilabel>Do not check Regular Expression</guilabel> field.
+</para>
+<para>
+  Search results can be filtered using <guilabel>Search</guilabel> field or <guilabel>Status</guilabel> drop-down menu (<guimenuitem>All Links</guimenuitem>, <guimenuitem>Good Links</guimenuitem>, <guimenuitem>Broken Links</guimenuitem>, <guimenuitem>Malformed Links</guimenuitem>, or <guimenuitem>Undetermined Links</guimenuitem>).
+</para>
+<para>
+  From the context menu of each item in search results you can <guimenuitem>Recheck</guimenuitem> item, <guisubmenu>Edit Referrer</guisubmenu> in the default editor, <guimenuitem>Open URL</guimenuitem>, <guimenuitem>Open Referrer URL</guimenuitem>, <guimenuitem>Copy URL</guimenuitem>, <guimenuitem>Copy Referrer URL</guimenuitem>, or <guimenuitem>Copy Cell Text</guimenuitem>).
+</para>
 <!--kde.org
 Support several protocols (allowing fast checking of local documents): http, ftp, ssh (fish or sftp) and file.
 Proxy support
