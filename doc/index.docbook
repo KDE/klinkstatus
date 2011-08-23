@@ -34,7 +34,7 @@
 <legalnotice>&FDLNotice;</legalnotice>
 
 <date>2011-08-22</date>
-<releaseinfo>0.7.0</releaseinfo>
+<releaseinfo>0.7.0 (&kde; 4.7)</releaseinfo>
 
 <abstract>
 <para>
@@ -124,9 +124,30 @@ Allows authentication when checking restricted documents
 Limit the search depth
 Pause/Resume of checking session
 History of checked URLs
+Kross Scripting
   -->
 </chapter>
+<!--
+  How does scheduling auto link check work? 
+  starting klinkstatus via user crontab? apparently not!
+  via a kded service?
+  needs arunning klinkstatus instance?
+  is this unfinished work?
+  
+<chapter id="auto-check">
+<title>Automatic Site Checking</title>
 
+<para>
+  Using <menuchoice><guimenu>Tools</guimenu><guimenuitem>Schedule Link Checks...</guimenuitem></menuchoice> 
+  opens the <guilabel>Configure Site Check Automation</guilabel> dialog.
+  
+  Here you can add, remove and edit sessions. 
+  Scheduling Weekly (how to set day?), Daily, Hourly
+  
+</para>
+
+</chapter>
+-->
 <chapter id="credits">
 
 <title>Credits and License</title>
