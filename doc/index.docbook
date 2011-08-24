@@ -56,7 +56,7 @@
 
 <para>
 &klinkstatus; is a link checker for &kde;.
-It allows you to search internal and external links in your entire web site, 
+It allows you to search internal and external links in your entire web site,
 just a single page and choose the depth to search.
 You can also check local files, ftp, fish, &etc;, as &klinkstatus; uses KIO.
 For performance, links can be checked simultaneously.
@@ -117,6 +117,9 @@ For performance, links can be checked simultaneously.
 <para>
   From the context menu of each item in search results you can <guimenuitem>Recheck</guimenuitem> item, <guisubmenu>Edit Referrer</guisubmenu> in the default editor, <guimenuitem>Open URL</guimenuitem>, <guimenuitem>Open Referrer URL</guimenuitem>, <guimenuitem>Copy URL</guimenuitem>, <guimenuitem>Copy Referrer URL</guimenuitem>, or <guimenuitem>Copy Cell Text</guimenuitem>).
 </para>
+<para>
+  The check results can be saved as &XML; site map using <menuchoice><guimenu>File</guimenu><guimenuitem>Create Site Map...</guimenuitem></menuchoice> menu item, or exported as &HTML; using <menuchoice><guimenu>File</guimenu><guisubmenu>Export to HTML</guisubmenu></menuchoice>. You can chose to export <guimenuitem>All</guimenuitem> or just <guimenuitem>Broken</guimenuitem> links. An option <guimenuitem>Download New Stylesheets</guimenuitem> to use stylesheets from Get Hot New Stuff repository for export is also implemented.
+</para>
 <!--kde.org
 Support several protocols (allowing fast checking of local documents): http, ftp, ssh (fish or sftp) and file.
 Proxy support
@@ -128,22 +131,22 @@ Kross Scripting
   -->
 </chapter>
 <!--
-  How does scheduling auto link check work? 
+  How does scheduling auto link check work?
   starting klinkstatus via user crontab? apparently not!
   via a kded service?
   needs arunning klinkstatus instance?
   is this unfinished work?
-  
+
 <chapter id="auto-check">
 <title>Automatic Site Checking</title>
 
 <para>
-  Using <menuchoice><guimenu>Tools</guimenu><guimenuitem>Schedule Link Checks...</guimenuitem></menuchoice> 
+  Using <menuchoice><guimenu>Tools</guimenu><guimenuitem>Schedule Link Checks...</guimenuitem></menuchoice>
   opens the <guilabel>Configure Site Check Automation</guilabel> dialog.
-  
-  Here you can add, remove and edit sessions. 
+
+  Here you can add, remove and edit sessions.
   Scheduling Weekly (how to set day?), Daily, Hourly
-  
+
 </para>
 
 </chapter>
@@ -191,6 +194,6 @@ sgml-indent-step:0
 sgml-indent-data:nil
 End:
 
-vim:tabstop=2:shiftwidth=2:expandtab 
+vim:tabstop=2:shiftwidth=2:expandtab
 -->
 
