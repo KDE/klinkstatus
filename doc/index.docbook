@@ -55,11 +55,10 @@
 <title>Introduction</title>
 
 <para>
-&klinkstatus; is a link checker for &kde;.
-It allows you to search internal and external links in your entire web site,
-just a single page and choose the depth to search.
-You can also check local files, ftp, fish, &etc;, as &klinkstatus; uses KIO.
-For performance, links can be checked simultaneously.
+  &klinkstatus; is a link checker for &kde;. It allows you to search internal and external links in your entire web site, just a single page and choose the depth to search. You can also check local files, ftp, fish, &etc;, as &klinkstatus; uses KIO. For performance, links can be checked simultaneously.
+</para>
+<para>
+  Application capabilities can be extended with <ulink url="http://techbase.kde.org/Development/Tutorials/Kross/Introduction">Kross scripting</ulink>.
 </para>
 </chapter>
 
@@ -151,6 +150,78 @@ Kross Scripting
 
 </chapter>
 -->
+
+<chapter id="config">
+  <title>Configuring &klinkstatus;</title>
+  <para>
+    Configuration options of &klinkstatus; can be accessed by opening the configuration dialog with selecting <menuchoice> <guimenu>Settings</guimenu> <guimenuitem>Configure &klinkstatus;...</guimenuitem> </menuchoice> from the menu.</para>
+    <screenshot>
+      <screeninfo>Configure &klinkstatus; Dialog</screeninfo>
+      <mediaobject>
+	<imageobject>
+	  <imagedata fileref="check-settings.png" format="PNG"/>
+	</imageobject>
+	<textobject>
+	  <phrase>Check</phrase>
+	</textobject>
+      </mediaobject>
+    </screenshot>
+  <para>
+    In the <guilabel>Check</guilabel> page, you can change the default check parameters. This page is divided into three panes (<guilabel>Network</guilabel>, <guilabel>Input</guilabel>, and <guilabel>Quanta</guilabel>) with additional checkbox <guilabel>Remember settings when exit</guilabel>. If the latter is checked, &klinkstatus; remember configured settings when you exit &klinkstatus; and restore them during the next application run.
+  </para>
+  <para>
+    The <guilabel>Network</guilabel> pane can be used to choose the <guilabel>Number of simultaneous connections</guilabel> and <guilabel>Timeout in seconds</guilabel>.
+  </para>
+  <para>
+    You can change the <guilabel>Number of items in &URL; history</guilabel> (default is 50) and the <guilabel>Depth</guilabel> of check (can be overriden with &klinkstatus; main window, 0 for <guilabel>Unlimited</guilabel>). You can also decide if &klinkstatus; should <guilabel>Check parent folders</guilabel> and <guilabel>Check external links</guilabel> (can be overriden with &klinkstatus; main window).
+  </para>
+  <para>
+    The <guilabel>Quanta</guilabel> pane is used to control &quantaplus; integration of &klinkstatus;. Check <guilabel>Use preview prefix</guilabel> if you want to use &quantaplus;'s project preview prefix in the URL to check.
+  </para>
+  <screenshot>
+    <screeninfo>Configure &klinkstatus; Dialog</screeninfo>
+    <mediaobject>
+      <imageobject>
+	<imagedata fileref="results-settings.png" format="PNG"/>
+      </imageobject>
+      <textobject>
+	<phrase>Results</phrase>
+      </textobject>
+    </mediaobject>
+  </screenshot>
+  <para>
+    Using the <guilabel>Results</guilabel> page you can choose format of the check results list. <guilabel>Tree</guilabel> is the default tree view and <guilabel>Flat</guilabel> is the flat list (can be faster on low-end machines). You can also let &klinkstatus; <guilabel>Follow Last Link Checked</guilabel> and define <guilabel>Preferred Style Sheet</guilabel> for the check list. The new stylesheets can be downloaded from the Get Hot New Stuff repository using <menuchoice><guimenu>File</guimenu> <guisubmenu>Export to HTML</guisubmenu> <guimenuitem>Download New Stylesheets</guimenuitem></menuchoice> menu item.
+  </para>
+  <screenshot>
+    <screeninfo>Configure &klinkstatus; Dialog</screeninfo>
+    <mediaobject>
+      <imageobject>
+	<imagedata fileref="identification-settings.png" format="PNG"/>
+      </imageobject>
+      <textobject>
+	<phrase>Identification</phrase>
+      </textobject>
+    </mediaobject>
+  </screenshot>
+  <para>
+    Using the <guilabel>Identification</guilabel> page you can configure the way &klinkstatus; reports itself to the server that stores the page checked. You can choose to <guilabel>Send Identification</guilabel>. Use <guibutton>Default</guibutton> button to set the default identification of &konqueror;. <guilabel>Identity</guilabel> pane can be used to choose your identity for authentication on the server.
+  </para>
+  <screenshot>
+    <screeninfo>Configure &klinkstatus; Dialog</screeninfo>
+    <mediaobject>
+      <imageobject>
+	<imagedata fileref="mail-transport-settings.png" format="PNG"/>
+      </imageobject>
+      <textobject>
+	<phrase>Mail Transport</phrase>
+      </textobject>
+    </mediaobject>
+  </screenshot>
+  <para>
+    Using the <guilabel>Mail Transport</guilabel> page, you can configure email account which receives &klinkstatus; scheduled check results.
+  </para>
+</chapter>
+
 <chapter id="credits">
 
 <title>Credits and License</title>
