@@ -133,7 +133,7 @@ Kross Scripting
   How does scheduling auto link check work?
   starting klinkstatus via user crontab? apparently not!
   via a kded service?
-  needs arunning klinkstatus instance?
+  needs a running klinkstatus instance?
   is this unfinished work?
 
 <chapter id="auto-check">
@@ -244,14 +244,15 @@ Documentation copyright 2004 Paulo Moura Guedes <email>pmg&#64;netcabo&#46;pt</e
 
 </chapter>
 
-<appendix id="installation">
+<chapter id="installation">
+  
 <title>Installation and Compilation</title>
 
 &install.intro.documentation;
 
 &install.compile.documentation;
 
-</appendix>
+</chapter>
 
 &documentation.index;
 </book>
