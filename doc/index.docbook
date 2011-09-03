@@ -66,7 +66,7 @@
 <title>Using &klinkstatus;</title>
 
 <para>
-  To check links on a web site or local file enter its address into the <guilabel>URL:</guilabel> field and hit &Enter;
+  To check links on a web site or local file enter its address into the <guilabel>URL:</guilabel> field and hit &Enter;.
   You can also use folder icon to the right to navigate to the address needed using &GUI;.
 </para>
 <screenshot>
@@ -80,7 +80,7 @@
 	  </textobject>
 	  <caption>
 	    <para>
-	      &klinkstatus; checking links on KDevelop web site. Broken and malformed links are marked with red.
+	      &klinkstatus; is checking links on KDevelop web site. Broken and malformed links are marked with red.
 	    </para>
 	  </caption>
 	</mediaobject>
@@ -99,7 +99,7 @@
 	  </textobject>
 	  <caption>
 	    <para>
-	      &klinkstatus; asking you to enter the credentials.
+	      &klinkstatus; is asking you to enter the credentials.
 	    </para>
 	  </caption>
 	</mediaobject>
@@ -176,7 +176,7 @@ Kross Scripting
     You can change the <guilabel>Number of items in &URL; history</guilabel> (default is 50) and the <guilabel>Depth</guilabel> of check (can be overriden with &klinkstatus; main window, 0 for <guilabel>Unlimited</guilabel>). You can also decide if &klinkstatus; should <guilabel>Check parent folders</guilabel> and <guilabel>Check external links</guilabel> (can be overriden with &klinkstatus; main window).
   </para>
   <para>
-    The <guilabel>Quanta</guilabel> pane is used to control &quantaplus; integration of &klinkstatus;. Check <guilabel>Use preview prefix</guilabel> if you want to use &quantaplus;'s project preview prefix in the URL to check.
+    The <guilabel>Quanta</guilabel> pane is used to control &quantaplus; integration of &klinkstatus;. Check <guilabel>Use preview prefix</guilabel> if you want to use &quantaplus;'s project preview prefix in the &URL; to check.
   </para>
   <screenshot>
     <screeninfo>Configure &klinkstatus; Dialog</screeninfo>
