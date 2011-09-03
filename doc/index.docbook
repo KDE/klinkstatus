@@ -66,7 +66,7 @@
 <title>Using &klinkstatus;</title>
 
 <para>
-  To check links on a web site or local file enter its address into the <guilabel>URL:</guilabel> field and hit &Enter;
+  To check links on a web site or local file enter its address into the <guilabel>URL:</guilabel> field and hit &Enter;.
   You can also use folder icon to the right to navigate to the address needed using &GUI;.
 </para>
 <screenshot>
@@ -80,7 +80,7 @@
 	  </textobject>
 	  <caption>
 	    <para>
-	      &klinkstatus; checking links on KDevelop web site. Broken and malformed links are marked with red.
+	      &klinkstatus; is checking links on KDevelop web site. Broken and malformed links are marked with red.
 	    </para>
 	  </caption>
 	</mediaobject>
@@ -99,7 +99,7 @@
 	  </textobject>
 	  <caption>
 	    <para>
-	      &klinkstatus; asking you to enter the credentials.
+	      &klinkstatus; is asking you to enter the credentials.
 	    </para>
 	  </caption>
 	</mediaobject>
@@ -114,10 +114,10 @@
   Search results can be filtered using <guilabel>Search</guilabel> field or <guilabel>Status</guilabel> drop-down menu (<guimenuitem>All Links</guimenuitem>, <guimenuitem>Good Links</guimenuitem>, <guimenuitem>Broken Links</guimenuitem>, <guimenuitem>Malformed Links</guimenuitem>, or <guimenuitem>Undetermined Links</guimenuitem>).
 </para>
 <para>
-  From the context menu of each item in search results you can <guimenuitem>Recheck</guimenuitem> item, <guisubmenu>Edit Referrer</guisubmenu> in the default editor, <guimenuitem>Open URL</guimenuitem>, <guimenuitem>Open Referrer URL</guimenuitem>, <guimenuitem>Copy URL</guimenuitem>, <guimenuitem>Copy Referrer URL</guimenuitem>, or <guimenuitem>Copy Cell Text</guimenuitem>).
+  From the context menu of each item in search results you can <guimenuitem>Recheck</guimenuitem> item, <guisubmenu>Edit Referrer</guisubmenu> in the default editor, <guimenuitem>Open URL</guimenuitem>, <guimenuitem>Open Referrer URL</guimenuitem>, <guimenuitem>Copy URL</guimenuitem>, <guimenuitem>Copy Referrer URL</guimenuitem>, or <guimenuitem>Copy Cell Text</guimenuitem>.
 </para>
 <para>
-  The check results can be saved as &XML; site map using <menuchoice><guimenu>File</guimenu><guimenuitem>Create Site Map...</guimenuitem></menuchoice> menu item, or exported as &HTML; using <menuchoice><guimenu>File</guimenu><guisubmenu>Export to HTML</guisubmenu></menuchoice>. You can chose to export <guimenuitem>All</guimenuitem> or just <guimenuitem>Broken</guimenuitem> links. An option <guimenuitem>Download New Stylesheets</guimenuitem> to use stylesheets from Get Hot New Stuff repository for export is also implemented.
+  The check results can be saved as &XML; site map using <menuchoice><guimenu>File</guimenu><guimenuitem>Create Site Map...</guimenuitem></menuchoice> menu item, or exported as &HTML; using <menuchoice><guimenu>File</guimenu><guisubmenu>Export to HTML</guisubmenu></menuchoice>. You can choose to export <guimenuitem>All</guimenuitem> or just <guimenuitem>Broken</guimenuitem> links. An option <guimenuitem>Download New Stylesheets</guimenuitem> to use stylesheets from Get Hot New Stuff repository for export is also implemented.
 </para>
 <!--kde.org
 Support several protocols (allowing fast checking of local documents): http, ftp, ssh (fish or sftp) and file.
@@ -176,7 +176,7 @@ Kross Scripting
     You can change the <guilabel>Number of items in &URL; history</guilabel> (default is 50) and the <guilabel>Depth</guilabel> of check (can be overriden with &klinkstatus; main window, 0 for <guilabel>Unlimited</guilabel>). You can also decide if &klinkstatus; should <guilabel>Check parent folders</guilabel> and <guilabel>Check external links</guilabel> (can be overriden with &klinkstatus; main window).
   </para>
   <para>
-    The <guilabel>Quanta</guilabel> pane is used to control &quantaplus; integration of &klinkstatus;. Check <guilabel>Use preview prefix</guilabel> if you want to use &quantaplus;'s project preview prefix in the URL to check.
+    The <guilabel>Quanta</guilabel> pane is used to control &quantaplus; integration of &klinkstatus;. Check <guilabel>Use preview prefix</guilabel> if you want to use &quantaplus;'s project preview prefix in the &URL; to check.
   </para>
   <screenshot>
     <screeninfo>Configure &klinkstatus; Dialog</screeninfo>
