@@ -1,11 +1,10 @@
+<!DOCTYPE KrossScripting SYSTEM "kpartgui.dtd">
 <KrossScripting version="3">
 
     <collection name="view">
         <separator/>
-        <script
+        <script text="Statistics" comment="Statistics Script"
             name="statistics_script"
-            text="Statistics"
-            comment="Statistics Script"
             interpreter="ruby"
             file="statistics.rb" />
     </collection>

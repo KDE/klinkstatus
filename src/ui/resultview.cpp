@@ -28,10 +28,10 @@
 #include <kurl.h>
 #include <kiconloader.h>
 
-const QString ResultView::URL_LABEL = "URL";
-const QString ResultView::STATUS_LABEL = "Status";
-const QString ResultView::MARKUP_LABEL = "Markup";
-const QString ResultView::LINK_LABEL_LABEL = "Label";
+const QString ResultView::URL_LABEL = i18n("URL");
+const QString ResultView::STATUS_LABEL = i18n("Status");
+const QString ResultView::MARKUP_LABEL = i18n("Markup");
+const QString ResultView::LINK_LABEL_LABEL = i18n("Label");
 
 
 // ******************************* ResultView ********************************
