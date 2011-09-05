@@ -114,7 +114,7 @@
   Search results can be filtered using <guilabel>Search</guilabel> field or <guilabel>Status</guilabel> drop-down menu (<guimenuitem>All Links</guimenuitem>, <guimenuitem>Good Links</guimenuitem>, <guimenuitem>Broken Links</guimenuitem>, <guimenuitem>Malformed Links</guimenuitem>, or <guimenuitem>Undetermined Links</guimenuitem>).
 </para>
 <para>
-  From the context menu of each item in search results you can <guimenuitem>Recheck</guimenuitem> item, <guisubmenu>Edit Referrer</guisubmenu> in the default editor, <guimenuitem>Open URL</guimenuitem>, <guimenuitem>Open Referrer URL</guimenuitem>, <guimenuitem>Copy URL</guimenuitem>, <guimenuitem>Copy Referrer URL</guimenuitem>, or <guimenuitem>Copy Cell Text</guimenuitem>).
+  From the context menu of each item in search results you can <guimenuitem>Recheck</guimenuitem> item, <guisubmenu>Edit Referrer</guisubmenu> in the default editor, <guimenuitem>Open URL</guimenuitem>, <guimenuitem>Open Referrer URL</guimenuitem>, <guimenuitem>Copy URL</guimenuitem>, <guimenuitem>Copy Referrer URL</guimenuitem>, or <guimenuitem>Copy Cell Text</guimenuitem>.
 </para>
 <para>
   The check results can be saved as &XML; site map using <menuchoice><guimenu>File</guimenu><guimenuitem>Create Site Map...</guimenuitem></menuchoice> menu item, or exported as &HTML; using <menuchoice><guimenu>File</guimenu><guisubmenu>Export to HTML</guisubmenu></menuchoice>. You can choose to export <guimenuitem>All</guimenuitem> or just <guimenuitem>Broken</guimenuitem> links. An option <guimenuitem>Download New Stylesheets</guimenuitem> to use stylesheets from Get Hot New Stuff repository for export is also implemented.
