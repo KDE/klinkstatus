@@ -1,13 +1,8 @@
 project(klinkstatus)
 
-remove_definitions(-DKDE4_KDE3SUPPORT_LIBS -DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS)
-
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules)
 
 find_package(KdepimLibs REQUIRED)
-find_package(Boost REQUIRED)
-
-include_directories( ${Boost_INCLUDE_DIR} )
 
 macro_optional_find_package(LibTidy)
 macro_log_feature(LIBTIDY_FOUND "libtidy" "HTML Tidy" "http://tidy.sourceforge.net" FALSE "" "Gives KlinkStatus the ability to tidy HTML")

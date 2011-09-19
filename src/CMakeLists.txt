@@ -13,8 +13,6 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/klinkstatus/src/interfaces/engine
     ${CMAKE_SOURCE_DIR}/klinkstatus/src/interfaces/ui
     ${CMAKE_BINARY_DIR}/klinkstatus/src
-    ${LIBXML2_INCLUDE_DIR}
-    ${LIBXSLT_INCLUDE_DIR}
     ${KDEPIMLIBS_INCLUDE_DIR}
     ${KDE4_INCLUDE_DIR}
     ${KDE4_INCLUDE_DIR}/threadweaver
@@ -125,8 +123,6 @@ qt4_add_dbus_adaptor(klinkstatuscommon_LIB_SRCS interfaces/ui/org.kde.kdewebdev.
 kde4_add_library(klinkstatuscommon SHARED ${klinkstatuscommon_LIB_SRCS})
 
 target_link_libraries(klinkstatuscommon
-    ${LIBXML2_LIBRARIES}
-    ${LIBXSLT_LIBRARIES}
     ${KDE4_KDECORE_LIBS} 
     ${KDE4_KPARTS_LIBS} 
     ${KDE4_KIO_LIBS}
