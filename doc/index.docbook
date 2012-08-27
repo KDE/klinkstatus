@@ -105,7 +105,7 @@
 	</mediaobject>
 </screenshot>
 <para>
-  Enter the the credentials and push <guibutton>OK</guibutton> button.
+  Enter the credentials and push <guibutton>OK</guibutton> button.
 </para>
 <para>
   You can narrow down the range of the links to be checked by unchecking <guilabel>Check external links</guilabel> item (if external links need not to be checked) or entering regular expression into <guilabel>Do not check Regular Expression</guilabel> field.
