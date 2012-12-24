@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Automation plugin
 Name[bg]=Приставка за автоматизация
+Name[bs]=Dodatak za automatizaciju
 Name[ca]=Connector d'automatització
 Name[ca@valencia]=Connector d'automatització
 Name[cs]=Automatizační modul
@@ -43,6 +44,7 @@ Name[zh_CN]=自动化插件
 Name[zh_TW]=自動化外掛程式
 Comment=Allow configuration of automated tasks
 Comment[bg]=Позволява настройване на автоматични задачи
+Comment[bs]=Omogući konfigurisanje automatizovanih zadataka
 Comment[ca]=Permet la configuració de tasques automàtiques
 Comment[ca@valencia]=Permet la configuració de tasques automàtiques
 Comment[cs]=Umožní nastavení automatizovaných úloh
