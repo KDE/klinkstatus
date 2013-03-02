@@ -2,7 +2,7 @@
 Name=Scripting plugin
 Name[bg]=Приставка за скриптове
 Name[bs]=Dodatak za skriptanje
-Name[ca]=Connector d'scripting
+Name[ca]=Connector per scripts
 Name[ca@valencia]=Connector d'scripting
 Name[cs]=Skriptovací modul
 Name[da]=Scripting-plugin
@@ -46,7 +46,7 @@ Name[zh_TW]=文稿外掛程式
 Comment=Allow execution of scripts
 Comment[bg]=Позволява изпълнение на скриптове
 Comment[bs]=Dozvoli izvršenje skripti
-Comment[ca]=Permet l'execució de guions (scripts)
+Comment[ca]=Permet l'execució d'scripts
 Comment[ca@valencia]=Permet l'execució de guions (scripts)
 Comment[cs]=Umožní spouštění skriptů
 Comment[da]=Tillad afvikling af scripts
