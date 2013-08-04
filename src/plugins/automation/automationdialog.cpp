@@ -130,7 +130,7 @@ void AutomationDialog::slotRemoveClicked()
         
     QFile file(configFilename);
     if(file.exists() && !file.remove()) {
-        KMessageBox::sorry(this, i18n("Could not delete configuration file %1").arg(configFilename));
+        KMessageBox::sorry(this, i18n("Could not delete configuration file %1", configFilename));
         return;
     }
     
