@@ -517,8 +517,8 @@ void SessionWidget::slotSearchFinished(SearchManager*)
     resetPendingActions();
     emit signalUpdateActions();
 
-    Global::getInstance()->setStatusBarText(i18n("Finished checking") + ' '
-        + combobox_url->currentText(), false);
+    Global::getInstance()->setStatusBarText(i18n("Finished checking %1",
+        combobox_url->currentText()), false);
 
     emit signalSearchFinnished();
 }
