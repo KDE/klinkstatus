@@ -123,7 +123,7 @@ void TabWidgetSession::addNewSession(KUrl const& url)
 
     ActionManager::getInstance()->slotUpdateActions(page);
 
-    addTab(page, i18n("Session") + QString::number(count() + 1));
+    addTab(page, i18n("Session%1", QString::number(count() + 1)));
     setCurrentIndex(count() - 1);
 
     // After adding the tab, otherwise looses focus in the combo url
