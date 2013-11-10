@@ -182,7 +182,7 @@ bool Url::equalHost(QString const& host1, QString const& host2, bool restrict)
         return false;
 
     int i = 1;
-    while( ((int)(size1 - i) >= (int)aux) && ((int)(size2 - i) >= (int)aux) )
+    while( ((int)(size1 - i) >= (int)aux) && ((int)(size2 - i) >= (int)aux2) )
     {
         if( !(v1[size1 - i] == v2[size2 - i]) )
             return false;
