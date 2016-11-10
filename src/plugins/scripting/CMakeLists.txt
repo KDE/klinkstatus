@@ -1,7 +1,7 @@
 add_subdirectory(scripts)
 
 include_directories(
-    ${CMAKE_SOURCE_DIR}/klinkstatus/src 
+    ${CMAKE_SOURCE_DIR}/src 
 )
 
 set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  ${KDE4_ENABLE_EXCEPTIONS}")

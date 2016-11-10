@@ -1,6 +1,6 @@
 include_directories(
-    ${CMAKE_SOURCE_DIR}/klinkstatus/src 
-    ${CMAKE_BINARY_DIR}/klinkstatus/src
+    ${CMAKE_SOURCE_DIR}/src 
+    ${CMAKE_BINARY_DIR}/src
     ${KDEPIMLIBS_INCLUDE_DIR}
 )
 
@@ -13,11 +13,11 @@ set(automationklinkstatus_PART_SRCS
 )
 
 kde4_add_ui_files(automationklinkstatus_PART_SRCS
-   ${CMAKE_SOURCE_DIR}/klinkstatus/src/plugins/automation/automationconfigpageui.ui
+   ${CMAKE_SOURCE_DIR}/src/plugins/automation/automationconfigpageui.ui
 )
 
-kde4_add_kcfg_files(automationklinkstatus_PART_SRCS ${CMAKE_SOURCE_DIR}/klinkstatus/src/engine/automationconfig.kcfgc)
-kde4_add_kcfg_files(automationklinkstatus_PART_SRCS ${CMAKE_SOURCE_DIR}/klinkstatus/src/cfg/klsconfig.kcfgc)
+kde4_add_kcfg_files(automationklinkstatus_PART_SRCS ${CMAKE_SOURCE_DIR}/src/engine/automationconfig.kcfgc)
+kde4_add_kcfg_files(automationklinkstatus_PART_SRCS ${CMAKE_SOURCE_DIR}/src/cfg/klsconfig.kcfgc)
 
 kde4_add_plugin(automationklinkstatus ${automationklinkstatus_PART_SRCS})
 

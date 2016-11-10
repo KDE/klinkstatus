@@ -5,14 +5,13 @@ set(GENERIC_KLINKSTATUS_LIB_SOVERSION "4")
 
 configure_file(config-tidy.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-tidy.h )
 
-
 include_directories(
-    ${CMAKE_SOURCE_DIR}/klinkstatus/src 
-    ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui
-    ${CMAKE_SOURCE_DIR}/klinkstatus/src/interfaces
-    ${CMAKE_SOURCE_DIR}/klinkstatus/src/interfaces/engine
-    ${CMAKE_SOURCE_DIR}/klinkstatus/src/interfaces/ui
-    ${CMAKE_BINARY_DIR}/klinkstatus/src
+    ${CMAKE_SOURCE_DIR}/src 
+    ${CMAKE_SOURCE_DIR}/src/ui
+    ${CMAKE_SOURCE_DIR}/src/interfaces
+    ${CMAKE_SOURCE_DIR}/src/interfaces/engine
+    ${CMAKE_SOURCE_DIR}/src/interfaces/ui
+    ${CMAKE_BINARY_DIR}/src
     ${KDEPIMLIBS_INCLUDE_DIR}
     ${KDE4_INCLUDE_DIR}
     ${KDE4_INCLUDE_DIR}/threadweaver
@@ -29,56 +28,56 @@ endif(LIBTIDY_FOUND)
 ########### next target ###############
 
 set(libutils_SRCS 
-    ${CMAKE_SOURCE_DIR}/klinkstatus/src/utils/utils.cpp     
-    ${CMAKE_SOURCE_DIR}/klinkstatus/src/utils/timer.cpp
+    ${CMAKE_SOURCE_DIR}/src/utils/utils.cpp     
+    ${CMAKE_SOURCE_DIR}/src/utils/timer.cpp
 )
 
 set(libparser_SRCS
-    ${CMAKE_SOURCE_DIR}/klinkstatus/src/parser/htmlparser.cpp 
-    ${CMAKE_SOURCE_DIR}/klinkstatus/src/parser/http.cpp 
-    ${CMAKE_SOURCE_DIR}/klinkstatus/src/parser/mstring.cpp 
-    ${CMAKE_SOURCE_DIR}/klinkstatus/src/parser/node.cpp 
-    ${CMAKE_SOURCE_DIR}/klinkstatus/src/parser/url.cpp
-    ${CMAKE_SOURCE_DIR}/klinkstatus/src/parser/robotsparser.cpp
+    ${CMAKE_SOURCE_DIR}/src/parser/htmlparser.cpp 
+    ${CMAKE_SOURCE_DIR}/src/parser/http.cpp 
+    ${CMAKE_SOURCE_DIR}/src/parser/mstring.cpp 
+    ${CMAKE_SOURCE_DIR}/src/parser/node.cpp 
+    ${CMAKE_SOURCE_DIR}/src/parser/url.cpp
+    ${CMAKE_SOURCE_DIR}/src/parser/robotsparser.cpp
 )
 
 set(libengine_SRCS 
-    ${CMAKE_SOURCE_DIR}/klinkstatus/src/engine/linkchecker.cpp 
-    ${CMAKE_SOURCE_DIR}/klinkstatus/src/engine/linkfilter.cpp 
-    ${CMAKE_SOURCE_DIR}/klinkstatus/src/engine/linkstatus.cpp 
-    ${CMAKE_SOURCE_DIR}/klinkstatus/src/engine/linkstatushelper.cpp
-    ${CMAKE_SOURCE_DIR}/klinkstatus/src/engine/searchmanager.cpp 
-    ${CMAKE_SOURCE_DIR}/klinkstatus/src/engine/searchmanageragent.cpp 
-    ${CMAKE_SOURCE_DIR}/klinkstatus/src/engine/automationengine.cpp 
+    ${CMAKE_SOURCE_DIR}/src/engine/linkchecker.cpp 
+    ${CMAKE_SOURCE_DIR}/src/engine/linkfilter.cpp 
+    ${CMAKE_SOURCE_DIR}/src/engine/linkstatus.cpp 
+    ${CMAKE_SOURCE_DIR}/src/engine/linkstatushelper.cpp
+    ${CMAKE_SOURCE_DIR}/src/engine/searchmanager.cpp 
+    ${CMAKE_SOURCE_DIR}/src/engine/searchmanageragent.cpp 
+    ${CMAKE_SOURCE_DIR}/src/engine/automationengine.cpp 
 )
 
 set(libinterfaces_SRC
-    ${CMAKE_SOURCE_DIR}/klinkstatus/src/interfaces/engine/isearchmanager.cpp
-    ${CMAKE_SOURCE_DIR}/klinkstatus/src/interfaces/ui/iview.cpp
+    ${CMAKE_SOURCE_DIR}/src/interfaces/engine/isearchmanager.cpp
+    ${CMAKE_SOURCE_DIR}/src/interfaces/ui/iview.cpp
 )
 
 set(libui_SRCS 
-    ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/view.cpp 
-    ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/documentrootdialog.cpp 
-    ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/klshistorycombo.cpp
-    ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/resultssearchbar.cpp 
-    ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/resultview.cpp 
-    ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/sessionwidget.cpp
-    ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/tabwidgetsession.cpp  
-    ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/treeview.cpp
-    ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/sessionstackedwidget.cpp
-    ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/unreferreddocumentswidget.cpp
-    ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/httppostdialog.cpp
+    ${CMAKE_SOURCE_DIR}/src/ui/view.cpp 
+    ${CMAKE_SOURCE_DIR}/src/ui/documentrootdialog.cpp 
+    ${CMAKE_SOURCE_DIR}/src/ui/klshistorycombo.cpp
+    ${CMAKE_SOURCE_DIR}/src/ui/resultssearchbar.cpp 
+    ${CMAKE_SOURCE_DIR}/src/ui/resultview.cpp 
+    ${CMAKE_SOURCE_DIR}/src/ui/sessionwidget.cpp
+    ${CMAKE_SOURCE_DIR}/src/ui/tabwidgetsession.cpp  
+    ${CMAKE_SOURCE_DIR}/src/ui/treeview.cpp
+    ${CMAKE_SOURCE_DIR}/src/ui/sessionstackedwidget.cpp
+    ${CMAKE_SOURCE_DIR}/src/ui/unreferreddocumentswidget.cpp
+    ${CMAKE_SOURCE_DIR}/src/ui/httppostdialog.cpp
 )
 
 set(libuisettings_SRCS 
-    ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/settings/configidentificationdialog.cpp     
-    ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/settings/configresultsdialogimpl.cpp
+    ${CMAKE_SOURCE_DIR}/src/ui/settings/configidentificationdialog.cpp     
+    ${CMAKE_SOURCE_DIR}/src/ui/settings/configresultsdialogimpl.cpp
 )
 
 set(libpim_SRCS 
-    ${CMAKE_SOURCE_DIR}/klinkstatus/src/pim/pimconfigdialog.cpp
-    ${CMAKE_SOURCE_DIR}/klinkstatus/src/pim/pimagent.cpp
+    ${CMAKE_SOURCE_DIR}/src/pim/pimconfigdialog.cpp
+    ${CMAKE_SOURCE_DIR}/src/pim/pimagent.cpp
 )
 
 set (klinkstatuscommon_LIB_SRCS
@@ -96,20 +95,20 @@ set (klinkstatuscommon_LIB_SRCS
 )
 
 kde4_add_ui_files(klinkstatuscommon_LIB_SRCS
-    ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/sessionwidgetbase.ui
-    ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/unreferreddocumentswidget.ui
-    ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/httppostwidgetui.ui
-    ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/settings/configsearchdialog.ui
-    ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/settings/configresultsdialog.ui
-    ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/settings/configidentificationdialogui.ui   
-    ${CMAKE_SOURCE_DIR}/klinkstatus/src/pim/identitywidgetui.ui
+    ${CMAKE_SOURCE_DIR}/src/ui/sessionwidgetbase.ui
+    ${CMAKE_SOURCE_DIR}/src/ui/unreferreddocumentswidget.ui
+    ${CMAKE_SOURCE_DIR}/src/ui/httppostwidgetui.ui
+    ${CMAKE_SOURCE_DIR}/src/ui/settings/configsearchdialog.ui
+    ${CMAKE_SOURCE_DIR}/src/ui/settings/configresultsdialog.ui
+    ${CMAKE_SOURCE_DIR}/src/ui/settings/configidentificationdialogui.ui   
+    ${CMAKE_SOURCE_DIR}/src/pim/identitywidgetui.ui
 )
 
-kde4_add_kcfg_files(klinkstatuscommon_LIB_SRCS ${CMAKE_SOURCE_DIR}/klinkstatus/src/cfg/klsconfig.kcfgc)
-kde4_add_kcfg_files(klinkstatuscommon_LIB_SRCS ${CMAKE_SOURCE_DIR}/klinkstatus/src/engine/automationconfig.kcfgc)
+kde4_add_kcfg_files(klinkstatuscommon_LIB_SRCS ${CMAKE_SOURCE_DIR}/src/cfg/klsconfig.kcfgc)
+kde4_add_kcfg_files(klinkstatuscommon_LIB_SRCS ${CMAKE_SOURCE_DIR}/src/engine/automationconfig.kcfgc)
 
 if(LIBTIDY_FOUND)
-    set(libtidy_SRCS ${CMAKE_SOURCE_DIR}/klinkstatus/src/tidy/markupvalidator.cpp)
+    set(libtidy_SRCS ${CMAKE_SOURCE_DIR}/src/tidy/markupvalidator.cpp)
     set(klinkstatuscommon_LIB_SRCS ${klinkstatuscommon_LIB_SRCS} ${libtidy_SRCS})
 endif(LIBTIDY_FOUND)
 
@@ -154,7 +153,7 @@ set(klinkstatuspart_PART_SRCS
     klinkstatus_part.cpp
 )
 
-kde4_add_kcfg_files(klinkstatuspart_PART_SRCS ${CMAKE_SOURCE_DIR}/klinkstatus/src/cfg/klsconfig.kcfgc)
+kde4_add_kcfg_files(klinkstatuspart_PART_SRCS ${CMAKE_SOURCE_DIR}/src/cfg/klsconfig.kcfgc)
 
 kde4_add_plugin(klinkstatuspart ${klinkstatuspart_PART_SRCS})
 
@@ -168,7 +167,7 @@ install(TARGETS klinkstatuspart DESTINATION ${PLUGIN_INSTALL_DIR})
 
 set(klinkstatus_SRCS
     klinkstatus.cpp main.cpp
-    ${CMAKE_SOURCE_DIR}/klinkstatus/src/ui/trayicon.cpp)
+    ${CMAKE_SOURCE_DIR}/src/ui/trayicon.cpp)
 
 
 kde4_add_executable(klinkstatus ${klinkstatus_SRCS})
