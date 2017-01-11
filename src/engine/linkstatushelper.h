@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2006 by Paulo Moura Guedes                              *
- *   moura@kdewebdev.org                                                   *
+ *   kde@mouraguedes.com                                                   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -27,7 +27,7 @@ class QDomElement;
 #include "engine/linkstatus.h"
 
 /**
-	@author Paulo Moura Guedes <moura@kdewebdev.org>
+	@author Paulo Moura Guedes <kde@mouraguedes.com>
     
     All the code here could go to LinkStatus class.
     It's here to save some memory, as there are a lot of LinkStatus objects out there.

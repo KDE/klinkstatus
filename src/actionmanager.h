@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2004 by Paulo Moura Guedes                              *
- *   moura@kdewebdev.org                                                        *
+ *   kde@mouraguedes.com                                                        *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -32,7 +32,7 @@ class KLinkStatusPart;
 class TabWidgetSession;
 
 /**
-    @author Paulo Moura Guedes <moura@kdewebdev.org>
+    @author Paulo Moura Guedes <kde@mouraguedes.com>
 
     interface for accessing actions, popup menus etc. from widgets.
 */
